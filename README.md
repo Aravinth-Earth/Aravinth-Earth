@@ -11,4 +11,4 @@
 
 ![Github Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aravinth-Earth&theme=onedark&langs_count=10&count_private=true)
 
-![](http://estruyf-github.azurewebsites.net/api/VisitorHit?user=caroldf07&repo=caroldf07&countColorcountColor&style=flat)
+![GitHub Profiel Visits](https://estruyf-github.azurewebsites.net/api/VisitorHit?user=Aravinth-Earth&repo=Aravinth-Earth)

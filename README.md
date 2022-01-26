@@ -10,3 +10,5 @@
 ![Github Contributions](https://github-readme-streak-stats.herokuapp.com/?user=Aravinth-Earth&theme=onedark&hide_border=true)
 
 ![Github Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aravinth-Earth&theme=onedark&langs_count=10&count_private=true)
+
+![](http://estruyf-github.azurewebsites.net/api/VisitorHit?user=caroldf07&repo=caroldf07&countColorcountColor&style=flat)

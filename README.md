@@ -12,3 +12,13 @@
 [![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=Aravinth-Earth&theme=dark&hide_border=true&date_format=j%20M%5B%20Y%5D)]
 
 ![Github Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aravinth-Earth&theme=onedark&langs_count=10&count_private=true)
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PWXJK5HD8L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PWXJK5HD8L');
+</script>

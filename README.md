@@ -6,7 +6,7 @@
 
 ### Analytics ⚙️
 
-![Github Statistics](https://github-readme-stats.vercel.app/api/?username=Aravinth-Earth&theme=midnight-purple&count_private=true&show_icons=true)
-![Github Contributions](https://github-readme-streak-stats.herokuapp.com/?user=Aravinth-Earth&theme=midnight-purple&hide_border=true)
+![Github Statistics](https://github-readme-stats.vercel.app/api/?username=Aravinth-Earth&theme=onedark&count_private=true&show_icons=true)
+![Github Contributions](https://github-readme-streak-stats.herokuapp.com/?user=Aravinth-Earth&theme=onedark&hide_border=true)
 
-![Github Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aravinth-Earth&theme=midnight-purple&langs_count=10&count_private=true)
+![Github Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aravinth-Earth&theme=onedarke&langs_count=10&count_private=true)

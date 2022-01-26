@@ -1,5 +1,10 @@
 ### Hi there 👋
 
+- 🌱 I’m currently learning Python (For Aritificial Intelligence applicaitons)
+
+- 💬 Ask me about Selenium WebDriver, Appium, Java, C#, Python, Javascript
+-
+- 📫 How to reach me: aravinth_earth@pm.me
 <!--
 **Aravinth-Earth/Aravinth-Earth** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 

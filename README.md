@@ -1,6 +1,6 @@
 ## Hi there 👋 Aravinth Here! 
 
-- 🌱 I’m currently learning Python (For Aritificial Intelligence applicaitons)
+- 🌱 I’m currently learning Python (To explore in depth on Aritificial Intelligence)
 - 💬 Ask me about Selenium WebDriver, Appium, Java, C#, Python, Javascript
 - 📫 How to reach me: <aravinth_earth@pm.me>
 

@@ -32,7 +32,7 @@
 
 ##### Operating Systems
 
-<button style="color:green;background-color:powderblue;border:none;padding: 5px 8px;display: inline-block;font-size: 14px;border-radius: 10px;">Windows - 10, 8.1, 8, 7</button>
+<button style="color:green;background-color:powderblue;border:none;padding: 5px 8px;display: inline-block;font-size: 14px;border-radius: 10px;">Windows - 11, 10, 8.1, 8, 7</button>
 <button style="color:green;background-color:powderblue;border:none;padding: 5px 8px;display: inline-block;font-size: 14px;border-radius: 10px;">Ubunut LTS - 20, 18</button>
 
 ### My GitHub Repos Analytics

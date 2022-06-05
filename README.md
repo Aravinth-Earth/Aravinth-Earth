@@ -4,7 +4,9 @@
 
 ## Hi there 👋 Aravinth Here! 
 
-- 🌱 I’m currently learning Python (To explore in depth on Aritificial Intelligence)
+- 🌱 I’m currently learning 
+  - Python (To explore in depth on Aritificial Intelligence)
+  - Android Studio
 - 💬 Ask me about Selenium WebDriver, Appium, Java, C#, Python, Javascript
 
 ![GitHub Profiel Visits](https://estruyf-github.azurewebsites.net/api/VisitorHit?user=Aravinth-Earth&repo=Aravinth-Earth)

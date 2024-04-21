@@ -1,3 +1,6 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 body{
     background-color: rgb(13, 17, 23);
     margin: 2%;

@@ -1,0 +1,84 @@
+body{
+    background-color: rgb(13, 17, 23);
+    margin: 2%;
+    color: rgb(201,209,217);
+}
+a{
+    text-decoration: none;
+    color: #1fd1f9;
+    font-weight: bold;
+}
+a:hover{
+    text-decoration: underline;
+}
+a:focus {
+    /* Adds an outline on focus */
+    outline: 2px solid #1fd1f9;
+}
+a::after{
+    /* Adds the title value as a tool tip info */
+    content: attr(title);
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+/* Default font size */
+.content {
+    /* Adjust the default font size as needed */
+    font-size: 5vw; 
+}
+
+/* Extra Small Devices (portrait phones) */
+@media (max-width: 576px) {
+    /* Adjust font size for extra small screens */
+    .content {
+        font-size: 12vw;         
+    }
+    h2{
+        font-size: 14vw;
+    }
+}
+
+/* Small Devices (landscape phones) */
+@media (min-width: 576px) and (max-width: 768px) {
+    /* Adjust font size for small screens */
+    .content {
+        font-size: 10vw;         
+    }
+    h2{
+        font-size: 12vw;
+    }
+}
+
+/* Medium Devices (tablets) */
+@media (min-width: 768px) and (max-width: 992px) {
+    /* Adjust font size for medium screens */
+    .content {
+        font-size: 7vw; 
+    }
+    h2{
+        font-size: 9vw;
+    }
+}
+
+/* Large Devices (desktops) */
+@media (min-width: 992px) and (max-width: 1200px) {
+    /* Adjust font size for large screens */
+    .content {
+        font-size: 5vw;         
+    }
+    h2{
+        font-size: 7vw;
+    }
+}
+
+/* Extra Large Devices (large desktops) */
+@media (min-width: 1200px) {
+    /* Adjust font size for extra large screens */
+    .content {
+        font-size: 2vw;         
+    }
+    h2{
+        font-size: 4vw;
+    }
+}

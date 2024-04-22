@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(13, 17, 23);
+    background-color: #0d1117;
     margin: 2%;
     color: rgb(201,209,217);
 }
@@ -81,4 +81,9 @@ a::after{
     h2{
         font-size: 4vw;
     }
+}
+#visitorbadge{
+    position: absolute;
+    top: 1%;
+    right: 1%;
 }

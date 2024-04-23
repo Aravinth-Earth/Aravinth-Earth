@@ -1,7 +1,12 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 body{
-    background-color: rgb(13, 17, 23);
+    background-color: #0d1117;
     margin: 2%;
     color: rgb(201,209,217);
+    height: 100%;
+    width: 100%;
 }
 a{
     text-decoration: none;
@@ -25,17 +30,20 @@ a::after{
 /* Default font size */
 .content {
     /* Adjust the default font size as needed */
-    font-size: 5vw; 
+    font-size: 2vw; 
+}
+h2{
+    font-size: 3vw;
 }
 
 /* Extra Small Devices (portrait phones) */
 @media (max-width: 576px) {
     /* Adjust font size for extra small screens */
     .content {
-        font-size: 12vw;         
+        font-size: 4vw;         
     }
     h2{
-        font-size: 14vw;
+        font-size: 5vw;
     }
 }
 
@@ -43,10 +51,10 @@ a::after{
 @media (min-width: 576px) and (max-width: 768px) {
     /* Adjust font size for small screens */
     .content {
-        font-size: 10vw;         
+        font-size: 3vw;         
     }
     h2{
-        font-size: 12vw;
+        font-size: 4vw;
     }
 }
 
@@ -54,10 +62,10 @@ a::after{
 @media (min-width: 768px) and (max-width: 992px) {
     /* Adjust font size for medium screens */
     .content {
-        font-size: 7vw; 
+        font-size: 3vw; 
     }
     h2{
-        font-size: 9vw;
+        font-size: 4vw;
     }
 }
 
@@ -65,10 +73,10 @@ a::after{
 @media (min-width: 992px) and (max-width: 1200px) {
     /* Adjust font size for large screens */
     .content {
-        font-size: 5vw;         
+        font-size: 2vw;         
     }
     h2{
-        font-size: 7vw;
+        font-size: 3vw;
     }
 }
 
@@ -79,6 +87,9 @@ a::after{
         font-size: 2vw;         
     }
     h2{
-        font-size: 4vw;
+        font-size: 3vw;
     }
+}
+footer{
+    text-align: center;
 }

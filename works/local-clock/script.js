@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const footer = document.querySelector('footer');
+    const clock = document.getElementById('clock');
     const settingsButton = document.getElementById('settings-button');
     const settingsPanel = document.getElementById('settings-panel');
     const toggleFormatButton = document.getElementById('toggle-format');
@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const fontSizeValue = document.getElementById('font-size-value');
     const toggleFullscreenButton = document.getElementById('toggle-fullscreen');
     const container = document.querySelector('.container');
+    const footer = document.querySelector('footer');
 
     let is24HourFormat = true;
     let colorMode = 'pitch-dark';
-    let fontSize = 70;
     let dynamicColorInterval;
 
     const updateClock = () => {
@@ -70,14 +70,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.requestFullscreen().then(() => {
                 document.body.classList.add('fullscreen');
                 footer.style.display = 'none'; // Hide footer in fullscreen mode
+            }).catch((err) => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
             });
         } else {
             document.exitFullscreen().then(() => {
                 document.body.classList.remove('fullscreen');
                 footer.style.display = ''; // Show footer in normal mode
+            }).catch((err) => {
+                console.error(`Error attempting to disable full-screen mode: ${err.message} (${err.name})`);
             });
         }
     };
+
+    // Add fullscreenchange event listener
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            document.body.classList.add('fullscreen');
+            footer.style.display = 'none'; // Hide footer in fullscreen mode
+        } else {
+            document.body.classList.remove('fullscreen');
+            footer.style.display = ''; // Show footer in normal mode
+        }
+    });
 
     settingsButton.addEventListener('click', () => {
         settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
@@ -90,22 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const savedFontSize = localStorage.getItem('fontSize');
     if (savedFontSize) {
-        fontSize = savedFontSize;
-        fontSizeSlider.value = fontSize;
-        fontSizeValue.textContent = `${fontSize}px`;
-        clock.style.fontSize = `${fontSize}px`;
+        fontSizeSlider.value = savedFontSize;
+        fontSizeValue.textContent = `${savedFontSize}px`;
+        clock.style.fontSize = `${savedFontSize}px`;
+    } else {
+        fontSizeSlider.value = 80;
+        fontSizeValue.textContent = '100px';
+        clock.style.fontSize = '100px';
     }
 
     updateClock();
     setInterval(updateClock, 1000);
-
-    // Handling the UI re-enablement after exiting fullscreen
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
-            document.body.classList.remove('fullscreen');
-            footer.style.display = ''; // Show footer in normal mode
-        }
-    });
 
     // Intersection Observer Example
     const target = document.querySelector('#target-element');

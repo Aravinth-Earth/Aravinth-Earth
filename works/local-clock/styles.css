@@ -1,0 +1,120 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.container {
+    flex: 1; /* Allows container to take up remaining space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 0.875rem;
+    transition: opacity 0.3s; /* Smooth transition for visibility */
+}
+
+/* Fullscreen Mode Styles */
+.fullscreen footer {
+    display: none; /* Hide footer in fullscreen mode */
+}
+
+/* Button and Select Styles */
+button, select {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 12px;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
+    white-space: nowrap;
+    background-color: #fff;
+    color: #000;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:hover, select:hover {
+    background-color: #ddd;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+button:active, select:active {
+    transform: scale(0.95);
+}
+
+/* Clock Styles */
+.clock {
+    font-size: 5rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: font-size 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Color Modes */
+.pitch-dark {
+    background-color: #000;
+    color: #fff;
+}
+
+.classic-white {
+    color: #000;
+}
+
+.dynamic-color {
+    color: #fff;
+}
+
+/* Settings Panel Styles */
+.settings-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    display: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.settings-panel h3 {
+    margin-bottom: 10px;
+}
+
+#font-size {
+    width: 100%;
+}
+
+#font-size-value {
+    margin-left: 10px;
+}
+
+/* Fullscreen Mode */
+.fullscreen .settings-panel,
+.fullscreen #toggle-fullscreen,
+.fullscreen #settings-button {
+    display: none;
+}
+
+.fullscreen #container {
+    display: none;
+}

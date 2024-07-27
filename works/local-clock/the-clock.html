@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://js-de.sentry-cdn.com/fa87d991b73015e809d8c9d2fee8d53b.min.js" crossorigin="anonymous"></script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PWXJK5HD8L"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-PWXJK5HD8L');
+        </script>
+        <!-- Hotjar Tracking Code for Site 5074410 (name missing) -->
+        <script>
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:5074410,hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        </script>
+        <script src="https://cdn.logr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
+        <script>window.LogRocket && window.LogRocket.init('gakosm/personal');</script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Digital Clock</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body class="pitch-dark">
+        <div class="container">
+            <!-- Clock display element -->
+            <div id="clock" class="clock"></div>
+            
+            <!-- Settings panel -->
+            <div id="settings-panel" class="settings-panel">
+                <!-- Toggle 24-hour/12-hour format button -->
+                <button id="toggle-format">Switch to 12-Hour Format</button>
+                <!-- Dropdown for color mode selection -->
+                <select id="color-mode">
+                    <option value="pitch-dark">Pitch Dark</option>
+                    <option value="classic-white">Classic White</option>
+                    <option value="dynamic-color">Dynamic Color</option>
+                </select>
+                <!-- Font size slider -->
+                <label for="font-size">Font Size: <span id="font-size-value"></span></label>
+                <input type="range" id="font-size" min="10" max="100">
+            </div>
+            
+            <!-- Fullscreen toggle button -->
+            <button id="toggle-fullscreen">Toggle Fullscreen</button>
+            
+            <!-- Settings button to show/hide the settings panel -->
+            <button id="settings-button">Settings</button>
+        </div>
+        <!-- JavaScript file -->
+        <script src="script.js"></script>
+    </body>
+    <footer>
+        <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fwww.332321.xyz%2F"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
+    </footer>
+</html>

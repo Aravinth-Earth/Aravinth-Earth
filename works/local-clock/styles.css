@@ -3,20 +3,20 @@ body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensure body takes full viewport height */
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensure body takes full viewport height */
+    position: relative;
     transition: background-color 0.5s, color 0.5s;
 }
 
 .container {
-    flex: 1; /* Allows container to take up remaining space */
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 600px;
     padding: 20px;
-    box-sizing: border-box;
 }
 
 /* Footer Styles */
@@ -24,6 +24,10 @@ footer {
     text-align: center;
     padding: 10px;
     font-size: 0.875rem;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     transition: opacity 0.3s; /* Smooth transition for visibility */
 }
 
@@ -66,7 +70,9 @@ button:active, select:active {
     transition: font-size 0.3s, color 0.3s;
     display: flex;
     align-items: center;
+    justify-content: center; /* Center the content horizontally */
     gap: 10px;
+    white-space: nowrap; /* Prevent line wrapping */
 }
 
 /* Color Modes */

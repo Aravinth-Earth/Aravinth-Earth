@@ -11,14 +11,15 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #000;
             margin: 0;
         }
         .calculator {
             border: 1px solid #ccc;
             border-radius: 8px;
             padding: 20px;
-            background-color: #fff;
+            background-color: #111;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .calculator input[type="text"] {
             width: 100%;
@@ -26,17 +27,23 @@
             font-size: 18px;
             margin-bottom: 10px;
             text-align: right;
-            border: 1px solid #ddd;
+            border: 1px solid #222;
             border-radius: 4px;
         }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+        }
         .calculator button {
-            width: 23%;
+            flex: 1;
             padding: 15px;
             margin: 5px;
             font-size: 18px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #999;
         }
         .calculator button.operator {
             background-color: #f0ad4e;
@@ -45,6 +52,7 @@
         .calculator button.equals {
             background-color: #5bc0de;
             color: white;
+            flex: 2; /* Makes the equals button wider */
         }
         .calculator button:hover {
             opacity: 0.8;
@@ -54,27 +62,33 @@
 <body>
     <div class="calculator">
         <input type="text" id="display" disabled>
-        <br>
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="appendToDisplay('7')">7</button>
-        <button onclick="appendToDisplay('8')">8</button>
-        <button onclick="appendToDisplay('9')">9</button>
-        <button class="operator" onclick="appendToDisplay('/')">/</button>
-        <br>
-        <button onclick="appendToDisplay('4')">4</button>
-        <button onclick="appendToDisplay('5')">5</button>
-        <button onclick="appendToDisplay('6')">6</button>
-        <button class="operator" onclick="appendToDisplay('*')">*</button>
-        <br>
-        <button onclick="appendToDisplay('1')">1</button>
-        <button onclick="appendToDisplay('2')">2</button>
-        <button onclick="appendToDisplay('3')">3</button>
-        <button class="operator" onclick="appendToDisplay('-')">-</button>
-        <br>
-        <button onclick="appendToDisplay('0')">0</button>
-        <button onclick="appendToDisplay('.')">.</button>
-        <button class="equals" onclick="calculateResult()">=</button>
-        <button class="operator" onclick="appendToDisplay('+')">+</button>
+        <div class="button-row">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('/')">/</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('*')">*</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+        </div>
+        <div class="button-row">
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="equals" onclick="calculateResult()">=</button>
+        </div>
     </div>
     <script>
         function appendToDisplay(value) {

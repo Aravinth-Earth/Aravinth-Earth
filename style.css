@@ -2,9 +2,9 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 body{
-    background-color: #0d1117;
+    background-color: #000;
     margin: 2%;
-    color: rgb(201,209,217);
+    color: rgb(161, 167, 173);
     height: 100%;
     width: 100%;
 }

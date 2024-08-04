@@ -1,0 +1,32 @@
+# .github/workflows/notify-private-repo.yml
+name: Notify Private Repo
+
+on:
+  deployment_status:
+    types: [success] # Trigger when deployment status is successful
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Private Repo Workflow
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { Octokit } = require('@octokit/rest');
+            const octokit = new Octokit({
+              auth: process.env.GH_TOKEN
+            });
+
+            await octokit.request('POST /repos/{owner}/{repo}/dispatches', {
+              owner: process.env.PRIVATE_REPO_OWNER,
+              repo: process.env.PRIVATE_REPO_NAME,
+              event_type: 'deploy',
+              client_payload: {
+                ref: 'main'
+              }
+            });
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PRIVATE_REPO_OWNER: ${{ secrets.PRIVATE_REPO_OWNER }}
+          PRIVATE_REPO_NAME: ${{ secrets.PRIVATE_REPO_NAME }}

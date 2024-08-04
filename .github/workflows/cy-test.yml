@@ -1,6 +1,7 @@
 # .github/workflows/notify-private-repo.yml
 name: Notify Private Repo
 
+# don't thing it will work !
 on:
   deployment_status:
     types: [success] # Trigger when deployment status is successful

@@ -8,18 +8,18 @@
     <style>
         body {
             background-color: #000;
-            color: #fff;
+            color: #999;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100%;
         }
         .container {
-            width: 90%;
-            max-width: 1200px;
+            max-width: 97%;
+            padding-top: 1%;
         }
         table {
             width: 100%;
@@ -28,16 +28,15 @@
             border-radius: 8px;
             overflow: hidden;
             padding: 0;
+            border: none;
         }
         th, td {
-            border: 1px solid #333;
-            padding: 12px;
+            padding: 2px;
             text-align: center;
             cursor: pointer;
             vertical-align: middle;
             white-space: normal;
-            word-wrap: break-word;
-            color: #fff;
+            word-wrap: break-word;            
         }
         th {
             background-color: #444;
@@ -45,7 +44,6 @@
         }
         th .icon {
             background-color: #333;
-            color: #fff;
             border: none;
             border-radius: 50%;
             padding: 5px 10px;
@@ -66,20 +64,19 @@
             background: none;
             border: none;
             font-size: 20px;
-            color: #fff;
             cursor: pointer;
         }
         .controls {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 10px;            
         }
         .controls button {
+            color: #999;
             margin: 0 5px;
-            padding: 10px 20px;
+            padding: 2px 10px;
             border: none;
             border-radius: 20px;
             background-color: #444;
-            color: #fff;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -89,6 +86,15 @@
         }
         .controls button:focus {
             outline: none;
+        }
+        #dynamicTable{
+            padding: 1%;
+        }
+        button{
+            background-color: #333;
+        }
+        .icon{
+            color: #aaa;
         }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PWXJK5HD8L"></script>
@@ -415,9 +421,12 @@
         // Function to get text color based on background color
         function getTextColorBasedOnBackground(backgroundColor) {
             // Simple luminance calculation for text color contrast
-            const rgb = backgroundColor.match(/\d+/g);
-            const luminance = 0.2126 * (rgb[0] / 255) + 0.7152 * (rgb[1] / 255) + 0.0722 * (rgb[2] / 255);
-            return luminance > 0.5 ? '#000' : '#fff'; // Return black or white based on luminance
+            // const rgb = backgroundColor.match(/\d+/g);
+            // const luminance = 0.2126 * (rgb[0] / 255) + 0.7152 * (rgb[1] / 255) + 0.0722 * (rgb[2] / 255);
+            // return luminance > 0.5 ? '#000' : '#fff'; // Return black or white based on luminance
+
+            // setting constant value
+            return '#999';
         }
 
         // Initialize event listeners and table state on load

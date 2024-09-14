@@ -8,7 +8,7 @@
     <style>
         body {
             background-color: #000;
-            color: #999;
+            color: #aaa;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -18,8 +18,8 @@
             width: 100%;
         }
         .container {
-            max-width: 97%;
-            padding-top: 1%;
+            max-width: 99%;
+            padding: 1%;
         }
         table {
             width: 100%;
@@ -27,11 +27,9 @@
             margin-bottom: 10px;
             border-radius: 8px;
             overflow: hidden;
-            padding: 0;
             border: none;
         }
         th, td {
-            padding: 2px;
             text-align: center;
             cursor: pointer;
             vertical-align: middle;
@@ -45,9 +43,6 @@
         th .icon {
             background-color: #333;
             border: none;
-            border-radius: 50%;
-            padding: 5px 10px;
-            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -63,7 +58,6 @@
         .delete-row button {
             background: none;
             border: none;
-            font-size: 20px;
             cursor: pointer;
         }
         .controls {
@@ -71,13 +65,12 @@
             margin-bottom: 10px;            
         }
         .controls button {
-            color: #999;
+            color: #ccc;
             margin: 0 5px;
             padding: 2px 10px;
             border: none;
             border-radius: 20px;
             background-color: #444;
-            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -87,14 +80,10 @@
         .controls button:focus {
             outline: none;
         }
-        #dynamicTable{
-            padding: 1%;
-        }
         button{
-            background-color: #333;
-        }
-        .icon{
-            color: #aaa;
+            color: gold;
+            background-color: #444;
+            border: none;
         }
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PWXJK5HD8L"></script>
@@ -120,9 +109,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">Column 1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">Column 2 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">Column 3 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -287,7 +276,7 @@
             for (let i = 2; i < headerCells.length; i++) {
                 const cell = newRow.insertCell();
                 cell.contentEditable = "true";
-                cell.innerText = `Row ${tbody.rows.length}, Cell ${i - 1}`;
+                cell.innerText = `R${tbody.rows.length}C${i - 1}`;
             }
 
             updateSerialNumbers();
@@ -303,14 +292,14 @@
             const headerRow = thead.querySelector('tr');
             const newHeader = document.createElement('th');
             newHeader.contentEditable = "true";
-            newHeader.innerHTML = `Column ${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
             headerRow.appendChild(newHeader);
 
             // Add new cells to each row
             tbody.querySelectorAll('tr').forEach(row => {
                 const newCell = row.insertCell();
                 newCell.contentEditable = "true";
-                newCell.innerText = `Row ${row.rowIndex + 1}, Cell ${headerRow.children.length - 3}`;
+                newCell.innerText = `R${row.rowIndex + 1}C${headerRow.children.length - 3}`;
             });
 
             updateSerialNumbers();
@@ -369,9 +358,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">Column 1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">Column 2 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">Column 3 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
                 </tr>
             `;
             tbody.innerHTML = '';
@@ -426,7 +415,7 @@
             // return luminance > 0.5 ? '#000' : '#fff'; // Return black or white based on luminance
 
             // setting constant value
-            return '#999';
+            return '#aaa';
         }
 
         // Initialize event listeners and table state on load

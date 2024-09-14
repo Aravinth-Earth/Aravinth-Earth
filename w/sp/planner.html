@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Planner</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 0;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            vertical-align: middle;
+            white-space: normal;
+            word-wrap: break-word;
+            color: #fff;
+        }
+        th {
+            background-color: #444;
+            position: relative;
+        }
+        th .icon {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        th .icon:hover {
+            background-color: #555;
+        }
+        .row-light {
+            background-color: #222;
+        }
+        .delete-row {
+            text-align: right;
+        }
+        .delete-row button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .controls button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #444;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .controls button:hover {
+            background-color: #555;
+        }
+        .controls button:focus {
+            outline: none;
+        }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PWXJK5HD8L"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-PWXJK5HD8L');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <button onclick="addRow()">Add Row</button>
+            <button onclick="addColumn()">Add Column</button>
+            <button onclick="clearTable()">Clear Table</button>
+            <button onclick="saveTable()">Save Table</button>
+            <button onclick="loadTable()">Load Table</button>
+            <button onclick="regenerateColors()">Regenerate Row Colors</button>
+        </div>
+        <table id="dynamicTable">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>S.No</th>
+                    <th contenteditable="true">Column 1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">Column 2 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">Column 3 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Initial rows will be added by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to generate a random darker color
+        function getRandomDarkColor() {
+            const randomColor = `rgb(${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)})`;
+            return randomColor;
+        }
+
+        // Function to select all content in a cell
+        function selectCellContent(event) {
+            const cell = event.target;
+            const range = document.createRange();
+            range.selectNodeContents(cell);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        // Save table data to a JSON file
+        function saveTable() {
+            const table = document.getElementById('dynamicTable');
+
+            // Extract and clean header text
+            const headers = Array.from(table.querySelectorAll('thead tr th')).map(th => {
+                const headerText = th.innerText.trim();
+                if (headerText.endsWith('❌')) {
+                    return headerText.slice(0, -1).trim(); // Remove the last '❌' and trim spaces
+                }
+                return headerText;
+            });
+
+            // Extract row data
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => 
+                Array.from(tr.querySelectorAll('td')).slice(2).map(td => td.innerText)
+            );
+
+            const tableData = {
+                headers: headers.slice(2), // Skip Action and Serial Number columns
+                rows: rows
+            };
+
+            // Create a blob with the JSON data
+            const blob = new Blob([JSON.stringify(tableData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // Create and click a download link
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'table-data.json';
+            a.click();
+
+            // Clean up
+            URL.revokeObjectURL(url);
+        }
+
+        // Load table data from a JSON file
+        function loadTable() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const tableData = JSON.parse(reader.result);
+
+                    const table = document.getElementById('dynamicTable');
+                    const thead = table.querySelector('thead');
+                    const tbody = table.querySelector('tbody');
+
+                    // Clear existing data
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Action</th>
+                            <th>S.No</th>
+                        </tr>
+                    `;
+                    tbody.innerHTML = '';
+
+                    // Add header row to the existing header row
+                    const headerRow = thead.querySelector('tr');
+
+                    // Populate headers
+                    tableData.headers.forEach((header, index) => {
+                        const th = document.createElement('th');
+                        th.contentEditable = "true";
+                        th.innerHTML = `${header} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+                        headerRow.appendChild(th);
+                    });
+
+                    // Populate rows
+                    tableData.rows.forEach(rowData => {
+                        const row = document.createElement('tr');
+                        row.classList.add('row-light');
+                        row.style.backgroundColor = getRandomDarkColor(); // Set dark color for the row
+
+                        // Add action cell
+                        const actionCell = row.insertCell();
+                        actionCell.innerHTML = `
+                            <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
+                            <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
+                            <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+                        `;
+                        actionCell.contentEditable = "true";
+
+                        // Add serial number cell
+                        const serialCell = row.insertCell();
+                        serialCell.contentEditable = "true";
+                        serialCell.innerText = tbody.rows.length + 1; // Correct serial number
+
+                        // Add cells for each column
+                        rowData.forEach(cellData => {
+                            const cell = row.insertCell();
+                            cell.contentEditable = "true";
+                            cell.innerText = cellData;
+                        });
+
+                        tbody.appendChild(row);
+                    });
+
+                    updateSerialNumbers();
+                    reattachEventListeners();
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Add a new row to the table
+        function addRow() {
+            const table = document.getElementById('dynamicTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+            const headerCells = thead.querySelectorAll('tr th');
+
+            const newRow = tbody.insertRow();
+            newRow.classList.add('row-light');
+            newRow.style.backgroundColor = getRandomDarkColor(); // Set dark color for the row
+
+            // Add action cell
+            const actionCell = newRow.insertCell();
+            actionCell.innerHTML = `
+                <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
+                <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
+                <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+            `;
+            actionCell.contentEditable = "true";
+
+            // Add serial number cell
+            const serialCell = newRow.insertCell();
+            serialCell.contentEditable = "true";
+            serialCell.innerText = tbody.rows.length; // Correct serial number
+
+            // Add cells for each column
+            for (let i = 2; i < headerCells.length; i++) {
+                const cell = newRow.insertCell();
+                cell.contentEditable = "true";
+                cell.innerText = `Row ${tbody.rows.length}, Cell ${i - 1}`;
+            }
+
+            updateSerialNumbers();
+        }
+
+        // Add a new column to the table
+        function addColumn() {
+            const table = document.getElementById('dynamicTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            // Add a new header cell to the existing header row
+            const headerRow = thead.querySelector('tr');
+            const newHeader = document.createElement('th');
+            newHeader.contentEditable = "true";
+            newHeader.innerHTML = `Column ${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+            headerRow.appendChild(newHeader);
+
+            // Add new cells to each row
+            tbody.querySelectorAll('tr').forEach(row => {
+                const newCell = row.insertCell();
+                newCell.contentEditable = "true";
+                newCell.innerText = `Row ${row.rowIndex + 1}, Cell ${headerRow.children.length - 3}`;
+            });
+
+            updateSerialNumbers();
+        }
+
+        // Delete a row
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateSerialNumbers();
+        }
+
+        // Delete a column
+        function deleteColumn(button) {
+            const table = document.getElementById('dynamicTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            // Remove header column
+            const th = button.closest('th');
+            const index = Array.from(th.parentNode.children).indexOf(th);
+            th.remove();
+
+            // Remove cells in each row
+            tbody.querySelectorAll('tr').forEach(row => {
+                row.children[index].remove();
+            });
+
+            // Update column numbers and serial numbers
+            updateSerialNumbers();
+        }
+
+        // Move a row up or down
+        function moveRow(button, direction) {
+            const row = button.closest('tr');
+            const rows = Array.from(row.parentNode.children);
+            const index = rows.indexOf(row);
+
+            if (direction === 'up' && index > 0) {
+                row.parentNode.insertBefore(row, rows[index - 1]);
+            } else if (direction === 'down' && index < rows.length - 1) {
+                row.parentNode.insertBefore(row, rows[index + 2]);
+            }
+
+            updateSerialNumbers();
+        }
+
+        // Clear all table data and create default rows
+        function clearTable() {
+            const table = document.getElementById('dynamicTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            // Clear existing data
+            thead.innerHTML = `
+                <tr>
+                    <th>Action</th>
+                    <th>S.No</th>
+                    <th contenteditable="true">Column 1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">Column 2 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">Column 3 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                </tr>
+            `;
+            tbody.innerHTML = '';
+
+            // Add default rows
+            for (let i = 0; i < 3; i++) {
+                addRow();
+            }
+        }
+
+        // Update serial numbers in the table
+        function updateSerialNumbers() {
+            const table = document.getElementById('dynamicTable');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.cells[1].innerText = index + 1; // Update serial number column
+            });
+        }
+
+        // Reattach event listeners after loading table data
+        function reattachEventListeners() {
+            const deleteRowButtons = document.querySelectorAll('button[onclick*="deleteRow"]');
+            deleteRowButtons.forEach(button => {
+                button.onclick = function() {
+                    deleteRow(this);
+                };
+            });
+
+            const deleteColButtons = document.querySelectorAll('button[onclick*="deleteColumn"]');
+            deleteColButtons.forEach(button => {
+                button.onclick = function() {
+                    deleteColumn(this);
+                };
+            });
+        }
+
+        // Regenerate new set of dynamic colors for each row
+        function regenerateColors() {
+            const table = document.getElementById('dynamicTable');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.style.backgroundColor = getRandomDarkColor();
+                row.style.color = getTextColorBasedOnBackground(row.style.backgroundColor);
+            });
+        }
+
+        // Function to get text color based on background color
+        function getTextColorBasedOnBackground(backgroundColor) {
+            // Simple luminance calculation for text color contrast
+            const rgb = backgroundColor.match(/\d+/g);
+            const luminance = 0.2126 * (rgb[0] / 255) + 0.7152 * (rgb[1] / 255) + 0.0722 * (rgb[2] / 255);
+            return luminance > 0.5 ? '#000' : '#fff'; // Return black or white based on luminance
+        }
+
+        // Initialize event listeners and table state on load
+        window.onload = function() {
+            reattachEventListeners();
+
+            // Add default rows and columns
+            const table = document.getElementById('dynamicTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            // Add default rows
+            for (let i = 0; i < 3; i++) {
+                addRow();
+            }
+            // Add default columns
+            addColumn();
+            addColumn();
+            addColumn();
+        };
+
+        // Ensure content is selected when cell is clicked or tabbed to
+        document.addEventListener('click', function(event) {
+            if (event.target.matches('td, th')) {
+                selectCellContent(event);
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Tab') {
+                const focusedElement = document.activeElement;
+                if (focusedElement.matches('td, th')) {
+                    selectCellContent({ target: focusedElement });
+                }
+            }
+        });
+    </script>
+</body>
+<footer style="display: none;">
+    <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fwww.332321.xyz%2F"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
+</footer>
+</html>

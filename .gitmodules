@@ -1,3 +1,6 @@
 [submodule "works/youtube-news"]
 	path = works/youtube-news
 	url = https://github.com/Aravinth-Earth/yt-news.git
+[submodule "w/yn"]
+	path = w/yn
+	url = https://github.com/Aravinth-Earth/yt-news

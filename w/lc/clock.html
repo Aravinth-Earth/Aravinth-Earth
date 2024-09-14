@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset=UTF-8>
-        <title>My Works</title>
-        <link rel="stylesheet" href="../style.css">        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Digital Clock</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="script.js"></script>
         <script>
             var _rollbarConfig = {
                 accessToken: '0187a9e3e61c4e79971ac30f72bb04b0',
@@ -55,48 +57,39 @@
         <script data-goatcounter="https://priv-ana.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
     </head>
-    <body>
-        <nav>
-            <a href="../index.html" class="content">Home</a>
-        </nav>
-        <p class="content">Here i have listed my works, which might be interested/useful to you :)</p>
-        <ul>
-            <li>
-                <h2>
-                    <a href="youtube-news/news-v2.html" class="content">YT-News</a>
-                </h2>
-                <p class="content">
-                    The regular youtube channel(s) i go for, to watch news are added as individual i-frames in a separate html page, For each switching between channels :)
-                </p>
-            </li>
-            <li>
-                <h2>
-                    <a href="local-clock/the-clock.html" class="content">Local Clock</a>
-                </h2>
-                <p class="content">
-                    A simple local device time based digital clock
-                </p>
-            </li>
-            <li>
-                <h2>
-                    <a href="calculator/calc.html" class="content">Simple Calculator</a>
-                </h2>
-                <p class="content">
-                    A simple calculator :)
-                </p>
-            </li>
-            <li>
-                <h2>
-                    <a href="sp/planner.html" class="content">Simple Planner</a>
-                </h2>
-                <p class="content">
-                    A simple task planner :)
-                </p>
-            </li>
-        </ul>
+    <div style="display: none;">
+        <h3>Local Clock</h3>
+        shows time in 24 hr format, based on device local time
+    </div>
+    <body class="pitch-dark">
+        <div class="container">
+            <!-- Clock display element -->
+            <div id="clock" class="clock"></div>
+            
+            <!-- Settings panel -->
+            <div id="settings-panel" class="settings-panel">
+                <!-- Toggle 24-hour/12-hour format button -->
+                <button id="toggle-format">Switch to 12-Hour Format</button>
+                <!-- Dropdown for color mode selection -->
+                <select id="color-mode">
+                    <option value="pitch-dark">Pitch Dark</option>
+                    <option value="classic-white">Classic White</option>
+                    <option value="dynamic-color">Dynamic Color</option>
+                </select>
+                <!-- Font size slider -->
+                <label for="font-size">Font Size: <span id="font-size-value"></span></label>
+                <input type="range" id="font-size" min="15" max="150">
+            </div>
+            
+            <!-- Fullscreen toggle button -->
+            <button id="toggle-fullscreen">Toggle Fullscreen</button>
+            
+            <!-- Settings button to show/hide the settings panel -->
+            <button id="settings-button">Settings</button>
+        </div>
+        <!-- JavaScript file -->        
     </body>
     <footer>
-        <a href="https://visitorbadge.io/status?path=https%3A%2F%2Fwww.332321.xyz%2F"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
-    </footer>
+        <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
+    </footer>    
 </html>
-

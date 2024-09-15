@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>YouTube Live Streams</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #121212; /* Dark background color */
+                color: #aaa; /* Light text color for contrast */
+            }
+            .channel {
+                margin-bottom: 40px;
+                padding-left: 10px; /* Padding on the left of the channel section */
+            }
+            .channel-name {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+            .live-streams {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: start;
+                padding-left: 10px; /* Padding on the left of the live streams container */
+            }
+            .live-stream {
+                flex: 0 0 300px; /* Fixed width for each iframe */
+                height: 200px; /* Fixed height for each iframe */
+                box-sizing: border-box;
+                margin-left: 10px; /* Add margin to avoid starting from the screen edge */
+            }
+            iframe {
+                width: 100%; /* Ensures iframe fills the container */
+                height: 100%; /* Ensures iframe fills the container */
+                border: none;
+            }
+            hr {
+                border: 0;
+                height: 1px;
+                background: #333;
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="channel">
+            <div class="channel-name">Polimer News (@PolimerNews)</div>
+        <div class="live-streams">
+        
+    <div class="live-stream">
+        <iframe data-src="https://www.youtube-nocookie.com/embed/5XN8oY2DBVg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    
+    <div class="live-stream">
+        <iframe data-src="https://www.youtube-nocookie.com/embed/AZLVN1OesdQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    
+    <div class="live-stream">
+        <iframe data-src="https://www.youtube-nocookie.com/embed/uVbNYYbNH90" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    </div><hr></div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const iframes = document.querySelectorAll('iframe[data-src]');
+                
+                const loadIframe = (iframe) => {
+                    iframe.src = iframe.getAttribute('data-src');
+                    iframe.removeAttribute('data-src');
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            loadIframe(entry.target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    rootMargin: '0px',
+                    threshold: 0.1
+                });
+
+                iframes.forEach(iframe => {
+                    observer.observe(iframe);
+                });
+            });
+        </script>
+    </body>
+</html>

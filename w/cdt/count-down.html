@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duration Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #121212; /* Pitch dark background */
+            color: #e0e0e0; /* Light text color */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align content */
+        }
+        #inputSection {
+            background-color: #1e1e1e; /* Darker background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px; /* Space between sections */
+            width: 90%; /* Full width on smaller screens */
+            max-width: 600px; /* Limit width on larger screens */
+            transition: max-height 0.3s ease; /* Smooth transition for collapsing */
+            overflow: hidden; /* Hide content when collapsed */
+        }
+        #inputSection.collapsed {
+            display: none; /* Completely hide the section when collapsed */
+        }
+        #toggleButton {
+            cursor: pointer;
+            opacity: 0.1; /* Semi-transparent when not hovered */
+            transition: opacity 0.3s; /* Smooth transition for opacity */
+            font-size: 20px; /* Arrow size */
+            margin-bottom: 10px; /* Space below the button */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px; /* Fixed height */
+        }
+        #toggleButton:hover {
+            opacity: 1; /* Fully opaque on hover */
+        }
+        h2 {
+            display: flex;
+            justify-content: center;
+            font-size: 1.5em; /* Increase font size for headings */
+        }
+        .horizontal {
+            display: flex;
+            justify-content: space-between; /* Space between input groups */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Stack label and value */
+            align-items: center; /* Center align items */
+            width: calc(14.285% - 10px); /* Adjust width for 7 items with spacing */
+            min-width: 70px; /* Minimum width for responsiveness */
+            margin-bottom: 10px; /* Space between input groups */
+        }
+        .label {
+            font-weight: bold;
+            font-size: 1em;
+        }
+        .value {
+            font-size: 2em;
+            color: #ffcc00; /* A contrasting color for values */
+            text-align: center; /* Center align the text */
+        }
+        input {
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333; /* Input background color */
+            color: #fff; /* Input text color */
+            width: 100%; /* Full width */
+            font-size: 1em; /* Font size for inputs */
+            text-align: center; /* Center align the text */
+        }
+        input:focus {
+            outline: none;
+            background-color: #444; /* Darker input on focus */
+        }
+        /* Hide number input spinner controls */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number] {
+            -webkit-appearance: none; /* Hide spinner in WebKit browsers */
+            -moz-appearance: textfield; /* Hide spinner in Firefox */
+            margin: 0; /* Reset margin */
+        }
+        /* Media queries for smaller screens */ 
+        @media (max-width: 600px) {
+            .input-group {
+                width: calc(20% - 10px); /* Adjust width on smaller screens */
+            }
+            h2 {
+                font-size: 1.2em; /* Adjust font size for smaller screens */
+            }
+        }
+        span{
+            padding-top: 15%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="inputSection">
+        <div id="toggleButton" onclick="toggleInputSection()">&#9654;</div> <!-- Arrow icon -->
+        <h2>Event Date & Time</h2>
+        <div class="horizontal">
+            <div class="input-group">
+                <input type="number" id="year" value="2024" required oninput="startTimer()" onfocus="selectValue(this)">
+                <span class="label">Y</span>
+            </div>
+            <div class="input-group">
+                <input type="number" id="month" value="10" min="1" max="12" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
+                <span class="label">M</span>
+            </div>
+            <div class="input-group">
+                <input type="number" id="day" value="2" min="1" max="31" oninput="startTimer()" placeholder="DD" onfocus="selectValue(this)">
+                <span class="label">D</span>
+            </div>
+            <div class="input-group">
+                <input type="number" id="hour" value="10" min="0" max="23" oninput="startTimer()" placeholder="HH" onfocus="selectValue(this)">
+                <span class="label">H</span>
+            </div>
+            <div class="input-group">
+                <input type="number" id="minute" value="0" min="0" max="59" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
+                <span class="label">M</span>
+            </div>
+            <div class="input-group">
+                <input type="number" id="second" value="0" min="0" max="59" oninput="startTimer()" placeholder="SS" onfocus="selectValue(this)">
+                <span class="label">S</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="liveDuration">
+        <h2 id="durationLabel">Duration till now</h2>
+        <div class="horizontal">
+            <div class="input-group"><span class="value" id="years">00</span><span class="label">Y</span></div>
+            <div class="input-group"><span class="value" id="months">00</span><span class="label">M</span></div>
+            <div class="input-group"><span class="value" id="days">00</span><span class="label">D</span></div>
+            <div class="input-group"><span class="value" id="hours">00</span><span class="label">H</span></div>
+            <div class="input-group"><span class="value" id="minutes">00</span><span class="label">M</span></div>
+            <div class="input-group"><span class="value" id="seconds">00</span><span class="label">S</span></div>
+        </div>
+    </div>
+
+    <script>
+        let timer; // Variable to store the timer
+
+        // Load stored values from local storage
+        window.onload = () => {
+            const fields = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+            fields.forEach(field => {
+                const value = localStorage.getItem(field);
+                if (value !== null) {
+                    document.getElementById(field).value = value;
+                }
+            });
+            startTimer();
+        };
+
+        // Save values to local storage on input
+        const saveToLocalStorage = () => {
+            const fields = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+            fields.forEach(field => {
+                localStorage.setItem(field, document.getElementById(field).value);
+            });
+        };
+
+        function startTimer() {
+            clearInterval(timer); // Clear any existing timer
+            updateDuration(); // Update immediately on input change
+
+            const now = new Date();
+            timer = setInterval(() => {
+                const year = document.getElementById('year').value || lastValid.year;
+                const month = Math.max(1, Math.min(document.getElementById('month').value || lastValid.month || 1, 12));
+                const day = Math.max(1, Math.min(document.getElementById('day').value || lastValid.day || 1, 31));
+                const hour = Math.max(0, Math.min(document.getElementById('hour').value || lastValid.hour || 0, 23));
+                const minute = Math.max(0, Math.min(document.getElementById('minute').value || lastValid.minute || 0, 59));
+                const second = Math.max(0, Math.min(document.getElementById('second').value || lastValid.second || 0, 59));
+
+                const startDate = new Date(year, month - 1, day, hour, minute, second); // month - 1 for 0-indexing
+
+                // Update the label based on the date
+                if (startDate > now) {
+                    document.getElementById('durationLabel').textContent = 'Time to event';
+                } else {
+                    document.getElementById('durationLabel').textContent = 'Time from event';
+                }
+
+                updateDuration(startDate);
+                saveToLocalStorage(); // Save values on input change
+            }, 1000);
+        }
+
+        function updateDuration(startDate) {
+            const now = new Date();
+            const diff = startDate - now;
+            const isFuture = diff > 0;
+
+            const seconds = Math.floor(Math.abs(diff / 1000) % 60);
+            const minutes = Math.floor(Math.abs(diff / 1000 / 60) % 60);
+            const hours = Math.floor(Math.abs(diff / 1000 / 3600) % 24);
+            const days = Math.floor(Math.abs(diff / 1000 / 3600 / 24));
+            const months = Math.floor(days / 30); // Approximation
+            const years = Math.floor(months / 12); // Approximation
+
+            // Update the display values
+            updateDisplay(years, months % 12, days % 30, hours, minutes, seconds);
+
+            // Check for countdown completion for future dates
+            if (isFuture && diff <= 0) {
+                // Just keep counting from the past without changing the label
+                startDate.setSeconds(startDate.getSeconds() + 1); // Increment the date
+            }
+        }
+
+        function updateDisplay(years, months, days, hours, minutes, seconds) {
+            document.getElementById('years').textContent = String(years).padStart(2, '0');
+            document.getElementById('months').textContent = String(months).padStart(2, '0');
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        function selectValue(input) {
+            input.select();
+        }
+
+        function toggleInputSection() {
+            const inputSection = document.getElementById('inputSection');
+            inputSection.classList.toggle('collapsed');
+            if (inputSection.classList.contains('collapsed')) {
+                inputSection.style.display = 'none'; // Hide completely
+            } else {
+                inputSection.style.display = 'block'; // Show again
+            }
+            document.getElementById('toggleButton').innerHTML = inputSection.classList.contains('collapsed') ? '' : '&#9660;'; // Change arrow direction
+        }
+
+        let lastValid = {
+            year: 2024,
+            month: 10,
+            day: 2,
+            hour: 14,
+            minute: 45,
+            second: 0,
+        };
+
+    </script>
+
+</body>
+</html>

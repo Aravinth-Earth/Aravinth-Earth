@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Planner</title>
     <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             background-color: #1a1a1a;
@@ -47,11 +48,11 @@
             position: relative;
         }
         th .icon {
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-left: 8px;
-            opacity: 0.7;
-            transition: opacity 0.2s;
+            font-size: 18px;
+            padding: 4px;
+            border: none;
+            background: transparent;
+            color: #888;
         }
         th .icon:hover {
             opacity: 1;
@@ -65,21 +66,25 @@
             justify-content: center;
         }
         .controls button {
-            padding: 8px 16px;
-            border-radius: 6px;
-            background: #333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #2a2a2a, #333);
             color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
+            border: 1px solid #444;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             font-size: 14px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         .controls button:hover {
-            background: #444;
-            transform: translateY(-1px);
+            background: linear-gradient(145deg, #333, #3a3a3a);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .controls button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         td:first-child {
             white-space: nowrap;
@@ -87,16 +92,19 @@
             background: #2c2c2c;
         }
         td:first-child button {
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 0 2px;
-            background: #333;
-            border: none;
+            padding: 6px;
+            margin: 0 3px;
+            border-radius: 6px;
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #444;
             cursor: pointer;
             transition: all 0.2s;
         }
         td:first-child button:hover {
             background: #444;
+            color: #fff;
+            border-color: #555;
             transform: scale(1.1);
         }
         [contenteditable="true"]:hover {
@@ -104,13 +112,21 @@
         }
         [contenteditable="true"]:focus {
             background: rgba(255, 255, 255, 0.1);
-            outline: none;
+            outline: 2px solid #555;
+            border-radius: 4px;
         }
         .row-light {
             transition: background-color 0.3s;
         }
         .row-light:hover {
             filter: brightness(1.1);
+        }
+        .highlight {
+            animation: highlight 1s ease-out;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(255, 255, 255, 0.2); }
+            100% { background-color: transparent; }
         }
         /* Mobile-first responsive adjustments */
         @media screen and (max-width: 840px) {
@@ -135,21 +151,21 @@
 <body>
     <div class="container">
         <div class="controls">
-            <button onclick="addRow()">Add Row</button>
-            <button onclick="addColumn()">Add Column</button>
-            <button onclick="clearTable()">Clear Table</button>
-            <button onclick="saveTable()">Save Table</button>
-            <button onclick="loadTable()">Load Table</button>
-            <button onclick="regenerateColors()">Regenerate Row Colors</button>
+            <button onclick="addRow()"><span class="material-icons">add_box</span> Add Row</button>
+            <button onclick="addColumn()"><span class="material-icons">view_column</span> Add Column</button>
+            <button onclick="clearTable()"><span class="material-icons">clear_all</span> Clear Table</button>
+            <button onclick="saveTable()"><span class="material-icons">save</span> Save Table</button>
+            <button onclick="loadTable()"><span class="material-icons">upload_file</span> Load Table</button>
+            <button onclick="regenerateColors()"><span class="material-icons">palette</span> Regenerate Colors</button>
         </div>
         <table id="dynamicTable">
             <thead>
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
                 </tr>
             </thead>
             <tbody>
@@ -243,7 +259,7 @@
                     tableData.headers.forEach((header, index) => {
                         const th = document.createElement('th');
                         th.contentEditable = "true";
-                        th.innerHTML = `${header} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+                        th.innerHTML = `${header} <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button>`;
                         headerRow.appendChild(th);
                     });
 
@@ -256,9 +272,9 @@
                         // Add action cell
                         const actionCell = row.insertCell();
                         actionCell.innerHTML = `
-                            <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
-                            <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
-                            <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+                            <button class="icon" onclick="moveRow(this, 'up')"><span class="material-icons">arrow_upward</span></button>
+                            <button class="icon" onclick="moveRow(this, 'down')"><span class="material-icons">arrow_downward</span></button>
+                            <button class="icon" onclick="deleteRow(this)"><span class="material-icons">delete</span></button>
                         `;
                         actionCell.contentEditable = "true";
 
@@ -299,9 +315,9 @@
             // Add action cell
             const actionCell = newRow.insertCell();
             actionCell.innerHTML = `
-                <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
-                <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
-                <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+                <button class="icon" onclick="moveRow(this, 'up')"><span class="material-icons">arrow_upward</span></button>
+                <button class="icon" onclick="moveRow(this, 'down')"><span class="material-icons">arrow_downward</span></button>
+                <button class="icon" onclick="deleteRow(this)"><span class="material-icons">delete</span></button>
             `;
             actionCell.contentEditable = "true";
 
@@ -318,6 +334,7 @@
             }
 
             updateSerialNumbers();
+            highlightEffect(newRow);
         }
 
         // Add a new column to the table
@@ -330,7 +347,7 @@
             const headerRow = thead.querySelector('tr');
             const newHeader = document.createElement('th');
             newHeader.contentEditable = "true";
-            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button>`;
             headerRow.appendChild(newHeader);
 
             // Add new cells to each row
@@ -338,6 +355,7 @@
                 const newCell = row.insertCell();
                 newCell.contentEditable = "true";
                 newCell.innerText = `R${row.rowIndex + 1}C${headerRow.children.length - 3}`;
+                highlightEffect(row);
             });
 
             updateSerialNumbers();
@@ -396,9 +414,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1 <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
                 </tr>
             `;
             tbody.innerHTML = '';
@@ -454,6 +472,12 @@
 
             // setting constant value
             return '#aaa';
+        }
+
+        // Add highlight effect when actions are performed
+        function highlightEffect(element) {
+            element.classList.add('highlight');
+            setTimeout(() => element.classList.remove('highlight'), 1000);
         }
 
         // Initialize event listeners and table state on load

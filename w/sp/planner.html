@@ -175,6 +175,26 @@
         .icon-down::before { content: "⬇️"; }
         .icon-delete::before { content: "🗑️"; }
         .icon-close::before { content: "✖️"; }
+
+        /* Update th button styling */
+        th .icon-btn {
+            background: transparent;
+            border: none;
+            padding: 2px;
+            margin-left: 4px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        th .icon-btn:hover {
+            opacity: 1;
+        }
+        
+        /* Remove any existing th .icon styles that might conflict */
+        th .icon {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -376,7 +396,7 @@
             const headerRow = thead.querySelector('tr');
             const newHeader = document.createElement('th');
             newHeader.contentEditable = "true";
-            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
+            newHeader.innerHTML = `C${headerRow.children.length - 2}<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
             headerRow.appendChild(newHeader);
 
             // Add new cells to each row
@@ -443,9 +463,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
-                    <th contenteditable="true">C2 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
-                    <th contenteditable="true">C3 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C1<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C2<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C3<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
                 </tr>
             `;
             tbody.innerHTML = '';

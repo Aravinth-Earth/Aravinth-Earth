@@ -542,10 +542,8 @@
             for (let i = 0; i < 3; i++) {
                 addRow();
             }
-            // Add default columns
-            addColumn();
-            addColumn();
-            addColumn();
+            // Remove the extra addColumn calls
+            // Keep table consistent with 3 columns as defined in the HTML
         };
 
         // Ensure content is selected when cell is clicked or tabbed to

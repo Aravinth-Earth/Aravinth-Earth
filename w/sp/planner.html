@@ -7,104 +7,214 @@
     <link rel="stylesheet" href="../style.css">
     <style>
         body {
-            background-color: #000;
-            color: #aaa;
-            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            padding: 0;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100%;
+            padding: 10px;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
         .container {
-            max-width: 99%;
-            padding: 1%;
+            width: 98%; /* Use most of the screen width */
+            margin: 0 auto;
+            padding: 15px;
+            background: #242424;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Enable horizontal scroll when needed */
         }
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
+            min-width: 800px; /* Move min-width to table instead of container */
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
             border-radius: 8px;
             overflow: hidden;
-            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            text-align: center;
-            cursor: pointer;
-            vertical-align: middle;
-            white-space: normal;
-            word-wrap: break-word;            
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+            transition: background-color 0.2s;
         }
         th {
-            background-color: #444;
+            background-color: #2c2c2c;
+            font-weight: 500;
+            color: #fff;
             position: relative;
         }
         th .icon {
-            background-color: #333;
+            font-size: 18px;
+            padding: 4px;
             border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            background: transparent;
+            color: #888;
         }
         th .icon:hover {
-            background-color: #555;
-        }
-        .row-light {
-            background-color: #222;
-        }
-        .delete-row {
-            text-align: right;
-        }
-        .delete-row button {
-            background: none;
-            border: none;
-            cursor: pointer;
+            opacity: 1;
+            background-color: #444;
         }
         .controls {
-            text-align: center;
-            margin-bottom: 10px;            
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            justify-content: center;
         }
         .controls button {
-            color: #ccc;
-            margin: 0 5px;
-            padding: 2px 10px;
-            border: none;
-            border-radius: 20px;
-            background-color: #444;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #2a2a2a, #333);
+            color: #fff;
+            border: 1px solid #444;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .controls button:hover {
-            background-color: #555;
+            background: linear-gradient(145deg, #333, #3a3a3a);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
-        .controls button:focus {
-            outline: none;
+        .controls button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
-        button{
-            color: gold;
-            background-color: #444;
+        td:first-child {
+            white-space: nowrap;
+            width: 1%;
+            background: #2c2c2c;
+        }
+        td:first-child button {
+            padding: 6px;
+            margin: 0 3px;
+            border-radius: 6px;
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #444;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        td:first-child button:hover {
+            background: #444;
+            color: #fff;
+            border-color: #555;
+            transform: scale(1.1);
+        }
+        [contenteditable="true"]:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        [contenteditable="true"]:focus {
+            background: rgba(255, 255, 255, 0.1);
+            outline: 2px solid #555;
+            border-radius: 4px;
+        }
+        .row-light {
+            transition: background-color 0.3s;
+        }
+        .row-light:hover {
+            filter: brightness(1.1);
+        }
+        .highlight {
+            animation: highlight 1s ease-out;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(255, 255, 255, 0.2); }
+            100% { background-color: transparent; }
+        }
+        /* Mobile-first responsive adjustments */
+        @media screen and (max-width: 840px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                width: 100%;
+                padding: 10px 5px;
+                border-radius: 8px;
+            }
+            .controls {
+                padding: 0 5px;
+            }
+            .controls button {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* Add CSS-based icon classes */
+        .icon-btn {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-symbol {
+            font-size: 18px;
+            font-weight: normal;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        /* Custom CSS icons */
+        .icon-add::before { content: "➕"; }
+        .icon-column::before { content: "║"; }
+        .icon-clear::before { content: "❌"; }
+        .icon-save::before { content: "💾"; }
+        .icon-load::before { content: "📂"; }
+        .icon-color::before { content: "🎨"; }
+        .icon-up::before { content: "⬆️"; }
+        .icon-down::before { content: "⬇️"; }
+        .icon-delete::before { content: "🗑️"; }
+        .icon-close::before { content: "✖️"; }
+
+        /* Update th button styling */
+        th .icon-btn {
+            background: transparent;
             border: none;
+            padding: 2px;
+            margin-left: 4px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        th .icon-btn:hover {
+            opacity: 1;
+        }
+        
+        /* Remove any existing th .icon styles that might conflict */
+        th .icon {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="controls">
-            <button onclick="addRow()">Add Row</button>
-            <button onclick="addColumn()">Add Column</button>
-            <button onclick="clearTable()">Clear Table</button>
-            <button onclick="saveTable()">Save Table</button>
-            <button onclick="loadTable()">Load Table</button>
-            <button onclick="regenerateColors()">Regenerate Row Colors</button>
+            <button onclick="addRow()"><span class="icon-symbol icon-add"></span> Add Row</button>
+            <button onclick="addColumn()"><span class="icon-symbol icon-column"></span> Add Column</button>
+            <button onclick="clearTable()"><span class="icon-symbol icon-clear"></span> Clear Table</button>
+            <button onclick="saveTable()"><span class="icon-symbol icon-save"></span> Save Table</button>
+            <button onclick="loadTable()"><span class="icon-symbol icon-load"></span> Load Table</button>
+            <button onclick="regenerateColors()"><span class="icon-symbol icon-color"></span> Regenerate Colors</button>
         </div>
         <table id="dynamicTable">
             <thead>
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C2<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C3<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
                 </tr>
             </thead>
             <tbody>
@@ -198,7 +308,7 @@
                     tableData.headers.forEach((header, index) => {
                         const th = document.createElement('th');
                         th.contentEditable = "true";
-                        th.innerHTML = `${header} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+                        th.innerHTML = `${header} <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
                         headerRow.appendChild(th);
                     });
 
@@ -211,9 +321,9 @@
                         // Add action cell
                         const actionCell = row.insertCell();
                         actionCell.innerHTML = `
-                            <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
-                            <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
-                            <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+                            <button class="icon-btn" onclick="moveRow(this, 'up')"><span class="icon-symbol icon-up"></span></button>
+                            <button class="icon-btn" onclick="moveRow(this, 'down')"><span class="icon-symbol icon-down"></span></button>
+                            <button class="icon-btn" onclick="deleteRow(this)"><span class="icon-symbol icon-delete"></span></button>
                         `;
                         actionCell.contentEditable = "true";
 
@@ -254,9 +364,9 @@
             // Add action cell
             const actionCell = newRow.insertCell();
             actionCell.innerHTML = `
-                <button class="icon" onclick="moveRow(this, 'up')">&#8593;</button>
-                <button class="icon" onclick="moveRow(this, 'down')">&#8595;</button>
-                <button class="icon" onclick="deleteRow(this)">&#10060;</button>
+                <button class="icon-btn" onclick="moveRow(this, 'up')"><span class="icon-symbol icon-up"></span></button>
+                <button class="icon-btn" onclick="moveRow(this, 'down')"><span class="icon-symbol icon-down"></span></button>
+                <button class="icon-btn" onclick="deleteRow(this)"><span class="icon-symbol icon-delete"></span></button>
             `;
             actionCell.contentEditable = "true";
 
@@ -273,6 +383,7 @@
             }
 
             updateSerialNumbers();
+            highlightEffect(newRow);
         }
 
         // Add a new column to the table
@@ -285,7 +396,7 @@
             const headerRow = thead.querySelector('tr');
             const newHeader = document.createElement('th');
             newHeader.contentEditable = "true";
-            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)">&#10060;</button>`;
+            newHeader.innerHTML = `C${headerRow.children.length - 2}<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
             headerRow.appendChild(newHeader);
 
             // Add new cells to each row
@@ -293,6 +404,7 @@
                 const newCell = row.insertCell();
                 newCell.contentEditable = "true";
                 newCell.innerText = `R${row.rowIndex + 1}C${headerRow.children.length - 3}`;
+                highlightEffect(row);
             });
 
             updateSerialNumbers();
@@ -351,9 +463,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1 <button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)">&#10060;</button></th>
+                    <th contenteditable="true">C1<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C2<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C3<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
                 </tr>
             `;
             tbody.innerHTML = '';
@@ -411,6 +523,12 @@
             return '#aaa';
         }
 
+        // Add highlight effect when actions are performed
+        function highlightEffect(element) {
+            element.classList.add('highlight');
+            setTimeout(() => element.classList.remove('highlight'), 1000);
+        }
+
         // Initialize event listeners and table state on load
         window.onload = function() {
             reattachEventListeners();
@@ -424,10 +542,8 @@
             for (let i = 0; i < 3; i++) {
                 addRow();
             }
-            // Add default columns
-            addColumn();
-            addColumn();
-            addColumn();
+            // Remove the extra addColumn calls
+            // Keep table consistent with 3 columns as defined in the HTML
         };
 
         // Ensure content is selected when cell is clicked or tabbed to

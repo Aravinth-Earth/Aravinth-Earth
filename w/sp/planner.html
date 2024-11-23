@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Planner</title>
     <link rel="stylesheet" href="../style.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             background-color: #1a1a1a;
@@ -146,26 +145,56 @@
                 font-size: 13px;
             }
         }
+
+        /* Add CSS-based icon classes */
+        .icon-btn {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-symbol {
+            font-size: 18px;
+            font-weight: normal;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        /* Custom CSS icons */
+        .icon-add::before { content: "➕"; }
+        .icon-column::before { content: "║"; }
+        .icon-clear::before { content: "❌"; }
+        .icon-save::before { content: "💾"; }
+        .icon-load::before { content: "📂"; }
+        .icon-color::before { content: "🎨"; }
+        .icon-up::before { content: "⬆️"; }
+        .icon-down::before { content: "⬇️"; }
+        .icon-delete::before { content: "🗑️"; }
+        .icon-close::before { content: "✖️"; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="controls">
-            <button onclick="addRow()"><span class="material-icons">add_box</span> Add Row</button>
-            <button onclick="addColumn()"><span class="material-icons">view_column</span> Add Column</button>
-            <button onclick="clearTable()"><span class="material-icons">clear_all</span> Clear Table</button>
-            <button onclick="saveTable()"><span class="material-icons">save</span> Save Table</button>
-            <button onclick="loadTable()"><span class="material-icons">upload_file</span> Load Table</button>
-            <button onclick="regenerateColors()"><span class="material-icons">palette</span> Regenerate Colors</button>
+            <button onclick="addRow()"><span class="icon-symbol icon-add"></span> Add Row</button>
+            <button onclick="addColumn()"><span class="icon-symbol icon-column"></span> Add Column</button>
+            <button onclick="clearTable()"><span class="icon-symbol icon-clear"></span> Clear Table</button>
+            <button onclick="saveTable()"><span class="icon-symbol icon-save"></span> Save Table</button>
+            <button onclick="loadTable()"><span class="icon-symbol icon-load"></span> Load Table</button>
+            <button onclick="regenerateColors()"><span class="icon-symbol icon-color"></span> Regenerate Colors</button>
         </div>
         <table id="dynamicTable">
             <thead>
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C1<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C2<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C3<button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
                 </tr>
             </thead>
             <tbody>
@@ -259,7 +288,7 @@
                     tableData.headers.forEach((header, index) => {
                         const th = document.createElement('th');
                         th.contentEditable = "true";
-                        th.innerHTML = `${header} <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button>`;
+                        th.innerHTML = `${header} <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
                         headerRow.appendChild(th);
                     });
 
@@ -272,9 +301,9 @@
                         // Add action cell
                         const actionCell = row.insertCell();
                         actionCell.innerHTML = `
-                            <button class="icon" onclick="moveRow(this, 'up')"><span class="material-icons">arrow_upward</span></button>
-                            <button class="icon" onclick="moveRow(this, 'down')"><span class="material-icons">arrow_downward</span></button>
-                            <button class="icon" onclick="deleteRow(this)"><span class="material-icons">delete</span></button>
+                            <button class="icon-btn" onclick="moveRow(this, 'up')"><span class="icon-symbol icon-up"></span></button>
+                            <button class="icon-btn" onclick="moveRow(this, 'down')"><span class="icon-symbol icon-down"></span></button>
+                            <button class="icon-btn" onclick="deleteRow(this)"><span class="icon-symbol icon-delete"></span></button>
                         `;
                         actionCell.contentEditable = "true";
 
@@ -315,9 +344,9 @@
             // Add action cell
             const actionCell = newRow.insertCell();
             actionCell.innerHTML = `
-                <button class="icon" onclick="moveRow(this, 'up')"><span class="material-icons">arrow_upward</span></button>
-                <button class="icon" onclick="moveRow(this, 'down')"><span class="material-icons">arrow_downward</span></button>
-                <button class="icon" onclick="deleteRow(this)"><span class="material-icons">delete</span></button>
+                <button class="icon-btn" onclick="moveRow(this, 'up')"><span class="icon-symbol icon-up"></span></button>
+                <button class="icon-btn" onclick="moveRow(this, 'down')"><span class="icon-symbol icon-down"></span></button>
+                <button class="icon-btn" onclick="deleteRow(this)"><span class="icon-symbol icon-delete"></span></button>
             `;
             actionCell.contentEditable = "true";
 
@@ -347,7 +376,7 @@
             const headerRow = thead.querySelector('tr');
             const newHeader = document.createElement('th');
             newHeader.contentEditable = "true";
-            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button>`;
+            newHeader.innerHTML = `C${headerRow.children.length - 2} <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button>`;
             headerRow.appendChild(newHeader);
 
             // Add new cells to each row
@@ -414,9 +443,9 @@
                 <tr>
                     <th>Action</th>
                     <th>S.No</th>
-                    <th contenteditable="true">C1 <button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
-                    <th contenteditable="true">C2<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
-                    <th contenteditable="true">C3<button class="icon" onclick="deleteColumn(this)"><span class="material-icons">close</span></button></th>
+                    <th contenteditable="true">C1 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C2 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
+                    <th contenteditable="true">C3 <button class="icon-btn" onclick="deleteColumn(this)"><span class="icon-symbol icon-close"></span></button></th>
                 </tr>
             `;
             tbody.innerHTML = '';

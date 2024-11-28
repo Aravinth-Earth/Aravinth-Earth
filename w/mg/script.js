@@ -72,7 +72,8 @@ const checkAnswer = () => {
     const submitButton = document.getElementById('submit-answer');
 
     if (userAnswer === state.currentAnswer) {
-        state.score += 10;
+        const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };
+        state.score += scoreMap[state.level];
         state.attempts = 0;
         document.getElementById('score').textContent = state.score;
         messageEl.textContent = '🎉 Correct! Keep going!';

@@ -283,7 +283,8 @@ const checkAnswer = () => {
         state.score += totalScore;
         state.attempts = 0;
         state.correctCount += 1; // Increment correct count
-        state.incorrectCount = 0; // Optionally reset incorrect count on correct answer
+        // Remove this line to prevent incorrectCount from resetting
+        // state.incorrectCount = 0; // Optionally reset incorrect count on correct answer
         document.getElementById('score').textContent = state.score;
         
         messageEl.textContent = `🎉 Correct! ${state.streak > 2 ? `Streak bonus: +${streakBonus}!` : ''}`;
@@ -301,18 +302,23 @@ const checkAnswer = () => {
         setTimeout(() => streakEl.classList.remove('pulse-streak'), 500);
     } else {
         state.attempts++;
-        state.incorrectCount += 1; // Increment incorrect count
-        messageEl.className = 'failure';
+
         if (state.attempts >= 3) {
             messageEl.textContent = `The correct answer was ${state.currentAnswer}. Click "Next Question" to continue.`;
+            messageEl.className = 'failure';
+
+            state.incorrectCount += 1; // Increment incorrect count when failed all attempts
+
             state.attempts = 0;
             document.getElementById('next-question').classList.remove('hidden');
             submitButton.classList.add('hidden');
+            updateStats(); // Update stats after incrementing incorrectCount
         } else {
             messageEl.textContent = `Wrong answer! Try again! (${3 - state.attempts} attempts left)`;
+            messageEl.className = 'failure';
         }
     }
-    updateStats();
+    updateStats(); // Ensure stats are updated
 };
 
 const toggleTheme = () => {
@@ -375,7 +381,7 @@ const toggleStats = () => {
 // Add updateStats function
 const updateStats = () => {
     const total = state.correctCount + state.incorrectCount;
-    const successRate = total > 0 ? Math.round((state.correctCount / total) * 100) : 0;
+    const successRate = total > 0 ? ((state.correctCount / total) * 100).toFixed(1) : '0.0';
     
     // Update all stats
     document.getElementById('streak-counter').textContent = state.streak;

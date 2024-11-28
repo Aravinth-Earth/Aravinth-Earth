@@ -5,35 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Game</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <div id="score-display">Score: <span id="score">0</span></div>
-        
-        <div id="welcome-screen" class="screen">
+<body class="light-theme">
+    
+    <div class="container light-theme">
+        <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
-            <input type="text" id="player-name" placeholder="Enter your name">
-            <button id="generate-name">Generate Name</button>
-            <select id="difficulty">
-                <option value="1">Level 1 (+ -)</option>
-                <option value="2">Level 2 (× ÷)</option>
-                <option value="3">Level 3 (Mix + -)</option>
-                <option value="4">Level 4 (Mix × ÷)</option>
-                <option value="5">Level 5 (All Mix)</option>
-            </select>
-            <button id="start-game">Start Game</button>
-            <button id="reset-game">Reset Progress</button>
-        </div>
+            <button id="show-info" class="info-button">
+                <i class="fas fa-info-circle"></i> How It Works
+            </button>
+            <div class="game-content">
+                <input type="text" id="player-name" placeholder="Enter your name">
+                <div class="button-group">
+                    <button id="generate-name"><i class="fas fa-magic"></i> Generate Name</button>
+                    <button id="start-game"><i class="fas fa-play"></i> Start Game</button>
+                    <button id="reset-game"><i class="fas fa-redo"></i> Reset Progress</button>
+                </div>
+                <select id="difficulty">
+                    <option value="1">Easy (+ -)</option>
+                    <option value="2">Medium (* /)</option>
+                    <option value="3">Hard (+ - * /)</option>
+                    <option value="4">Expert (All)</option>
+                </select>
+                <div class="theme-controls">
+                    <button class="toggle-theme"><i class="fas fa-adjust"></i> Theme</button>
+                    <button class="toggle-color-theme"><i class="fas fa-palette"></i> Color</button>
+                </div>
+            </div>
+        </section>
 
-        <div id="game-screen" class="screen hidden">
-            <h2 id="question"></h2>
-            <input type="number" id="answer" placeholder="Your answer">
-            <button id="submit-answer">Submit</button>
-            <p id="message"></p>
-            <button id="next-question" class="hidden">Next Question</button>
-            <button id="back-to-menu">Back to Menu</button>
+        <section id="game-screen" class="screen hidden">
+            <div class="top-bar">
+                <div class="theme-controls">
+                    <button id="back-to-menu"><i class="fas fa-arrow-left"></i></button>
+                    <button class="toggle-theme"><i class="fas fa-adjust"></i></button>
+                    <button class="toggle-color-theme"><i class="fas fa-palette"></i></button>
+                </div>
+                <div class="user-info">
+                    <div id="user-name"></div>
+                    <div>Score: <span id="score">0</span></div>
+                    <div class="difficulty">
+                        Level: <span id="current-difficulty"></span>
+                        <span class="difficulty-indicator difficulty-easy"></span>
+                    </div>
+                    <div class="timer-bar"></div>
+                </div>
+            </div>
+            <div class="game-content">
+                <button id="toggle-stats" class="stats-toggle">
+                    <i class="fas fa-chevron-up"></i> Statistics
+                </button>
+                <div class="stats-panel collapsed">
+                    <div class="stat-item">
+                        <i class="fas fa-fire"></i>
+                        <span class="label">Streak</span>
+                        <span class="value" id="streak-counter">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="label">Complexity</span>
+                        <span class="value" id="complexity-level">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span class="label">Success Rate</span>
+                        <span class="value" id="success-rate">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span class="label">Skill Rating</span>
+                        <span class="value" id="skill-rating">1000</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check"></i>
+                        <span class="label">Correct</span>
+                        <span class="value" id="correct-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-times"></i>
+                        <span class="label">Incorrect</span>
+                        <span class="value" id="incorrect-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-trophy"></i>
+                        <span class="label">1st Att</span>
+                        <span class="value" id="first-attempt-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-medal"></i>
+                        <span class="label">2nd Att</span>
+                        <span class="value" id="second-attempt-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-award"></i>
+                        <span class="label">3rd Att</span>
+                        <span class="value" id="third-attempt-count">0</span>
+                    </div>
+                </div>
+                <h2 id="question"></h2>
+                <input type="number" id="answer" placeholder="Your answer">
+                <div class="game-controls">
+                    <button id="submit-answer"><i class="fas fa-check"></i> Submit</button>
+                    <button id="next-question" class="hidden"><i class="fas fa-arrow-right"></i> Next Question</button>
+                </div>
+                <p id="message"></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Add game info overlay -->
+    <div class="info-overlay">
+        <div class="info-content">
+            <button class="info-close"><i class="fas fa-times"></i></button>
+            <h2>How the Game Works</h2>
+            <div class="info-sections">
+                <section>
+                    <h3>Scoring System</h3>
+                    <ul>
+                        <li>Base Scores: Easy (10), Medium (20), Hard (30), Expert (40)</li>
+                        <li>Streak Bonus: Every 3 correct answers (+5 points)</li>
+                        <li>Maximum Streak Multiplier: 10x</li>
+                        <li>Difficulty Bonus: Based on current complexity level</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Difficulty Progression</h3>
+                    <ul>
+                        <li>Skill Rating: Starts at 1000, caps at 4000</li>
+                        <li>Complexity: Increases with skill and streak</li>
+                        <li>Maximum Difficulty: 50</li>
+                        <li>Number Ranges: Scale logarithmically with difficulty</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Performance Tracking</h3>
+                    <ul>
+                        <li>Success Rate: Based on correct vs total attempts</li>
+                        <li>Skill Rating: ELO-like system that adapts to performance</li>
+                        <li>Recent Performance: Affects difficulty adjustments</li>
+                    </ul>
+                </section>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
+    <style>
+        .stats-panel {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    </style>
 </body>
 </html>

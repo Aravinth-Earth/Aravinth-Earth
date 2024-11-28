@@ -12,6 +12,69 @@ const state = {
     performanceHistory: [], // Track last 10 answers
 };
 
+// Add after state declaration
+const logger = {
+    logQuestion: (question, difficulty, numbers, operation) => {
+        console.log(
+            '%cNew Question Generated', 'color: #4CAF50; font-weight: bold',
+            '\nDifficulty Level:', difficulty,
+            '\nSkill Rating:', Math.round(state.skillRating),
+            '\nStreak:', state.streak,
+            '\nQuestion:', question,
+            '\nNumbers:', numbers,
+            '\nOperation:', operation
+        );
+    },
+    logAnswer: (correct, userAnswer, attempt) => {
+        console.log(
+            `%cAnswer Attempt ${attempt}`, `color: ${correct ? '#4CAF50' : '#f44336'}; font-weight: bold`,
+            '\nCorrect:', correct,
+            '\nUser Answer:', userAnswer,
+            '\nCorrect Answer:', state.currentAnswer,
+            '\nNew Score:', state.score,
+            '\nSuccess Rate:', `${Math.round((state.correctCount / (state.correctCount + state.incorrectCount)) * 100)}%`
+        );
+    },
+    logPerformance: () => {
+        console.table({
+            skillRating: Math.round(state.skillRating),
+            streak: state.streak,
+            correctCount: state.correctCount,
+            incorrectCount: state.incorrectCount,
+            successRate: `${Math.round((state.correctCount / (state.correctCount + state.incorrectCount)) * 100)}%`,
+            recentPerformance: state.performanceHistory.slice(-5)
+        });
+    }
+};
+
+// Add this function after state declaration
+const resetState = () => {
+    Object.assign(state, {
+        playerName: '',
+        score: 0,
+        level: 1,
+        attempts: 0,
+        currentAnswer: 0,
+        correctCount: 0,
+        incorrectCount: 0,
+        skillRating: 1000,
+        streak: 0,
+        difficultyLevel: 1,
+        performanceHistory: []
+    });
+    
+    // Reset UI elements
+    document.getElementById('score').textContent = '0';
+    document.getElementById('streak-counter').textContent = '0';
+    document.getElementById('complexity-level').textContent = '1';
+    document.getElementById('success-rate').textContent = '0%';
+    document.getElementById('skill-rating').textContent = '1000';
+    document.getElementById('correct-count').textContent = '0';
+    document.getElementById('incorrect-count').textContent = '0';
+
+    updateStats(); // Add this line
+};
+
 // Load saved state
 const loadState = () => {
     const saved = JSON.parse(localStorage.getItem('mathGame')) || {};
@@ -62,6 +125,7 @@ const getPerformanceAdjustment = () => {
     return successRate > 0.8 ? 1 : successRate < 0.3 ? -1 : 0;
 };
 
+// Modify generateQuestion function
 const generateQuestion = () => {
     const operations = {
         1: ['+', '-'],
@@ -101,8 +165,29 @@ const generateQuestion = () => {
     document.getElementById('message').textContent = '';
     document.getElementById('submit-answer').classList.remove('hidden');
     document.getElementById('submit-answer').disabled = true;
+
+    // Add complexity calculation
+    const complexity = {
+        numbers: [num1, num2],
+        operation: op,
+        range: numberRange,
+        difficulty: difficulty
+    };
+
+    logger.logQuestion(question, difficulty, [num1, num2], op);
+    
+    // Update UI stats
+    document.getElementById('complexity-level').textContent = Math.round(difficulty);
+    document.getElementById('streak-counter').textContent = state.streak;
+    const successRate = state.correctCount + state.incorrectCount > 0 
+        ? Math.round((state.correctCount / (state.correctCount + state.incorrectCount)) * 100)
+        : 0;
+    document.getElementById('success-rate').textContent = `${successRate}%`;
+
+    updateStats(); // Add this line at the end
 };
 
+// Modify checkAnswer function
 const checkAnswer = () => {
     const userAnswer = parseFloat(document.getElementById('answer').value);
     const messageEl = document.getElementById('message');
@@ -115,6 +200,9 @@ const checkAnswer = () => {
     if (state.performanceHistory.length > 10) {
         state.performanceHistory.shift();
     }
+
+    logger.logAnswer(correct, userAnswer, state.attempts);
+    logger.logPerformance();
 
     if (correct) {
         const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };
@@ -145,6 +233,7 @@ const checkAnswer = () => {
             messageEl.textContent = `Wrong answer! Try again! (${3 - state.attempts} attempts left)`;
         }
     }
+    updateStats();
 };
 
 const toggleTheme = () => {
@@ -193,6 +282,33 @@ const toggleColorTheme = () => {
     // Do not store colorTheme in localStorage
 };
 
+// Add stats toggle function
+const toggleStats = () => {
+    const statsPanel = document.querySelector('.stats-panel');
+    const isCollapsed = statsPanel.classList.toggle('collapsed');
+    localStorage.setItem('statsCollapsed', isCollapsed);
+    
+    // Update toggle button icon
+    const toggleIcon = document.querySelector('#toggle-stats i');
+    toggleIcon.className = isCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+};
+
+// Add updateStats function
+const updateStats = () => {
+    const total = state.correctCount + state.incorrectCount;
+    const successRate = total > 0 ? Math.round((state.correctCount / total) * 100) : 0;
+    
+    // Update all stats
+    document.getElementById('streak-counter').textContent = state.streak;
+    document.getElementById('complexity-level').textContent = Math.round(getDynamicDifficulty());
+    document.getElementById('success-rate').textContent = `${successRate}%`;
+    document.getElementById('skill-rating').textContent = Math.round(state.skillRating);
+    document.getElementById('correct-count').textContent = state.correctCount;
+    document.getElementById('incorrect-count').textContent = state.incorrectCount;
+
+    logger.logPerformance();
+};
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
@@ -216,12 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
         generateQuestion();
     });
 
+    // Modify the reset-game click handler
     document.getElementById('reset-game').addEventListener('click', () => {
         localStorage.removeItem('mathGame');
+        resetState();
         generateName();
-        Object.assign(state, { score: 0, level: 1, attempts: 0, currentAnswer: 0 });
-        document.getElementById('score').textContent = state.score;
-        document.getElementById('difficulty').value = state.level;
+        document.getElementById('difficulty').value = '1';
         document.getElementById('welcome-screen').classList.remove('hidden');
         document.getElementById('game-screen').classList.add('hidden');
     });
@@ -257,4 +373,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.toggle-color-theme').forEach(button => {
         button.addEventListener('click', toggleColorTheme);
     });
+
+    // Set initial stats panel state
+    const statsCollapsed = localStorage.getItem('statsCollapsed') === 'true';
+    if (statsCollapsed) {
+        document.querySelector('.stats-panel').classList.add('collapsed');
+        document.querySelector('#toggle-stats i').className = 'fas fa-chevron-down';
+    }
+
+    // Add stats toggle listener
+    document.getElementById('toggle-stats').addEventListener('click', toggleStats);
 });

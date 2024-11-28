@@ -46,6 +46,41 @@
                 </div>
             </div>
             <div class="game-content">
+                <button id="toggle-stats" class="stats-toggle">
+                    <i class="fas fa-chevron-up"></i> Statistics
+                </button>
+                <div class="stats-panel collapsed">
+                    <div class="stat-item">
+                        <i class="fas fa-fire"></i>
+                        <span class="label">Streak</span>
+                        <span class="value" id="streak-counter">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="label">Complexity</span>
+                        <span class="value" id="complexity-level">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-bullseye"></i>
+                        <span class="label">Success Rate</span>
+                        <span class="value" id="success-rate">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span class="label">Skill Rating</span>
+                        <span class="value" id="skill-rating">1000</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check"></i>
+                        <span class="label">Correct</span>
+                        <span class="value" id="correct-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-times"></i>
+                        <span class="label">Incorrect</span>
+                        <span class="value" id="incorrect-count">0</span>
+                    </div>
+                </div>
                 <h2 id="question"></h2>
                 <input type="number" id="answer" placeholder="Your answer">
                 <div class="game-controls">

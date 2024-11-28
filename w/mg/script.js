@@ -5,7 +5,11 @@ const state = {
     attempts: 0,
     currentAnswer: 0,
     correctCount: 0,
-    incorrectCount: 0
+    incorrectCount: 0,
+    skillRating: 1000, // Base ELO-like rating
+    streak: 0,
+    difficultyLevel: 1,
+    performanceHistory: [], // Track last 10 answers
 };
 
 // Load saved state
@@ -35,6 +39,29 @@ const enableSubmitButton = () => {
     document.getElementById('submit-answer').disabled = !answerInput.value.trim();
 };
 
+const updateSkillRating = (correct) => {
+    const K = 32; // K-factor for ELO calculation
+    const expectedScore = 1 / (1 + Math.pow(10, (1500 - state.skillRating) / 400));
+    const actualScore = correct ? 1 : 0;
+    state.skillRating += K * (actualScore - expectedScore);
+    state.streak = correct ? state.streak + 1 : 0;
+};
+
+const getDynamicDifficulty = () => {
+    const baseRange = Math.floor(state.skillRating / 100); // Base range from skill
+    const streakBonus = Math.floor(state.streak / 3); // Bonus from streaks
+    const performanceAdjustment = getPerformanceAdjustment();
+    
+    return Math.max(1, Math.min(100, baseRange + streakBonus + performanceAdjustment));
+};
+
+const getPerformanceAdjustment = () => {
+    if (state.performanceHistory.length < 5) return 0;
+    const recentPerformance = state.performanceHistory.slice(-5);
+    const successRate = recentPerformance.filter(x => x).length / 5;
+    return successRate > 0.8 ? 1 : successRate < 0.3 ? -1 : 0;
+};
+
 const generateQuestion = () => {
     const operations = {
         1: ['+', '-'],
@@ -43,36 +70,28 @@ const generateQuestion = () => {
         4: ['+', '-', '*', '/']
     };
 
-    const { level, correctCount, incorrectCount } = state;
+    const { level } = state;
     const ops = operations[level];
     const op = ops[Math.floor(Math.random() * ops.length)];
+    
+    // Get dynamic difficulty based on skill rating and performance
+    const difficulty = getDynamicDifficulty();
+    const numberRange = Math.pow(10, Math.floor(difficulty / 30) + 1);
+    
+    // Generate numbers with progressive complexity
     let num1, num2;
-
-    // Adjust number range based on correct and incorrect counts
-    let numberRange;
-    if (correctCount < 15) {
-        numberRange = 10; // Single digits
-    } else if (correctCount < 45) {
-        numberRange = 100; // Double digits
-    } else {
-        numberRange = 1000; // Triple digits
-    }
-
-    // Decrease complexity if incorrect answers exceed a threshold
-    if (incorrectCount > 5 && numberRange > 10) {
-        numberRange = Math.floor(numberRange / 10);
-        state.incorrectCount = 0; // Reset counter after adjustment
-    }
-
-    // Generate numbers based on adjusted range
     switch(op) {
         case '/':
-            num2 = Math.floor(Math.random() * (numberRange / 10)) + 1;
-            num1 = num2 * (Math.floor(Math.random() * (numberRange / 10)) + 1);
+            num2 = Math.max(1, Math.floor(Math.random() * (numberRange / 10)));
+            num1 = num2 * Math.max(1, Math.floor(Math.random() * (numberRange / 10)));
+            break;
+        case '*':
+            num1 = Math.floor(Math.random() * Math.sqrt(numberRange));
+            num2 = Math.floor(Math.random() * Math.sqrt(numberRange));
             break;
         default:
-            num1 = Math.floor(Math.random() * numberRange) + 1;
-            num2 = Math.floor(Math.random() * numberRange) + 1;
+            num1 = Math.floor(Math.random() * numberRange);
+            num2 = Math.floor(Math.random() * numberRange);
     }
 
     const question = `${num1} ${op} ${num2}`;
@@ -88,15 +107,28 @@ const checkAnswer = () => {
     const userAnswer = parseFloat(document.getElementById('answer').value);
     const messageEl = document.getElementById('message');
     const submitButton = document.getElementById('submit-answer');
+    const correct = userAnswer === state.currentAnswer;
+    
+    // Update skill rating and performance history
+    updateSkillRating(correct);
+    state.performanceHistory.push(correct);
+    if (state.performanceHistory.length > 10) {
+        state.performanceHistory.shift();
+    }
 
-    if (userAnswer === state.currentAnswer) {
+    if (correct) {
         const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };
         state.score += scoreMap[state.level];
         state.attempts = 0;
         state.correctCount += 1; // Increment correct count
         state.incorrectCount = 0; // Optionally reset incorrect count on correct answer
         document.getElementById('score').textContent = state.score;
-        messageEl.textContent = '🎉 Correct! Keep going!';
+        
+        // Add streak bonus to score
+        const streakBonus = Math.floor(state.streak / 3) * 5;
+        state.score += streakBonus;
+        
+        messageEl.textContent = `🎉 Correct! ${state.streak > 2 ? `Streak bonus: +${streakBonus}!` : ''}`;
         messageEl.className = 'success';
         saveState();
         setTimeout(generateQuestion, 1000);

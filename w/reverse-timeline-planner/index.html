@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timeline Planner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Timeline Planner</h1>
+    <div class="header-controls">
+      <select id="time-interval" aria-label="Select Time Interval">
+        <option value="5">5 mins</option>
+        <option value="10">10 mins</option>
+        <option value="15">15 mins</option>
+        <option value="30" selected>30 mins</option>
+        <option value="60">1 hr</option>
+        <option value="120">2 hr</option>
+        <option value="180">3 hr</option>
+        <option value="360">6 hr</option>
+      </select>
+      <button id="import-json" aria-label="Import JSON" onclick="document.getElementById('load-plan').click()">📂 Import</button>
+      <button id="export-json" aria-label="Export JSON" onclick="exportPlan()">💾 Export</button>
+      <button id="clear-data" aria-label="Clear Data" onclick="clearData()">🗑️ Clear</button>
+      <button id="generate-random" aria-label="Generate Random Data" onclick="generateRandomData()">🎲 Random</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="input-section">
+      <h2>Plan Your Timeline</h2>
+      <form id="timeline-form">
+        <label for="event-name">Event Name (optional):</label>
+        <input type="text" id="event-name" name="eventName">
+
+        <label for="target-end-time">Target End Time:</label>
+        <input type="datetime-local" id="target-end-time" name="targetEndTime" required>
+
+        <div id="events-container">
+          <h3>Events</h3>
+          <div class="event">
+            <input type="text" name="eventName" placeholder="Event Name" required>
+            <input type="number" name="eventDuration" placeholder="Duration (minutes)" min="1" required>
+            <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
+          </div>
+        </div>
+        <button type="button" id="add-event" aria-label="Add Event">Add Event</button>
+      </form>
+    </section>
+
+    <section id="timeline-section">
+      <h2>Calculated Timeline</h2>
+      <div id="timeline">
+        <div class="timeline-content">
+          <div class="timeline-events-column" id="timeline-events-column"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; ?</p>
+  </footer>
+
+  <input type="file" id="load-plan" accept=".json" style="display: none;" aria-label="Load Plan">
+
+  <script src="script.js"></script>
+</body>
+</html>

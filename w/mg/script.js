@@ -145,7 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('reset-game').addEventListener('click', () => {
         localStorage.removeItem('mathGame');
-        location.reload();
+        generateName();
+        state.score = 0;
+        state.level = 1;
+        state.attempts = 0;
+        state.currentAnswer = 0;
+        document.getElementById('score').textContent = state.score;
+        document.getElementById('difficulty').value = state.level;
+        document.getElementById('welcome-screen').classList.remove('hidden');
+        document.getElementById('game-screen').classList.add('hidden');
     });
 
     document.getElementById('submit-answer').addEventListener('click', checkAnswer);

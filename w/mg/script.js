@@ -39,9 +39,8 @@ const generateQuestion = () => {
     const operations = {
         1: ['+', '-'],
         2: ['*', '/'],
-        3: ['+', '-'],
-        4: ['*', '/'],
-        5: ['+', '-', '*', '/']
+        3: ['+', '-', '*', '/'],
+        4: ['+', '-', '*', '/']
     };
 
     const ops = operations[state.level];
@@ -149,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
         document.getElementById('user-name').textContent = state.playerName;
+        document.getElementById('current-difficulty').textContent = document.getElementById('difficulty').selectedOptions[0].text;
         saveState();
         generateQuestion();
     });

@@ -481,7 +481,7 @@ body.light-theme .top-bar {
 
 .stats-panel {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.8rem;
     margin: 0;
     padding: 1rem;

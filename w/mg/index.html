@@ -87,6 +87,21 @@
                         <span class="label">Incorrect</span>
                         <span class="value" id="incorrect-count">0</span>
                     </div>
+                    <div class="stat-item">
+                        <i class="fas fa-trophy"></i>
+                        <span class="label">1st Att</span>
+                        <span class="value" id="first-attempt-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-medal"></i>
+                        <span class="label">2nd Att</span>
+                        <span class="value" id="second-attempt-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-award"></i>
+                        <span class="label">3rd Att</span>
+                        <span class="value" id="third-attempt-count">0</span>
+                    </div>
                 </div>
                 <h2 id="question"></h2>
                 <input type="number" id="answer" placeholder="Your answer">
@@ -136,5 +151,10 @@
     </div>
 
     <script src="script.js"></script>
+    <style>
+        .stats-panel {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    </style>
 </body>
 </html>

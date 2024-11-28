@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
+        document.getElementById('user-name').textContent = state.playerName;
         saveState();
         generateQuestion();
     });

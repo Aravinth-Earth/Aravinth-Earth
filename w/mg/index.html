@@ -8,32 +8,50 @@
 </head>
 <body class="light-theme theme-blue">
     <div class="container light-theme">
-        <div id="score-display">Score: <span id="score">0</span></div>
-        
         <div id="welcome-screen" class="screen">
             <h1>Math Game</h1>
-            <input type="text" id="player-name" placeholder="Enter your name">
-            <button id="generate-name">Generate Name</button>
-            <select id="difficulty">
-                <option value="1">Level 1 (+ -)</option>
-                <option value="2">Level 2 (× ÷)</option>
-                <option value="3">Level 3 (Mix + -)</option>
-                <option value="4">Level 4 (Mix × ÷)</option>
-                <option value="5">Level 5 (All Mix)</option>
-            </select>
-            <button id="start-game">Start Game</button>
-            <button id="reset-game">Reset Progress</button>
-            <button id="toggle-theme">Toggle Theme</button>
-            <button id="toggle-color-theme">Toggle Color Theme</button>
+            <div class="game-content">
+                <input type="text" id="player-name" placeholder="Enter your name">
+                <div class="button-group">
+                    <button id="generate-name">Generate Name</button>
+                    <button id="start-game">Start Game</button>
+                    <button id="reset-game">Reset Progress</button>
+                </div>
+                <select id="difficulty">
+                    <option value="1">Level 1 (+ -)</option>
+                    <option value="2">Level 2 (× ÷)</option>
+                    <option value="3">Level 3 (Mix + -)</option>
+                    <option value="4">Level 4 (Mix × ÷)</option>
+                    <option value="5">Level 5 (All Mix)</option>
+                </select>
+                <div class="theme-controls">
+                    <button id="toggle-theme">🔃 Theme </button>
+                    <button id="toggle-color-theme">🔃 Color </button>
+                </div>
+            </div>
         </div>
 
         <div id="game-screen" class="screen hidden">
-            <h2 id="question"></h2>
-            <input type="number" id="answer" placeholder="Your answer">
-            <button id="submit-answer">Submit</button>
-            <p id="message"></p>
-            <button id="next-question" class="hidden">Next Question</button>
-            <button id="back-to-menu">Back to Menu</button>
+            <div class="top-bar">
+                <div class="theme-controls">
+                    <button id="back-to-menu">Menu</button>
+                    <button id="toggle-theme">🔃 Theme</button>
+                    <button id="toggle-color-theme">🔃 Color</button>
+                </div>
+                <div class="user-info">
+                    <div id="user-name"></div>
+                    <div>Score: <span id="score">0</span></div>
+                </div>
+            </div>
+            <div class="game-content">
+                <h2 id="question"></h2>
+                <input type="number" id="answer" placeholder="Your answer">
+                <div class="game-controls">
+                    <button id="submit-answer">Submit</button>
+                    <button id="next-question" class="hidden">Next Question</button>
+                </div>
+                <p id="message"></p>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

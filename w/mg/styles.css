@@ -210,6 +210,12 @@ button:hover {
     transform: scale(1.05);
 }
 
+button:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
 #score-display {
     position: fixed;
     top: 1rem;

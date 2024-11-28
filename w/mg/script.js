@@ -29,6 +29,12 @@ const generateName = () => {
     document.getElementById('player-name').value = name;
 };
 
+const enableSubmitButton = () => {
+    const answerInput = document.getElementById('answer');
+    const submitButton = document.getElementById('submit-answer');
+    submitButton.disabled = !answerInput.value.trim();
+};
+
 const generateQuestion = () => {
     const operations = {
         1: ['+', '-'],
@@ -58,6 +64,7 @@ const generateQuestion = () => {
     document.getElementById('answer').value = '';
     document.getElementById('message').textContent = '';
     document.getElementById('submit-answer').classList.remove('hidden');
+    document.getElementById('submit-answer').disabled = true;
 };
 
 const checkAnswer = () => {
@@ -160,8 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('submit-answer').addEventListener('click', checkAnswer);
+    document.getElementById('answer').addEventListener('input', enableSubmitButton);
     document.getElementById('answer').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkAnswer();
+        if (e.key === 'Enter' && !document.getElementById('submit-answer').disabled) checkAnswer();
     });
 
     document.getElementById('next-question').addEventListener('click', () => {

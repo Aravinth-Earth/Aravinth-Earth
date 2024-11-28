@@ -120,24 +120,33 @@ const themes = [
 const toggleColorTheme = () => {
     const body = document.body;
     const buttons = document.querySelectorAll('button');
-    let currentTheme = localStorage.getItem('colorTheme') || 'blue';
-    let currentIndex = themes.indexOf(currentTheme);
-    let nextIndex = (currentIndex + 1) % themes.length;
-    let nextTheme = themes[nextIndex];
+    let currentTheme = null; // Remove retrieval from localStorage
+    let randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
-    body.classList.remove(`theme-${currentTheme}`);
-    body.classList.add(`theme-${nextTheme}`);
-    buttons.forEach(button => {
-        button.classList.remove(`theme-${currentTheme}`);
-        button.classList.add(`theme-${nextTheme}`);
+    // Ensure a new random theme is selected
+    body.classList.forEach(cls => {
+        if (cls.startsWith('theme-')) {
+            body.classList.remove(cls);
+            buttons.forEach(button => button.classList.remove(cls));
+        }
     });
 
-    localStorage.setItem('colorTheme', nextTheme);
+    body.classList.add(`theme-${randomTheme}`);
+    buttons.forEach(button => {
+        button.classList.add(`theme-${randomTheme}`);
+    });
+
+    // Do not store colorTheme in localStorage
 };
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
+
+    // Auto-generate a random name if none is saved
+    if (!state.playerName) {
+        generateName();
+    }
 
     document.getElementById('generate-name').addEventListener('click', generateName);
     document.getElementById('start-game').addEventListener('click', () => {
@@ -179,17 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('welcome-screen').classList.remove('hidden');
     });
 
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        toggleTheme();
-    }
-
-    const savedColorTheme = localStorage.getItem('colorTheme') || 'blue';
-    document.body.classList.add(`theme-${savedColorTheme}`);
+    // Apply a random color theme on load
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    document.body.classList.add(`theme-${randomTheme}`);
     document.querySelectorAll('button').forEach(button => {
-        button.classList.add(`theme-${savedColorTheme}`);
+        button.classList.add(`theme-${randomTheme}`);
     });
 
-    document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
-    document.getElementById('toggle-color-theme').addEventListener('click', toggleColorTheme);
+    // Attach event listeners for theme toggles
+    document.querySelectorAll('.toggle-theme').forEach(button => {
+        button.addEventListener('click', toggleTheme);
+    });
+
+    document.querySelectorAll('.toggle-color-theme').forEach(button => {
+        button.addEventListener('click', toggleColorTheme);
+    });
 });

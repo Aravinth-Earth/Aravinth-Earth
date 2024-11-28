@@ -49,6 +49,71 @@ body.theme-green {
     --color-secondary: #27ae60;
 }
 
+body.theme-red {
+    --color-primary: #e74c3c;
+    --color-secondary: #c0392b;
+}
+
+body.theme-purple {
+    --color-primary: #9b59b6;
+    --color-secondary: #8e44ad;
+}
+
+body.theme-orange {
+    --color-primary: #e67e22;
+    --color-secondary: #d35400;
+}
+
+body.theme-yellow {
+    --color-primary: #f1c40f;
+    --color-secondary: #f39c12;
+}
+
+body.theme-pink {
+    --color-primary: #fd79a8;
+    --color-secondary: #e84393;
+}
+
+body.theme-teal {
+    --color-primary: #1abc9c;
+    --color-secondary: #16a085;
+}
+
+body.theme-brown {
+    --color-primary: #8d6e63;
+    --color-secondary: #5d4037;
+}
+
+body.theme-gray {
+    --color-primary: #95a5a6;
+    --color-secondary: #7f8c8d;
+}
+
+body.theme-cyan {
+    --color-primary: #00bcd4;
+    --color-secondary: #0097a7;
+}
+
+body.theme-lime {
+    --color-primary: #cddc39;
+    --color-secondary: #afb42b;
+}
+
+body.theme-indigo {
+    --color-primary: #3f51b5;
+    --color-secondary: #303f9f;
+}
+
+body.theme-amber {
+    --color-primary: #ffc107;
+    --color-secondary: #ff9800;
+}
+
+body.theme-deep-orange {
+    --color-primary: #ff5722;
+    --color-secondary: #e64a19;
+}
+
 /* ...other theme colors... */
 
 .container {

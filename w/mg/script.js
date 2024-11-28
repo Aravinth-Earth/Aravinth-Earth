@@ -57,11 +57,13 @@ const generateQuestion = () => {
     document.getElementById('question').textContent = question;
     document.getElementById('answer').value = '';
     document.getElementById('message').textContent = '';
+    document.getElementById('submit-answer').classList.remove('hidden');
 };
 
 const checkAnswer = () => {
     const userAnswer = parseFloat(document.getElementById('answer').value);
     const messageEl = document.getElementById('message');
+    const submitButton = document.getElementById('submit-answer');
 
     if (userAnswer === state.currentAnswer) {
         state.score += 10;
@@ -78,6 +80,7 @@ const checkAnswer = () => {
             messageEl.textContent = `The correct answer was ${state.currentAnswer}. Click "Next Question" to continue.`;
             state.attempts = 0;
             document.getElementById('next-question').classList.remove('hidden');
+            submitButton.classList.add('hidden');
         } else {
             messageEl.textContent = `Wrong answer! Try again! (${3 - state.attempts} attempts left)`;
         }

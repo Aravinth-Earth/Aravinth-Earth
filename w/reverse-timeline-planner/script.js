@@ -168,15 +168,41 @@ document.addEventListener('DOMContentLoaded', () => {
       events
     };
 
+    // Save to localStorage
+    saveToCache(plan);
+
     const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const filename = eventName ? `${eventName}-${new Date().toISOString()}.json` : `timeline-plan-${new Date().toISOString()}.json`;
+    const timestamp = new Date(targetEndTime).toISOString().replace(/[:]/g, '-').slice(0, 16);
+    const filename = eventName ? `${eventName}_${timestamp}.json` : `timeline-plan_${timestamp}.json`;
     
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  // Cache Management
+  function saveToCache(plan) {
+    localStorage.setItem('timelinePlan', JSON.stringify(plan));
+  }
+
+  function loadFromCache() {
+    const cached = localStorage.getItem('timelinePlan');
+    if (cached) {
+      const plan = JSON.parse(cached);
+      document.getElementById('event-name').value = plan.eventName || '';
+      document.getElementById('target-end-time').value = plan.targetEndTime;
+      eventsContainer.innerHTML = '';
+      plan.events.forEach(event => {
+        const eventDiv = createEventElement(event.name, event.duration);
+        eventsContainer.appendChild(eventDiv);
+      });
+      updateTimeline();
+      return true;
+    }
+    return false;
   }
 
   // Export Plan
@@ -215,8 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Clear Data
   function clearData() {
+    document.getElementById('event-name').value = '';
     document.getElementById('target-end-time').value = '';
     eventsContainer.innerHTML = '';
+    localStorage.removeItem('timelinePlan');
     updateTimeline();
   }
 
@@ -253,14 +281,22 @@ document.addEventListener('DOMContentLoaded', () => {
     displayTimeline(calculatedEvents);
   }
 
-  // Call prefillForm on page load
-  prefillForm();
+  // Replace the prefillForm call with cache check
+  if (!loadFromCache()) {
+    prefillForm();
+  }
 
   // Update timeline when target end time changes
-  document.getElementById('target-end-time').addEventListener('change', updateTimeline);
+  document.getElementById('target-end-time').addEventListener('change', () => {
+    updateTimeline();
+    savePlan(); // This will update the cache
+  });
 
   // Update timeline when event details change
-  eventsContainer.addEventListener('input', updateTimeline);
+  eventsContainer.addEventListener('input', () => {
+    updateTimeline();
+    savePlan(); // This will update the cache
+  });
 });
 
 // the background dotted line logic is not yet proper

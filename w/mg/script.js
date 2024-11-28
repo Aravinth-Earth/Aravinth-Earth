@@ -3,7 +3,9 @@ const state = {
     score: 0,
     level: 1,
     attempts: 0,
-    currentAnswer: 0
+    currentAnswer: 0,
+    correctCount: 0,
+    incorrectCount: 0
 };
 
 // Load saved state
@@ -41,19 +43,36 @@ const generateQuestion = () => {
         4: ['+', '-', '*', '/']
     };
 
-    const { level } = state;
+    const { level, correctCount, incorrectCount } = state;
     const ops = operations[level];
     const op = ops[Math.floor(Math.random() * ops.length)];
     let num1, num2;
 
+    // Adjust number range based on correct and incorrect counts
+    let numberRange;
+    if (correctCount < 15) {
+        numberRange = 10; // Single digits
+    } else if (correctCount < 45) {
+        numberRange = 100; // Double digits
+    } else {
+        numberRange = 1000; // Triple digits
+    }
+
+    // Decrease complexity if incorrect answers exceed a threshold
+    if (incorrectCount > 5 && numberRange > 10) {
+        numberRange = Math.floor(numberRange / 10);
+        state.incorrectCount = 0; // Reset counter after adjustment
+    }
+
+    // Generate numbers based on adjusted range
     switch(op) {
         case '/':
-            num2 = Math.floor(Math.random() * 10) + 1;
-            num1 = num2 * (Math.floor(Math.random() * 10) + 1);
+            num2 = Math.floor(Math.random() * (numberRange / 10)) + 1;
+            num1 = num2 * (Math.floor(Math.random() * (numberRange / 10)) + 1);
             break;
         default:
-            num1 = Math.floor(Math.random() * 20) + 1;
-            num2 = Math.floor(Math.random() * 20) + 1;
+            num1 = Math.floor(Math.random() * numberRange) + 1;
+            num2 = Math.floor(Math.random() * numberRange) + 1;
     }
 
     const question = `${num1} ${op} ${num2}`;
@@ -74,6 +93,8 @@ const checkAnswer = () => {
         const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };
         state.score += scoreMap[state.level];
         state.attempts = 0;
+        state.correctCount += 1; // Increment correct count
+        state.incorrectCount = 0; // Optionally reset incorrect count on correct answer
         document.getElementById('score').textContent = state.score;
         messageEl.textContent = '🎉 Correct! Keep going!';
         messageEl.className = 'success';
@@ -81,6 +102,7 @@ const checkAnswer = () => {
         setTimeout(generateQuestion, 1000);
     } else {
         state.attempts++;
+        state.incorrectCount += 1; // Increment incorrect count
         messageEl.className = 'failure';
         if (state.attempts >= 3) {
             messageEl.textContent = `The correct answer was ${state.currentAnswer}. Click "Next Question" to continue.`;

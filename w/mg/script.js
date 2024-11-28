@@ -10,6 +10,7 @@ const state = {
     streak: 0,
     difficultyLevel: 1,
     performanceHistory: [], // Track last 10 answers
+    lastQuestion: null, // Add this line
 };
 
 // Add after state declaration
@@ -60,7 +61,8 @@ const resetState = () => {
         skillRating: 1000,
         streak: 0,
         difficultyLevel: 1,
-        performanceHistory: []
+        performanceHistory: [],
+        lastQuestion: null // Add this line
     });
     
     // Reset UI elements
@@ -158,7 +160,14 @@ const generateQuestion = () => {
             num2 = Math.floor(Math.random() * numberRange);
     }
 
+    // Check if question is same as last one
     const question = `${num1} ${op} ${num2}`;
+    if (question === state.lastQuestion) {
+        // Regenerate question if it's the same
+        return generateQuestion();
+    }
+    
+    state.lastQuestion = question;
     state.currentAnswer = eval(question);
     document.getElementById('question').textContent = question;
     document.getElementById('answer').value = '';
@@ -203,6 +212,14 @@ const checkAnswer = () => {
 
     logger.logAnswer(correct, userAnswer, state.attempts);
     logger.logPerformance();
+
+    if (!correct) {
+        document.getElementById('answer').classList.add('shake-wrong');
+        // Remove class after animation completes
+        setTimeout(() => {
+            document.getElementById('answer').classList.remove('shake-wrong');
+        }, 500);
+    }
 
     if (correct) {
         const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };

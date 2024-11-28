@@ -564,3 +564,21 @@ body.light-theme .top-bar {
     transform: none !important;
     opacity: 0.8;
 }
+
+/* Add these new styles */
+.shake-wrong {
+    animation: shake-animation 0.5s ease-in-out;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-color: #ff6b6b !important;
+}
+
+@keyframes shake-animation {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* Modify existing input styles */
+input[type="number"] {
+    transition: background-color 0.3s, border-color 0.3s;
+}

@@ -13,6 +13,16 @@ const state = {
     lastQuestion: null, // Add this line
 };
 
+// Add these constants at the top
+const GAME_LIMITS = {
+    MAX_SKILL_RATING: 4000,
+    MAX_DIFFICULTY: 50,
+    MAX_STREAK_MULTIPLIER: 10,
+    BASE_SCORES: { 1: 10, 2: 20, 3: 30, 4: 40 },
+    STREAK_BONUS_BASE: 5,
+    STREAK_INTERVAL: 3
+};
+
 // Add after state declaration
 const logger = {
     logQuestion: (question, difficulty, numbers, operation) => {
@@ -104,20 +114,32 @@ const enableSubmitButton = () => {
     document.getElementById('submit-answer').disabled = !answerInput.value.trim();
 };
 
+// Modified updateSkillRating function
 const updateSkillRating = (correct) => {
-    const K = 32; // K-factor for ELO calculation
+    const K = Math.max(8, 32 - Math.floor(state.correctCount / 100)); // K-factor decreases with experience
     const expectedScore = 1 / (1 + Math.pow(10, (1500 - state.skillRating) / 400));
     const actualScore = correct ? 1 : 0;
-    state.skillRating += K * (actualScore - expectedScore);
+    
+    state.skillRating = Math.min(
+        GAME_LIMITS.MAX_SKILL_RATING,
+        state.skillRating + K * (actualScore - expectedScore)
+    );
+    
     state.streak = correct ? state.streak + 1 : 0;
 };
 
+// Modified getDynamicDifficulty function
 const getDynamicDifficulty = () => {
-    const baseRange = Math.floor(state.skillRating / 100); // Base range from skill
-    const streakBonus = Math.floor(state.streak / 3); // Bonus from streaks
+    const baseRange = Math.floor(state.skillRating / 100);
+    const streakBonus = Math.min(
+        Math.floor(state.streak / GAME_LIMITS.STREAK_INTERVAL),
+        GAME_LIMITS.MAX_STREAK_MULTIPLIER
+    );
     const performanceAdjustment = getPerformanceAdjustment();
     
-    return Math.max(1, Math.min(100, baseRange + streakBonus + performanceAdjustment));
+    return Math.max(1, Math.min(GAME_LIMITS.MAX_DIFFICULTY, 
+        baseRange + streakBonus + performanceAdjustment
+    ));
 };
 
 const getPerformanceAdjustment = () => {
@@ -125,6 +147,21 @@ const getPerformanceAdjustment = () => {
     const recentPerformance = state.performanceHistory.slice(-5);
     const successRate = recentPerformance.filter(x => x).length / 5;
     return successRate > 0.8 ? 1 : successRate < 0.3 ? -1 : 0;
+};
+
+// Add this function to calculate levelup thresholds
+const getLevelupThreshold = (level) => {
+    return Math.floor(100 * Math.pow(2, level - 1));
+};
+
+// Add this function to get logarithmic number ranges
+const getNumberRange = (difficulty) => {
+    const base = Math.min(10, Math.floor(difficulty / 10) + 1);
+    const maxRange = Math.pow(base, 2);
+    return {
+        min: Math.max(1, Math.floor(maxRange / 10)),
+        max: maxRange
+    };
 };
 
 // Modify generateQuestion function
@@ -142,22 +179,22 @@ const generateQuestion = () => {
     
     // Get dynamic difficulty based on skill rating and performance
     const difficulty = getDynamicDifficulty();
-    const numberRange = Math.pow(10, Math.floor(difficulty / 30) + 1);
+    const range = getNumberRange(difficulty);
     
     // Generate numbers with progressive complexity
     let num1, num2;
     switch(op) {
         case '/':
-            num2 = Math.max(1, Math.floor(Math.random() * (numberRange / 10)));
-            num1 = num2 * Math.max(1, Math.floor(Math.random() * (numberRange / 10)));
+            num2 = Math.max(1, Math.floor(Math.random() * (range.max / 10)));
+            num1 = num2 * Math.max(1, Math.floor(Math.random() * (range.max / 10)));
             break;
         case '*':
-            num1 = Math.floor(Math.random() * Math.sqrt(numberRange));
-            num2 = Math.floor(Math.random() * Math.sqrt(numberRange));
+            num1 = Math.floor(Math.random() * Math.sqrt(range.max));
+            num2 = Math.floor(Math.random() * Math.sqrt(range.max));
             break;
         default:
-            num1 = Math.floor(Math.random() * numberRange);
-            num2 = Math.floor(Math.random() * numberRange);
+            num1 = Math.floor(Math.random() * range.max) + range.min;
+            num2 = Math.floor(Math.random() * range.max) + range.min;
     }
 
     // Check if question is same as last one
@@ -179,7 +216,7 @@ const generateQuestion = () => {
     const complexity = {
         numbers: [num1, num2],
         operation: op,
-        range: numberRange,
+        range: range.max,
         difficulty: difficulty
     };
 
@@ -194,9 +231,17 @@ const generateQuestion = () => {
     document.getElementById('success-rate').textContent = `${successRate}%`;
 
     updateStats(); // Add this line at the end
+
+    updateDifficultyIndicator();
+    
+    // Start timer animation
+    const timer = document.querySelector('.timer-bar');
+    timer.classList.remove('timer-active');
+    void timer.offsetWidth; // Force reflow
+    timer.classList.add('timer-active');
 };
 
-// Modify checkAnswer function
+// Modified checkAnswer function
 const checkAnswer = () => {
     const userAnswer = parseFloat(document.getElementById('answer').value);
     const messageEl = document.getElementById('message');
@@ -222,21 +267,38 @@ const checkAnswer = () => {
     }
 
     if (correct) {
-        const scoreMap = { 1: 10, 2: 20, 3: 30, 4: 40 };
-        state.score += scoreMap[state.level];
+        const baseScore = GAME_LIMITS.BASE_SCORES[state.level];
+        const streakMultiplier = Math.min(
+            Math.floor(state.streak / GAME_LIMITS.STREAK_INTERVAL),
+            GAME_LIMITS.MAX_STREAK_MULTIPLIER
+        );
+        const streakBonus = GAME_LIMITS.STREAK_BONUS_BASE * streakMultiplier;
+        const difficultyBonus = Math.floor(getDynamicDifficulty() / 10);
+
+        // Calculate total score with diminishing returns
+        const totalScore = baseScore + 
+            Math.floor(streakBonus * (1 - state.correctCount / 10000)) + 
+            Math.min(difficultyBonus * baseScore / 2, baseScore);
+
+        state.score += totalScore;
         state.attempts = 0;
         state.correctCount += 1; // Increment correct count
         state.incorrectCount = 0; // Optionally reset incorrect count on correct answer
         document.getElementById('score').textContent = state.score;
         
-        // Add streak bonus to score
-        const streakBonus = Math.floor(state.streak / 3) * 5;
-        state.score += streakBonus;
-        
         messageEl.textContent = `🎉 Correct! ${state.streak > 2 ? `Streak bonus: +${streakBonus}!` : ''}`;
         messageEl.className = 'success';
         saveState();
         setTimeout(generateQuestion, 1000);
+
+        // Add floating score animation
+        const rect = document.getElementById('score').getBoundingClientRect();
+        createFloatingScore(totalScore, rect.left, rect.top);
+        
+        // Add pulse animation to streak counter
+        const streakEl = document.getElementById('streak-counter');
+        streakEl.classList.add('pulse-streak');
+        setTimeout(() => streakEl.classList.remove('pulse-streak'), 500);
     } else {
         state.attempts++;
         state.incorrectCount += 1; // Increment incorrect count
@@ -324,6 +386,85 @@ const updateStats = () => {
     document.getElementById('incorrect-count').textContent = state.incorrectCount;
 
     logger.logPerformance();
+    updateThresholdIndicators();
+};
+
+const createFloatingScore = (score, x, y) => {
+    const el = document.createElement('div');
+    el.className = 'floating-score';
+    el.textContent = `+${score}`;
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+};
+
+const updateDifficultyIndicator = () => {
+    const indicator = document.querySelector('.difficulty-indicator');
+    const difficulty = getDynamicDifficulty();
+    const classes = {
+        easy: difficulty <= 25,
+        medium: difficulty > 25 && difficulty <= 50,
+        hard: difficulty > 50 && difficulty <= 75,
+        expert: difficulty > 75
+    };
+    
+    indicator.className = 'difficulty-indicator ' + 
+        Object.keys(classes).find(key => classes[key]);
+};
+
+const createThresholdIndicators = () => {
+    const statsItems = document.querySelectorAll('.stat-item');
+    
+    statsItems.forEach(item => {
+        const value = item.querySelector('.value');
+        const type = value.id;
+        
+        if (['skill-rating', 'streak-counter'].includes(type)) {
+            const indicator = document.createElement('div');
+            indicator.className = 'threshold-indicator';
+            
+            const fill = document.createElement('div');
+            fill.className = 'threshold-fill';
+            
+            const cap = type === 'skill-rating' ? 
+                GAME_LIMITS.MAX_SKILL_RATING : 
+                GAME_LIMITS.MAX_STREAK_MULTIPLIER * GAME_LIMITS.STREAK_INTERVAL;
+            
+            indicator.appendChild(fill);
+            item.appendChild(indicator);
+            
+            // Add cap marker
+            const marker = document.createElement('div');
+            marker.className = 'threshold-marker';
+            marker.style.left = '100%';
+            const label = document.createElement('span');
+            label.className = 'threshold-label';
+            label.textContent = `Max: ${cap}`;
+            marker.appendChild(label);
+            indicator.appendChild(marker);
+        }
+    });
+};
+
+const updateThresholdIndicators = () => {
+    const skillFill = document.querySelector('#skill-rating')
+        .parentElement.querySelector('.threshold-fill');
+    const streakFill = document.querySelector('#streak-counter')
+        .parentElement.querySelector('.threshold-fill');
+    
+    if (skillFill) {
+        const skillPercent = (state.skillRating / GAME_LIMITS.MAX_SKILL_RATING) * 100;
+        skillFill.style.width = `${Math.min(100, skillPercent)}%`;
+        if (skillPercent >= 95) skillFill.classList.add('cap-warning');
+    }
+    
+    if (streakFill) {
+        const maxStreak = GAME_LIMITS.MAX_STREAK_MULTIPLIER * GAME_LIMITS.STREAK_INTERVAL;
+        const streakPercent = (state.streak / maxStreak) * 100;
+        streakFill.style.width = `${Math.min(100, streakPercent)}%`;
+        if (streakPercent >= 95) streakFill.classList.add('cap-warning');
+    }
 };
 
 // Event Listeners
@@ -400,4 +541,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add stats toggle listener
     document.getElementById('toggle-stats').addEventListener('click', toggleStats);
+    
+    createThresholdIndicators();
+    
+    // Add info overlay handlers
+    document.getElementById('show-info').addEventListener('click', () => {
+        document.querySelector('.info-overlay').classList.add('visible');
+    });
+    
+    document.querySelector('.info-close').addEventListener('click', () => {
+        document.querySelector('.info-overlay').classList.remove('visible');
+    });
+    
+    // Close overlay on outside click
+    document.querySelector('.info-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            e.target.classList.remove('visible');
+        }
+    });
 });

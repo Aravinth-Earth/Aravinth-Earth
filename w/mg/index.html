@@ -12,6 +12,9 @@
     <div class="container light-theme">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
+            <button id="show-info" class="info-button">
+                <i class="fas fa-info-circle"></i> How It Works
+            </button>
             <div class="game-content">
                 <input type="text" id="player-name" placeholder="Enter your name">
                 <div class="button-group">
@@ -42,7 +45,11 @@
                 <div class="user-info">
                     <div id="user-name"></div>
                     <div>Score: <span id="score">0</span></div>
-                    <div class="difficulty">Difficulty: <span id="current-difficulty"></span></div>
+                    <div class="difficulty">
+                        Level: <span id="current-difficulty"></span>
+                        <span class="difficulty-indicator difficulty-easy"></span>
+                    </div>
+                    <div class="timer-bar"></div>
                 </div>
             </div>
             <div class="game-content">
@@ -91,6 +98,43 @@
             </div>
         </section>
     </div>
+
+    <!-- Add game info overlay -->
+    <div class="info-overlay">
+        <div class="info-content">
+            <button class="info-close"><i class="fas fa-times"></i></button>
+            <h2>How the Game Works</h2>
+            <div class="info-sections">
+                <section>
+                    <h3>Scoring System</h3>
+                    <ul>
+                        <li>Base Scores: Easy (10), Medium (20), Hard (30), Expert (40)</li>
+                        <li>Streak Bonus: Every 3 correct answers (+5 points)</li>
+                        <li>Maximum Streak Multiplier: 10x</li>
+                        <li>Difficulty Bonus: Based on current complexity level</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Difficulty Progression</h3>
+                    <ul>
+                        <li>Skill Rating: Starts at 1000, caps at 4000</li>
+                        <li>Complexity: Increases with skill and streak</li>
+                        <li>Maximum Difficulty: 50</li>
+                        <li>Number Ranges: Scale logarithmically with difficulty</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Performance Tracking</h3>
+                    <ul>
+                        <li>Success Rate: Based on correct vs total attempts</li>
+                        <li>Skill Rating: ELO-like system that adapts to performance</li>
+                        <li>Recent Performance: Affects difficulty adjustments</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

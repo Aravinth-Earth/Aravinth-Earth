@@ -4,89 +4,55 @@
     padding: 0;
 }
 
+/* Define CSS variables for colors */
+:root {
+    --color-primary: #1e90ff;
+    --color-secondary: #70a1ff;
+    --color-dark: #2c3e50;
+    --color-light: #ffffff;
+    --color-text-dark: #000000;
+    --color-text-light: #ffffff;
+    /* ...other variables... */
+}
+
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1e90ff, #70a1ff);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
     transition: background 0.3s, color 0.3s;
+    color: var(--color-text-dark);
 }
 
 body.light-theme {
-    background: linear-gradient(135deg, #1e90ff, #70a1ff);
-    color: black;
+    --color-primary: #1e90ff;
+    --color-secondary: #70a1ff;
+    --color-text: var(--color-text-dark);
 }
 
 body.dark-theme {
-    background: linear-gradient(135deg, #2c3e50, #4ca1af);
-    color: white;
+    --color-primary: var(--color-dark);
+    --color-secondary: #4ca1af;
+    --color-text: var(--color-text-light);
 }
 
-body.theme-blue {
-    background: linear-gradient(135deg, #1e90ff, #70a1ff);
+body[class*="theme-"] {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-text);
 }
 
 body.theme-green {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    --color-primary: #2ecc71;
+    --color-secondary: #27ae60;
 }
 
-body.theme-red {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-body.theme-purple {
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
-}
-
-body.theme-orange {
-    background: linear-gradient(135deg, #e67e22, #d35400);
-}
-
-body.theme-yellow {
-    background: linear-gradient(135deg, #f1c40f, #f39c12);
-}
-
-body.theme-pink {
-    background: linear-gradient(135deg, #e91e63, #c2185b);
-}
-
-body.theme-teal {
-    background: linear-gradient(135deg, #1abc9c, #16a085);
-}
-
-body.theme-brown {
-    background: linear-gradient(135deg, #8d6e63, #795548);
-}
-
-body.theme-gray {
-    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-}
-
-body.theme-cyan {
-    background: linear-gradient(135deg, #00bcd4, #0097a7);
-}
-
-body.theme-lime {
-    background: linear-gradient(135deg, #cddc39, #afb42b);
-}
-
-body.theme-indigo {
-    background: linear-gradient(135deg, #3f51b5, #303f9f);
-}
-
-body.theme-amber {
-    background: linear-gradient(135deg, #ffc107, #ffa000);
-}
-
-body.theme-deep-orange {
-    background: linear-gradient(135deg, #ff5722, #e64a19);
-}
+/* ...other theme colors... */
 
 .container {
-    background: white;
+    background: var(--color-light);
     padding: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -96,6 +62,7 @@ body.theme-deep-orange {
     margin-top: 4rem;
     max-width: min(90%, 600px);
     padding: 2rem;
+    color: var(--color-text);
 }
 
 .container.light-theme {
@@ -129,8 +96,8 @@ input, select, button {
 }
 
 button {
-    background: #1e90ff;
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-text-light);
     border: none;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s, color 0.3s;
@@ -146,64 +113,8 @@ button.dark-theme {
     color: black;
 }
 
-button.theme-blue {
-    background: #1e90ff;
-}
-
-button.theme-green {
-    background: #2ecc71;
-}
-
-button.theme-red {
-    background: #e74c3c;
-}
-
-button.theme-purple {
-    background: #9b59b6;
-}
-
-button.theme-orange {
-    background: #e67e22;
-}
-
-button.theme-yellow {
-    background: #f1c40f;
-}
-
-button.theme-pink {
-    background: #e91e63;
-}
-
-button.theme-teal {
-    background: #1abc9c;
-}
-
-button.theme-brown {
-    background: #8d6e63;
-}
-
-button.theme-gray {
-    background: #95a5a6;
-}
-
-button.theme-cyan {
-    background: #00bcd4;
-}
-
-button.theme-lime {
-    background: #cddc39;
-}
-
-button.theme-indigo {
-    background: #3f51b5;
-}
-
-button.theme-amber {
-    background: #ffc107;
-}
-
-button.theme-deep-orange {
-    background: #ff5722;
+button[class*="theme-"] {
+    background: var(--color-primary);
 }
 
 button:hover {

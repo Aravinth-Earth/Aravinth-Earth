@@ -8,14 +8,12 @@ const state = {
 
 // Load saved state
 const loadState = () => {
-    const saved = localStorage.getItem('mathGame');
-    if (saved) {
-        const data = JSON.parse(saved);
-        Object.assign(state, data);
-        document.getElementById('player-name').value = state.playerName;
-        document.getElementById('difficulty').value = state.level;
-        document.getElementById('score').textContent = state.score;
-    }
+    const saved = JSON.parse(localStorage.getItem('mathGame')) || {};
+    Object.assign(state, saved);
+    const { playerName = '', level = 1, score = 0 } = state;
+    document.getElementById('player-name').value = playerName;
+    document.getElementById('difficulty').value = level;
+    document.getElementById('score').textContent = score;
 };
 
 const saveState = () => {
@@ -25,14 +23,14 @@ const saveState = () => {
 const generateName = () => {
     const adjectives = ['Happy', 'Lucky', 'Clever', 'Bright', 'Quick'];
     const nouns = ['Wizard', 'Eagle', 'Tiger', 'Dolphin', 'Star'];
-    const name = `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${Math.floor(Math.random() * 100)}`;
+    const randomElement = arr => arr[Math.floor(Math.random() * arr.length)];
+    const name = `${randomElement(adjectives)}${randomElement(nouns)}${Math.floor(Math.random() * 100)}`;
     document.getElementById('player-name').value = name;
 };
 
 const enableSubmitButton = () => {
     const answerInput = document.getElementById('answer');
-    const submitButton = document.getElementById('submit-answer');
-    submitButton.disabled = !answerInput.value.trim();
+    document.getElementById('submit-answer').disabled = !answerInput.value.trim();
 };
 
 const generateQuestion = () => {
@@ -43,7 +41,8 @@ const generateQuestion = () => {
         4: ['+', '-', '*', '/']
     };
 
-    const ops = operations[state.level];
+    const { level } = state;
+    const ops = operations[level];
     const op = ops[Math.floor(Math.random() * ops.length)];
     let num1, num2;
 
@@ -157,10 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('reset-game').addEventListener('click', () => {
         localStorage.removeItem('mathGame');
         generateName();
-        state.score = 0;
-        state.level = 1;
-        state.attempts = 0;
-        state.currentAnswer = 0;
+        Object.assign(state, { score: 0, level: 1, attempts: 0, currentAnswer: 0 });
         document.getElementById('score').textContent = state.score;
         document.getElementById('difficulty').value = state.level;
         document.getElementById('welcome-screen').classList.remove('hidden');

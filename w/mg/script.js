@@ -84,6 +84,48 @@ const checkAnswer = () => {
     }
 };
 
+const toggleTheme = () => {
+    const body = document.body;
+    const container = document.querySelector('.container');
+    const buttons = document.querySelectorAll('button');
+    const scoreDisplay = document.getElementById('score-display');
+    const isDark = body.classList.toggle('dark-theme');
+    body.classList.toggle('light-theme', !isDark);
+    container.classList.toggle('dark-theme', isDark);
+    container.classList.toggle('light-theme', !isDark);
+    scoreDisplay.classList.toggle('dark-theme', isDark);
+    scoreDisplay.classList.toggle('light-theme', !isDark);
+    buttons.forEach(button => {
+        button.classList.toggle('dark-theme', isDark);
+        button.classList.toggle('light-theme', !isDark);
+    });
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+};
+
+const themes = [
+    'blue', 'green', 'red', 'purple', 'orange',
+    'yellow', 'pink', 'teal', 'brown', 'gray',
+    'cyan', 'lime', 'indigo', 'amber', 'deep-orange'
+];
+
+const toggleColorTheme = () => {
+    const body = document.body;
+    const buttons = document.querySelectorAll('button');
+    let currentTheme = localStorage.getItem('colorTheme') || 'blue';
+    let currentIndex = themes.indexOf(currentTheme);
+    let nextIndex = (currentIndex + 1) % themes.length;
+    let nextTheme = themes[nextIndex];
+
+    body.classList.remove(`theme-${currentTheme}`);
+    body.classList.add(`theme-${nextTheme}`);
+    buttons.forEach(button => {
+        button.classList.remove(`theme-${currentTheme}`);
+        button.classList.add(`theme-${nextTheme}`);
+    });
+
+    localStorage.setItem('colorTheme', nextTheme);
+};
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
@@ -119,4 +161,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('welcome-screen').classList.remove('hidden');
     });
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        toggleTheme();
+    }
+
+    const savedColorTheme = localStorage.getItem('colorTheme') || 'blue';
+    document.body.classList.add(`theme-${savedColorTheme}`);
+    document.querySelectorAll('button').forEach(button => {
+        button.classList.add(`theme-${savedColorTheme}`);
+    });
+
+    document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
+    document.getElementById('toggle-color-theme').addEventListener('click', toggleColorTheme);
 });

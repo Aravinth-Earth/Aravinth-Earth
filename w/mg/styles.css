@@ -11,16 +11,98 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #1e90ff, #70a1ff);
+    color: black;
+}
+
+body.dark-theme {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: white;
+}
+
+body.theme-blue {
+    background: linear-gradient(135deg, #1e90ff, #70a1ff);
+}
+
+body.theme-green {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+body.theme-red {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+body.theme-purple {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+body.theme-orange {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+}
+
+body.theme-yellow {
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+}
+
+body.theme-pink {
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+}
+
+body.theme-teal {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+body.theme-brown {
+    background: linear-gradient(135deg, #8d6e63, #795548);
+}
+
+body.theme-gray {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+}
+
+body.theme-cyan {
+    background: linear-gradient(135deg, #00bcd4, #0097a7);
+}
+
+body.theme-lime {
+    background: linear-gradient(135deg, #cddc39, #afb42b);
+}
+
+body.theme-indigo {
+    background: linear-gradient(135deg, #3f51b5, #303f9f);
+}
+
+body.theme-amber {
+    background: linear-gradient(135deg, #ffc107, #ffa000);
+}
+
+body.theme-deep-orange {
+    background: linear-gradient(135deg, #ff5722, #e64a19);
 }
 
 .container {
     background: white;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    width: 90%;
-    max-width: 500px;
-    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.container.light-theme {
+    background: white;
+    color: black;
+}
+
+.container.dark-theme {
+    background: #333;
+    color: white;
 }
 
 .screen {
@@ -39,6 +121,8 @@ input, select, button {
     border: 2px solid #ddd;
     border-radius: 0.5rem;
     font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 button {
@@ -46,7 +130,77 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background 0.3s, color 0.3s;
+}
+
+button.light-theme {
+    background: #1e90ff;
+    color: white;
+}
+
+button.dark-theme {
+    background: #4ca1af;
+    color: black;
+}
+
+button.theme-blue {
+    background: #1e90ff;
+}
+
+button.theme-green {
+    background: #2ecc71;
+}
+
+button.theme-red {
+    background: #e74c3c;
+}
+
+button.theme-purple {
+    background: #9b59b6;
+}
+
+button.theme-orange {
+    background: #e67e22;
+}
+
+button.theme-yellow {
+    background: #f1c40f;
+}
+
+button.theme-pink {
+    background: #e91e63;
+}
+
+button.theme-teal {
+    background: #1abc9c;
+}
+
+button.theme-brown {
+    background: #8d6e63;
+}
+
+button.theme-gray {
+    background: #95a5a6;
+}
+
+button.theme-cyan {
+    background: #00bcd4;
+}
+
+button.theme-lime {
+    background: #cddc39;
+}
+
+button.theme-indigo {
+    background: #3f51b5;
+}
+
+button.theme-amber {
+    background: #ffc107;
+}
+
+button.theme-deep-orange {
+    background: #ff5722;
 }
 
 button:hover {
@@ -61,6 +215,16 @@ button:hover {
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#score-display.light-theme {
+    background: white;
+    color: black;
+}
+
+#score-display.dark-theme {
+    background: #333;
+    color: white;
 }
 
 #back-to-menu {
@@ -93,6 +257,17 @@ button:hover {
 @media (max-width: 480px) {
     .container {
         padding: 1rem;
-        width: 95%;
+        width: 100%;
+    }
+
+    #score-display, #back-to-menu {
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    #back-to-menu {
+        right: 5rem;
     }
 }

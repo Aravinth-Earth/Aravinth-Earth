@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     eventDiv.innerHTML = `
       <input type="text" name="eventName" placeholder="Event Name" value="${name}" required>
       <input type="number" name="eventDuration" placeholder="Duration (minutes)" value="${duration}" min="1" required>
+      <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
+      <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
       <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
     `;
     return eventDiv;
@@ -37,7 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Remove Event
   eventsContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('remove-event')) {
+    if (e.target.classList.contains('move-up')) {
+      const eventDiv = e.target.parentElement;
+      if (eventDiv.previousElementSibling) {
+        eventsContainer.insertBefore(eventDiv, eventDiv.previousElementSibling);
+        updateTimeline();
+      }
+    } else if (e.target.classList.contains('move-down')) {
+      const eventDiv = e.target.parentElement;
+      if (eventDiv.nextElementSibling) {
+        eventsContainer.insertBefore(eventDiv.nextElementSibling, eventDiv);
+        updateTimeline();
+      }
+    } else if (e.target.classList.contains('remove-event')) {
       e.target.parentElement.remove();
       updateTimeline();
     }
@@ -119,40 +133,36 @@ document.addEventListener('DOMContentLoaded', () => {
     while (currentTime <= events[events.length - 1].endTime) {
       const timeBlock = document.createElement('div');
       timeBlock.className = 'timeline-time-block';
-      timeBlock.innerHTML = `<span>${currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</span>`;
+      timeBlock.innerHTML = `<span>${currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>`;
       timeColumn.appendChild(timeBlock);
       currentTime.setMinutes(currentTime.getMinutes() + intervalMinutes);
     }
 
+    // Reverse the events array before displaying
+    events = events.slice().reverse();
+
     // Create event blocks with proper scaling
-    events.reverse().forEach(event => {
+    events.forEach(event => {
       const eventBlock = document.createElement('div');
       eventBlock.className = 'timeline-event-block';
       
       // Calculate how many time blocks this event should span
       const blocksCount = Math.ceil(event.duration / intervalMinutes);
-      eventBlock.style.setProperty('--blocks-count', blocksCount);
+      eventBlock.style.height = `calc(var(--time-block-height) * ${blocksCount})`;
       
+      const startTime = event.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+      const endTime = event.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+      const duration = `${Math.floor(event.duration / 60).toString().padStart(2, '0')}:${(event.duration % 60).toString().padStart(2, '0')}`;
+
       eventBlock.innerHTML = `
-        <span>${event.name} - ${event.duration} mins</span>
-        <span>(${blocksCount} ${blocksCount === 1 ? 'block' : 'blocks'})</span>
+        <span>[ ${startTime} > ${duration} > ${endTime} ] => ${event.name} </span>
       `;
       eventsColumn.appendChild(eventBlock);
     });
   }
 
   function getIntervalMinutes(interval) {
-    switch (interval) {
-      case '5 mins': return 5;
-      case '10 mins': return 10;
-      case '15 mins': return 15;
-      case '30 mins': return 30;
-      case '1 hr': return 60;
-      case '2 hr': return 120;
-      case '3 hr': return 180;
-      case '6 hr': return 360;
-      default: return 30;
-    }
+    return parseInt(interval);
   }
 
   // Save Plan
@@ -240,9 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const events = [];
     for (let i = 0; i < 10; i++) {
-      const eventDiv = createEventElement(eventNames[i % eventNames.length], Math.floor(Math.random() * (150 - 15 + 1)) + 15);
+      const randomDuration = Math.floor(Math.random() * (150 - 15 + 1)) + 15;
+      const eventName = eventNames[i % eventNames.length];
+      const eventDiv = createEventElement(eventName, randomDuration);
       eventsContainer.appendChild(eventDiv);
-      events.push({ name: eventNames[i % eventNames.length], duration: Math.floor(Math.random() * (150 - 15 + 1)) + 15 });
+      events.push({ name: eventName, duration: randomDuration });
     }
 
     const calculatedEvents = calculateReverseTimeline(targetEndTime, events);

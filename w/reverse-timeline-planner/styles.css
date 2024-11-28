@@ -210,20 +210,19 @@ select:hover {
   display: flex;
   align-items: center;
   padding: 0.5rem;
-  border: 1px solid var(--accent-color);
-  border-radius: var(--border-radius);
+  border-top: 1px solid var(--accent-color); /* Add a line between events */
   background-color: var(--input-bg);
   color: var(--input-text);
-  margin-bottom: 0.5rem;
   width: 100%;
+}
+
+/* Remove margin-bottom to eliminate gaps between event blocks */
+.timeline-event-block {
+  margin-bottom: 0;
 }
 
 .timeline-time-block {
   height: var(--time-block-height);
-  min-height: var(--time-block-height);
-}
-
-.timeline-event-block {
   min-height: var(--time-block-height);
 }
 
@@ -242,6 +241,17 @@ timeline-bar span {
   left: 50%;
   transform: translate(-50%, -50%);
   color: var(--button-text);
+  font-weight: bold;
+}
+
+.timeline-target-end-block {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-top: 1px solid var(--accent-color); /* Add a line at the bottom */
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  width: 100%;
   font-weight: bold;
 }
 

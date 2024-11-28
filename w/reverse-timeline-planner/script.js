@@ -66,7 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return { name, duration };
     });
 
-    const calculatedEvents = calculateReverseTimeline(targetEndTime, events);
+    // Reverse the events array once
+    const reversedEvents = events.slice();
+
+    const calculatedEvents = calculateReverseTimeline(targetEndTime, reversedEvents);
     displayTimeline(calculatedEvents);
   }
 
@@ -75,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTime = new Date(targetEndTime);
     const result = [];
 
-    for (let i = events.length - 1; i >= 0; i--) {
+    for (let i = 0; i < events.length; i++) {
       const event = events[i];
       const endTime = new Date(currentTime);
       currentTime.setMinutes(currentTime.getMinutes() - event.duration);
       const startTime = new Date(currentTime);
-      result.unshift({
+      result.push({
         name: event.name,
         duration: event.duration,
         startTime,
@@ -115,11 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const eventsColumn = document.getElementById('timeline-events-column');
 
-    // Reverse the events array before displaying
-    events = events.slice().reverse();
-
     // Create event blocks with proper scaling
-    events.forEach(event => {
+    events.reverse().forEach(event => {
       const eventBlock = document.createElement('div');
       eventBlock.className = 'timeline-event-block';
       
@@ -136,6 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       eventsColumn.appendChild(eventBlock);
     });
+
+    // Add a line at the bottom to represent the target end time
+    const targetEndTime = new Date(document.getElementById('target-end-time').value);
+    const targetEndTimeString = targetEndTime.toLocaleString([], { hour: '2-digit', minute: '2-digit', hour12: false, year: 'numeric', month: 'short', day: 'numeric' });
+    const eventName = document.getElementById('event-name').value;
+
+    const targetEndBlock = document.createElement('div');
+    targetEndBlock.className = 'timeline-target-end-block';
+    targetEndBlock.innerHTML = `
+      <span>${eventName ? `${eventName} - ` : ''}Target End Time: ${targetEndTimeString}</span>
+    `;
+    eventsColumn.appendChild(targetEndBlock);
   }
 
   function getIntervalMinutes(interval) {
@@ -144,18 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Save Plan
   function savePlan() {
-    const eventName = document.getElementById('event-name').value;
-    const targetEndTime = document.getElementById('target-end-time').value;
-    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => {
-      const name = eventDiv.querySelector('input[name="eventName"]').value;
-      const duration = eventDiv.querySelector('input[name="eventDuration"]').value;
-      return { name, duration };
-    });
-
-    const plan = { eventName, targetEndTime, events };
-    const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
     const filename = eventName ? `${eventName}-${new Date().toISOString()}.json` : `timeline-plan-${new Date().toISOString()}.json`;
     const a = document.createElement('a');
     a.href = url;

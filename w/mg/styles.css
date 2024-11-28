@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e90ff, #70a1ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+input, select, button {
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+button {
+    background: #1e90ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+#score-display {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#back-to-menu {
+    position: fixed;
+    top: 1rem;
+    right: 6rem;
+}
+
+.success {
+    animation: bounce 0.5s;
+    color: green;
+}
+
+.failure {
+    animation: shake 0.5s;
+    color: red;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+        width: 95%;
+    }
+}

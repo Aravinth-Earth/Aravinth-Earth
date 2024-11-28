@@ -2,3 +2,7 @@
 /shelf/
 /workspace.xml
 .idea**
+
+# ignore the visualization related assets
+figures/
+count_lines*

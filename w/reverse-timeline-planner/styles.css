@@ -189,12 +189,23 @@ select:hover {
   margin-bottom: 1rem;
 }
 
+/* Update timeline content to not use grid layout */
 .timeline-content {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Remove styles related to the time column */
 .timeline-time-block,
+.timeline-time-column {
+  display: none;
+}
+
+/* Adjust event column to full width */
+.timeline-events-column {
+  width: 100%;
+}
+
 .timeline-event-block {
   display: flex;
   align-items: center;
@@ -204,6 +215,7 @@ select:hover {
   background-color: var(--input-bg);
   color: var(--input-text);
   margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .timeline-time-block {

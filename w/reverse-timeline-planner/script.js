@@ -95,14 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayTimeline(events) {
     if (events.length === 0) {
       timelineDiv.innerHTML = `
-        <div class="timeline-header">
-          <div class="timeline-time">Time</div>
-          <div class="timeline-events">Events</div>
-        </div>
-        <div class="timeline-content">
-          <div class="timeline-time-column" id="timeline-time-column"></div>
-          <div class="timeline-events-column" id="timeline-events-column"></div>
-        </div>
         <p class="no-events-message">No events to display. Please add events to see the timeline.</p>
       `;
       return;
@@ -114,29 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set CSS variable for interval minutes
     document.documentElement.style.setProperty('--interval-minutes', intervalMinutes);
 
+    // Update timeline content to only contain the events column
     timelineDiv.innerHTML = `
-      <div class="timeline-header">
-        <div class="timeline-time">Time</div>
-        <div class="timeline-events">Events</div>
-      </div>
       <div class="timeline-content">
-        <div class="timeline-time-column" id="timeline-time-column"></div>
         <div class="timeline-events-column" id="timeline-events-column"></div>
       </div>
     `;
 
-    const timeColumn = document.getElementById('timeline-time-column');
     const eventsColumn = document.getElementById('timeline-events-column');
-
-    // Create time blocks
-    let currentTime = new Date(events[0].startTime);
-    while (currentTime <= events[events.length - 1].endTime) {
-      const timeBlock = document.createElement('div');
-      timeBlock.className = 'timeline-time-block';
-      timeBlock.innerHTML = `<span>${currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>`;
-      timeColumn.appendChild(timeBlock);
-      currentTime.setMinutes(currentTime.getMinutes() + intervalMinutes);
-    }
 
     // Reverse the events array before displaying
     events = events.slice().reverse();

@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return { name, duration };
     });
 
-    // Reverse the events array once
     const reversedEvents = events.slice();
 
     const calculatedEvents = calculateReverseTimeline(targetEndTime, reversedEvents);
@@ -156,12 +155,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Save Plan
   function savePlan() {
+    const eventName = document.getElementById('event-name').value;
+    const targetEndTime = document.getElementById('target-end-time').value;
+    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => ({
+      name: eventDiv.querySelector('input[name="eventName"]').value,
+      duration: parseInt(eventDiv.querySelector('input[name="eventDuration"]').value)
+    }));
+
+    const plan = {
+      eventName,
+      targetEndTime,
+      events
+    };
+
+    const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const filename = eventName ? `${eventName}-${new Date().toISOString()}.json` : `timeline-plan-${new Date().toISOString()}.json`;
+    
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     a.click();
-    URL.revokeObjectURL(url);    
+    URL.revokeObjectURL(url);
   }
 
   // Export Plan
@@ -247,3 +262,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update timeline when event details change
   eventsContainer.addEventListener('input', updateTimeline);
 });
+
+// the background dotted line logic is not yet proper

@@ -381,7 +381,7 @@ const toggleStats = () => {
 // Add updateStats function
 const updateStats = () => {
     const total = state.correctCount + state.incorrectCount;
-    const successRate = total > 0 ? ((state.correctCount / total) * 100).toFixed(1) : '0.0';
+    const successRate = total > 0 ? ((state.correctCount / total) * 100).toFixed(3) : '0.0';
     
     // Update all stats
     document.getElementById('streak-counter').textContent = state.streak;

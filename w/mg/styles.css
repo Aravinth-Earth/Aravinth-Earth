@@ -128,6 +128,8 @@ body.theme-deep-orange {
     max-width: min(90%, 600px);
     padding: 2rem;
     color: var(--color-text);
+    max-width: 800px; /* Consolidated max-width */
+    padding: 3rem; /* Consolidated padding */
 }
 
 .container.light-theme {
@@ -249,6 +251,18 @@ button:disabled {
     #back-to-menu {
         right: 5rem;
     }
+
+    .top-bar .theme-controls button {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+        min-width: 0; /* Allow buttons to shrink */
+    }
+
+    .top-bar .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
 
 .top-bar {
@@ -358,36 +372,6 @@ body.light-theme .top-bar {
     }
 }
 
-.top-bar button {
-    width: auto;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-}
-
-.game-content {
-    display: grid;
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-#question {
-    font-size: 2rem;
-    margin: 1rem 0;
-}
-
-#answer {
-    font-size: 1.5rem;
-    text-align: center;
-    max-width: 200px;
-    margin: 0 auto;
-}
-
-.button-group {
-    display: grid;
-    gap: 0.5rem;
-    margin: 1rem 0;
-}
-
 @media (min-width: 768px) {
     .container {
         margin-top: 5rem;
@@ -442,4 +426,28 @@ body.light-theme .top-bar {
 .game-controls button {
     flex: 1;
     max-width: 200px;
+}
+
+.game-content {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+#question {
+    font-size: 2rem;
+    margin: 1rem 0;
+}
+
+#answer {
+    font-size: 1.5rem;
+    text-align: center;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.button-group {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1rem 0;
 }

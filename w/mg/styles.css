@@ -837,6 +837,7 @@ input[type="number"] {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
 .version-info #version-display {
@@ -847,6 +848,18 @@ input[type="number"] {
 
 body.dark-theme .version-info #version-display {
     color: var(--color-text-light);
+}
+
+@media (max-width: 480px) {
+    .version-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .version-info #version-display,
+    .version-info .info-button {
+        margin-bottom: 0.5rem;
+    }
 }
 
 .version-overlay .info-content {

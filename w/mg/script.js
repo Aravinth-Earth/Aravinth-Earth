@@ -222,6 +222,9 @@ const game = {
         timer.classList.remove('timer-active');
         void timer.offsetWidth; // Force reflow
         timer.classList.add('timer-active');
+
+        const submitButton = document.getElementById('submit-answer');
+        submitButton.disabled = false; // Re-enable the submit button for the new question
     },
 
     checkAnswer() {
@@ -307,6 +310,8 @@ const game = {
             }
         }
         this.updateUI(); // Ensure stats are updated
+
+        submitButton.disabled = true; // Disable the submit button after clicking
     },
 
     setupEventListeners() {
@@ -358,11 +363,17 @@ const game = {
     },
 
     applyInitialTheme() {
+        // Start with dark theme
+        document.body.classList.add('dark-theme');
+        document.querySelector('.container').classList.add('dark-theme');
+        
+        // Apply random color theme
         const randomTheme = GAME_LIMITS.THEMES[Math.floor(Math.random() * GAME_LIMITS.THEMES.length)];
         document.body.classList.add(`theme-${randomTheme}`);
         document.querySelectorAll('button').forEach(button => {
             button.classList.add(`theme-${randomTheme}`);
         });
+        
         const statsCollapsed = localStorage.getItem('statsCollapsed') === 'true';
         if (statsCollapsed) {
             document.querySelector('.stats-panel').classList.add('collapsed');

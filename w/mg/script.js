@@ -17,8 +17,6 @@ const GAME_LIMITS = {
     }
 };
 
-const VERSION = '1.0.1';
-
 // Utility Functions
 const utils = {
     random: (arr) => arr[Math.floor(Math.random() * arr.length)],
@@ -609,7 +607,6 @@ const handlers = {
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     game.init();
-    document.getElementById('version-display').textContent = `Version: ${VERSION}`;
     // Setup event listeners
     document.getElementById('generate-name').addEventListener('click', handlers.onGenerateName);
     document.getElementById('start-game').addEventListener('click', handlers.onStartGame);

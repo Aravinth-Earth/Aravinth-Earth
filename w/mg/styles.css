@@ -837,17 +837,56 @@ input[type="number"] {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
+    flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+.version-info #version-display {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+body.dark-theme .version-info #version-display {
+    color: var(--color-text-light);
+    background-color: var(--color-secondary);
+}
+
+@media (max-width: 480px) {
+    .version-info {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .version-info #version-display,
+    .version-info .info-button {
+        margin-bottom: 0;
+    }
+}
+
+.version-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
     flex-wrap: wrap; /* Allow wrapping */
 }
 
 .version-info #version-display {
     font-size: 0.9rem;
     color: var(--color-text-dark);
-    transition: color 0.3s;
+    background-color: var(--color-light);
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.3rem;
+    transition: color 0.3s, background-color 0.3s;
 }
 
 body.dark-theme .version-info #version-display {
     color: var(--color-text-light);
+    background-color: var(--color-dark);
 }
 
 @media (max-width: 480px) {
@@ -870,4 +909,32 @@ body.dark-theme .version-info #version-display {
     border-radius: 1rem;
     position: relative;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+/* Add these new styles */
+.button-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.button-row button {
+    flex: 1;
+}
+
+/* Add these new styles */
+.name-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.name-row input {
+    flex: 1;
+}
+
+.icon-button {
+    flex: 0 0 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8rem;
 }

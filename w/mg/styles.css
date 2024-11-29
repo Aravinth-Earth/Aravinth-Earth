@@ -84,61 +84,85 @@ body.theme-red {
 body.theme-purple {
     --color-primary: #9b59b6;
     --color-secondary: #8e44ad;
+    --color-tertiary: #be90d4;
+    --color-quaternary: #9b59b6;
 }
 
 body.theme-orange {
     --color-primary: #e67e22;
     --color-secondary: #d35400;
+    --color-tertiary: #f39c12;
+    --color-quaternary: #e67e22;
 }
 
 body.theme-yellow {
     --color-primary: #f1c40f;
     --color-secondary: #f39c12;
+    --color-tertiary: #f1c40f;
+    --color-quaternary: #f39c12;
 }
 
 body.theme-pink {
     --color-primary: #fd79a8;
     --color-secondary: #e84393;
+    --color-tertiary: #ff9ff3;
+    --color-quaternary: #f368e0;
 }
 
 body.theme-teal {
     --color-primary: #1abc9c;
     --color-secondary: #16a085;
+    --color-tertiary: #48dbfb;
+    --color-quaternary: #1dd1a1;
 }
 
 body.theme-brown {
     --color-primary: #8d6e63;
     --color-secondary: #5d4037;
+    --color-tertiary: #a1887f;
+    --color-quaternary: #795548;
 }
 
 body.theme-gray {
     --color-primary: #95a5a6;
     --color-secondary: #7f8c8d;
+    --color-tertiary: #bdc3c7;
+    --color-quaternary: #95a5a6;
 }
 
 body.theme-cyan {
     --color-primary: #00bcd4;
     --color-secondary: #0097a7;
+    --color-tertiary: #00acc1;
+    --color-quaternary: #00838f;
 }
 
 body.theme-lime {
     --color-primary: #cddc39;
     --color-secondary: #afb42b;
+    --color-tertiary: #d4e157;
+    --color-quaternary: #c0ca33;
 }
 
 body.theme-indigo {
     --color-primary: #3f51b5;
     --color-secondary: #303f9f;
+    --color-tertiary: #5c6bc0;
+    --color-quaternary: #3949ab;
 }
 
 body.theme-amber {
     --color-primary: #ffc107;
     --color-secondary: #ff9800;
+    --color-tertiary: #ffb300;
+    --color-quaternary: #ffa000;
 }
 
 body.theme-deep-orange {
     --color-primary: #ff5722;
     --color-secondary: #e64a19;
+    --color-tertiary: #ff7043;
+    --color-quaternary: #d84315;
 }
 
 /* ...other theme colors... */

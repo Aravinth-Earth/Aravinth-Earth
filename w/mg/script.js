@@ -344,6 +344,11 @@ const game = {
                 e.target.classList.remove('visible');
             }
         });
+        document.getElementById('answer').addEventListener('focus', () => {
+            setTimeout(() => {
+                document.getElementById('answer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
     },
 
     applyInitialTheme() {
@@ -500,6 +505,7 @@ const ui = {
         const buttons = document.querySelectorAll('button');
         const scoreDisplay = document.getElementById('score-display');
         const infoContent = document.querySelector('.info-content');
+        const gameControls = document.querySelector('.game-controls');
         const isDark = body.classList.toggle('dark-theme');
         
         body.classList.toggle('light-theme', !isDark);
@@ -517,7 +523,13 @@ const ui = {
             scoreDisplay.classList.toggle('dark-theme', isDark);
             scoreDisplay.classList.toggle('light-theme', !isDark);
         }
-    
+
+        // Toggle theme for game controls
+        if (gameControls) {
+            gameControls.classList.toggle('dark-theme', isDark);
+            gameControls.classList.toggle('light-theme', !isDark);
+        }
+
         buttons.forEach(button => {
             button.classList.toggle('dark-theme', isDark);
             button.classList.toggle('light-theme', !isDark);

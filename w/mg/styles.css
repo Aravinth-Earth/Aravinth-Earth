@@ -169,21 +169,15 @@ body.theme-deep-orange {
 
 .container {
     background: var(--color-light);
-    padding: 1.5rem;
+    padding: 3rem; /* Consolidated padding */
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 400px;
-    transition: background 0.3s, color 0.3s;
-    margin-top: 2rem;
-    max-width: min(90%, 600px);
-    padding: 2rem;
-    color: var(--color-text);
     max-width: 600px; /* Set maximum width */
+    transition: background 0.3s, color 0.3s;
     margin: 2rem auto; /* Center the container */
-    padding: 3rem; /* Consolidated padding */
+    color: var(--color-text);
 }
-
 
 .container.dark-theme {
     background: #333;
@@ -203,13 +197,10 @@ body.theme-deep-orange {
 
 input, select, button {
     padding: 0.8rem;
-    border: 2px solid #ddd;
     border-radius: 0.5rem;
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--color-light);
-    color: var(--color-text-dark);
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     background-color: var(--color-light);
     color: var(--color-text-dark);
@@ -218,9 +209,6 @@ input, select, button {
 
 body.dark-theme input,
 body.dark-theme select {
-    background-color: var(--color-dark);
-    color: var(--color-text-light);
-    border-color: #555;
     background-color: var(--color-dark);
     color: var(--color-text-light);
     border-color: var(--color-secondary);
@@ -874,12 +862,6 @@ input[type="number"] {
     opacity: 0.9;
 }
 
-.icon-button {
-    width: auto;
-    padding: 0.5rem;
-    aspect-ratio: 1;
-}
-
 body.dark-theme .version-info #version-display {
     color: var(--color-text-light);
     background-color: var(--color-secondary);
@@ -897,9 +879,6 @@ body.dark-theme .version-info #version-display {
         font-size: 0.8rem; /* Adjust font size for mobile */
     }
 
-    .icon-button {
-        padding: 0.5rem; /* Adjust padding for mobile */
-    }
 }
 
 .version-info #version-display {
@@ -924,14 +903,6 @@ body.dark-theme .version-info #version-display {
     border-radius: 1rem;
     position: relative;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
-}
-
-.icon-button {
-    flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.8rem;
 }
 
 /* Add these new styles */

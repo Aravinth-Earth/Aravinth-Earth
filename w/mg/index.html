@@ -12,31 +12,27 @@
     <div class="container light-theme">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
+            <span class="version-display">v1.2.3</span>
             <div class="game-content">
-                <div class="theme-controls">
-                    <button class="toggle-theme"><i class="fas fa-adjust"></i></button>
-                    <button class="toggle-color-theme"><i class="fas fa-palette"></i></button>
-                </div>
-                <div class="name-row">
-                    <input type="text" id="player-name" placeholder="Enter your name">
-                    <button id="generate-name" class="icon-button"><i class="fas fa-magic"></i></button>
-                </div>
-                <div class="button-group">
-                    <div class="button-row">
-                        <button id="start-game"><i class="fas fa-play"></i> Start</button>
-                        <button id="reset-game"><i class="fas fa-redo"></i> Reset</button>
-                    </div>
-                </div>
                 <select id="difficulty">
                     <option value="1">Easy (+ -)</option>
                     <option value="2">Medium (* /)</option>
                     <option value="3">Hard (+ - * /)</option>
                     <option value="4">Expert (All)</option>
                 </select>
+                <div class="name-row">
+                    <input type="text" id="player-name" placeholder="Enter your name">
+                    <button id="generate-name" class="icon-button"><i class="fas fa-magic"></i></button>
+                </div>
+                <div class="button-row">
+                    <button id="reset-game"><i class="fas fa-redo"></i> Reset</button>
+                    <button id="start-game"><i class="fas fa-play"></i> Start</button>                    
+                </div>                
                 <div class="version-info">
-                    <button id="show-info" class="icon-button"><i class="fas fa-info-circle"></i></button>
-                    <span class="version-display">v1.2.3</span>
+                    <button id="show-info" class="icon-button"><i class="fas fa-info-circle"></i></button>                    
                     <button id="show-version-history" class="icon-button"><i class="fas fa-history"></i></button>
+                    <button class="toggle-theme icon-button"><i class="fas fa-adjust"></i></button>
+                    <button class="toggle-color-theme icon-button"><i class="fas fa-palette"></i></button>
                 </div>
             </div>
         </section>

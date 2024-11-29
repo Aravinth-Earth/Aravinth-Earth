@@ -1,3 +1,13 @@
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --accent-primary: #58a6ff;
+  --accent-secondary: #1f6feb;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 /* General Styles */
 body {
     margin: 0;
@@ -62,12 +72,11 @@ button:active, select:active {
 
 /* Clock Styles */
 .clock {
-    font-size: 5rem;
-    text-align: center;
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transition: font-size 0.3s, color 0.3s;
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    text-shadow: 0 0 20px var(--accent-primary);
+    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center; /* Center the content horizontally */
@@ -91,6 +100,12 @@ button:active, select:active {
 
 /* Settings Panel Styles */
 .settings-panel {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    transform: translateY(0);
+    transition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -100,6 +115,12 @@ button:active, select:active {
     color: #fff;
     display: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.settings-panel.hidden {
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .settings-panel h3 {
@@ -123,4 +144,25 @@ button:active, select:active {
 
 .fullscreen #container {
     display: none;
+}
+
+/* Modern buttons */
+button {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--accent-primary);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover {
+    background-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+}
+
+button:active {
+    transform: translateY(0);
 }

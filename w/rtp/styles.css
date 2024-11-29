@@ -9,6 +9,16 @@
   --border-radius: 8px;
   --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   --time-block-height: 40px; /* Fixed height for time blocks */
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --accent-primary: #58a6ff;
+  --accent-secondary: #1f6feb;
+  --success: #238636;
+  --error: #f85149;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --border-radius: 8px;
 }
 
 * {
@@ -272,4 +282,84 @@ footer {
   #save-load {
     flex-direction: column;
   }
+}
+
+input[type="datetime-local"],
+input[type="text"],
+input[type="number"],
+select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--border-radius);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-primary);
+  outline: none;
+}
+
+/* Add visual cues */
+.timeline-event-block,
+.timeline-target-end-block {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.timeline-event-block:hover,
+.timeline-target-end-block:hover {
+  transform: translateX(5px);
+  box-shadow: var(--box-shadow);
+}
+
+/* Better button styling */
+button {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Add loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem;
+  border: 2px solid var(--accent-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

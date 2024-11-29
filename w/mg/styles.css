@@ -831,3 +831,30 @@ input[type="number"] {
     color: #f1c40f;
     animation: pulse 1s infinite;
 }
+
+.version-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.version-info #version-display {
+    font-size: 0.9rem;
+    color: var(--color-text-dark);
+    transition: color 0.3s;
+}
+
+body.dark-theme .version-info #version-display {
+    color: var(--color-text-light);
+}
+
+.version-overlay .info-content {
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}

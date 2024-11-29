@@ -17,6 +17,8 @@ const GAME_LIMITS = {
     }
 };
 
+const VERSION = '1.0.1';
+
 // Utility Functions
 const utils = {
     random: (arr) => arr[Math.floor(Math.random() * arr.length)],
@@ -349,6 +351,12 @@ const game = {
                 document.getElementById('answer').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         });
+        document.getElementById('show-version-history').addEventListener('click', () => {
+            document.querySelector('.version-overlay').classList.add('visible');
+        });
+        document.querySelector('.version-overlay .info-close').addEventListener('click', () => {
+            document.querySelector('.version-overlay').classList.remove('visible');
+        });
     },
 
     applyInitialTheme() {
@@ -601,7 +609,7 @@ const handlers = {
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     game.init();
-    
+    document.getElementById('version-display').textContent = `Version: ${VERSION}`;
     // Setup event listeners
     document.getElementById('generate-name').addEventListener('click', handlers.onGenerateName);
     document.getElementById('start-game').addEventListener('click', handlers.onStartGame);

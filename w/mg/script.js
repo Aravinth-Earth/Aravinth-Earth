@@ -84,6 +84,8 @@ const state = {
     correctFirstAttempt: 0,
     correctSecondAttempt: 0,
     correctThirdAttempt: 0,
+    questionCounter: 0,
+    selectedDifficulty: '',
 };
 
 // Core Game Logic
@@ -122,6 +124,8 @@ const game = {
             correctFirstAttempt: 0,
             correctSecondAttempt: 0,
             correctThirdAttempt: 0,
+            questionCounter: 0,
+            selectedDifficulty: '',
         });
         this.updateUI();
     },
@@ -132,7 +136,6 @@ const game = {
         
         // Update all stats
         document.getElementById('streak-counter').textContent = state.streak;
-        document.getElementById('complexity-level').textContent = Math.round(this.getDynamicDifficulty());
         document.getElementById('success-rate').textContent = `${successRate}%`;
         document.getElementById('skill-rating').textContent = Math.round(state.skillRating);
         document.getElementById('correct-count').textContent = state.correctCount;
@@ -225,6 +228,9 @@ const game = {
 
         const submitButton = document.getElementById('submit-answer');
         submitButton.disabled = false; // Re-enable the submit button for the new question
+
+        state.questionCounter++;
+        document.getElementById('question-counter').textContent = state.questionCounter;
     },
 
     checkAnswer() {
@@ -504,16 +510,16 @@ const ui = {
 
     updateDifficultyIndicator() {
         const indicator = document.querySelector('.difficulty-indicator');
-        const difficulty = game.getDynamicDifficulty();
-        const classes = {
-            easy: difficulty <= 25,
-            medium: difficulty > 25 && difficulty <= 50,
-            hard: difficulty > 50 && difficulty <= 75,
-            expert: difficulty > 75
-        };
+        if (!indicator) return; // Safety check
         
-        indicator.className = 'difficulty-indicator ' + 
-            Object.keys(classes).find(key => classes[key]);
+        const difficulty = game.getDynamicDifficulty();
+        let difficultyClass = 'easy';
+        
+        if (difficulty > 75) difficultyClass = 'expert';
+        else if (difficulty > 50) difficultyClass = 'hard';
+        else if (difficulty > 25) difficultyClass = 'medium';
+        
+        indicator.className = `difficulty-indicator difficulty-${difficultyClass}`;
     },
 
     toggleTheme() {
@@ -598,6 +604,16 @@ const handlers = {
         
         // Update UI elements
         document.getElementById('user-name').textContent = state.playerName;
+        
+        // Add these lines to properly update the selected difficulty
+        const difficultySelect = document.getElementById('difficulty');
+        state.selectedDifficulty = difficultySelect.options[difficultySelect.selectedIndex].text;
+        document.getElementById('selected-difficulty').textContent = state.selectedDifficulty;
+        
+        // Reset question counter when starting new game
+        state.questionCounter = 0;
+        document.getElementById('question-counter').textContent = '0';
+        
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
         

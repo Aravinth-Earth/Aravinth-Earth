@@ -929,3 +929,26 @@ body.dark-theme .version-info #version-display {
     align-items: center;
     padding: 0.8rem;
 }
+
+.selected-info {
+    font-size: 0.9rem;
+    padding: 0.3rem 0;
+    color: var(--color-text);
+    background: rgba(255,255,255,0.1);
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    margin-top: 0.3rem;
+}
+
+body.dark-theme .selected-info {
+    background: rgba(0,0,0,0.2);
+}
+
+/* Update media query for mobile view */
+@media (max-width: 480px) {
+    /* ...existing code... */
+    .selected-info {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.5rem;
+    }
+}

@@ -7,48 +7,51 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="light-theme">
+<body class="dark-theme">
     
     <div class="container light-theme">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
-            <button id="show-info" class="info-button">
-                <i class="fas fa-info-circle"></i> How It Works
-            </button>
+            <span class="version-display">v1.2.3</span>
             <div class="game-content">
-                <input type="text" id="player-name" placeholder="Enter your name">
-                <div class="button-group">
-                    <button id="generate-name"><i class="fas fa-magic"></i> Generate Name</button>
-                    <button id="start-game"><i class="fas fa-play"></i> Start Game</button>
-                    <button id="reset-game"><i class="fas fa-redo"></i> Reset Progress</button>
-                </div>
                 <select id="difficulty">
                     <option value="1">Easy (+ -)</option>
                     <option value="2">Medium (* /)</option>
                     <option value="3">Hard (+ - * /)</option>
                     <option value="4">Expert (All)</option>
                 </select>
-                <div class="theme-controls">
-                    <button class="toggle-theme"><i class="fas fa-adjust"></i> Theme</button>
-                    <button class="toggle-color-theme"><i class="fas fa-palette"></i> Color</button>
+                <div class="name-row">
+                    <input type="text" id="player-name" placeholder="Enter your name">
+                    <button id="generate-name" class="icon-button"><i class="fas fa-magic"></i></button>
+                </div>
+                <div class="button-row">
+                    <button id="reset-game"><i class="fas fa-redo"></i> Reset</button>
+                    <button id="start-game"><i class="fas fa-play"></i> Start</button>                    
+                </div>                
+                <div class="version-info">
+                    <button id="show-info" class="icon-button"><i class="fas fa-info-circle"></i></button>                    
+                    <button id="show-version-history" class="icon-button"><i class="fas fa-history"></i></button>
+                    <button class="toggle-theme icon-button"><i class="fas fa-adjust"></i></button>
+                    <button class="toggle-color-theme icon-button"><i class="fas fa-palette"></i></button>
                 </div>
             </div>
         </section>
-
+        
         <section id="game-screen" class="screen hidden">
             <div class="top-bar">
                 <div class="theme-controls">
-                    <button id="back-to-menu"><i class="fas fa-arrow-left"></i></button>
-                    <button class="toggle-theme"><i class="fas fa-adjust"></i></button>
-                    <button class="toggle-color-theme"><i class="fas fa-palette"></i></button>
+                    <button id="back-to-menu" class="icon-button"><i class="fas fa-arrow-left"></i></button>
+                    <button class="toggle-theme" class="icon-button"><i class="fas fa-adjust"></i></button>
+                    <button class="toggle-color-theme" class="icon-button"><i class="fas fa-palette"></i></button>
                 </div>
                 <div class="user-info">
                     <div id="user-name"></div>
                     <div>Score: <span id="score">0</span></div>
-                    <div class="difficulty">
-                        Level: <span id="current-difficulty"></span>
-                        <span class="difficulty-indicator difficulty-easy"></span>
+                    <div class="selected-info">
+                        Mode: <span id="selected-difficulty"></span> | 
+                        Question: <span id="question-counter">0</span>
                     </div>
+                    <div class="difficulty-indicator"></div>
                     <div class="timer-bar"></div>
                 </div>
             </div>
@@ -150,11 +153,30 @@
         </div>
     </div>
 
+    <!-- Add version history overlay -->
+    <div class="version-overlay info-overlay">
+        <div class="info-content">
+            <button class="info-close"><i class="fas fa-times"></i></button>
+            <h2>Version History</h2>
+            <div class="info-sections">                
+                <!-- Add new version history here -->
+                <section>
+                    <h3>V 1.0.1</h3>
+                    <ul>
+                        <li>Bug Fix: bring submit button to top with keyboard.</li>
+                        <li>Added version history and version display.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>V 1.0.0</h3>
+                    <ul>
+                        <li>Initial release of the game.</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
-    <style>
-        .stats-panel {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    </style>
 </body>
 </html>

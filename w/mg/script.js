@@ -84,6 +84,8 @@ const state = {
     correctFirstAttempt: 0,
     correctSecondAttempt: 0,
     correctThirdAttempt: 0,
+    questionCounter: 0,
+    selectedDifficulty: '',
 };
 
 // Core Game Logic
@@ -122,6 +124,8 @@ const game = {
             correctFirstAttempt: 0,
             correctSecondAttempt: 0,
             correctThirdAttempt: 0,
+            questionCounter: 0,
+            selectedDifficulty: '',
         });
         this.updateUI();
     },
@@ -132,7 +136,6 @@ const game = {
         
         // Update all stats
         document.getElementById('streak-counter').textContent = state.streak;
-        document.getElementById('complexity-level').textContent = Math.round(this.getDynamicDifficulty());
         document.getElementById('success-rate').textContent = `${successRate}%`;
         document.getElementById('skill-rating').textContent = Math.round(state.skillRating);
         document.getElementById('correct-count').textContent = state.correctCount;
@@ -222,6 +225,12 @@ const game = {
         timer.classList.remove('timer-active');
         void timer.offsetWidth; // Force reflow
         timer.classList.add('timer-active');
+
+        const submitButton = document.getElementById('submit-answer');
+        submitButton.disabled = false; // Re-enable the submit button for the new question
+
+        state.questionCounter++;
+        document.getElementById('question-counter').textContent = state.questionCounter;
     },
 
     checkAnswer() {
@@ -307,6 +316,8 @@ const game = {
             }
         }
         this.updateUI(); // Ensure stats are updated
+
+        submitButton.disabled = true; // Disable the submit button after clicking
     },
 
     setupEventListeners() {
@@ -349,14 +360,26 @@ const game = {
                 document.getElementById('answer').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         });
+        document.getElementById('show-version-history').addEventListener('click', () => {
+            document.querySelector('.version-overlay').classList.add('visible');
+        });
+        document.querySelector('.version-overlay .info-close').addEventListener('click', () => {
+            document.querySelector('.version-overlay').classList.remove('visible');
+        });
     },
 
     applyInitialTheme() {
+        // Start with dark theme
+        document.body.classList.add('dark-theme');
+        document.querySelector('.container').classList.add('dark-theme');
+        
+        // Apply random color theme
         const randomTheme = GAME_LIMITS.THEMES[Math.floor(Math.random() * GAME_LIMITS.THEMES.length)];
         document.body.classList.add(`theme-${randomTheme}`);
         document.querySelectorAll('button').forEach(button => {
             button.classList.add(`theme-${randomTheme}`);
         });
+        
         const statsCollapsed = localStorage.getItem('statsCollapsed') === 'true';
         if (statsCollapsed) {
             document.querySelector('.stats-panel').classList.add('collapsed');
@@ -404,12 +427,137 @@ const game = {
     },
 
     getNumberRange(difficulty) {
-        const base = Math.min(10, Math.floor(difficulty / 10) + 1);
-        const maxRange = Math.pow(base, 2);
+        // Update number range calculation to be more diverse from start
+        const minBase = Math.max(2, Math.floor(difficulty / 5));
+        const maxBase = Math.min(20, Math.floor(difficulty / 2) + 5);
+        
         return {
-            min: Math.max(1, Math.floor(maxRange / 10)),
-            max: maxRange
+            min: minBase,
+            max: Math.max(maxBase * 2, 10) // Ensure minimum range of 10
         };
+    },
+
+    generateQuestion() {
+        // Hide the next question button whenever generating a new question
+        document.getElementById('next-question').classList.add('hidden');
+        
+        const operations = {
+            1: ['+', '-'],
+            2: ['*', '/'],
+            3: ['+', '-', '*', '/'],
+            4: ['+', '-', '*', '/']
+        };
+    
+        const { level } = state;
+        const ops = operations[level];
+        const op = ops[Math.floor(Math.random() * ops.length)];
+        
+        // Get dynamic difficulty based on skill rating and performance
+        const difficulty = this.getDynamicDifficulty();
+        const range = this.getNumberRange(difficulty);
+        
+        // Enhanced number generation logic
+        let num1, num2;
+        const trivialNumbers = [0, 1];
+        
+        switch(op) {
+            case '/':
+                do {
+                    num2 = Math.max(2, Math.floor(Math.random() * (range.max / 4)));
+                    num1 = num2 * Math.floor(Math.random() * (range.max / 4) + 2);
+                } while (trivialNumbers.includes(num1) || trivialNumbers.includes(num2));
+                break;
+                
+            case '*':
+                do {
+                    num1 = Math.floor(Math.random() * (Math.sqrt(range.max)) + 2);
+                    num2 = Math.floor(Math.random() * (Math.sqrt(range.max)) + 2);
+                } while (trivialNumbers.includes(num1) || trivialNumbers.includes(num2));
+                break;
+                
+            case '-':
+                // New specific logic for subtraction
+                do {
+                    // Make first number larger 80% of the time
+                    if (Math.random() < 0.8) {
+                        num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min + Math.floor(range.max / 4);
+                        num2 = Math.floor(Math.random() * (num1 - range.min)) + range.min;
+                    } else {
+                        // Sometimes allow smaller first number for variety
+                        num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                        num2 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    }
+                    
+                    // Prevent trivial calculations
+                    if (num1 === num2 || trivialNumbers.includes(num2)) continue;
+                    break;
+                } while (true);
+                break;
+                
+            default: // Addition
+                do {
+                    num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    num2 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    if (trivialNumbers.includes(num2)) continue;
+                    break;
+                } while (true);
+        }
+
+        // Check if this exact question was asked in last 5 questions
+        const question = `${num1} ${op} ${num2}`;
+        if (!state.lastQuestions) state.lastQuestions = [];
+        
+        if (state.lastQuestions.includes(question)) {
+            return this.generateQuestion(); // Try again if question was recent
+        }
+        
+        // Keep track of last 5 questions
+        state.lastQuestions.push(question);
+        if (state.lastQuestions.length > 5) {
+            state.lastQuestions.shift();
+        }
+
+        state.lastQuestion = question;
+        state.currentAnswer = eval(question);
+        document.getElementById('question').textContent = question;
+        document.getElementById('answer').value = '';
+        document.getElementById('message').textContent = '';
+        document.getElementById('submit-answer').classList.remove('hidden');
+        document.getElementById('submit-answer').disabled = true;
+    
+        // Add complexity calculation
+        const complexity = {
+            numbers: [num1, num2],
+            operation: op,
+            range: range.max,
+            difficulty: difficulty
+        };
+    
+        logger.logQuestion(question, difficulty, [num1, num2], op);
+        
+        // Update UI stats
+        document.getElementById('complexity-level').textContent = Math.round(difficulty);
+        document.getElementById('streak-counter').textContent = state.streak;
+        const successRate = state.correctCount + state.incorrectCount > 0 
+            ? Math.round((state.correctCount / (state.correctCount + state.incorrectCount)) * 100)
+            : 0;
+        document.getElementById('success-rate').textContent = `${successRate}%`;
+    
+        this.updateUI(); // Add this line at the end
+    
+        ui.updateDifficultyIndicator();
+        
+        // Start timer animation
+        const timer = document.querySelector('.timer-bar');
+        timer.classList.remove('timer-active');
+        void timer.offsetWidth; // Force reflow
+        timer.classList.add('timer-active');
+
+        const submitButton = document.getElementById('submit-answer');
+        submitButton.disabled = false; // Re-enable the submit button for the new question
+
+        state.questionCounter++;
+        document.getElementById('question-counter').textContent = state.questionCounter;
     }
 };
 
@@ -487,16 +635,16 @@ const ui = {
 
     updateDifficultyIndicator() {
         const indicator = document.querySelector('.difficulty-indicator');
-        const difficulty = game.getDynamicDifficulty();
-        const classes = {
-            easy: difficulty <= 25,
-            medium: difficulty > 25 && difficulty <= 50,
-            hard: difficulty > 50 && difficulty <= 75,
-            expert: difficulty > 75
-        };
+        if (!indicator) return; // Safety check
         
-        indicator.className = 'difficulty-indicator ' + 
-            Object.keys(classes).find(key => classes[key]);
+        const difficulty = game.getDynamicDifficulty();
+        let difficultyClass = 'easy';
+        
+        if (difficulty > 75) difficultyClass = 'expert';
+        else if (difficulty > 50) difficultyClass = 'hard';
+        else if (difficulty > 25) difficultyClass = 'medium';
+        
+        indicator.className = `difficulty-indicator difficulty-${difficultyClass}`;
     },
 
     toggleTheme() {
@@ -581,6 +729,16 @@ const handlers = {
         
         // Update UI elements
         document.getElementById('user-name').textContent = state.playerName;
+        
+        // Add these lines to properly update the selected difficulty
+        const difficultySelect = document.getElementById('difficulty');
+        state.selectedDifficulty = difficultySelect.options[difficultySelect.selectedIndex].text;
+        document.getElementById('selected-difficulty').textContent = state.selectedDifficulty;
+        
+        // Reset question counter when starting new game
+        state.questionCounter = 0;
+        document.getElementById('question-counter').textContent = '0';
+        
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
         
@@ -601,7 +759,6 @@ const handlers = {
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     game.init();
-    
     // Setup event listeners
     document.getElementById('generate-name').addEventListener('click', handlers.onGenerateName);
     document.getElementById('start-game').addEventListener('click', handlers.onStartGame);

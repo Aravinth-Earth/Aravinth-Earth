@@ -475,15 +475,30 @@ const game = {
                 } while (trivialNumbers.includes(num1) || trivialNumbers.includes(num2));
                 break;
                 
-            default: // Addition and Subtraction
+            case '-':
+                // New specific logic for subtraction
+                do {
+                    // Make first number larger 80% of the time
+                    if (Math.random() < 0.8) {
+                        num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min + Math.floor(range.max / 4);
+                        num2 = Math.floor(Math.random() * (num1 - range.min)) + range.min;
+                    } else {
+                        // Sometimes allow smaller first number for variety
+                        num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                        num2 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    }
+                    
+                    // Prevent trivial calculations
+                    if (num1 === num2 || trivialNumbers.includes(num2)) continue;
+                    break;
+                } while (true);
+                break;
+                
+            default: // Addition
                 do {
                     num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
                     num2 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
-                    
-                    // Prevent trivial calculations like x-x or x+0
-                    if (op === '-' && num1 === num2) continue;
                     if (trivialNumbers.includes(num2)) continue;
-                    
                     break;
                 } while (true);
         }

@@ -427,12 +427,122 @@ const game = {
     },
 
     getNumberRange(difficulty) {
-        const base = Math.min(10, Math.floor(difficulty / 10) + 1);
-        const maxRange = Math.pow(base, 2);
+        // Update number range calculation to be more diverse from start
+        const minBase = Math.max(2, Math.floor(difficulty / 5));
+        const maxBase = Math.min(20, Math.floor(difficulty / 2) + 5);
+        
         return {
-            min: Math.max(1, Math.floor(maxRange / 10)),
-            max: maxRange
+            min: minBase,
+            max: Math.max(maxBase * 2, 10) // Ensure minimum range of 10
         };
+    },
+
+    generateQuestion() {
+        // Hide the next question button whenever generating a new question
+        document.getElementById('next-question').classList.add('hidden');
+        
+        const operations = {
+            1: ['+', '-'],
+            2: ['*', '/'],
+            3: ['+', '-', '*', '/'],
+            4: ['+', '-', '*', '/']
+        };
+    
+        const { level } = state;
+        const ops = operations[level];
+        const op = ops[Math.floor(Math.random() * ops.length)];
+        
+        // Get dynamic difficulty based on skill rating and performance
+        const difficulty = this.getDynamicDifficulty();
+        const range = this.getNumberRange(difficulty);
+        
+        // Enhanced number generation logic
+        let num1, num2;
+        const trivialNumbers = [0, 1];
+        
+        switch(op) {
+            case '/':
+                do {
+                    num2 = Math.max(2, Math.floor(Math.random() * (range.max / 4)));
+                    num1 = num2 * Math.floor(Math.random() * (range.max / 4) + 2);
+                } while (trivialNumbers.includes(num1) || trivialNumbers.includes(num2));
+                break;
+                
+            case '*':
+                do {
+                    num1 = Math.floor(Math.random() * (Math.sqrt(range.max)) + 2);
+                    num2 = Math.floor(Math.random() * (Math.sqrt(range.max)) + 2);
+                } while (trivialNumbers.includes(num1) || trivialNumbers.includes(num2));
+                break;
+                
+            default: // Addition and Subtraction
+                do {
+                    num1 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    num2 = Math.floor(Math.random() * (range.max - range.min)) + range.min;
+                    
+                    // Prevent trivial calculations like x-x or x+0
+                    if (op === '-' && num1 === num2) continue;
+                    if (trivialNumbers.includes(num2)) continue;
+                    
+                    break;
+                } while (true);
+        }
+
+        // Check if this exact question was asked in last 5 questions
+        const question = `${num1} ${op} ${num2}`;
+        if (!state.lastQuestions) state.lastQuestions = [];
+        
+        if (state.lastQuestions.includes(question)) {
+            return this.generateQuestion(); // Try again if question was recent
+        }
+        
+        // Keep track of last 5 questions
+        state.lastQuestions.push(question);
+        if (state.lastQuestions.length > 5) {
+            state.lastQuestions.shift();
+        }
+
+        state.lastQuestion = question;
+        state.currentAnswer = eval(question);
+        document.getElementById('question').textContent = question;
+        document.getElementById('answer').value = '';
+        document.getElementById('message').textContent = '';
+        document.getElementById('submit-answer').classList.remove('hidden');
+        document.getElementById('submit-answer').disabled = true;
+    
+        // Add complexity calculation
+        const complexity = {
+            numbers: [num1, num2],
+            operation: op,
+            range: range.max,
+            difficulty: difficulty
+        };
+    
+        logger.logQuestion(question, difficulty, [num1, num2], op);
+        
+        // Update UI stats
+        document.getElementById('complexity-level').textContent = Math.round(difficulty);
+        document.getElementById('streak-counter').textContent = state.streak;
+        const successRate = state.correctCount + state.incorrectCount > 0 
+            ? Math.round((state.correctCount / (state.correctCount + state.incorrectCount)) * 100)
+            : 0;
+        document.getElementById('success-rate').textContent = `${successRate}%`;
+    
+        this.updateUI(); // Add this line at the end
+    
+        ui.updateDifficultyIndicator();
+        
+        // Start timer animation
+        const timer = document.querySelector('.timer-bar');
+        timer.classList.remove('timer-active');
+        void timer.offsetWidth; // Force reflow
+        timer.classList.add('timer-active');
+
+        const submitButton = document.getElementById('submit-answer');
+        submitButton.disabled = false; // Re-enable the submit button for the new question
+
+        state.questionCounter++;
+        document.getElementById('question-counter').textContent = state.questionCounter;
     }
 };
 

@@ -477,25 +477,36 @@ body.light-theme .top-bar {
     }
 }
 
+/* Update theme-controls styles */
 .theme-controls {
     display: flex;
     gap: 0.5rem;
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: 0.5rem;
+    z-index: 2;
 }
 
 .theme-controls button {
-    min-width: 100px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-    color: var(--color-text); /* Make icon color dynamic */
+    padding: 0.5rem 1rem;
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none;
 }
 
-body.dark-theme .theme-controls button {
-    background-color: rgba(0, 0, 0, 0.2);
+.theme-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Remove these overrides to keep consistent theme colors */
+.theme-controls button[class*="theme-"] {
+    background: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+body.dark-theme .theme-controls button[class*="theme-"] {
+    background: var(--color-primary);
     color: var(--color-text-light);
 }
 
@@ -531,7 +542,7 @@ body.dark-theme .theme-controls button {
 
 .stats-panel {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 0.8rem;
     margin: 0;
     padding: 1rem;
@@ -542,7 +553,8 @@ body.dark-theme .theme-controls button {
     max-height: 500px;
     opacity: 1;
     transition: all 0.3s ease-out;
-    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .stats-panel.collapsed {
@@ -550,12 +562,6 @@ body.dark-theme .theme-controls button {
     padding: 0;
     margin: 0;
     opacity: 0;
-}
-
-@media (max-width: 600px) {
-    .stats-panel {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 .stat-item {
@@ -567,6 +573,25 @@ body.dark-theme .theme-controls button {
     border-radius: 0.3rem;
     background: rgba(255, 255, 255, 0.1);
     transition: transform 0.2s;
+    min-width: 0; /* Prevent overflow */
+    box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+    .stats-panel {
+        grid-template-columns: repeat(2, 1fr); /* Show 2 columns on mobile */
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .stat-item {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .stat-item .label {
+        font-size: 0.8rem;
+    }
 }
 
 .stat-item i {
@@ -903,6 +928,21 @@ body.dark-theme .version-info #version-display {
     border-radius: 1rem;
     position: relative;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    background: var(--color-light);
+    color: var(--color-text-dark);
+}
+
+/* Add these new styles */
+body.dark-theme .version-overlay .info-content,
+body.dark-theme .info-overlay .info-content {
+    background: #333;
+    color: var(--color-text-light);
+}
+
+body.light-theme .version-overlay .info-content,
+body.light-theme .info-overlay .info-content {
+    background: var(--color-light);
+    color: var(--color-text-dark);
 }
 
 /* Add these new styles */

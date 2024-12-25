@@ -6,92 +6,191 @@
     <title>Simple Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
+            background-color: #121212;
             margin: 0;
         }
+
         .calculator {
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            width: 320px;
+            border-radius: 16px;
             padding: 20px;
-            background-color: #111;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #1e1e1e;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            position: relative; /* Add position relative for memory indicator */
         }
-        .calculator input[type="text"] {
-            width: 90%;
-            padding: 10px;
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-align: right;
-            border: 1px solid #525151;
-            border-radius: 4px;
-            background-color: #ccc;
-        }
-        .button-row {
-            display: flex;
-            justify-content: space-between;
-        }
-        .calculator button {
-            flex: 1;
-            padding: 15px;
-            margin: 5px;
-            font-size: 18px;
+
+        #display {
+            width: 100%;
+            height: 60px;
+            margin-bottom: 20px;
+            background-color: #2d2d2d;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 32px;
+            color: #ffffff;
+            text-align: right;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 60px;  /* Set consistent row height */
+            gap: 12px;
+        }
+
+        button {
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #999;
+            transition: all 0.2s ease;
+            color: #ffffff;
+            background-color: #2d2d2d;
         }
-        .calculator button.operator {
-            background-color: #f0ad4e;
-            color: white;
+
+        button:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
         }
-        .calculator button.equals {
-            background-color: #5bc0de;
-            color: white;
-            flex: 2; /* Makes the equals button wider */
+
+        button:active {
+            transform: translateY(0);
         }
-        .calculator button:hover {
-            opacity: 0.8;
+
+        button.operator {
+            background-color: #ff9500;
+            color: #ffffff;
         }
-    </style>    
+
+        button.equals {
+            background-color: #007AFF;
+        }
+
+        button.zero {
+            grid-column: span 2; /* Make zero span 2 columns */
+        }
+
+        button.clear {
+            background-color: #ff3b30;
+            color: #ffffff;
+        }
+
+        button.special {
+            background-color: #666;
+            color: #ffffff;
+        }
+
+        button.memory {
+            background-color: #444;
+            color: #ffffff;
+        }
+
+        button.function {
+            background-color: #555;
+            color: #ffffff;
+            font-size: 18px;  /* Slightly smaller font for function names */
+        }
+
+        /* Dark theme adjustments */
+        @media (prefers-color-scheme: dark) {
+            button {
+                background-color: #3a3a3c;
+            }
+            
+            #display {
+                background-color: #2c2c2e;
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 360px) {
+            .calculator {
+                width: 280px;
+                padding: 15px;
+            }
+
+            button {
+                height: 50px;
+                font-size: 20px;
+            }
+
+            #display {
+                height: 50px;
+                font-size: 28px;
+            }
+        }
+
+        /* Add memory indicator styles */
+        #memory-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: #ff9500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #memory-indicator.active {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
     <div class="calculator">
+        <!-- Add memory indicator -->
+        <div id="memory-indicator">M</div>
         <input type="text" id="display" disabled>
-        <div class="button-row">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="appendToDisplay('/')">/</button>
-        </div>
-        <div class="button-row">
+        <div class="button-grid">
+            <!-- Row 1: Memory and Clear -->
+            <button class="memory" onclick="memoryClear()">MC</button>
+            <button class="memory" onclick="memoryRecall()">MR</button>
+            <button class="memory" onclick="memoryAdd()">M+</button>
+            <button class="clear" onclick="clearDisplay()">C</button>
+
+            <!-- Row 2: Functions -->
+            <button class="function" onclick="squareRoot()">√</button>
+            <button class="function" onclick="square()">x²</button>
+            <button class="function" onclick="percentage()">%</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+
+            <!-- Row 3: Numbers and multiply -->
             <button onclick="appendToDisplay('7')">7</button>
             <button onclick="appendToDisplay('8')">8</button>
             <button onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('*')">*</button>
-        </div>
-        <div class="button-row">
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+
+            <!-- Row 4 -->
             <button onclick="appendToDisplay('4')">4</button>
             <button onclick="appendToDisplay('5')">5</button>
             <button onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
-        </div>
-        <div class="button-row">
+            <button class="operator" onclick="appendToDisplay('-')">−</button>
+
+            <!-- Row 5 -->
             <button onclick="appendToDisplay('1')">1</button>
             <button onclick="appendToDisplay('2')">2</button>
             <button onclick="appendToDisplay('3')">3</button>
             <button class="operator" onclick="appendToDisplay('+')">+</button>
-        </div>
-        <div class="button-row">
-            <button onclick="appendToDisplay('0')">0</button>
+
+            <!-- Row 6 -->
+            <button onclick="appendToDisplay('0')" class="zero" style="grid-column: span 2">0</button>
             <button onclick="appendToDisplay('.')">.</button>
             <button class="equals" onclick="calculateResult()">=</button>
         </div>
     </div>
+
     <script>
+        let memory = 0;
+        let hasMemory = false;
+
         function appendToDisplay(value) {
             document.getElementById('display').value += value;
         }
@@ -102,6 +201,85 @@
             try {
                 const result = eval(document.getElementById('display').value);
                 document.getElementById('display').value = result;
+            } catch (e) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        // Memory Clear (MC): Erases the stored value
+        function memoryClear() {
+            memory = 0;
+            hasMemory = false;
+            updateMemoryIndicator();
+            // Optional: Show feedback
+            document.getElementById('display').value = 'Memory Cleared';
+            setTimeout(() => {
+                document.getElementById('display').value = '';
+            }, 500);
+        }
+
+        // Memory Recall (MR): Shows the stored value
+        function memoryRecall() {
+            if (hasMemory) {
+                document.getElementById('display').value = memory;
+            } else {
+                document.getElementById('display').value = 'No Memory';
+                setTimeout(() => {
+                    document.getElementById('display').value = '';
+                }, 500);
+            }
+        }
+
+        // Memory Add (M+): Adds current display value to memory
+        function memoryAdd() {
+            try {
+                const currentValue = eval(document.getElementById('display').value);
+                memory += currentValue;
+                hasMemory = true;
+                updateMemoryIndicator();
+                // Show feedback
+                const prevValue = document.getElementById('display').value;
+                document.getElementById('display').value = 'Added to Memory';
+                setTimeout(() => {
+                    document.getElementById('display').value = prevValue;
+                }, 500);
+            } catch (e) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        // Update memory indicator visibility
+        function updateMemoryIndicator() {
+            const indicator = document.getElementById('memory-indicator');
+            if (hasMemory) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        }
+
+        function squareRoot() {
+            try {
+                const value = eval(document.getElementById('display').value);
+                document.getElementById('display').value = Math.sqrt(value);
+            } catch (e) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        function square() {
+            try {
+                const value = eval(document.getElementById('display').value);
+                document.getElementById('display').value = value * value;
+            } catch (e) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        function percentage() {
+            try {
+                const value = eval(document.getElementById('display').value);
+                document.getElementById('display').value = value / 100;
             } catch (e) {
                 document.getElementById('display').value = 'Error';
             }

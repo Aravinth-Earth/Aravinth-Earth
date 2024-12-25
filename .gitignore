@@ -6,3 +6,6 @@
 # ignore the visualization related assets
 figures/
 count_lines*
+
+node_modules
+package-lock.json

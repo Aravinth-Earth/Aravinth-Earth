@@ -141,3 +141,80 @@ footer {
     transform: rotate(360deg);
   }
 }
+
+.warning-box {
+    background-color: var(--bg-secondary);
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+}
+
+.warning-box h4 {
+    color: var(--text-primary);
+    margin-top: 0;
+    opacity: 0.9;
+}
+
+.warning-box ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    list-style-type: disc;
+}
+
+.warning-box li {
+    margin: 0.5rem 0;
+    padding: 0;
+    background: none;
+}
+
+.warning-box li:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.tool-container {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+#loading-overlay {
+    position: absolute;
+    width: 850px;
+    height: 731px;
+    background: var(--bg-secondary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.loader {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--bg-primary);
+    border-bottom-color: var(--text-secondary); /* darker color */
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite; /* slower rotation */
+}
+
+/* remove the ::after pseudo-element that was showing text */
+.loader::after {
+    display: none;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

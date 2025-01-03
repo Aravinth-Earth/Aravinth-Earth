@@ -1,13 +1,21 @@
 {
     "name": "Aravinth's Site",
     "short_name": "Aravinth",
+    "description": "Personal site featuring various web tools and projects",
     "start_url": "/",
+    "scope": "/",
     "display": "standalone",
+    "orientation": "any",
     "background_color": "#0d1117",
     "theme_color": "#0d1117",
-    "icons": [{
-        "src": "/favicon.png",
-        "sizes": "307x307",
-        "type": "image/png"
-    }]
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "sizes": "307x307",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["utilities", "productivity"],
+    "prefer_related_applications": false
 }

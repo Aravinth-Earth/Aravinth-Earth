@@ -1,0 +1,13 @@
+{
+    "name": "Aravinth's Site",
+    "short_name": "Aravinth",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0d1117",
+    "theme_color": "#0d1117",
+    "icons": [{
+        "src": "/favicon.png",
+        "sizes": "307x307",
+        "type": "image/png"
+    }]
+}

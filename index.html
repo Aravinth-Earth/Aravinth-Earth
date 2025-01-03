@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset=UTF-8>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Aravinth's Site</title>
+
+        <!-- PWA essentials -->
+        <link rel="manifest" href="/manifest.json">
+        <link rel="icon" type="image/png" href="/favicon.png">
+
+        <!-- Stylesheet -->
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <!-- Schema.org metadata -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Aravinth",
+            "url": "https://www.332321.xyz/",
+            "sameAs": [],
+            "jobTitle": "Developer",
+            "worksFor": {
+                "@type": "Organization",
+                "name": "Self-Employed"
+            }
+        }
+        </script>
+
         <div class="container">
             <header>
                 <h3>👋 Aravinth Here!</h3>
@@ -58,6 +80,11 @@
                                 <span class="work-title">🔢 Math Game</span>
                                 <p class="work-desc">Simple and fun math game to test your skills</p>
                             </a>
+                        </li>
+                        <li>
+                            <a href="w/ssa/analysis.html">
+                                <span class="work-title">Security Sentiment Analysis</span>
+                                <p class="work-desc">Analyze the sentiment of the security by news articles</p>
                         </li>
                     </ul>
                 </section>

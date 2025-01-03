@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset=UTF-8>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Sentiment Analysis - Aravinth's Site</title>
+        <link rel="stylesheet" href="../../style.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h3>📊 Security Sentiment Analysis</h3>
+                <p class="subtitle">Analyze news sentiment for securities</p>
+                <a href="../../index.html" class="back-link">← Back to Home</a>
+            </header>
+
+            <main>
+                <section class="disclaimer">
+                    <div class="warning-box">
+                        <h4>⚠️ Important Disclaimer</h4>
+                        <ul>
+                            <li>This is a proof-of-concept application for demonstration purposes only</li>
+                            <li>Not to be used for actual financial decisions</li>
+                            <li>Neither the application nor its creator provides financial advice</li>
+                            <li>Past performance does not guarantee future results</li>
+                            <li>Always consult licensed financial advisors for investment decisions</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="info">
+                    <h4>ℹ️ About this tool</h4>
+                    <p>This experimental tool analyzes news sentiment related to securities using natural language processing. 
+                       Please note that this is a technical demonstration and results should be treated as exploratory only.</p>
+                </section>
+
+                <section class="tool-container">
+                    <iframe
+                        src="https://75761ca4-securities-sentiment-analysis.hf.space"
+                        frameborder="0"
+                        width="850"
+                        height="950"
+                        title="Security Sentiment Analysis Tool"
+                    ></iframe>
+                </section>
+
+                <section class="contact">
+                    <hr>
+                    <p>For any queries, feel free to <a href="mailto:aravinth@332321.xyz?subject=About Security Sentiment Analysis" class="contact-link">📧 email me</a></p>
+                </section>
+            </main>
+
+            <footer>
+                <div class="visitor-badge">
+                    <a href="https://www.332321.xyz/index.html">
+                        <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
+                             alt="Visitor Badge"
+                             loading="lazy">
+                    </a>
+                </div>
+            </footer>
+        </div>
+
+        <script>
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.href.includes('mailto:')) {
+                        this.classList.add('loading');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

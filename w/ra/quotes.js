@@ -13,7 +13,7 @@ class QuoteManager {
     constructor() {
         this.container = document.getElementById('quoteContainer');
         this.quoteElement = document.getElementById('quote');
-        this.currentLanguage = 'english';
+        this.currentLanguage = 'tamil'; // Changed default to Tamil
         this.updateInterval = 8000;
         this.fadeTime = 2000;
         this.container.style.opacity = '1';

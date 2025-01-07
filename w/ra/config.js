@@ -1,7 +1,7 @@
 const ART_CONFIG = {
     description: {
-        title: "The Ephemeral Dance of Life",
-        concept: "A generative art piece representing the randomness and interconnectedness of life on Earth."
+        title: "வாழ்வின் நடனம் | The Ephemeral Dance of Life",
+        concept: "பூமியின் வாழ்க்கை முறைகளின் ஒருங்கிணைந்த காட்சி | A generative art piece representing the interconnectedness of life"
     },
     canvas: {
         shapeCount: 400,

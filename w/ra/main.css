@@ -1,0 +1,56 @@
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    background: #000;
+    background-image: radial-gradient(circle at center, #000510 0%, #000000 100%);
+}
+
+svg { 
+    width: 100vw; 
+    height: 100vh;
+}
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.quote-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    pointer-events: none;
+    transition: opacity 2s ease;
+    max-width: 80%;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+}
+
+.quote {
+    margin: 0;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+}
+
+.fade-out {
+    opacity: 0;
+}

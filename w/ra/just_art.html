@@ -23,69 +23,75 @@
         // Centralized configuration with recommended ranges and effects
         const ART_CONFIG = {
             canvas: {
-                // Range: 10-1000, Higher values impact performance
-                // Low (<50): Sparse, clear movement patterns
-                // High (>200): Dense, complex interactions
-                shapeCount: 200,
-
-                // Size range in pixels
-                // min: 1-10, Smaller = more fluid-like movement
-                // max: 5-30, Larger = more visible patterns
-                minSize: 5,
-                maxSize: 12
+                shapeCount: 400,
+                size: {
+                    min: 1,
+                    max: 6
+                },
+                shape: {
+                    // Probability of circle vs polygon (0-1)
+                    circleChance: 0.5,
+                    polygon: {
+                        // Min and max number of sides for polygons
+                        sides: {
+                            min: 3,
+                            max: 6
+                        }
+                    }
+                }
             },
             lifecycle: {
-                // How long (ms) a shape can be outside viewport before removal
-                maxOutsideTime: 3000,
-                // Chance per frame for new shape to appear (0-1)
-                spawnChance: 0.4,
-                // Maximum shapes allowed at once
-                maxShapes: 100
+                timing: {
+                    // How long shapes can stay outside viewport (ms)
+                    maxOutsideTime: 2000,
+                    // Duration of fade animation (ms)
+                    fadeOutDuration: 1000
+                },
+                probability: {
+                    // Per-frame chances
+                    spawn: 0.4,
+                    disappear: 0.005
+                },
+                // Maximum shapes as percentage of shapeCount
+                maxShapesPercent: 50
             },
             motion: {
                 speed: {
-                    // Speed ranges (pixels per frame)
-                    // min: 0.1-1.0, Lower = smoother movement
-                    // max: 0.2-2.0, Higher = more chaotic
-                    // Note: max should be at least 2x min for natural movement
-                    min: 1,
-                    max: 2
+                    min: 0.2,
+                    max: 0.8
                 },
-                // Range: 0.0-2.0
-                // 0.0: No random movement, only interaction forces
-                // 0.5: Gentle wandering
-                // >1.0: Very chaotic movement
                 randomness: 0.2,
-                
                 interaction: {
-                    // Range: 20-200 pixels
-                    // Small (<30): Local clustering
-                    // Large (>100): Large-scale patterns
                     radius: 50,
-
-                    // Range: 0.001-0.1
-                    // Low (<0.01): Subtle interaction
-                    // High (>0.05): Strong repulsion
-                    // Warning: Values >0.1 may cause unstable behavior
                     strength: 0.05
                 }
             },
             colors: {
                 hue: {
-                    min: 0,    // 0-360 degrees
-                    max: 360
+                    min: 0,
+                    max: 360,
+                    // Variation for gradient
+                    variation: 30
                 },
                 saturation: {
-                    min: 50,   // 0-100%
-                    max: 100
+                    min: 50,
+                    max: 100,
+                    // Default for gradient
+                    gradient: 70
                 },
                 lightness: {
-                    min: 30,   // 0-100%
-                    max: 70
+                    min: 30,
+                    max: 70,
+                    // Default for gradient
+                    gradient: 50
                 },
                 opacity: {
-                    min: 0.3,  // 0-1
-                    max: 0.8
+                    min: 0.3,
+                    max: 0.8,
+                    gradient: {
+                        start: 0.8,
+                        end: 0
+                    }
                 }
             }
         };
@@ -105,13 +111,14 @@
             }
 
             static createGradient() {
-                // Create slightly different color for gradient effect
                 const baseHue = this.random(ART_CONFIG.colors.hue.min, ART_CONFIG.colors.hue.max);
-                const hueVariation = 30; // Vary by 30 degrees
+                const hueVar = ART_CONFIG.colors.hue.variation;
+                const sat = ART_CONFIG.colors.saturation.gradient;
+                const light = ART_CONFIG.colors.lightness.gradient;
                 
                 return {
-                    start: `hsla(${baseHue}, 70%, 50%, 0.8)`,
-                    end: `hsla(${(baseHue + hueVariation) % 360}, 70%, 50%, 0)`
+                    start: `hsla(${baseHue}, ${sat}%, ${light}%, ${ART_CONFIG.colors.opacity.gradient.start})`,
+                    end: `hsla(${(baseHue + hueVar) % 360}, ${sat}%, ${light}%, ${ART_CONFIG.colors.opacity.gradient.end})`
                 };
             }
         }
@@ -119,9 +126,10 @@
         class Shape {
             constructor() {
                 this.element = document.createElementNS('http://www.w3.org/2000/svg', 
-                    Math.random() > 0.5 ? 'circle' : 'polygon');
+                    Math.random() < ART_CONFIG.canvas.shape.circleChance ? 'circle' : 'polygon');
                 this.init();
                 this.outOfViewSince = null;
+                this.fadeStart = null;
             }
 
             init() {
@@ -129,7 +137,7 @@
                 
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
-                this.size = Math.random() * (ART_CONFIG.canvas.maxSize - ART_CONFIG.canvas.minSize) + ART_CONFIG.canvas.minSize;
+                this.size = Math.random() * (ART_CONFIG.canvas.size.max - ART_CONFIG.canvas.size.min) + ART_CONFIG.canvas.size.min;
                 
                 // Initialize with random direction and speed
                 const speed = Math.random() * (ART_CONFIG.motion.speed.max - ART_CONFIG.motion.speed.min) + ART_CONFIG.motion.speed.min;
@@ -215,7 +223,8 @@
             }
 
             generatePolygonPoints() {
-                const sides = Math.floor(Math.random() * 3) + 3;
+                const config = ART_CONFIG.canvas.shape.polygon.sides;
+                const sides = Math.floor(Math.random() * (config.max - config.min + 1)) + config.min;
                 return Array.from({length: sides}, (_, i) => {
                     const angle = (i / sides) * Math.PI * 2;
                     const px = this.x + Math.cos(angle) * this.size;
@@ -232,7 +241,34 @@
                        this.y <= window.innerHeight + margin;
             }
 
+            fadeOut() {
+                if (!this.fadeStart) {
+                    this.fadeStart = Date.now();
+                }
+                const elapsed = Date.now() - this.fadeStart;
+                const duration = ART_CONFIG.lifecycle.timing.fadeOutDuration; // 1 second fade
+                const progress = Math.min(elapsed / duration, 1);
+                
+                return progress >= 1;
+            }
+
             update() {
+                // Random disappearance check
+                if (!this.fadeStart && Math.random() < ART_CONFIG.lifecycle.probability.disappear) {
+                    this.fadeStart = Date.now();
+                }
+
+                // If fading, update opacity
+                if (this.fadeStart) {
+                    const elapsed = Date.now() - this.fadeStart;
+                    const duration = ART_CONFIG.lifecycle.timing.fadeOutDuration;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const opacity = 1 - progress;
+                    
+                    this.element.style.opacity = opacity;
+                }
+
+                // Regular movement updates
                 this.updateMovement();
                 this.x = (this.x + this.dx + window.innerWidth) % window.innerWidth;
                 this.y = (this.y + this.dy + window.innerHeight) % window.innerHeight;
@@ -257,19 +293,24 @@
             }
 
             shouldRemove() {
-                return this.outOfViewSince && 
-                       (Date.now() - this.outOfViewSince > ART_CONFIG.lifecycle.maxOutsideTime);
+                return (this.outOfViewSince && 
+                       (Date.now() - this.outOfViewSince > ART_CONFIG.lifecycle.timing.maxOutsideTime)) ||
+                       (this.fadeStart && this.fadeOut());
             }
         }
 
         const canvas = document.getElementById('canvas');
         const shapes = new Set();
 
+        function getMaxShapes() {
+            return Math.floor(ART_CONFIG.canvas.shapeCount * (ART_CONFIG.lifecycle.maxShapesPercent / 100));
+        }
+
         function createShapes() {
             shapes.forEach(shape => canvas.removeChild(shape.element));
             shapes.clear();
             // Start with half max shapes
-            const initialCount = Math.floor(ART_CONFIG.lifecycle.maxShapes / 2);
+            const initialCount = Math.floor(getMaxShapes() / 2);
             for (let i = 0; i < initialCount; i++) {
                 const shape = new Shape();
                 shapes.add(shape);
@@ -278,7 +319,7 @@
         }
 
         function animate() {
-            // Remove shapes that have been outside too long
+            // Remove shapes that have been outside too long or have faded out
             shapes.forEach(shape => {
                 if (shape.shouldRemove()) {
                     canvas.removeChild(shape.element);
@@ -287,8 +328,8 @@
             });
 
             // Randomly spawn new shapes if below max
-            if (shapes.size < ART_CONFIG.lifecycle.maxShapes && 
-                Math.random() < ART_CONFIG.lifecycle.spawnChance) {
+            if (shapes.size < getMaxShapes() && 
+                Math.random() < ART_CONFIG.lifecycle.probability.spawn) {
                 const shape = new Shape();
                 shapes.add(shape);
                 canvas.appendChild(shape.element);

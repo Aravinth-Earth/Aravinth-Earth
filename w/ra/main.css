@@ -36,7 +36,7 @@ svg {
     font-family: Arial, sans-serif;
     text-align: center;
     pointer-events: none;
-    transition: opacity 1.5s ease, filter 1.5s ease;
+    transition: opacity 2s ease, filter 0.5s ease;
     max-width: 80%;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 100;
@@ -52,7 +52,7 @@ svg {
     line-height: 1.8;
     letter-spacing: 0.8px;
     font-size: 24px;
-    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
 }
 

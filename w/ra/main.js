@@ -8,12 +8,14 @@ class ArtGenerator {
     }
 
     setupResizeHandler() {
-        window.addEventListener('resize', () => {
+        const resizeCanvas = () => {
             this.canvas.setAttribute('width', window.innerWidth);
             this.canvas.setAttribute('height', window.innerHeight);
-        });
-        this.canvas.setAttribute('width', window.innerWidth);
-        this.canvas.setAttribute('height', window.innerHeight);
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        resizeCanvas();
     }
 
     start() {
@@ -28,7 +30,7 @@ class ArtGenerator {
     }
 
     setupCleanup() {
-        window.addEventListener('unload', () => {
+        window.addEventListener('beforeunload', () => {
             this.cleanup();
         });
     }

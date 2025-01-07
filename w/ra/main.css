@@ -36,7 +36,7 @@ svg {
     font-family: Arial, sans-serif;
     text-align: center;
     pointer-events: none;
-    transition: opacity 1.5s ease;
+    transition: opacity 1.5s ease, filter 1.5s ease;
     max-width: 80%;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 100;
@@ -58,14 +58,14 @@ svg {
 
 .quote.tamil {
     font-family: 'Noto Sans Tamil', Arial, sans-serif;
-    font-size: 28px;
+    font-size: 24px;
     line-height: 2;
     opacity: 1;
 }
 
 .quote.english {
     font-family: 'Georgia', serif;
-    font-size: 24px;
+    font-size: 28px;
     line-height: 1.8;
     opacity: 1;
 }
@@ -73,9 +73,40 @@ svg {
 .fade-out {
     opacity: 0;
     transform: translateY(20px);
+    filter: blur(5px);
 }
 
 .fade-in {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .quote {
+        font-size: 20px;
+    }
+
+    .quote.tamil {
+        font-size: 24px;
+    }
+
+    .quote-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .quote {
+        font-size: 18px;
+    }
+
+    .quote.tamil {
+        font-size: 22px;
+    }
+
+    .quote-container {
+        padding: 10px;
+    }
 }

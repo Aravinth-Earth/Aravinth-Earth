@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Dynamic Art</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        svg { width: 100vw; height: 100vh; }
+        .shape { transition: transform 0.3s ease; }
+    </style>
+</head>
+<body>
+    <svg id="canvas">
+        <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </radialGradient>
+        </defs>
+    </svg>
+
+    <script>
+        // Centralized configuration
+        const ART_CONFIG = {
+            canvas: {
+                shapeCount: 100,
+                speed: 5,
+                minSize: 2,
+                maxSize: 12
+            },
+            colors: {
+                current: 'rainbow',
+                palettes: {
+                    rainbow: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'],
+                    pastel: ['#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA', '#FFB3FF'],
+                    neon: ['#ff0080', '#00ff80', '#0080ff', '#ff8000', '#8000ff']
+                }
+            }
+        };
+
+        class Shape {
+            constructor() {
+                this.element = document.createElementNS('http://www.w3.org/2000/svg', 
+                    Math.random() > 0.5 ? 'circle' : 'polygon');
+                this.init();
+            }
+
+            init() {
+                const palette = ART_CONFIG.colors.palettes[ART_CONFIG.colors.current];
+                const color = palette[Math.floor(Math.random() * palette.length)];
+                
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.size = Math.random() * (ART_CONFIG.canvas.maxSize - ART_CONFIG.canvas.minSize) + ART_CONFIG.canvas.minSize;
+                this.dx = (Math.random() - 0.5) * ART_CONFIG.canvas.speed;
+                this.dy = (Math.random() - 0.5) * ART_CONFIG.canvas.speed;
+                this.rotation = Math.random() * 360;
+                this.dr = (Math.random() - 0.5) * 2;
+
+                this.setupShape(color);
+            }
+
+            setupShape(color) {
+                if (this.element.tagName === 'circle') {
+                    this.element.setAttribute('r', this.size);
+                    this.element.setAttribute('cx', this.x);
+                    this.element.setAttribute('cy', this.y);
+                } else {
+                    this.element.setAttribute('points', this.generatePolygonPoints());
+                }
+                this.element.setAttribute('fill', color);
+                this.element.setAttribute('class', 'shape');
+                this.element.style.filter = 'url(#glow)';
+            }
+
+            generatePolygonPoints() {
+                const sides = Math.floor(Math.random() * 3) + 3;
+                return Array.from({length: sides}, (_, i) => {
+                    const angle = (i / sides) * Math.PI * 2;
+                    const px = this.x + Math.cos(angle) * this.size;
+                    const py = this.y + Math.sin(angle) * this.size;
+                    return `${px},${py}`;
+                }).join(' ');
+            }
+
+            update() {
+                this.x = (this.x + this.dx + window.innerWidth) % window.innerWidth;
+                this.y = (this.y + this.dy + window.innerHeight) % window.innerHeight;
+                this.rotation += this.dr;
+
+                if (this.element.tagName === 'circle') {
+                    this.element.setAttribute('cx', this.x);
+                    this.element.setAttribute('cy', this.y);
+                } else {
+                    this.element.setAttribute('points', this.generatePolygonPoints());
+                    this.element.style.transform = `rotate(${this.rotation}deg)`;
+                }
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const shapes = new Set();
+
+        function createShapes() {
+            shapes.forEach(shape => canvas.removeChild(shape.element));
+            shapes.clear();
+            for (let i = 0; i < ART_CONFIG.canvas.shapeCount; i++) {
+                const shape = new Shape();
+                shapes.add(shape);
+                canvas.appendChild(shape.element);
+            }
+        }
+
+        function animate() {
+            shapes.forEach(shape => shape.update());
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        window.onresize = () => {
+            canvas.setAttribute('width', window.innerWidth);
+            canvas.setAttribute('height', window.innerHeight);
+        };
+        window.onresize();
+        createShapes();
+        animate();
+    </script>
+</body>
+</html>

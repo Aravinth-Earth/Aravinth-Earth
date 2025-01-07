@@ -29,28 +29,53 @@ svg {
 
 .quote-container {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    color: rgba(255, 255, 255, 0.6);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.8);
     font-family: Arial, sans-serif;
-    font-size: 16px;
+    text-align: center;
     pointer-events: none;
-    transition: opacity 2s ease;
+    transition: opacity 1.5s ease;
     max-width: 80%;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     z-index: 100;
     padding: 20px;
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    border-radius: 12px;
     backdrop-filter: blur(4px);
+    opacity: 0;
 }
 
 .quote {
     margin: 0;
-    line-height: 1.6;
-    letter-spacing: 0.5px;
+    line-height: 1.8;
+    letter-spacing: 0.8px;
+    font-size: 24px;
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.quote.tamil {
+    font-family: 'Noto Sans Tamil', Arial, sans-serif;
+    font-size: 28px;
+    line-height: 2;
+    opacity: 1;
+}
+
+.quote.english {
+    font-family: 'Georgia', serif;
+    font-size: 24px;
+    line-height: 1.8;
+    opacity: 1;
 }
 
 .fade-out {
     opacity: 0;
+    transform: translateY(20px);
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
 }

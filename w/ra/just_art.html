@@ -1,16 +1,111 @@
+<!--
+=================================================================
+The Ephemeral Dance of Life
+=================================================================
+Created with assistance from:
+- GitHub Copilot
+- Anthropic's Claude (Claude Instant/Sonnet)
+
+This generative art piece explores the randomness and interconnectedness
+of life through particle simulation and emergent behavior.
+
+Attribution preserves the collaborative nature of AI-assisted creativity
+while respecting the tools that helped shape this work.
+=================================================================
+-->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simple Dynamic Art</title>
+    <title>The Ephemeral Dance of Life | Interactive Art</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="An interactive digital art piece representing the chaotic yet beautiful patterns of life on Earth. Watch as abstract beings move, interact, and evolve in a dance of existence.">
+    <meta name="keywords" content="digital art, interactive art, life patterns, chaos theory, emergence, particle simulation, generative art">
+    <meta name="author" content="Your Name">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="The Ephemeral Dance of Life">
+    <meta property="og:description" content="Interactive art exploring the randomness and beauty of life's patterns">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="path-to-preview-image.jpg"> <!-- Add preview image if available -->
+    
+    <!-- Theme Color for Browsers -->
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
+    
     <style>
-        body { margin: 0; overflow: hidden; background: #000; }
-        svg { width: 100vw; height: 100vh; }
-        /* Remove the shape transition that was causing unwanted animation */
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #000;
+            /* Optional: Add subtle background texture */
+            background-image: radial-gradient(circle at center, #000510 0%, #000000 100%);
+        }
+        svg { 
+            width: 100vw; 
+            height: 100vh;
+        }
+        
+        /* Add loading state styling */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Update quote container styling */
+        .quote-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            pointer-events: none;
+            transition: opacity 2s ease;
+            max-width: 80%;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .quote {
+            margin: 0;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+        
+        .fade-out {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
-    <svg id="canvas">
+    <!-- Loading Message -->
+    <div id="loading" class="loading">
+        <h1>The Ephemeral Dance of Life</h1>
+        <p>Witness the chaotic beauty of existence...</p>
+    </div>
+
+    <!-- Main Canvas -->
+    <svg id="canvas" aria-label="Interactive visualization of life patterns">
         <defs>
             <radialGradient id="glow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
@@ -19,9 +114,88 @@
         </defs>
     </svg>
 
+    <!-- Quote Container (only this, remove old poetic description) -->
+    <div id="quoteContainer" class="quote-container">
+        <p id="quote" class="quote"></p>
+    </div>
+
     <script>
-        // Centralized configuration with recommended ranges and effects
+        // Show loading message
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Move PHILOSOPHICAL_QUOTES before ART_CONFIG
+        const PHILOSOPHICAL_QUOTES = {
+            tamil: [
+                "வாழ்க்கை என்பது நீரோட்டம் போன்றது - எப்போதும் நகர்ந்து கொண்டே இருக்கிறது",
+                "ஒவ்வொரு துகளும் பிரபஞ்சத்தின் நடனமாடும் வெளிப்பாடு",
+                "நாம் அனைவரும் ஒரே ஆற்றில் பயணிக்கும் அலைகள்",
+                "மாற்றமே மாறாத சத்தியம்",
+                "எல்லா உயிர்களும் ஒன்றோடொன்று பின்னிப் பிணைந்தவை"
+            ],
+            english: [
+                "Each particle is a story, dancing in the cosmic ballet",
+                "In chaos lies the deepest order of existence",
+                "We are all waves in the same cosmic ocean",
+                "Every moment is a new beginning, every end a new creation",
+                "Life flows like water, finding its path through the universe"
+            ]
+        };
+
+        class QuoteManager {
+            constructor() {
+                this.container = document.getElementById('quoteContainer');
+                this.quoteElement = document.getElementById('quote');
+                this.currentLanguage = 'english';
+                this.updateInterval = 8000;
+                this.fadeTime = 2000;
+                
+                // Ensure initial opacity
+                this.container.style.opacity = '1';
+            }
+
+            getRandomQuote() {
+                const quotes = PHILOSOPHICAL_QUOTES[this.currentLanguage];
+                return quotes[Math.floor(Math.random() * quotes.length)];
+            }
+
+            async changeQuote() {
+                // Fade out
+                this.quoteElement.classList.add('fade-out');
+                
+                await new Promise(resolve => setTimeout(resolve, this.fadeTime));
+                
+                // Switch language and update text
+                this.currentLanguage = this.currentLanguage === 'english' ? 'tamil' : 'english';
+                this.quoteElement.textContent = this.getRandomQuote();
+                
+                // Fade in
+                this.quoteElement.classList.remove('fade-out');
+            }
+
+            start() {
+                // Set initial quote
+                this.quoteElement.textContent = this.getRandomQuote();
+                
+                // Start cycle after initial display
+                setTimeout(() => {
+                    this.changeQuote();
+                    setInterval(() => this.changeQuote(), this.updateInterval);
+                }, this.updateInterval);
+            }
+        }
+
+        // Add description to ART_CONFIG
         const ART_CONFIG = {
+            description: {
+                title: "The Ephemeral Dance of Life",
+                concept: "A generative art piece representing the randomness and interconnectedness of life on Earth. " +
+                        "Each particle symbolizes a living being, its movement reflecting the unpredictable yet " +
+                        "purposeful nature of existence."
+            },
             canvas: {
                 shapeCount: 400,
                 size: {
@@ -96,22 +270,34 @@
             }
         };
 
-        class ColorGenerator {
+        class MathUtils {
             static random(min, max) {
                 return Math.random() * (max - min) + min;
             }
 
+            static randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            static distance(x1, y1, x2, y2) {
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+        }
+
+        class ColorGenerator {
             static generate() {
-                const hue = this.random(ART_CONFIG.colors.hue.min, ART_CONFIG.colors.hue.max);
-                const saturation = this.random(ART_CONFIG.colors.saturation.min, ART_CONFIG.colors.saturation.max);
-                const lightness = this.random(ART_CONFIG.colors.lightness.min, ART_CONFIG.colors.lightness.max);
-                const opacity = this.random(ART_CONFIG.colors.opacity.min, ART_CONFIG.colors.opacity.max);
+                const hue = MathUtils.random(ART_CONFIG.colors.hue.min, ART_CONFIG.colors.hue.max);
+                const saturation = MathUtils.random(ART_CONFIG.colors.saturation.min, ART_CONFIG.colors.saturation.max);
+                const lightness = MathUtils.random(ART_CONFIG.colors.lightness.min, ART_CONFIG.colors.lightness.max);
+                const opacity = MathUtils.random(ART_CONFIG.colors.opacity.min, ART_CONFIG.colors.opacity.max);
                 
                 return `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`;
             }
 
             static createGradient() {
-                const baseHue = this.random(ART_CONFIG.colors.hue.min, ART_CONFIG.colors.hue.max);
+                const baseHue = MathUtils.random(ART_CONFIG.colors.hue.min, ART_CONFIG.colors.hue.max);
                 const hueVar = ART_CONFIG.colors.hue.variation;
                 const sat = ART_CONFIG.colors.saturation.gradient;
                 const light = ART_CONFIG.colors.lightness.gradient;
@@ -123,13 +309,90 @@
             }
         }
 
+        class ShapeManager {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.shapes = new Set();
+                this.lastUpdate = Date.now();
+            }
+
+            create(count) {
+                for (let i = 0; i < count; i++) {
+                    const shape = new Shape(this);
+                    this.shapes.add(shape);
+                    this.canvas.appendChild(shape.element);
+                }
+            }
+
+            update() {
+                const currentTime = Date.now();
+                const deltaTime = currentTime - this.lastUpdate;
+                this.lastUpdate = currentTime;
+
+                this.shapes.forEach(shape => {
+                    try {
+                        if (shape.shouldRemove()) {
+                            this.canvas.removeChild(shape.element);
+                            this.shapes.delete(shape);
+                        }
+                    } catch (error) {
+                        console.error('Error removing shape:', error);
+                        this.shapes.delete(shape);
+                    }
+                });
+
+                if (this.shapes.size < this.getMaxShapes() && 
+                    Math.random() < ART_CONFIG.lifecycle.probability.spawn) {
+                    try {
+                        this.create(1);
+                    } catch (error) {
+                        console.error('Error creating new shape:', error);
+                    }
+                }
+
+                this.shapes.forEach(shape => {
+                    try {
+                        shape.update(deltaTime);
+                    } catch (error) {
+                        console.error('Error updating shape:', error);
+                    }
+                });
+            }
+
+            getMaxShapes() {
+                return Math.floor(ART_CONFIG.canvas.shapeCount * 
+                       (ART_CONFIG.lifecycle.maxShapesPercent / 100));
+            }
+
+            clear() {
+                this.shapes.forEach(shape => this.canvas.removeChild(shape.element));
+                this.shapes.clear();
+            }
+        }
+
         class Shape {
-            constructor() {
-                this.element = document.createElementNS('http://www.w3.org/2000/svg', 
-                    Math.random() < ART_CONFIG.canvas.shape.circleChance ? 'circle' : 'polygon');
-                this.init();
-                this.outOfViewSince = null;
-                this.fadeStart = null;
+            constructor(shapeManager) {
+                try {
+                    this.element = document.createElementNS('http://www.w3.org/2000/svg', 
+                        Math.random() < ART_CONFIG.canvas.shape.circleChance ? 'circle' : 'polygon');
+                    this.shapeManager = shapeManager;
+                    this.gradientId = null;
+                    this.init();
+                    this.outOfViewSince = null;
+                    this.fadeStart = null;
+                } catch (error) {
+                    console.error('Error creating shape:', error);
+                    throw error;
+                }
+            }
+
+            cleanup() {
+                if (this.gradientId) {
+                    const gradient = document.getElementById(this.gradientId);
+                    if (gradient) {
+                        gradient.parentNode.removeChild(gradient);
+                    }
+                }
             }
 
             init() {
@@ -139,7 +402,6 @@
                 this.y = Math.random() * window.innerHeight;
                 this.size = Math.random() * (ART_CONFIG.canvas.size.max - ART_CONFIG.canvas.size.min) + ART_CONFIG.canvas.size.min;
                 
-                // Initialize with random direction and speed
                 const speed = Math.random() * (ART_CONFIG.motion.speed.max - ART_CONFIG.motion.speed.min) + ART_CONFIG.motion.speed.min;
                 const angle = Math.random() * Math.PI * 2;
                 this.dx = Math.cos(angle) * speed;
@@ -149,17 +411,14 @@
             }
 
             updateMovement() {
-                // Add random movement vector
                 const randomAngle = Math.random() * Math.PI * 2;
                 const randomMagnitude = ART_CONFIG.motion.randomness;
                 
                 this.dx += Math.cos(randomAngle) * randomMagnitude;
                 this.dy += Math.sin(randomAngle) * randomMagnitude;
                 
-                // Add interaction forces from nearby shapes
                 this.applyInteractionForces();
                 
-                // Limit speed to prevent excessive acceleration
                 const currentSpeed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
                 if (currentSpeed > ART_CONFIG.motion.speed.max) {
                     this.dx = (this.dx / currentSpeed) * ART_CONFIG.motion.speed.max;
@@ -169,20 +428,21 @@
 
             applyInteractionForces() {
                 const interaction = ART_CONFIG.motion.interaction;
+                const maxDistance = interaction.radius;
+                const maxDistanceSquared = maxDistance * maxDistance;
                 
-                shapes.forEach(other => {
+                this.shapeManager.shapes.forEach(other => {
                     if (other === this) return;
 
                     const dx = other.x - this.x;
                     const dy = other.y - this.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const distanceSquared = dx * dx + dy * dy;
 
-                    if (distance < interaction.radius && distance > 0) {
-                        // Calculate repulsion force
-                        const force = (interaction.radius - distance) * interaction.strength;
+                    if (distanceSquared < maxDistanceSquared && distanceSquared > 0) {
+                        const distance = Math.sqrt(distanceSquared);
+                        const force = (maxDistance - distance) * interaction.strength;
                         const angle = Math.atan2(dy, dx);
                         
-                        // Apply force in opposite direction
                         this.dx -= Math.cos(angle) * force;
                         this.dy -= Math.sin(angle) * force;
                     }
@@ -190,36 +450,41 @@
             }
 
             setupShape(color) {
-                if (this.element.tagName === 'circle') {
-                    this.element.setAttribute('r', this.size);
-                    this.element.setAttribute('cx', this.x);
-                    this.element.setAttribute('cy', this.y);
-                } else {
-                    this.element.setAttribute('points', this.generatePolygonPoints());
+                const svgNS = 'http://www.w3.org/2000/svg';
+                try {
+                    if (this.element.tagName === 'circle') {
+                        this.element.setAttribute('r', this.size);
+                        this.element.setAttribute('cx', this.x);
+                        this.element.setAttribute('cy', this.y);
+                    } else {
+                        this.element.setAttribute('points', this.generatePolygonPoints());
+                    }
+                    
+                    this.gradientId = `gradient-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                    const gradient = ColorGenerator.createGradient();
+                    
+                    const radialGradient = document.createElementNS(svgNS, 'radialGradient');
+                    radialGradient.setAttribute('id', this.gradientId);
+                    
+                    const stop1 = document.createElementNS(svgNS, 'stop');
+                    stop1.setAttribute('offset', '0%');
+                    stop1.setAttribute('stop-color', gradient.start);
+                    
+                    const stop2 = document.createElementNS(svgNS, 'stop');
+                    stop2.setAttribute('offset', '100%');
+                    stop2.setAttribute('stop-color', gradient.end);
+                    
+                    radialGradient.appendChild(stop1);
+                    radialGradient.appendChild(stop2);
+                    
+                    document.querySelector('defs').appendChild(radialGradient);
+                    
+                    this.element.setAttribute('fill', `url(#${this.gradientId})`);
+                    this.element.setAttribute('class', 'shape');
+                } catch (error) {
+                    console.error('Error setting up shape:', error);
+                    throw error;
                 }
-                
-                // Create unique gradient for each shape
-                const gradientId = `gradient-${Math.random().toString(36).substr(2, 9)}`;
-                const gradient = ColorGenerator.createGradient();
-                
-                const radialGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
-                radialGradient.setAttribute('id', gradientId);
-                
-                const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                stop1.setAttribute('offset', '0%');
-                stop1.setAttribute('stop-color', gradient.start);
-                
-                const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                stop2.setAttribute('offset', '100%');
-                stop2.setAttribute('stop-color', gradient.end);
-                
-                radialGradient.appendChild(stop1);
-                radialGradient.appendChild(stop2);
-                
-                document.querySelector('defs').appendChild(radialGradient);
-                
-                this.element.setAttribute('fill', `url(#${gradientId})`);
-                this.element.setAttribute('class', 'shape');
             }
 
             generatePolygonPoints() {
@@ -246,19 +511,17 @@
                     this.fadeStart = Date.now();
                 }
                 const elapsed = Date.now() - this.fadeStart;
-                const duration = ART_CONFIG.lifecycle.timing.fadeOutDuration; // 1 second fade
+                const duration = ART_CONFIG.lifecycle.timing.fadeOutDuration;
                 const progress = Math.min(elapsed / duration, 1);
                 
                 return progress >= 1;
             }
 
             update() {
-                // Random disappearance check
                 if (!this.fadeStart && Math.random() < ART_CONFIG.lifecycle.probability.disappear) {
                     this.fadeStart = Date.now();
                 }
 
-                // If fading, update opacity
                 if (this.fadeStart) {
                     const elapsed = Date.now() - this.fadeStart;
                     const duration = ART_CONFIG.lifecycle.timing.fadeOutDuration;
@@ -268,12 +531,10 @@
                     this.element.style.opacity = opacity;
                 }
 
-                // Regular movement updates
                 this.updateMovement();
                 this.x = (this.x + this.dx + window.innerWidth) % window.innerWidth;
                 this.y = (this.y + this.dy + window.innerHeight) % window.innerHeight;
                 
-                // Track time outside viewport
                 if (!this.isInViewport()) {
                     if (!this.outOfViewSince) {
                         this.outOfViewSince = Date.now();
@@ -282,7 +543,6 @@
                     this.outOfViewSince = null;
                 }
 
-                // Update visual representation
                 if (this.element.tagName === 'circle') {
                     this.element.setAttribute('cx', this.x);
                     this.element.setAttribute('cy', this.y);
@@ -293,61 +553,62 @@
             }
 
             shouldRemove() {
-                return (this.outOfViewSince && 
-                       (Date.now() - this.outOfViewSince > ART_CONFIG.lifecycle.timing.maxOutsideTime)) ||
-                       (this.fadeStart && this.fadeOut());
-            }
-        }
-
-        const canvas = document.getElementById('canvas');
-        const shapes = new Set();
-
-        function getMaxShapes() {
-            return Math.floor(ART_CONFIG.canvas.shapeCount * (ART_CONFIG.lifecycle.maxShapesPercent / 100));
-        }
-
-        function createShapes() {
-            shapes.forEach(shape => canvas.removeChild(shape.element));
-            shapes.clear();
-            // Start with half max shapes
-            const initialCount = Math.floor(getMaxShapes() / 2);
-            for (let i = 0; i < initialCount; i++) {
-                const shape = new Shape();
-                shapes.add(shape);
-                canvas.appendChild(shape.element);
-            }
-        }
-
-        function animate() {
-            // Remove shapes that have been outside too long or have faded out
-            shapes.forEach(shape => {
-                if (shape.shouldRemove()) {
-                    canvas.removeChild(shape.element);
-                    shapes.delete(shape);
+                const shouldRemove = (this.outOfViewSince && 
+                    (Date.now() - this.outOfViewSince > ART_CONFIG.lifecycle.timing.maxOutsideTime)) ||
+                    (this.fadeStart && this.fadeOut());
+                
+                if (shouldRemove) {
+                    this.cleanup();
                 }
-            });
-
-            // Randomly spawn new shapes if below max
-            if (shapes.size < getMaxShapes() && 
-                Math.random() < ART_CONFIG.lifecycle.probability.spawn) {
-                const shape = new Shape();
-                shapes.add(shape);
-                canvas.appendChild(shape.element);
+                
+                return shouldRemove;
             }
-
-            // Update existing shapes
-            shapes.forEach(shape => shape.update());
-            requestAnimationFrame(animate);
         }
 
-        // Initialize
-        window.onresize = () => {
-            canvas.setAttribute('width', window.innerWidth);
-            canvas.setAttribute('height', window.innerHeight);
-        };
-        window.onresize();
-        createShapes();
-        animate();
+        class ArtGenerator {
+            constructor() {
+                this.canvas = document.getElementById('canvas');
+                this.shapeManager = new ShapeManager(this.canvas);
+                this.setupResizeHandler();
+                this.setupCleanup();
+                this.quoteManager = new QuoteManager();
+            }
+
+            setupResizeHandler() {
+                window.addEventListener('resize', () => {
+                    this.canvas.setAttribute('width', window.innerWidth);
+                    this.canvas.setAttribute('height', window.innerHeight);
+                });
+                this.canvas.setAttribute('width', window.innerWidth);
+                this.canvas.setAttribute('height', window.innerHeight);
+            }
+
+            start() {
+                this.shapeManager.create(Math.floor(this.shapeManager.getMaxShapes() / 2));
+                this.animate();
+                this.quoteManager.start();
+            }
+
+            animate = () => {
+                this.shapeManager.update();
+                requestAnimationFrame(this.animate);
+            }
+
+            cleanup() {
+                this.shapeManager.clear();
+                const defs = document.querySelector('defs');
+                while (defs.firstChild) {
+                    defs.removeChild(defs.firstChild);
+                }
+            }
+
+            setupCleanup() {
+                window.addEventListener('unload', () => this.cleanup());
+            }
+        }
+
+        const artGenerator = new ArtGenerator();
+        artGenerator.start();
     </script>
 </body>
 </html>

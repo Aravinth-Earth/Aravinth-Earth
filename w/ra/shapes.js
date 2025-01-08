@@ -26,7 +26,7 @@ class ShapeManager {
         });
 
         // Enforce minimum shape count and use spawn probability
-        const minShapes = Math.floor(ART_CONFIG.canvas.shapeCount * 0.2);
+        const minShapes = Math.floor(this.getMaxShapes() * 0.95);
         if (this.shapes.size < minShapes || 
             (this.shapes.size < this.getMaxShapes() && 
              Math.random() < ART_CONFIG.lifecycle.probability)) {
@@ -39,8 +39,7 @@ class ShapeManager {
     }
 
     getMaxShapes() {
-        return Math.floor(ART_CONFIG.canvas.shapeCount * 
-               (ART_CONFIG.lifecycle.maxShapesPercent / 100));
+        return ART_CONFIG.canvas.maxShapes;
     }
 
     clear() {
@@ -108,7 +107,7 @@ class Shape {
         // Only allow disappearing if we're above minimum shape count
         if (!this.fadeStart && 
             Math.random() < ART_CONFIG.lifecycle.probability && 
-            this.shapeManager.shapes.size > Math.floor(ART_CONFIG.canvas.shapeCount * 0.2)) {
+            this.shapeManager.shapes.size > Math.floor(ART_CONFIG.canvas.maxShapes * 0.2)) {
             this.startFade();
         }
 

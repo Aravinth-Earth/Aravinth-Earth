@@ -8,7 +8,7 @@ const ART_CONFIG = {
         concept: "பூமியின் வாழ்க்கை முறைகளின் ஒருங்கிணைந்த காட்சி | A generative art piece representing the interconnectedness of life"  // Any string
     },
     canvas: {
-        shapeCount: 400,                    // Range: 50-1000; Higher values may impact performance
+        maxShapes: 800,                   // Range: 50-1000; Maximum number of shapes to maintain
         size: { 
             min: 0.1,                         // Range: 0.1-5; Minimum shape size in pixels
             max: 8                          // Range: min+1 to 20; Maximum shape size in pixels
@@ -28,8 +28,7 @@ const ART_CONFIG = {
             maxOutsideTime: 1500,           // Range: 500-5000; Maximum time (ms) shapes can exist outside viewport
             fadeOutDuration: 800            // Range: 100-2000; Duration (ms) of fade out animation
         },
-        probability: 0.02,                  // Range: 0.001-0.1; Single probability for lifecycle changes
-        maxShapesPercent: 80               // Range: 20-100; Maximum percentage of shapeCount to maintain
+        probability: 0.005,                  // Range: 0.001-0.1; Single probability for lifecycle changes
     },
     motion: {
         speed: { 

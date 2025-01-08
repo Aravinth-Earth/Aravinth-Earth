@@ -36,3 +36,51 @@ class ColorGenerator {
         };
     }
 }
+
+class AudioManager {
+    constructor() {
+        this.audio = new Audio();
+        // Using local file instead of external URL
+        this.audio.src = './assets/ambient-peaceful.mp3';
+        this.audio.loop = true;
+        this.audio.volume = 0.3; // Start with lower volume
+        
+        // Fade in the audio over 3 seconds
+        this.fadeIn();
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.fadeOut();
+            } else {
+                this.fadeIn();
+            }
+        });
+    }
+
+    async fadeIn() {
+        this.audio.volume = 0;
+        await this.audio.play().catch(() => {
+            console.log('Audio autoplay blocked. User interaction required.');
+        });
+        
+        const fadeInterval = setInterval(() => {
+            if (this.audio.volume < 0.3) {
+                this.audio.volume = Math.min(0.3, this.audio.volume + 0.02);
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+
+    fadeOut() {
+        const fadeInterval = setInterval(() => {
+            if (this.audio.volume > 0.02) {
+                this.audio.volume -= 0.02;
+            } else {
+                this.audio.pause();
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+}

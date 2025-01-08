@@ -5,6 +5,7 @@ class ArtGenerator {
         this.setupResizeHandler();
         this.setupCleanup();
         this.quoteManager = new QuoteManager();
+        this.audioManager = new AudioManager();
     }
 
     setupResizeHandler() {
@@ -53,3 +54,11 @@ window.addEventListener('load', () => {
 
 const artGenerator = new ArtGenerator();
 artGenerator.start();
+
+// Add click handler to start audio
+document.addEventListener('click', () => {
+    if (!window.audioStarted) {
+        window.audioStarted = true;
+        artGenerator.audioManager.fadeIn();
+    }
+});

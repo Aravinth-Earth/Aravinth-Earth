@@ -82,6 +82,123 @@ svg {
     filter: blur(0);
 }
 
+footer {
+    display: block !important;  /* Override the display:none */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.audio-info {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+}
+
+.audio-icon {
+    cursor: help;
+    transition: color 0.3s ease;
+}
+
+.audio-icon:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.audio-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    margin-bottom: 5px;
+}
+
+.audio-info:hover .audio-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.audio-tooltip a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+.audio-tooltip a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.fullscreen-toggle {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.fullscreen-icon {
+    transition: color 0.3s ease;
+}
+
+.fullscreen-toggle:hover .fullscreen-icon {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.fullscreen-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    margin-bottom: 5px;
+}
+
+.fullscreen-toggle:hover .fullscreen-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.fullscreen-btn {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 24px;  /* Made larger for better clickability */
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1000;
+    padding: 10px;  /* Added padding for larger click area */
+    user-select: none;  /* Prevent text selection */
+}
+
+.fullscreen-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .quote {

@@ -6,6 +6,7 @@ class ArtGenerator {
         this.setupCleanup();
         this.quoteManager = new QuoteManager();
         this.audioManager = new AudioManager();
+        this.setupFullscreen();
     }
 
     setupResizeHandler() {
@@ -42,6 +43,23 @@ class ArtGenerator {
         while (defs.firstChild) {
             defs.removeChild(defs.firstChild);
         }
+    }
+
+    setupFullscreen() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.querySelector('.fullscreen-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen().catch(err => {
+                            console.warn('Failed to enter fullscreen:', err);
+                        });
+                    } else if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                });
+            }
+        });
     }
 }
 

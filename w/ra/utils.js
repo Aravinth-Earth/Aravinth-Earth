@@ -40,10 +40,10 @@ class ColorGenerator {
 class AudioManager {
     constructor() {
         this.audio = new Audio();
-        // Using local file instead of external URL
-        this.audio.src = './assets/ambient-peaceful.mp3';
+        // Using the forest ambient sound
+        this.audio.src = './523381__klankbeeld__edge-summer-forest-roond-nl-200619_0186.mp3';
         this.audio.loop = true;
-        this.audio.volume = 0.3; // Start with lower volume
+        this.audio.volume = 0.6; // Set volume to 60%
         
         // Fade in the audio over 3 seconds
         this.fadeIn();
@@ -65,8 +65,8 @@ class AudioManager {
         });
         
         const fadeInterval = setInterval(() => {
-            if (this.audio.volume < 0.3) {
-                this.audio.volume = Math.min(0.3, this.audio.volume + 0.02);
+            if (this.audio.volume < 0.6) {
+                this.audio.volume = Math.min(0.6, this.audio.volume + 0.02);
             } else {
                 clearInterval(fadeInterval);
             }

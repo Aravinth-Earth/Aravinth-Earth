@@ -1,27 +1,43 @@
-const CACHE_NAME = 'aravinth-site-v1';
-const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/manifest.json',
-    '/favicon.png',
-    '/w/lc/clock.html',
-    '/w/c/calc.html',
-    '/w/sp/planner.html',
-    '/w/ytn/news.html',
-    '/w/cdt/count-down.html',
-    '/w/rtp/index.html',
-    '/w/mg/index.html',
-    '/w/ssa/analysis.html',
-    '/w/ra/Life_On_Earth.html',
-    '/offline.html'
-];
+// Cache names for different sections
+const CACHE_NAMES = {
+    main: 'aravinth-site-v1',
+    mathGame: 'math-game-v1',
+    lifeOnEarth: 'life-on-earth-v1',
+    clock: 'local-clock-v1',
+    calculator: 'calculator-v1',
+    planner: 'simple-planner-v1',
+    ytNews: 'yt-news-v1',
+    countdown: 'countdown-v1',
+    reverseTimePlanner: 'reverse-time-planner-v1',
+    stockAnalysis: 'stock-analysis-v1'
+};
+
+// Function to determine cache name based on URL
+function getCacheName(url) {
+    if (url.includes('/w/mg/')) return CACHE_NAMES.mathGame;
+    if (url.includes('/w/ra/')) return CACHE_NAMES.lifeOnEarth;
+    if (url.includes('/w/lc/')) return CACHE_NAMES.clock;
+    if (url.includes('/w/c/')) return CACHE_NAMES.calculator;
+    if (url.includes('/w/sp/')) return CACHE_NAMES.planner;
+    if (url.includes('/w/ytn/')) return CACHE_NAMES.ytNews;
+    if (url.includes('/w/cdt/')) return CACHE_NAMES.countdown;
+    if (url.includes('/w/rtp/')) return CACHE_NAMES.reverseTimePlanner;
+    if (url.includes('/w/ssa/')) return CACHE_NAMES.stockAnalysis;
+    return CACHE_NAMES.main;
+}
 
 // Install event - cache basic assets
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(ASSETS_TO_CACHE))
+        caches.open(CACHE_NAMES.main)
+            .then(cache => cache.addAll([
+                '/',
+                '/index.html',
+                '/style.css',
+                '/manifest.json',
+                '/favicon.png',
+                '/offline.html'
+            ]))
     );
 });
 
@@ -31,7 +47,7 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(name => name !== CACHE_NAME)
+                    .filter(name => !Object.values(CACHE_NAMES).includes(name))
                     .map(name => caches.delete(name))
             );
         })
@@ -44,20 +60,19 @@ self.addEventListener('fetch', event => {
         caches.match(event.request)
             .then(response => {
                 if (response) {
-                    return response; // Return cached version
+                    return response;
                 }
                 
                 return fetch(event.request)
                     .then(response => {
-                        // Check if we received a valid response
                         if (!response || response.status !== 200 || response.type !== 'basic') {
                             return response;
                         }
 
-                        // Clone the response
                         const responseToCache = response.clone();
+                        const cacheName = getCacheName(event.request.url);
 
-                        caches.open(CACHE_NAME)
+                        caches.open(cacheName)
                             .then(cache => {
                                 cache.put(event.request, responseToCache);
                             });
@@ -65,11 +80,9 @@ self.addEventListener('fetch', event => {
                         return response;
                     })
                     .catch(() => {
-                        // Return offline page if it's a page request
                         if (event.request.mode === 'navigate') {
                             return caches.match('/offline.html');
                         }
-                        // Return null for other resources that aren't cached
                         return null;
                     });
             })

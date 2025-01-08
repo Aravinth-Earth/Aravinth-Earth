@@ -22,6 +22,7 @@
 
         <!-- Stylesheet -->
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="css/refresh-button.css">
     </head>
     <body>
         <!-- Schema.org metadata -->
@@ -134,22 +135,7 @@
             </footer>
         </div>
 
-        <script>
-            // Register Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => console.log('ServiceWorker registration successful'))
-                    .catch(err => console.log('ServiceWorker registration failed: ', err));
-            }
-            
-            // Add loading animation to links when clicked
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (!this.href.includes('mailto:')) {
-                        this.classList.add('loading');
-                    }
-                });
-            });
-        </script>
+        <button class="refresh-btn" title="Refresh options">↻</button>
+        <script src="js/refresh-handler.js"></script>
     </body>
 </html>

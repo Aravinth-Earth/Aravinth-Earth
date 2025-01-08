@@ -36,3 +36,51 @@ class ColorGenerator {
         };
     }
 }
+
+class AudioManager {
+    constructor() {
+        this.audio = new Audio();
+        // Using the forest ambient sound
+        this.audio.src = './523381__klankbeeld__edge-summer-forest-roond-nl-200619_0186.mp3';
+        this.audio.loop = true;
+        this.audio.volume = 0.6; // Set volume to 60%
+        
+        // Fade in the audio over 3 seconds
+        this.fadeIn();
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.fadeOut();
+            } else {
+                this.fadeIn();
+            }
+        });
+    }
+
+    async fadeIn() {
+        this.audio.volume = 0;
+        await this.audio.play().catch(() => {
+            console.log('Audio autoplay blocked. User interaction required.');
+        });
+        
+        const fadeInterval = setInterval(() => {
+            if (this.audio.volume < 0.6) {
+                this.audio.volume = Math.min(0.6, this.audio.volume + 0.02);
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+
+    fadeOut() {
+        const fadeInterval = setInterval(() => {
+            if (this.audio.volume > 0.02) {
+                this.audio.volume -= 0.02;
+            } else {
+                this.audio.pause();
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+}

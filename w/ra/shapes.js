@@ -25,8 +25,11 @@ class ShapeManager {
             }
         });
 
-        if (this.shapes.size < this.getMaxShapes() && 
-            Math.random() < ART_CONFIG.lifecycle.probability.spawn) {
+        // Enforce minimum shape count and use spawn probability
+        const minShapes = Math.floor(ART_CONFIG.canvas.shapeCount * 0.2);
+        if (this.shapes.size < minShapes || 
+            (this.shapes.size < this.getMaxShapes() && 
+             Math.random() < ART_CONFIG.lifecycle.probability)) {
             this.create(1);
         }
 
@@ -59,6 +62,7 @@ class Shape {
         this.init();
         this.outOfViewSince = null;
         this.fadeStart = null;
+        this.opacity = 1;
     }
 
     init() {
@@ -84,6 +88,7 @@ class Shape {
         }
 
         this.element.setAttribute('fill', color);
+        this.element.style.opacity = this.opacity;
     }
 
     generatePolygonPoints() {
@@ -100,10 +105,32 @@ class Shape {
     }
 
     update(deltaTime) {
+        // Only allow disappearing if we're above minimum shape count
+        if (!this.fadeStart && 
+            Math.random() < ART_CONFIG.lifecycle.probability && 
+            this.shapeManager.shapes.size > Math.floor(ART_CONFIG.canvas.shapeCount * 0.2)) {
+            this.startFade();
+        }
+
         this.updateMovement(deltaTime);
         this.updatePosition();
         this.updateVisibility();
         this.updateShape();
+        this.updateFade();
+    }
+
+    startFade() {
+        this.fadeStart = Date.now();
+        this.initialOpacity = this.opacity;
+    }
+
+    updateFade() {
+        if (this.fadeStart) {
+            const elapsed = Date.now() - this.fadeStart;
+            const progress = Math.min(elapsed / ART_CONFIG.lifecycle.timing.fadeOutDuration, 1);
+            this.opacity = this.initialOpacity * (1 - progress);
+            this.element.style.opacity = this.opacity;
+        }
     }
 
     updateMovement(deltaTime) {

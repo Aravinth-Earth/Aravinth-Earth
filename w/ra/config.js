@@ -28,10 +28,7 @@ const ART_CONFIG = {
             maxOutsideTime: 1500,           // Range: 500-5000; Maximum time (ms) shapes can exist outside viewport
             fadeOutDuration: 800            // Range: 100-2000; Duration (ms) of fade out animation
         },
-        probability: {
-            spawn: 0.001,                   // Range: 0.001-0.1; Probability of new shape spawning per frame
-            disappear: 0.01                // Range: 0.0001-0.01; Probability of shape starting to fade per frame
-        },
+        probability: 0.02,                  // Range: 0.001-0.1; Single probability for lifecycle changes
         maxShapesPercent: 80               // Range: 20-100; Maximum percentage of shapeCount to maintain
     },
     motion: {

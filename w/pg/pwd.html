@@ -3,7 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Generator</title>
+    <meta name="theme-color" content="#0d1117">
+    
+    <!-- PWA essentials -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Password Generator - Aravinth">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="description" content="A secure password generator tool with customizable options for creating strong passwords">
+    
+    <!-- Safari PWA -->
+    <link rel="apple-touch-startup-image" href="/favicon.png">
+    
+    <!-- PWA Windows -->
+    <meta name="msapplication-TileImage" content="/favicon.png">
+    <meta name="msapplication-TileColor" content="#0d1117">
+    
+    <!-- SEO and Security -->
+    <meta name="keywords" content="password generator, security, strong passwords, random password">
+    <meta name="author" content="Aravinth">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+    <title>Password Generator - Aravinth's Site</title>
+    
+    <!-- Schema.org metadata -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Password Generator",
+        "url": "https://www.332321.xyz/w/pg/pwd.html",
+        "author": {
+            "@type": "Person",
+            "name": "Aravinth"
+        },
+        "description": "A secure password generator tool with customizable options",
+        "applicationCategory": "Security Tool",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript"
+    }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- CSS imports -->
     <link rel="stylesheet" href="css/themes.css">
@@ -185,6 +229,16 @@
             </div>
         </section>
     </div>
+
+    <footer style="display: flex; justify-content: center; width: 100%;">
+        <div class="visitor-badge">
+            <a href="https://www.332321.xyz/index.html">
+                <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
+                     alt="Visitor Badge"
+                     loading="lazy">
+            </a>
+        </div>
+    </footer>
 
     <script type="module">
         import { PasswordGeneratorApp } from './js/main.js';

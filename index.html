@@ -2,29 +2,69 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Only affect dynamic content -->
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <meta name="viewport" content="width=device-width, initial-scale=5.0">
         <meta name="theme-color" content="#0d1117">
         <title>Aravinth's Site</title>
 
-        <!-- PWA essentials -->
+        <!-- Simplified PWA support -->
         <link rel="manifest" href="/manifest.json">
         <link rel="icon" type="image/png" href="/favicon.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="apple-mobile-web-app-title" content="Aravinth">
         <link rel="apple-touch-icon" href="/favicon.png">
-        <meta name="description" content="Personal site featuring various web tools and projects">
-        <!-- Safari PWA -->
-        <link rel="apple-touch-startup-image" href="/favicon.png">
-        <!-- PWA Windows -->
-        <meta name="msapplication-TileImage" content="/favicon.png">
-        <meta name="msapplication-TileColor" content="#0d1117">
-
-        <!-- Stylesheet -->
-        <link rel="stylesheet" href="style.css">
+        <meta name="description" content="Personal site featuring various web tools and projects by Aravinth">
+        
+        <!-- Social Media Tags -->
+        <meta property="og:title" content="Aravinth's Site">
+        <meta property="og:description" content="Personal site featuring various web tools and projects">
+        <meta property="og:image" content="/icons/og-image.png">
+        <meta property="og:type" content="website">
+        
+        <!-- Stylesheet with media queries -->
+        <script src="/config/version.js"></script>
+        <link rel="stylesheet" href="style.css?v=${APP_VERSION.number}">
         <link rel="stylesheet" href="css/refresh-button.css">
+        <!-- Add print stylesheet -->
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <style>
+            /* Animated background particles */
+            .particles {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0.3;
+            }
+            
+            .particle {
+                position: absolute;
+                background: var(--accent-primary);
+                border-radius: 50%;
+                filter: blur(2px);
+                animation: float 20s infinite;
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0) translateX(0); }
+                25% { transform: translateY(-30px) translateX(10px); }
+                50% { transform: translateY(-15px) translateX(-10px); }
+                75% { transform: translateY(-25px) translateX(15px); }
+            }
+        </style>
     </head>
     <body>
+        <div class="particles" aria-hidden="true">
+            <!-- Particles will be added by JS -->
+        </div>
         <!-- Schema.org metadata -->
         <script type="application/ld+json">
         {
@@ -42,100 +82,163 @@
         </script>
 
         <div class="container">
-            <header>
-                <h3>👋 Aravinth Here!</h3>
-                <p class="subtitle">Planning to host my site & blog here. Let's see how things turn out! 😊</p>
+            <header role="banner">
+                <h1 class="site-title">Hi, I'm Aravinth! 👋</h1>
+                <div class="header-description">
+                    <p class="sub-description">
+                        SDET crafting fun tools & games while exploring life..
+                    </p>
+                </div>
             </header>
 
-            <main>
-                <section class="works">
-                    <h4>🚀 My Works</h4>
-                    <ul>
+            <main role="main">
+                <section class="works" aria-labelledby="works-heading">
+                    <h2 id="works-heading">✨ My Works</h2>
+                    
+                    <ul class="works-grid">
                         <li>
-                            <a href="w/lc/clock.html">
-                                <span class="work-title">⏰ Local Clock</span>
-                                <p class="work-desc">Simple digital clock, based on local device time</p>
+                            <a href="w/sp/planner.html" class="work-card" aria-label="Task Planner">
+                                <span class="work-icon">📝</span>
+                                <span class="work-title">Task Planner</span>
+                                <span class="work-desc">Task (re)prioritizer with local storage</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/c/calc.html">
-                                <span class="work-title">🧮 Simple Calculator</span>
-                                <p class="work-desc">Simplest calculator for basic calculations</p>
+                            <a href="w/rtp/index.html" class="work-card" aria-label="Reverse - Reverse event planning tool">
+                                <span class="work-icon">🔄</span>
+                                <span class="work-title">Reverse Plan</span>
+                                <span class="work-desc">Reverse event planning tool</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/sp/planner.html">
-                                <span class="work-title">📝 Simple Planner</span>
-                                <p class="work-desc">Task (re)prioritizer; saves data locally; can explore & load from JSON</p>
+                            <a href="w/ssa/analysis.html" class="work-card" aria-label="Stocks - Stock sentiment analyzer">
+                                <span class="work-icon">📈</span>
+                                <span class="work-title">Stocks</span>
+                                <span class="work-desc">Stock sentiment analyzer</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/ytn/news.html">
-                                <span class="work-title">📺 YT Live News</span>
-                                <p class="work-desc">Famous Tamil YouTube news channels live streams, updated multiple times daily</p>
+                            <a href="w/lc/clock.html" class="work-card" aria-label="Clock - Digital clock">
+                                <span class="work-icon">⏰</span>
+                                <span class="work-title">Clock</span>
+                                <span class="work-desc">Digital clock</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/cdt/count-down.html">
-                                <span class="work-title">⏳ Count Down</span>
-                                <p class="work-desc">Simple countdown timer</p>
+                            <a href="w/c/calc.html" class="work-card" aria-label="Calc - Simple calculator">
+                                <span class="work-icon">🧮</span>
+                                <span class="work-title">Calc</span>
+                                <span class="work-desc">Simple calculator</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/rtp/index.html">
-                                <span class="work-title">🔄 Reverse Time Planner</span>
-                                <p class="work-desc">Plan the events in reverse for a particulr event for better planning</p>
+                            <a href="w/cdt/count-down.html" class="work-card" aria-label="Timer - Countdown timer">
+                                <span class="work-icon">⏳</span>
+                                <span class="work-title">Timer</span>
+                                <span class="work-desc">Countdown timer</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/mg/index.html">
-                                <span class="work-title">🔢 Math Game</span>
-                                <p class="work-desc">Simple and fun math game to test your skills</p>
+                            <a href="w/mg/index.html" class="work-card" aria-label="Math - Fun math practice">
+                                <span class="work-icon">🔢</span>
+                                <span class="work-title">Math</span>
+                                <span class="work-desc">Fun math practice</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/ssa/analysis.html">
-                                <span class="work-title">📈 Stock Sentiment Analysis</span>
-                                <p class="work-desc">Analyze the sentiment of the stock/security by news articles</p>
+                            <a href="w/ra/Life_On_Earth.html" class="work-card" aria-label="Life - Interactive art">
+                                <span class="work-icon">🌍</span>
+                                <span class="work-title">Life</span>
+                                <span class="work-desc">Interactive art</span>
+                            </a>
                         </li>
                         <li>
-                            <a href="w/ra/Life_On_Earth.html">
-                                <span class="work-title">🌍 Life On Earth</span>
-                                <p class="work-desc">An interactive digital art piece representing life patterns on Earth</p>
+                            <a href="w/ytn/news.html" class="work-card" aria-label="News - Tamil news streams">
+                                <span class="work-icon">📺</span>
+                                <span class="work-title">News</span>
+                                <span class="work-desc">Tamil news streams</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="w/pg/pwd.html" class="work-card" aria-label="Password - Secure password generator">
+                                <span class="work-icon">🔒</span>
+                                <span class="work-title">Password</span>
+                                <span class="work-desc">Secure password generator</span>
+                            </a>
                         </li>
                     </ul>
                 </section>
 
-                <section class="contact">
-                    <hr>
-                    <p>For any queries, feel free to <a href="mailto:aravinth@332321.xyz?subject=Found you on site '332321.xyz'" class="contact-link">📧 email me</a></p>
+                <section class="contact" aria-label="Contact Information">
+                    <a href="mailto:aravinth@332321.xyz" class="contact-link">
+                        <span>💌</span>
+                        <span>Let's Connect</span>
+                    </a>
                 </section>
             </main>
 
-            <footer>
-                <div class="stats-container">
-                    <iframe class="scaled-iframe-transform" 
-                            src="https://www.worldcommunitygrid.org/getDynamicImage.do?memberName=EmpathyInAction&mnOn=true&stat=3&imageNum=2&rankOn=true&projectsOn=false&special=false&link=0&memberId=1169407" 
-                            frameborder="0" 
-                            name="di" 
-                            loading="lazy"
-                            scrolling="no" 
-                            width="405" 
-                            height="185"
-                            title="World Community Grid Stats">
-                    </iframe>
-                </div>
-                <div class="visitor-badge">
-                    <a href="https://www.332321.xyz/index.html">
+            <footer class="unified-footer" role="contentinfo">
+                <div class="footer-content">
+                    <div class="stats-container">
+                        <iframe class="scaled-iframe-transform" 
+                                src="https://www.worldcommunitygrid.org/getDynamicImage.do?memberName=EmpathyInAction&mnOn=true&stat=3&imageNum=2&rankOn=true&projectsOn=false&special=false&link=0&memberId=1169407" 
+                                title="World Community Grid Statistics"
+                                loading="lazy"
+                                width="405" 
+                                height="185">
+                        </iframe>
+                    </div>
+                    <div class="visitor-section">
                         <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
-                             alt="Visitor Badge"
-                             loading="lazy">
-                    </a>
+                             alt="Visitor count badge"
+                             loading="lazy"
+                             width="auto"
+                             height="20">
+                    </div>
                 </div>
             </footer>
         </div>
 
-        <button class="refresh-btn" title="Refresh options">↻</button>
-        <script src="js/refresh-handler.js"></script>
+        <button class="refresh-btn" title="Refresh options" aria-label="Refresh page content">↻</button>
+        <script src="js/refresh-handler.js" defer></script>
+        <!-- Add service worker registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js', {
+                    updateViaCache: 'none'
+                }).then(registration => {
+                    // Check if version is different from cached version
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                const cachedVersion = localStorage.getItem('app-version');
+                                if (cachedVersion !== APP_VERSION.number) {
+                                    if (confirm('New version available! Reload to update?')) {
+                                        localStorage.setItem('app-version', APP_VERSION.number);
+                                        window.location.reload();
+                                    }
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Add animated background particles
+            const particles = document.querySelector('.particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.opacity = Math.random() * 0.5;
+                particles.appendChild(particle);
+            }
+        </script>
+        <script src="js/tabs.js" defer></script>
     </body>
 </html>

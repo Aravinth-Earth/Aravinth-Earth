@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d1117">
+    
+    <!-- PWA essentials -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Password Generator - Aravinth">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="description" content="A secure password generator tool with customizable options for creating strong passwords">
+    
+    <!-- Safari PWA -->
+    <link rel="apple-touch-startup-image" href="/favicon.png">
+    
+    <!-- PWA Windows -->
+    <meta name="msapplication-TileImage" content="/favicon.png">
+    <meta name="msapplication-TileColor" content="#0d1117">
+    
+    <!-- SEO and Security -->
+    <meta name="keywords" content="password generator, security, strong passwords, random password">
+    <meta name="author" content="Aravinth">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+    <title>Password Generator - Aravinth's Site</title>
+    
+    <!-- Schema.org metadata -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Password Generator",
+        "url": "https://www.332321.xyz/w/pg/pwd.html",
+        "author": {
+            "@type": "Person",
+            "name": "Aravinth"
+        },
+        "description": "A secure password generator tool with customizable options",
+        "applicationCategory": "Security Tool",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript"
+    }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- CSS imports -->
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/controls.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">Password Generator</h1>
+            <button class="theme-switch" onclick="toggleTheme()" title="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        <p class="app-subtitle">Generate secure passwords with customizable options</p>
+    </header>
+
+    <div class="container">
+        <section class="section combined-section">
+            <div class="password-container">
+                <div class="password-header">
+                    <h2 class="section-title">Generated Password</h2>
+                    <div class="password-actions">
+                        <button class="generate-btn" onclick="generatePassword()">
+                            <i class="fas fa-dice"></i>
+                            Generate
+                        </button>
+                        <button class="copy-btn" onclick="copyPassword()">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <div class="strength-bar-container">
+                    <div class="strength-text">
+                        <span id="strengthText">Strength: Weak</span>
+                        <div class="strength-details">
+                            <span id="entropyText">0 bits</span>
+                            <span class="separator">•</span>
+                            <span id="uniqueCharsText">0 unique</span>
+                            <span class="separator">•</span>
+                            <span id="shannonEntropyText">0.00 entropy</span>
+                        </div>
+                    </div>
+                    <div class="strength-bar">
+                        <div id="strengthProgress"></div>
+                    </div>
+                </div>
+                <div id="password" role="textbox" aria-label="Generated password" tabindex="0"></div>
+            </div>
+            
+            <div class="mode-buttons">
+                <button class="mode-button" data-mode="chars">
+                    <i class="fas fa-font"></i>
+                    Characters
+                </button>
+                <button class="mode-button" data-mode="words">
+                    <i class="fas fa-file-word"></i>
+                    Words
+                </button>
+            </div>
+        </section>
+
+        <section class="section config-section">
+            <div id="charControls">
+                <h2 class="section-title">String-based Password Configuration</h2>
+                <div class="controls-grid">
+                    <div class="options-group full-width">
+                        <h3>Length</h3>
+                        <div class="length-controls">
+                            <input type="range" id="lengthSlider" min="10" max="512" value="12">
+                            <input type="number" id="length" value="12" min="1" max="512">
+                        </div>
+                    </div>
+
+                    <div class="options-group">
+                        <h3>Character Sets</h3>
+                        <div class="char-sets">
+                            <label><input type="checkbox" id="uppercase" checked> Uppercase Letters</label>
+                            <label><input type="checkbox" id="lowercase" checked> Lowercase Letters</label>
+                            <label><input type="checkbox" id="numbers" checked> Numbers</label>
+                            <label><input type="checkbox" id="symbols" checked> Symbols</label>
+                        </div>
+                    </div>
+
+                    <div class="options-group" id="symbolLevels">
+                        <h3>Symbol Types</h3>
+                        <div><input type="radio" name="symbolLevel" value="basic" checked> Basic (!@#$%^&*)</div>
+                        <div><input type="radio" name="symbolLevel" value="extended"> Extended (includes Basic + {}[]()\/'"~,;:.<>)</div>
+                        <div><input type="radio" name="symbolLevel" value="advanced"> Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</div>
+                        <div><input type="radio" name="symbolLevel" value="ascii"> Full ASCII (includes all ASCII chars from 32-255)</div>
+                        <div><input type="radio" name="symbolLevel" value="custom"> Custom Symbols
+                            <div id="customSymbolsSection" style="margin-left: 20px; display: none;">
+                                <div style="margin-top: 10px;">
+                                    <label>Include these symbols:<br>
+                                        <input type="text" id="includeSymbols" placeholder="e.g., #@$%" style="width: 100%;">
+                                    </label>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label>Exclude these symbols:<br>
+                                        <input type="text" id="excludeSymbols" placeholder="e.g., <>&" style="width: 100%;">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="wordControls" style="display: none;">
+                <h2 class="section-title">Word-based Password Configuration</h2>
+                <div class="controls-grid">
+                    <div class="options-group full-width">
+                        <div class="word-settings">
+                            <div class="length-controls">
+                                <span>Word Count:</span>
+                                <input type="range" id="wordCountSlider" min="2" max="8" value="4">
+                                <input type="number" id="wordCount" value="4" min="2" max="8">
+                            </div>
+                            <div class="length-controls">
+                                <span>Word Length:</span>
+                                <input type="range" id="wordLengthSlider" min="3" max="12" value="5">
+                                <input type="number" id="wordLength" value="5" min="3" max="12">
+                            </div>
+                            <div class="pattern-options">
+                                <h4>Pattern Type:</h4>
+                                <label><input type="radio" name="patternType" value="simple" checked> Simple (CVCV)</label>
+                                <label><input type="radio" name="patternType" value="complex"> Complex (CCVC/CVCC)</label>
+                                <label><input type="radio" name="patternType" value="random"> Random Mix</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="options-group">
+                        <h3>Word Case</h3>
+                        <div class="word-case-options">
+                            <label><input type="radio" name="wordCase" value="Capitalize" checked> Capitalize</label>
+                            <label><input type="radio" name="wordCase" value="lowercase"> lowercase</label>
+                            <label><input type="radio" name="wordCase" value="UPPERCASE"> UPPERCASE</label>
+                            <label><input type="radio" name="wordCase" value="aLtErNaTe"> aLtErNaTe</label>
+                            <label><input type="radio" name="wordCase" value="random"> rAndOm</label>
+                        </div>
+                    </div>
+                    <div class="options-group">
+                        <h3>Word Separator</h3>
+                        <div class="separator-controls">
+                            <div class="preset-separators">
+                                <label><input type="radio" name="separator" value="-" checked> Hyphen (-)</label>
+                                <label><input type="radio" name="separator" value="."> Dot (.)</label>
+                                <label><input type="radio" name="separator" value="_"> Underscore (_)</label>
+                                <label><input type="radio" name="separator" value=" "> Space</label>
+                                <label><input type="radio" name="separator" value="custom"> Custom</label>
+                            </div>
+                            <input type="text" id="customSeparator" placeholder="Custom separator" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="options-group">
+                        <h3>Append Options</h3>
+                        <div class="append-options">
+                            <div class="number-options">
+                                <label><input type="checkbox" id="appendNumber" checked> Append Number</label>
+                                <input type="number" id="numberLength" value="2" min="1" max="4" style="width: 60px;">
+                            </div>
+                            <div class="char-options">
+                                <h4>Append Characters</h4>
+                                <div class="char-set-option">
+                                    <label><input type="radio" name="charSetType" value="default" checked> Default Set (!@#$%^&*)</label>
+                                    <label><input type="radio" name="charSetType" value="custom"> Custom Set</label>
+                                    <input type="text" id="customCharSet" placeholder="e.g., !@#$" style="display: none;">
+                                </div>
+                                <div class="char-count">
+                                    <label>Number of characters:</label>
+                                    <input type="number" id="appendCharCount" value="1" min="1" max="4" style="width: 60px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer style="display: flex; justify-content: center; width: 100%;">
+        <div class="visitor-badge">
+            <a href="https://www.332321.xyz/index.html">
+                <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
+                     alt="Visitor Badge"
+                     loading="lazy">
+            </a>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { PasswordGeneratorApp } from './js/main.js';
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            PasswordGeneratorApp.init();
+        });
+    </script>
+</body>
+</html>

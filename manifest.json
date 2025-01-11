@@ -16,6 +16,6 @@
             "purpose": "any maskable"
         }
     ],
-    "categories": ["utilities", "productivity"],
+    "categories": ["utilities", "productivity", "security"],
     "prefer_related_applications": false
 }

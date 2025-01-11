@@ -77,20 +77,39 @@
         <div class="cached-content">
             <p>Available offline | ஆஃப்லைனில் கிடைக்கும்:</p>
             <script>
-                // Display cached pages dynamically
-                caches.open('aravinth-site-v1').then(cache => {
-                    cache.keys().then(requests => {
-                        const urls = requests
-                            .map(req => req.url)
-                            .filter(url => url.endsWith('.html'));
-                        const list = document.createElement('ul');
-                        urls.forEach(url => {
-                            const li = document.createElement('li');
-                            li.textContent = url.split('/').pop();
-                            list.appendChild(li);
-                        });
-                        document.querySelector('.cached-content').appendChild(list);
+                // Display cached pages dynamically from all caches
+                const cacheNames = [
+                    'aravinth-site-v1',
+                    'math-game-v1',
+                    'life-on-earth-v1',
+                    'local-clock-v1',
+                    'calculator-v1',
+                    'simple-planner-v1',
+                    'yt-news-v1',
+                    'countdown-v1',
+                    'reverse-time-planner-v1',
+                    'stock-analysis-v1',
+                    'password-generator-v1'
+                ];
+
+                Promise.all(
+                    cacheNames.map(name => caches.open(name))
+                ).then(caches => {
+                    return Promise.all(
+                        caches.map(cache => cache.keys())
+                    );
+                }).then(responses => {
+                    const allRequests = responses.flat();
+                    const urls = allRequests
+                        .map(req => req.url)
+                        .filter(url => url.endsWith('.html'));
+                    const list = document.createElement('ul');
+                    urls.forEach(url => {
+                        const li = document.createElement('li');
+                        li.textContent = url.split('/').pop();
+                        list.appendChild(li);
                     });
+                    document.querySelector('.cached-content').appendChild(list);
                 });
             </script>
         </div>

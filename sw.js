@@ -9,7 +9,8 @@ const CACHE_NAMES = {
     ytNews: 'yt-news-v1',
     countdown: 'countdown-v1',
     reverseTimePlanner: 'reverse-time-planner-v1',
-    stockAnalysis: 'stock-analysis-v1'
+    stockAnalysis: 'stock-analysis-v1',
+    passwordGenerator: 'password-generator-v1'
 };
 
 // Function to determine cache name based on URL
@@ -23,6 +24,7 @@ function getCacheName(url) {
     if (url.includes('/w/cdt/')) return CACHE_NAMES.countdown;
     if (url.includes('/w/rtp/')) return CACHE_NAMES.reverseTimePlanner;
     if (url.includes('/w/ssa/')) return CACHE_NAMES.stockAnalysis;
+    if (url.includes('/w/pg/')) return CACHE_NAMES.passwordGenerator;
     return CACHE_NAMES.main;
 }
 

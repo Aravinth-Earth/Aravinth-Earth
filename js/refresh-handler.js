@@ -12,27 +12,22 @@ const APP_CACHE_NAMES = {
 };
 
 async function refreshContent(appId = null) {
+    const currentVersion = APP_VERSION.number;
     const refreshBtn = document.querySelector('.refresh-btn');
     refreshBtn.classList.add('spinning');
 
     try {
         if (appId) {
-            // App-specific refresh
-            const cacheName = APP_CACHE_NAMES[appId];
-            if (cacheName) {
-                await caches.delete(cacheName);
-                console.log(`Cleared cache for ${appId}`);
-            }
+            const cacheName = `app-${appId}-${APP_VERSION.cacheKey}`;
+            await caches.delete(cacheName);
         } else {
-            // Main site refresh
-            const registration = await navigator.serviceWorker.getRegistration('/');
-            if (registration) {
-                await registration.unregister();
-            }
-            await caches.delete('aravinth-site-v1');
+            // Clear all version-specific caches
+            const cacheList = await caches.keys();
+            await Promise.all(
+                cacheList.filter(name => name.includes(APP_VERSION.cacheKey))
+                    .map(name => caches.delete(name))
+            );
         }
-
-        // Reload the page
         window.location.reload(true);
     } catch (error) {
         console.error('Refresh failed:', error);

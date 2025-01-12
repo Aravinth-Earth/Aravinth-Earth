@@ -2,96 +2,25 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--refresh-gradient);
     border: none;
-    color: #c9d1d9;
+    color: var(--text-primary);
     font-size: 24px;
     cursor: pointer;
-    opacity: 0.7;
-    transition: transform 0.3s, opacity 0.3s;
+    opacity: 0.8;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--glow-orange);
 }
 
 .refresh-btn:hover {
     opacity: 1;
-    transform: rotate(180deg);
-}
-
-.refresh-btn.spinning {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    100% { transform: rotate(360deg); }
-}
-
-.refresh-menu {
-    position: fixed;
-    bottom: 60px;
-    right: 20px;
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 8px 0;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    display: none;
-    z-index: 999;
-    min-width: 200px;
-    max-width: 300px;
-}
-
-.refresh-menu.visible {
-    display: block;
-}
-
-.refresh-header {
-    padding: 8px 16px;
-    font-weight: 500;
-    color: #c9d1d9;
-    border-bottom: 1px solid #30363d;
-}
-
-.refresh-menu button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 8px 16px;
-    text-align: left;
-    background: none;
-    border: none;
-    color: #c9d1d9;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.cache-count {
-    font-size: 12px;
-    color: #8b949e;
-    margin-left: 8px;
-}
-
-.cache-details {
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.cache-details button {
-    font-size: 12px;
-    padding: 6px 16px;
-}
-
-.refresh-menu button:hover {
-    background: #1f242c;
-}
-
-.refresh-menu .divider {
-    margin: 4px 0;
-    border-top: 1px solid #30363d;
-}
-
-.refresh-menu .cache-info {
-    color: #8b949e;
-    font-size: 12px;
-    padding: 4px 16px;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }

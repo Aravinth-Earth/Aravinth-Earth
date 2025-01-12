@@ -26,45 +26,11 @@
         <meta property="og:type" content="website">
         
         <!-- Stylesheet with media queries -->
-        <script src="/config/version.js"></script>
-        <link rel="stylesheet" href="style.css?v=${APP_VERSION.number}">
         <link rel="stylesheet" href="css/refresh-button.css">
-        <!-- Add print stylesheet -->
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="stylesheet" href="css/style.css">
 
-        <style>
-            /* Animated background particles */
-            .particles {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 0;
-                opacity: 0.3;
-            }
-            
-            .particle {
-                position: absolute;
-                background: var(--accent-primary);
-                border-radius: 50%;
-                filter: blur(2px);
-                animation: float 20s infinite;
-            }
-            
-            @keyframes float {
-                0%, 100% { transform: translateY(0) translateX(0); }
-                25% { transform: translateY(-30px) translateX(10px); }
-                50% { transform: translateY(-15px) translateX(-10px); }
-                75% { transform: translateY(-25px) translateX(15px); }
-            }
-        </style>
     </head>
     <body>
-        <div class="particles" aria-hidden="true">
-            <!-- Particles will be added by JS -->
-        </div>
         <!-- Schema.org metadata -->
         <script type="application/ld+json">
         {
@@ -86,7 +52,7 @@
                 <h1 class="site-title">Hi, I'm Aravinth! 👋</h1>
                 <div class="header-description">
                     <p class="sub-description">
-                        SDET crafting fun tools & games while exploring life..
+                        SDET crafting fun tools & games while exploring life
                     </p>
                 </div>
             </header>
@@ -100,70 +66,60 @@
                             <a href="w/sp/planner.html" class="work-card" aria-label="Task Planner">
                                 <span class="work-icon">📝</span>
                                 <span class="work-title">Task Planner</span>
-                                <span class="work-desc">Task (re)prioritizer with local storage</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/rtp/index.html" class="work-card" aria-label="Reverse - Reverse event planning tool">
                                 <span class="work-icon">🔄</span>
                                 <span class="work-title">Reverse Plan</span>
-                                <span class="work-desc">Reverse event planning tool</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/ssa/analysis.html" class="work-card" aria-label="Stocks - Stock sentiment analyzer">
                                 <span class="work-icon">📈</span>
                                 <span class="work-title">Stocks</span>
-                                <span class="work-desc">Stock sentiment analyzer</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/lc/clock.html" class="work-card" aria-label="Clock - Digital clock">
                                 <span class="work-icon">⏰</span>
                                 <span class="work-title">Clock</span>
-                                <span class="work-desc">Digital clock</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/c/calc.html" class="work-card" aria-label="Calc - Simple calculator">
                                 <span class="work-icon">🧮</span>
                                 <span class="work-title">Calc</span>
-                                <span class="work-desc">Simple calculator</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/cdt/count-down.html" class="work-card" aria-label="Timer - Countdown timer">
                                 <span class="work-icon">⏳</span>
                                 <span class="work-title">Timer</span>
-                                <span class="work-desc">Countdown timer</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/mg/index.html" class="work-card" aria-label="Math - Fun math practice">
                                 <span class="work-icon">🔢</span>
                                 <span class="work-title">Math</span>
-                                <span class="work-desc">Fun math practice</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/ra/Life_On_Earth.html" class="work-card" aria-label="Life - Interactive art">
                                 <span class="work-icon">🌍</span>
                                 <span class="work-title">Life</span>
-                                <span class="work-desc">Interactive art</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/ytn/news.html" class="work-card" aria-label="News - Tamil news streams">
                                 <span class="work-icon">📺</span>
                                 <span class="work-title">News</span>
-                                <span class="work-desc">Tamil news streams</span>
                             </a>
                         </li>
                         <li>
                             <a href="w/pg/pwd.html" class="work-card" aria-label="Password - Secure password generator">
                                 <span class="work-icon">🔒</span>
                                 <span class="work-title">Password</span>
-                                <span class="work-desc">Secure password generator</span>
                             </a>
                         </li>
                     </ul>
@@ -201,44 +157,16 @@
 
         <button class="refresh-btn" title="Refresh options" aria-label="Refresh page content">↻</button>
         <script src="js/refresh-handler.js" defer></script>
-        <!-- Add service worker registration -->
         <script>
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js', {
-                    updateViaCache: 'none'
-                }).then(registration => {
-                    // Check if version is different from cached version
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                const cachedVersion = localStorage.getItem('app-version');
-                                if (cachedVersion !== APP_VERSION.number) {
-                                    if (confirm('New version available! Reload to update?')) {
-                                        localStorage.setItem('app-version', APP_VERSION.number);
-                                        window.location.reload();
-                                    }
-                                }
-                            }
-                        });
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered');
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
                     });
-                });
-            }
-
-            // Add animated background particles
-            const particles = document.querySelector('.particles');
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.width = Math.random() * 3 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.opacity = Math.random() * 0.5;
-                particles.appendChild(particle);
             }
         </script>
-        <script src="js/tabs.js" defer></script>
     </body>
 </html>

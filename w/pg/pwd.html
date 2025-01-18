@@ -5,28 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0d1117">
     
-    <!-- PWA essentials -->
-    <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" href="./favicon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Password Generator - Aravinth">
-    <link rel="apple-touch-icon" href="./favicon.png">
+    <!-- Essential meta -->
     <meta name="description" content="A secure password generator tool with customizable options for creating strong passwords">
-    
-    <!-- Safari PWA -->
-    <link rel="apple-touch-startup-image" href="./favicon.png">
-    
-    <!-- PWA Windows -->
-    <meta name="msapplication-TileImage" content="./favicon.png">
-    <meta name="msapplication-TileColor" content="#0d1117">
-    
-    <!-- SEO and Security -->
-    <meta name="keywords" content="password generator, security, strong passwords, random password">
     <meta name="author" content="Aravinth">
-    <meta name="robots" content="index, follow">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <!-- Remove X-Frame-Options meta tag -->
 
     <title>Password Generator - Aravinth's Site</title>
     
@@ -42,25 +25,18 @@
             "name": "Aravinth"
         },
         "description": "A secure password generator tool with customizable options",
-        "applicationCategory": "Security Tool",
-        "operatingSystem": "Any",
-        "browserRequirements": "Requires JavaScript"
+        "applicationCategory": "Security Tool"
     }
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- CSS imports -->
-    <link rel="stylesheet" href="./css/themes.css">
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/layout.css">
-    <link rel="stylesheet" href="./css/components.css">
-    <link rel="stylesheet" href="./css/controls.css">    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="app-header">
         <div class="header-content">
             <h1 class="app-title">Password Generator</h1>
-            <button class="theme-switch" id="themeBtn" title="Toggle theme">
+            <button class="theme-switch" onclick="toggleTheme()" title="Toggle theme">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
@@ -73,11 +49,11 @@
                 <div class="password-header">
                     <h2 class="section-title">Generated Password</h2>
                     <div class="password-actions">
-                        <button class="generate-btn" id="generateBtn">
+                        <button onclick="generatePassword()" class="generate-btn">
                             <i class="fas fa-dice"></i>
                             Generate
                         </button>
-                        <button class="copy-btn" id="copyBtn">
+                        <button onclick="copyPassword()" class="copy-btn">
                             <i class="fas fa-copy"></i>
                             Copy
                         </button>
@@ -102,11 +78,11 @@
             </div>
             
             <div class="mode-buttons">
-                <button class="mode-button" data-mode="chars">
+                <button onclick="switchMode('chars')" class="mode-button active" data-mode="chars">
                     <i class="fas fa-font"></i>
                     Characters
                 </button>
-                <button class="mode-button" data-mode="words">
+                <button onclick="switchMode('words')" class="mode-button" data-mode="words">
                     <i class="fas fa-file-word"></i>
                     Words
                 </button>
@@ -135,23 +111,17 @@
                         </div>
                     </div>
 
-                    <div class="options-group" id="symbolLevels">
+                    <div class="options-group" id="symbolLevels" style="display: none;">
                         <h3>Symbol Types</h3>
                         <div><input type="radio" name="symbolLevel" value="basic" checked> Basic (!@#$%^&*)</div>
                         <div><input type="radio" name="symbolLevel" value="extended"> Extended (includes Basic + {}[]()\/'"~,;:.<>)</div>
                         <div><input type="radio" name="symbolLevel" value="advanced"> Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</div>
                         <div><input type="radio" name="symbolLevel" value="ascii"> Full ASCII (includes all ASCII chars from 32-255)</div>
                         <div><input type="radio" name="symbolLevel" value="custom"> Custom Symbols
-                            <div id="customSymbolsSection" style="margin-left: 20px; display: none;">
-                                <div style="margin-top: 10px;">
-                                    <label>Include these symbols:<br>
-                                        <input type="text" id="includeSymbols" placeholder="e.g., #@$%" style="width: 100%;">
-                                    </label>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <label>Exclude these symbols:<br>
-                                        <input type="text" id="excludeSymbols" placeholder="e.g., <>&" style="width: 100%;">
-                                    </label>
+                            <div id="customSymbolsSection" style="display: none;">
+                                <div class="custom-symbols-input">
+                                    <label for="includeSymbols">Custom symbols:</label>
+                                    <input type="text" id="includeSymbols" placeholder="Enter your custom symbols (e.g., #@$%)" style="width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -240,21 +210,25 @@
         </div>
     </footer>
 
-    <!-- Debug Mode Configuration -->
+    <script src="password-generator.js"></script>
     <script>
-        // Enable console logging for localhost
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('[PasswordGenerator] Debug mode enabled');
-        } else {
-            console.log = function() {}; // Disable console.log in production
-        }
-    </script>
-
-    <script type="module">
-        import { PasswordGeneratorApp } from './js/main.js';
-        
+        // Added event listeners for form controls
         document.addEventListener('DOMContentLoaded', () => {
-            PasswordGeneratorApp.init();
+            // Initialize theme and generate first password
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+            generatePassword();
+
+            // Add listeners for input changes
+            document.querySelectorAll('input[type="checkbox"], input[type="radio"], input[type="range"], input[type="number"]')
+                .forEach(input => {
+                    input.addEventListener('change', generatePassword);
+                });
+
+            // Add listeners for custom inputs
+            document.getElementById('includeSymbols')?.addEventListener('input', generatePassword);
+            document.getElementById('excludeSymbols')?.addEventListener('input', generatePassword);
+            document.getElementById('customSeparator')?.addEventListener('input', generatePassword);
+            document.getElementById('customCharSet')?.addEventListener('input', generatePassword);
         });
     </script>
 </body>

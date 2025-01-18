@@ -1,0 +1,392 @@
+/* Theme Variables */
+:root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3d3d3d;
+    --text-primary: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-primary: #4CAF50;
+    --accent-secondary: #45a049;
+    --border-color: #444;
+    --shadow-color: rgba(0,0,0,0.3);
+    --transition-speed: 200ms;
+}
+
+[data-theme="light"] {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #eaeaea;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --accent-primary: #43A047;
+    --accent-secondary: #388E3C;
+    --border-color: #ddd;
+    --shadow-color: rgba(0,0,0,0.1);
+}
+
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-areas: 
+        "combined combined"
+        "config config";
+}
+
+.combined-section { grid-area: combined; }
+.mode-select-section { grid-area: mode-select; }
+.actions-section { grid-area: actions; }
+.config-section { grid-area: config; }
+
+/* Components */
+.section {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.75rem;
+}
+
+.password-section {
+    composes: section;
+    grid-area: password;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form Elements */
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: background-color var(--transition-speed) ease;
+}
+
+button:hover {
+    background-color: var(--accent-secondary);
+}
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.icon-button i {
+    font-size: 1.2rem;
+}
+
+input[type="text"],
+input[type="number"] {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 6px;
+    border-radius: 4px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--accent-primary);
+}
+
+/* Range input styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 8px;
+}
+
+/* Slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+    background: var(--bg-secondary);
+    height: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+input[type="range"]::-moz-range-track {
+    background: var(--bg-secondary);
+    height: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* Slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    margin-top: -5px;
+    border: none;
+    transition: background-color var(--transition-speed) ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-speed) ease;
+}
+
+/* Hover and focus states */
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:focus::-webkit-slider-thumb {
+    background: var(--accent-secondary);
+}
+
+input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:focus::-moz-range-thumb {
+    background: var(--accent-secondary);
+}
+
+/* Active state */
+input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.1);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+    transform: scale(1.1);
+}
+
+/* Controls */
+.controls-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Strength Indicators */
+.strength-bar-container {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+}
+
+/* Header */
+.app-header {
+    padding: 1rem 0.75rem;
+    margin-bottom: 0.5rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.app-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.5px;
+}
+
+.app-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Media Queries */
+@media (min-width: 1024px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "combined"
+            "config";
+        align-items: start;
+    }
+
+    .password-section {
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 5px;
+        gap: 0.5rem;
+    }
+    
+    .section {
+        padding: 0.75rem;
+    }
+}
+
+/* Add password container styles */
+.password-container {
+    margin-bottom: 1rem;
+}
+
+.password-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.password-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#password {
+    font-family: monospace;
+    font-size: 1.2rem;
+    padding: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    word-break: break-all;
+    min-height: 3rem;
+    cursor: pointer;
+}
+
+/* Character type colors */
+.char-upper { color: var(--accent-primary); }
+.char-lower { color: var(--text-primary); }
+.char-number { color: #ff9800; }
+.char-symbol { color: #e91e63; }
+
+/* Strength bar styles */
+.strength-bar {
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+}
+
+#strengthProgress {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.strength-details {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.separator {
+    color: var(--border-color);
+}
+
+/* Mode buttons */
+.mode-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.mode-button {
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+
+.mode-button.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+/* Form group styles */
+.options-group {
+    background: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.options-group h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.options-group h4 {
+    color: var(--text-secondary);
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+/* Length controls */
+.length-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.length-controls input[type="range"] {
+    flex: 1;
+}
+
+.length-controls input[type="number"] {
+    width: 70px;
+}
+
+/* Theme switch */
+.theme-switch {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 0.5rem;
+}
+
+.theme-switch:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Visitor badge */
+.visitor-badge {
+    margin: 2rem 0;
+}

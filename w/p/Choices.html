@@ -11,6 +11,12 @@
     <div class="choices-container">
         <h1 class="choices-title">Choices</h1>
         <p class="choices-description">There are n number of possible moves one can take at any moment, and each leads to a different future. Pick what you want to.</p>
+        <div class="controls">
+            <label>
+                Age: <input type="number" id="age-input" min="1" max="100" value="25">
+            </label>
+            <div id="meta-summary" class="meta-summary"></div>
+        </div>
         <div class="choices-visualization" id="choices-visualization"></div>
     </div>
     <script src="choices.js"></script>

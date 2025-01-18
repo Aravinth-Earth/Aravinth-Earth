@@ -1,29 +1,96 @@
-import { Events } from './ui/events.js';
-import { PasswordDisplay } from './components/password-display.js';
-import { ThemeSwitcher } from './components/theme-switcher.js';
-import { CharacterPasswordGenerator } from './generators/char-password.js';
-import { WordPasswordGenerator } from './generators/word-password.js';
+// Utility Imports
+import {
+    RandomGenerator,
+    Patterns,
+    Logger,
+    EntropyCalculator
+} from './utils/index.js';
+
+// UI Event Handlers
+import {
+    Events,
+    Controls
+} from './ui/index.js';
+
+// Component Imports
+import {
+    PasswordDisplay,
+    ThemeSwitcher,
+    StrengthIndicator
+} from './components/index.js';
+
+// Password Generators
+import {
+    CharacterPasswordGenerator,
+    WordPasswordGenerator
+} from './generators/index.js';
+
+// Debug configuration
+const DEBUG = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 export class PasswordGeneratorApp {
+    static debug(...args) {
+        if (DEBUG) console.log('[PasswordGenerator]', ...args);
+    }
+
     static init() {
-        // Make passwordDisplay globally accessible
-        window.passwordDisplay = new PasswordDisplay();
-        this.display = window.passwordDisplay;
-        this.setupEventListeners();
-        this.initializeUI();
-        // Generate password immediately
-        this.handleGeneratePassword();
+        try {
+            this.debug('Initializing application...');
+            
+            // Make functions globally accessible first
+            window.generatePassword = () => this.handleGeneratePassword();
+            window.copyPassword = () => this.handleCopyPassword();
+            window.toggleTheme = () => ThemeSwitcher.toggle();
+            
+            // Initialize the app
+            window.passwordDisplay = new PasswordDisplay();
+            this.display = window.passwordDisplay;
+            
+            this.setupEventListeners();
+            this.initializeUI();
+
+            // Ensure initial password generation
+            requestAnimationFrame(() => {
+                this.debug('Generating initial password...');
+                const password = this.handleGeneratePassword();
+                this.debug('Initial password generated:', password);
+                
+                // Verify password display
+                const displayElement = document.getElementById('password');
+                this.debug('Password display element content:', displayElement?.textContent);
+            });
+
+        } catch (error) {
+            console.error('Initialization failed:', error);
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h2>Something went wrong</h2>
+                    <p>Please try refreshing the page. If the problem persists, check the console for details.</p>
+                </div>`;
+        }
     }
 
     static setupEventListeners() {
+        this.debug('Setting up event listeners...');
         Events.attachEvents();
-        window.generatePassword = this.handleGeneratePassword.bind(this);
-        window.copyPassword = this.handleCopyPassword.bind(this);
-        window.toggleTheme = ThemeSwitcher.toggle.bind(ThemeSwitcher);
-        window.switchMode = (mode) => {
-            Events.switchMode(mode);
-            this.handleGeneratePassword();
-        };
+        
+        // Add click listeners to buttons
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const themeBtn = document.getElementById('themeBtn');
+        
+        if (generateBtn) generateBtn.addEventListener('click', () => this.handleGeneratePassword());
+        if (copyBtn) copyBtn.addEventListener('click', () => this.handleCopyPassword());
+        if (themeBtn) themeBtn.addEventListener('click', () => ThemeSwitcher.toggle());
+        
+        // Mode switcher
+        document.querySelectorAll('.mode-button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const mode = e.currentTarget.dataset.mode;
+                Events.switchMode(mode);
+                this.handleGeneratePassword();
+            });
+        });
     }
 
     static initializeUI() {
@@ -44,12 +111,21 @@ export class PasswordGeneratorApp {
     }
 
     static handleGeneratePassword() {
+        this.debug('Generating new password...');
         const isWordMode = document.querySelector('.mode-button[data-mode="words"].active') !== null;
+        this.debug('Mode:', isWordMode ? 'words' : 'characters');
+        
         const password = isWordMode ? 
             WordPasswordGenerator.generate() : 
             CharacterPasswordGenerator.generate();
             
+        this.debug('Generated password:', password);
         this.display.display(password);
+        
+        // Verify display
+        const displayElement = document.getElementById('password');
+        this.debug('Password display element content after update:', displayElement?.textContent);
+        
         return password;
     }
 

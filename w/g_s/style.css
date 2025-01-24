@@ -1,0 +1,187 @@
+#gameContainer {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a2e; /* Dark blue background */
+}
+
+.controls {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+    background: rgba(30, 30, 40, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.controls input {
+    background: #2a2a3a;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    width: 50px;
+}
+
+.controls label {
+    margin-right: 15px;
+    color: #bbb;
+}
+
+.controls button {
+    background: #2a2a3a;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.controls button:hover {
+    background: #3a3a4a;
+}
+
+#gun {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    width: 30px;  /* reduced from 50px */
+    height: 30px; /* reduced from 50px */
+    background: #444;
+    transform: translateX(-50%);
+    cursor: crosshair;
+    border-radius: 50%;
+    transform-origin: center center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.gun-barrel {
+    position: absolute;
+    top: -12px;
+    width: 8px;
+    height: 15px;
+    background: #555;
+    border-radius: 3px;
+    transform-origin: bottom center;
+    transition: all 0.2s ease;
+    will-change: transform;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.balloon {
+    position: absolute;
+    --base-size: 40px;
+    width: calc(var(--base-size) * var(--size-multiplier, 2));
+    height: calc(var(--base-size) * var(--size-multiplier, 2));
+    background: red;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Remove .balloon::after style that created the thread */
+
+@keyframes burst {
+    0% { 
+        transform: scale(1); 
+        opacity: 1;
+        filter: brightness(1.5);
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+        filter: brightness(2);
+    }
+    100% { 
+        transform: scale(2); 
+        opacity: 0;
+        filter: brightness(0);
+    }
+}
+
+.bursting {
+    animation: burst 0.3s ease-out forwards;
+}
+
+.bullet {
+    position: absolute;
+    width: 6px;    /* Slightly smaller bullets */
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ffa500,
+                0 0 16px rgba(255, 165, 0, 0.6);
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.4));
+    opacity: 0.8;  /* Slightly transparent for less visual noise */
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.2);
+}
+
+@keyframes particleFade {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+.game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 30, 0.95);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    font-size: 24px;
+    z-index: 1000;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+}
+
+#score {
+    color: #4CAF50;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+#lives {
+    color: #ff4444;
+    font-weight: bold;
+    margin-left: 10px;
+    text-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
+}
+
+.pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.pause-overlay.active {
+    display: flex;
+}
+
+.pause-text {
+    color: #fff;
+    font-size: 48px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}

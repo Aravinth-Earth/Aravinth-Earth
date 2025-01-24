@@ -50,3 +50,16 @@
     margin-left: 10px;
     text-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
 }
+
+.debug-control {
+    margin-right: 15px;
+    background: rgba(255, 255, 0, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.debug-control input[type="checkbox"] {
+    width: auto;
+    vertical-align: middle;
+    margin-left: 5px;
+}

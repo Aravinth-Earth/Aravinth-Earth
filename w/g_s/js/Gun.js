@@ -35,6 +35,7 @@ export class Gun {
 
     shoot() {
         if (this.game.isPaused) return;
+
         const bullets = parseInt(this.game.controls.bulletCount.value) || 1;
         const gunRect = this.element.getBoundingClientRect();
         const gunCenterX = gunRect.left + gunRect.width / 2;
@@ -78,6 +79,10 @@ export class Gun {
             
             this.game.collisionSystem.trackBulletPosition(bullet, animation, bulletAngle, speed);
         }
+    }
+
+    getBulletSpeed() {
+        return 1;  // Simplified - removed debug logic
     }
 
     startAutoShooting() {

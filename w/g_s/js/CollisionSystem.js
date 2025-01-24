@@ -5,9 +5,14 @@ export class CollisionSystem {
     }
 
     trackBulletPosition(bullet, animation, angle, speed) {
+        if (this.game.isPaused) {
+            bullet.remove();
+            return;
+        }
+
         const startTime = performance.now();
         const checkCollision = setInterval(() => {
-            if (!bullet.isConnected) {
+            if (!bullet.isConnected || this.game.isPaused) {
                 clearInterval(checkCollision);
                 this.activeCollisionChecks.delete(checkCollision);
                 return;
@@ -20,54 +25,34 @@ export class CollisionSystem {
             const currentX = parseFloat(bullet.dataset.startX) + Math.cos(radianAngle) * distance;
             const currentY = parseFloat(bullet.dataset.startY) + Math.sin(radianAngle) * distance;
             
-            const bulletRect = {
-                width: 6,
-                height: 6,
-                left: currentX - 3,
-                top: currentY - 3,
-                right: currentX + 3,
-                bottom: currentY + 3
-            };
-
-            const balloons = document.querySelectorAll('.balloon:not(.bursting)');
-            balloons.forEach(balloon => {
-                const balloonRect = balloon.getBoundingClientRect();
-                if (this.isColliding(bulletRect, balloonRect)) {
-                    this.game.balloonManager.burstBalloon(balloon);
-                    bullet.remove();
-                    clearInterval(checkCollision);
-                }
-            });
+            bullet.style.left = `${currentX}px`;
+            bullet.style.top = `${currentY}px`;
         }, 16);
         
         this.activeCollisionChecks.add(checkCollision);
     }
 
-    detectCollisions(bullet) {
-        // ...existing code...
-    }
-
     isColliding(bulletRect, balloonRect) {
-        const sizeInput = parseInt(this.game.controls.balloonSize?.value) || this.game.balloonManager.maxBalloonSize;
-        const sizeMultiplier = (sizeInput / this.game.balloonManager.maxBalloonSize) * 2;
-        const baseSize = 40;
-        const actualBalloonRadius = (baseSize * sizeMultiplier) / 2;
+        const bulletCenter = {
+            x: bulletRect.left + bulletRect.width/2,
+            y: bulletRect.top + bulletRect.height/2
+        };
+        
+        const balloonCenter = {
+            x: balloonRect.left + balloonRect.width/2,
+            y: balloonRect.top + balloonRect.height/2
+        };
 
-        const bulletCenterX = bulletRect.left + bulletRect.width/2;
-        const bulletCenterY = bulletRect.top + bulletRect.height/2;
-        const balloonCenterX = balloonRect.left + balloonRect.width/2;
-        const balloonCenterY = balloonRect.top + balloonRect.height/2;
+        const distance = Math.sqrt(
+            Math.pow(bulletCenter.x - balloonCenter.x, 2) + 
+            Math.pow(bulletCenter.y - balloonCenter.y, 2)
+        );
 
-        const dx = bulletCenterX - balloonCenterX;
-        const dy = bulletCenterY - balloonCenterY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        return distance < (3 + actualBalloonRadius);
+        return distance <= balloonRect.width/2;
     }
 
     cleanup() {
         this.activeCollisionChecks.forEach(interval => clearInterval(interval));
         this.activeCollisionChecks.clear();
-        document.querySelectorAll('.bullet').forEach(bullet => bullet.remove());
     }
 }

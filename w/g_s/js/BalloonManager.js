@@ -1,12 +1,11 @@
 export class BalloonManager {
     constructor(game) {
         this.game = game;
-        this.activeBalloonsRects = new Set();
         this.colors = ['#FF0000', '#FF4500', '#FFA500', '#FFD700', '#7FFF00', 
                       '#00FF00', '#00FFFF', '#0000FF', '#8A2BE2', '#FF00FF'];
         this.spawnIntervalId = null;
-        this.spawnDelay = 1000;
         this.maxBalloonSize = 5;
+        this.balloonIdCounter = 0;
         this.spawnBalloons();
     }
 
@@ -15,38 +14,62 @@ export class BalloonManager {
     }
 
     spawnBalloons() {
-        if (this.game.isPaused) return;
+        if (this.game.isPaused || this.game.isGameOver) return;
+        
         if (this.spawnIntervalId) {
             clearInterval(this.spawnIntervalId);
         }
 
         this.spawnIntervalId = setInterval(() => {
-            if (this.game.isGameOver) {
-                clearInterval(this.spawnIntervalId);
-                return;
-            }
-
             const currentBalloons = document.querySelectorAll('.balloon:not(.bursting)').length;
             const maxAllowed = parseInt(this.game.controls.maxBalloonsInput?.value) || 20;
-            const sizeInput = parseInt(this.game.controls.balloonSize?.value) || this.maxBalloonSize;
-            const sizeMultiplier = (sizeInput / this.maxBalloonSize) * 2;
             
-            if (currentBalloons >= maxAllowed) return;
+            if (currentBalloons >= maxAllowed || this.game.isPaused || this.game.isGameOver) return;
+            this.createBalloon();
+        }, 1000);
+    }
 
-            const balloon = document.createElement('div');
-            balloon.className = 'balloon';
-            balloon.style.backgroundColor = this.getRandomColor();
-            balloon.style.setProperty('--size-multiplier', sizeMultiplier);
-            balloon.style.top = '0px';
-            balloon.style.left = (Math.random() * 80 + 10) + 'vw';
-            
-            this.game.container.appendChild(balloon);
-            const balloonRect = balloon.getBoundingClientRect();
-            this.activeBalloonsRects.add(balloonRect);
+    getRandomBalloonPosition() {
+        const edge = Math.floor(Math.random() * 3);
+        const position = { x: 0, y: 0 };
 
-            this.setupBalloonBehavior(balloon);
-            
-        }, this.spawnDelay);
+        switch (edge) {
+            case 0:
+                position.x = Math.random() * 100;
+                position.y = -10;
+                break;
+            case 1:
+                position.x = -10;
+                position.y = Math.random() * 40;
+                break;
+            case 2:
+                position.x = 110;
+                position.y = Math.random() * 40;
+                break;
+        }
+
+        return position;
+    }
+
+    createBalloon() {
+        const balloon = document.createElement('div');
+        const balloonId = `balloon_${++this.balloonIdCounter}`;
+        balloon.id = balloonId;
+        balloon.className = 'balloon';
+        balloon.style.backgroundColor = this.getRandomColor();
+        
+        const position = this.getRandomBalloonPosition();
+        balloon.style.left = `${position.x}vw`;
+        balloon.style.top = `${position.y}vh`;
+        
+        const sizeInput = parseInt(this.game.controls.balloonSize?.value) || this.maxBalloonSize;
+        const sizeMultiplier = (sizeInput / this.maxBalloonSize) * 2;
+        balloon.style.setProperty('--size-multiplier', sizeMultiplier);
+        
+        this.game.container.appendChild(balloon);
+        this.setupBalloonBehavior(balloon);
+        
+        return balloon;
     }
 
     setupBalloonBehavior(balloon) {
@@ -80,16 +103,14 @@ export class BalloonManager {
     }
 
     burstBalloon(balloon) {
-        const balloonRect = balloon.getBoundingClientRect();
-        this.activeBalloonsRects.delete(balloonRect);
-        this.createBurstParticles(balloon);
+        if (!balloon || !balloon.isConnected) return;
+        
         balloon.classList.add('bursting');
-        this.game.score += 1;
+        this.game.score++;
         document.getElementById('score').textContent = this.game.score;
         
-        balloon.addEventListener('animationend', () => {
-            balloon.remove();
-        }, { once: true });
+        this.createBurstParticles(balloon);
+        setTimeout(() => balloon.remove(), 300);
     }
 
     createBurstParticles(balloon) {

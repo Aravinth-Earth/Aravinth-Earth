@@ -22,6 +22,7 @@ export class Game {
     init() {
         this.createPauseOverlay();
         this.updateLives();
+        this.update();
     }
 
     createPauseOverlay() {
@@ -84,4 +85,28 @@ export class Game {
         this.balloonManager.cleanup();
         this.collisionSystem.cleanup();
     }
+
+    update() {
+        if (!this.isPaused && !this.isGameOver) {
+            const bullets = document.querySelectorAll('.bullet');
+            const balloons = document.querySelectorAll('.balloon:not(.bursting)');
+            
+            bullets.forEach(bullet => {
+                balloons.forEach(balloon => {
+                    if (this.collisionSystem.isColliding(
+                        bullet.getBoundingClientRect(), 
+                        balloon.getBoundingClientRect()
+                    )) {
+                        this.balloonManager.burstBalloon(balloon);
+                        bullet.remove();
+                    }
+                });
+            });
+        }
+        requestAnimationFrame(() => this.update());
+    }
+
+    // Remove unused methods
+    checkCollisions() {} // Remove this method
+    updatePositions() {} // Remove this method
 }

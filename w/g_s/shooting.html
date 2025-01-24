@@ -9,30 +9,42 @@
     <link rel="stylesheet" href="css/controls.css">
     <link rel="stylesheet" href="css/game-elements.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
 </head>
 <body>
     <div class="game-hud" role="status" aria-live="polite">
-        <div class="score-display">Score: <span id="score">0</span></div>
-        <div class="lives-display">Lives: <span id="lives">5</span></div>
+        <div class="score-display">
+            <i class="fas fa-trophy"></i>
+            <span id="score">0</span>
+        </div>
+        <div class="lives-display">
+            <i class="fas fa-heartbeat"></i>
+            <span id="lives">5</span>
+        </div>
     </div>
     
     <div class="game-controls">
-        <button id="pauseButton" aria-label="Pause Game">Pause</button>
-        <button id="configButton" aria-label="Game Settings">⚙️</button>
+        <button id="pauseButton" aria-label="Pause Game">
+            <i class="fas fa-pause"></i>
+        </button>
+        <button id="configButton" aria-label="Game Settings">
+            <i class="fas fa-cog"></i>
+        </button>
     </div>
 
     <div class="controls-overlay" id="controlsOverlay">
         <div class="controls" id="controls" role="toolbar" aria-label="Game Controls">
-            <label>Bullets per shot (1-5): <input type="number" id="bulletCount" min="1" max="5" value="5"></label>
-            <label>Bullet Speed (1-10): <input type="number" id="bulletSpeed" min="1" max="10" value="1"></label>
-            <label>Balloon Speed: <input type="number" id="balloonSpeed" min="1" max="5" value="1"></label>
-            <label>Balloon Size: <input type="number" id="balloonSize" min="1" max="5" value="5"></label>
-            <label>Max Balloons: 
+            <label><i class="fas fa-bullets"></i> Bullets: <input type="number" id="bulletCount" min="1" max="5" value="5"></label>
+            <label><i class="fas fa-tachometer-alt"></i> Speed: <input type="number" id="bulletSpeed" min="1" max="10" value="1"></label>
+            <label><i class="fas fa-balloon"></i> Balloon Speed: <input type="number" id="balloonSpeed" min="1" max="5" value="1"></label>
+            <label><i class="fas fa-expand"></i> Size: <input type="number" id="balloonSize" min="1" max="5" value="5"></label>
+            <label><i class="fas fa-layer-group"></i> Max: 
                 <input type="range" id="maxBalloonsRange" min="5" max="50" value="20">
                 <input type="number" id="maxBalloons" min="5" max="50" value="20">
             </label>
         </div>
-        <button class="start-button" id="startButton">Start Game</button>
+        <button class="start-button" id="startButton"><i class="fas fa-play"></i> Play</button>
     </div>
     <div id="gameContainer" role="application" aria-label="Game Area">
         <div id="gun" role="img" aria-label="Gun">

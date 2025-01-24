@@ -77,13 +77,24 @@ export class Game {
         this.gameHUD = document.createElement('div');
         this.gameHUD.className = 'game-hud';
         this.gameHUD.innerHTML = `
-            <div class="score-lives">
-                <div class="score">Score: <span id="score">0</span></div>
-                <div class="lives">Lives: <span id="lives">5</span></div>
+            <div class="hud-container">
+                <div class="score-display">
+                    <i class="mdi mdi-trophy-outline"></i>
+                    <span id="score">0</span>
+                </div>
+                <div class="lives-display">
+                    <div class="hearts-container">
+                        ${Array(5).fill('<i class="mdi mdi-heart"></i>').join('')}
+                    </div>
+                </div>
             </div>
             <div class="game-controls">
-                <button id="pauseGame">❚❚</button>
-                <button id="gameSettings">⚙️</button>
+                <button id="pauseGame">
+                    <i class="mdi mdi-pause"></i>
+                </button>
+                <button id="gameSettings">
+                    <i class="mdi mdi-cog"></i>
+                </button>
             </div>
         `;
 
@@ -543,10 +554,105 @@ export class Game {
     }
 
     updateLives() {
-        document.getElementById('lives').textContent = this.lives;
+        const heartsContainer = document.querySelector('.hearts-container');
+        if (!heartsContainer) {
+            console.warn('Hearts container not found, creating new one');
+            return;
+        }
+
+        // Update hearts display
+        const hearts = Array(5).fill('').map((_, index) => {
+            if (index < this.lives) {
+                return '<i class="mdi mdi-heart"></i>';
+            }
+            return '<i class="mdi mdi-heart-outline"></i>';
+        }).join('');
+        
+        heartsContainer.innerHTML = hearts;
+
+        // Add low health effect
+        if (this.lives <= 2) {
+            heartsContainer.classList.add('low-health');
+        } else {
+            heartsContainer.classList.remove('low-health');
+        }
+
+        // Add life loss animation
+        if (this.lives < parseInt(heartsContainer.dataset.previousLives || 5)) {
+            const lostHeart = document.createElement('i');
+            lostHeart.className = 'mdi mdi-heart-broken lost-heart';
+            document.body.appendChild(lostHeart);
+            
+            // Position and animate the lost heart
+            const rect = heartsContainer.getBoundingClientRect();
+            lostHeart.style.left = `${rect.left + rect.width/2}px`;
+            lostHeart.style.top = `${rect.top + rect.height/2}px`;
+            
+            lostHeart.animate([
+                { 
+                    transform: 'translate(-50%, -50%) scale(1) rotate(0deg)',
+                    opacity: 1,
+                    color: 'var(--color-danger)'
+                },
+                { 
+                    transform: 'translate(-50%, -150%) scale(0) rotate(180deg)',
+                    opacity: 0,
+                    color: 'var(--color-danger)'
+                }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            }).onfinish = () => lostHeart.remove();
+        }
+        
+        heartsContainer.dataset.previousLives = this.lives;
+        
         if (this.lives <= 0) {
             this.gameOver();
         }
+    }
+
+    updateScore() {
+        const scoreElement = document.getElementById('score');
+        const scoreDisplay = document.querySelector('.score-display');
+        scoreElement.textContent = this.score;
+        
+        // Add score popup animation
+        scoreDisplay.classList.remove('score-change');
+        void scoreDisplay.offsetWidth; // Trigger reflow
+        scoreDisplay.classList.add('score-change');
+        
+        // Add floating score indicator
+        this.createFloatingNumber('+1', scoreDisplay, 'var(--color-warning)');
+    }
+
+    createFloatingNumber(text, parentElement, color) {
+        const floating = document.createElement('div');
+        floating.className = 'floating-number';
+        floating.textContent = text;
+        floating.style.color = color;
+        
+        // Position relative to parent element
+        const rect = parentElement.getBoundingClientRect();
+        floating.style.left = `${rect.left + rect.width/2}px`;
+        floating.style.top = `${rect.top + rect.height/2}px`;
+        
+        document.body.appendChild(floating);
+        
+        // Animate and remove
+        floating.animate([
+            { 
+                transform: 'translate(-50%, -50%) scale(0.8)',
+                opacity: 1
+            },
+            { 
+                transform: 'translate(-50%, -150%) scale(1.2)',
+                opacity: 0
+            }
+        ], {
+            duration: 800,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        }).onfinish = () => floating.remove();
     }
 
     gameOver() {

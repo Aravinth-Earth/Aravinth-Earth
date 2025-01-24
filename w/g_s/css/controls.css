@@ -26,6 +26,12 @@
     width: 50px;
 }
 
+.controls input[type="range"] {
+    width: 100px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
 .controls button {
     padding: 4px 12px;
     cursor: pointer;
@@ -39,6 +45,12 @@
 .controls label {
     margin-right: 15px;
     color: #bbb;
+}
+
+.controls label:has(input[type="range"]) {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 #score {

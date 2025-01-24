@@ -68,7 +68,7 @@ export class Gun {
         if (baseAngle > 180) baseAngle = (baseAngle > 270) ? 0 : 180;
         
         // Calculate spread for multiple bullets
-        const totalSpread = 30;
+        const totalSpread = 15;
         const spreadStep = bulletCount > 1 ? totalSpread / (bulletCount - 1) : 0;
         
         for (let i = 0; i < bulletCount; i++) {

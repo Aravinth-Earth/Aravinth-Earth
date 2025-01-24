@@ -6,7 +6,20 @@ export class BalloonManager {
         this.spawnIntervalId = null;
         this.maxBalloonSize = 5;
         this.balloonIdCounter = 0;
+        this.maxBalloons = parseInt(document.getElementById('maxBalloons').value);
+        this.targetBalloonPercentage = 0.7; // Aim to maintain 70% of max balloons
+        this.spawnBatchSize = 3; // Spawn multiple balloons at once
+        this.spawnInterval = 500; // Spawn every 500ms instead of 1000ms
+        this.setupControls();
         this.spawnBalloons();
+        this.balloonAnimations = new Map(); // Track balloon animations
+    }
+
+    setupControls() {
+        // Listen for changes to maxBalloons input
+        document.getElementById('maxBalloons').addEventListener('change', (e) => {
+            this.maxBalloons = parseInt(e.target.value);
+        });
     }
 
     getRandomColor() {
@@ -22,29 +35,42 @@ export class BalloonManager {
 
         this.spawnIntervalId = setInterval(() => {
             const currentBalloons = document.querySelectorAll('.balloon:not(.bursting)').length;
-            const maxAllowed = parseInt(this.game.controls.maxBalloonsInput?.value) || 20;
+            const targetCount = Math.floor(this.maxBalloons * this.targetBalloonPercentage);
             
-            if (currentBalloons >= maxAllowed || this.game.isPaused || this.game.isGameOver) return;
-            this.createBalloon();
-        }, 1000);
+            if (currentBalloons < targetCount) {
+                const balloonsToSpawn = Math.min(
+                    this.spawnBatchSize,
+                    this.maxBalloons - currentBalloons
+                );
+                
+                // Spawn multiple balloons with slight delay between each
+                for (let i = 0; i < balloonsToSpawn; i++) {
+                    setTimeout(() => {
+                        if (!this.game.isPaused && !this.game.isGameOver) {
+                            this.createBalloon();
+                        }
+                    }, i * 100); // 100ms delay between each balloon in batch
+                }
+            }
+        }, this.spawnInterval);
     }
 
     getRandomBalloonPosition() {
         const position = { x: 0, y: 0 };
         const spawnArea = Math.random();
         
-        if (spawnArea < 0.4) {
-            // Top edge
-            position.x = Math.random() * 100;
+        if (spawnArea < 0.5) { // Increased top spawn probability
+            // Top edge - wider spread
+            position.x = -10 + Math.random() * 120; // Goes from -10% to 110% of viewport
             position.y = -10;
-        } else if (spawnArea < 0.7) {
+        } else if (spawnArea < 0.75) {
             // Left edge
             position.x = -10;
-            position.y = Math.random() * 30; // Only top 30% of screen height
+            position.y = Math.random() * 40; // Increased height range to 40%
         } else {
             // Right edge
             position.x = 110;
-            position.y = Math.random() * 30; // Only top 30% of screen height
+            position.y = Math.random() * 40; // Increased height range to 40%
         }
         
         return position;
@@ -57,6 +83,10 @@ export class BalloonManager {
         balloon.className = 'balloon';
         balloon.style.backgroundColor = this.getRandomColor();
         
+        // Ensure initial visibility
+        balloon.style.visibility = 'visible';
+        balloon.style.opacity = '1';
+        
         const position = this.getRandomBalloonPosition();
         balloon.style.left = `${position.x}vw`;
         balloon.style.top = `${position.y}vh`;
@@ -66,14 +96,17 @@ export class BalloonManager {
         balloon.style.setProperty('--size-multiplier', sizeMultiplier);
         
         this.game.container.appendChild(balloon);
-        this.setupBalloonBehavior(balloon);
         
+        // Force a reflow to ensure proper positioning before animation
+        balloon.offsetHeight;
+        
+        this.setupBalloonBehavior(balloon);
         return balloon;
     }
 
     setupBalloonBehavior(balloon) {
         const speed = parseInt(this.game.controls.balloonSpeed.value) || 1;
-        const duration = 6000 / speed;
+        const duration = 6000;  // Base duration
         
         const gunRect = this.game.gun.element.getBoundingClientRect();
         const gunCenterX = gunRect.left + gunRect.width/2;
@@ -81,17 +114,35 @@ export class BalloonManager {
         // Aim slightly above the gun to create better gameplay
         const gunCenterY = gunRect.top;
         
-        const startX = balloon.offsetLeft;
-        const startY = balloon.offsetTop;
+        // Get balloon's initial position in pixels instead of viewport units
+        const balloonRect = balloon.getBoundingClientRect();
+        const startX = balloonRect.left;
+        const startY = balloonRect.top;
         const deltaX = (gunCenterX - startX);
         const deltaY = (gunCenterY - startY);
+
+        // Set initial transform to ensure proper starting position
+        balloon.style.transform = 'translate3d(0, 0, 0)';
         
         const animation = balloon.animate([
-            { transform: 'translate(0, 0)' },
-            { transform: `translate(${deltaX}px, ${deltaY}px)` }
+            { transform: 'translate3d(0, 0, 0)' },
+            { transform: `translate3d(${deltaX}px, ${deltaY}px, 0)` }
         ], {
             duration: duration,
-            easing: 'linear'
+            easing: 'linear',
+            fill: 'forwards'
+        });
+
+        // Set initial speed via playbackRate
+        animation.playbackRate = speed;
+        
+        // Store the animation
+        this.balloonAnimations.set(balloon, animation);
+
+        // Ensure balloon is visible immediately
+        requestAnimationFrame(() => {
+            balloon.style.visibility = 'visible';
+            balloon.style.opacity = '1';
         });
 
         animation.onfinish = () => {
@@ -99,6 +150,7 @@ export class BalloonManager {
                 this.game.lives--;
                 this.game.updateLives();
                 balloon.remove();
+                this.balloonAnimations.delete(balloon);
             }
         };
     }
@@ -146,10 +198,28 @@ export class BalloonManager {
         }
     }
 
+    pauseAllBalloons() {
+        this.balloonAnimations.forEach(animation => {
+            animation.pause();
+        });
+    }
+
+    resumeAllBalloons() {
+        this.balloonAnimations.forEach(animation => {
+            animation.play();
+        });
+    }
+
     cleanup() {
         if (this.spawnIntervalId) {
             clearInterval(this.spawnIntervalId);
         }
-        document.querySelectorAll('.balloon').forEach(balloon => balloon.remove());
+        // Only remove balloons if game is over
+        if (this.game.isGameOver) {
+            document.querySelectorAll('.balloon').forEach(balloon => {
+                balloon.remove();
+                this.balloonAnimations.delete(balloon);
+            });
+        }
     }
 }

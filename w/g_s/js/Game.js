@@ -32,7 +32,8 @@ export class Game {
         pauseText.className = 'pause-text';
         pauseText.textContent = 'PAUSED';
         this.pauseOverlay.appendChild(pauseText);
-        document.body.appendChild(this.pauseOverlay);
+        // Add the overlay to gameContainer instead of body to keep controls accessible
+        this.container.appendChild(this.pauseOverlay);
     }
 
     togglePause() {
@@ -43,21 +44,44 @@ export class Game {
         
         if (this.isPaused) {
             this.pauseOverlay.classList.add('active');
-            this.balloonManager.cleanup();
+            clearInterval(this.balloonManager.spawnIntervalId);
+            this.balloonManager.spawnIntervalId = null;
+            this.balloonManager.pauseAllBalloons();
             if (this.gun.shootingInterval) {
                 clearInterval(this.gun.shootingInterval);
             }
-            document.querySelectorAll('.balloon, .bullet').forEach(element => {
-                element.getAnimations().forEach(animation => animation.pause());
+            document.querySelectorAll('.bullet').forEach(bullet => {
+                bullet.getAnimations().forEach(animation => animation.pause());
             });
         } else {
             this.pauseOverlay.classList.remove('active');
+            // Apply updated settings before resuming
+            this.applyUpdatedSettings();
             this.balloonManager.spawnBalloons();
+            this.balloonManager.resumeAllBalloons();
             this.gun.startAutoShooting();
-            document.querySelectorAll('.balloon, .bullet').forEach(element => {
-                element.getAnimations().forEach(animation => animation.play());
+            document.querySelectorAll('.bullet').forEach(bullet => {
+                bullet.getAnimations().forEach(animation => animation.play());
             });
         }
+    }
+
+    applyUpdatedSettings() {
+        // Update balloon speeds for existing balloons
+        document.querySelectorAll('.balloon').forEach(balloon => {
+            const animation = this.balloonManager.balloonAnimations.get(balloon);
+            if (animation) {
+                const speed = parseInt(this.controls.balloonSpeed.value) || 1;
+                animation.playbackRate = speed;
+            }
+        });
+
+        // Update balloon sizes
+        const sizeInput = parseInt(this.controls.balloonSize?.value) || this.balloonManager.maxBalloonSize;
+        const sizeMultiplier = (sizeInput / this.balloonManager.maxBalloonSize) * 2;
+        document.querySelectorAll('.balloon').forEach(balloon => {
+            balloon.style.setProperty('--size-multiplier', sizeMultiplier);
+        });
     }
 
     updateLives() {

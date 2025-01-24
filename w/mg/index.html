@@ -108,10 +108,32 @@
                 </div>
                 <h2 id="question"></h2>
                 <input type="number" id="answer" placeholder="Your answer">
-                <div class="game-controls">
-                    <button id="submit-answer"><i class="fas fa-check"></i> Submit</button>
-                    <button id="next-question" class="hidden"><i class="fas fa-arrow-right"></i> Next Question</button>
+                <div class="number-pad-container">
+                    <div class="number-pad">
+                        <div class="num-pad-row">
+                            <button class="num-key">7</button>
+                            <button class="num-key">8</button>
+                            <button class="num-key">9</button>
+                            <button class="num-key function-key" id="backspace"><i class="fas fa-backspace"></i></button>
+                            <button class="num-key function-key" id="clear"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="num-pad-row">
+                            <button class="num-key">4</button>
+                            <button class="num-key">5</button>
+                            <button class="num-key">6</button>
+                            <button class="num-key">-</button>
+                            <button id="toggle-keyboard" class="num-key function-key"><i class="fas fa-keyboard"></i></button>
+                        </div>
+                        <div class="num-pad-row">
+                            <button class="num-key">1</button>
+                            <button class="num-key">2</button>
+                            <button class="num-key">3</button>
+                            <button class="num-key">0</button>
+                            <button id="submit-answer" class="num-key submit-key"><i class="fas fa-check"></i></button>
+                        </div>
+                    </div>
                 </div>
+                <button id="next-question" class="hidden"><i class="fas fa-arrow-right"></i> Next Question</button>
                 <p id="message"></p>
             </div>
         </section>

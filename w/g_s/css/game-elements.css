@@ -1,0 +1,206 @@
+#gun {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    z-index: 100;
+}
+
+.gun-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    background: linear-gradient(to bottom, #888, #444);
+    border-radius: 25px 25px 0 0;
+    border: 2px solid #999;
+    border-bottom: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    overflow: visible; /* Changed from hidden to show indicator */
+}
+
+.direction-indicator {
+    position: absolute;
+    bottom: 0;           /* Changed: align to bottom */
+    left: 50%;
+    width: 2px;
+    height: 25px;       /* Changed: match gun height */
+    background: #ff9900;
+    transform-origin: bottom center;
+    opacity: 0.6;
+    box-shadow: 0 0 3px #ff9900;
+    pointer-events: none;
+    transition: transform 0.1s ease-out;
+    /* Initial position pointing up */
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.barrels-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 50px;
+    height: 25px;
+    transform-origin: bottom center;
+}
+
+/* Remove gun-barrel styles as we won't show them visually */
+.gun-barrel {
+    display: none;
+}
+
+.balloon {
+    --base-size: var(--base-balloon-size);
+    position: absolute;
+    width: calc(var(--base-size) * var(--size-multiplier, 2));
+    height: calc(var(--base-size) * var(--size-multiplier, 2));
+    background: red;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    transform-origin: center;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    will-change: transform;
+    z-index: 10;
+    opacity: 1;
+    visibility: visible;
+}
+
+.bullet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ff9900;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 5px #ff9900;
+    z-index: 90;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.2);
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    z-index: 600; /* Above pause overlay (500) but below controls (1000) */
+    transform-origin: center;
+}
+
+/* Add style for particle container */
+.particle-container {
+    position: fixed; /* Change to fixed */
+    pointer-events: none;
+    z-index: 450; /* Between pause overlay and controls */
+    transform: translateZ(0); /* Create stacking context */
+    transform-style: preserve-3d;
+}
+
+/* Add style for burst ring effect */
+.burst-ring {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    filter: blur(8px);
+    opacity: 0;
+    background: transparent;
+}
+
+.burst-splash {
+    position: absolute;
+    transform-origin: center;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 4;
+}
+
+#gameContainer {
+    position: fixed;
+    inset: 50px 0 0 0; /* Add top margin for controls */
+    overflow: visible; /* Changed from hidden to allow particles to show */
+    transform: translateZ(0); /* Create new stacking context */
+    transform-style: preserve-3d; /* Create proper 3D context */
+    perspective: 1000px;
+    z-index: 1;
+}
+
+.pause-overlay {
+    position: fixed; /* Change to fixed */
+    inset: 50px 0 0 0; /* Match gameContainer position */
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 400;
+    pointer-events: none;
+}
+
+.pause-overlay.active {
+    display: flex;
+}
+
+.pause-text {
+    color: var(--color-text);
+    font-size: 48px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+}
+
+/* Add visual feedback when max balloons reached */
+.controls label:has(#maxBalloons) {
+    position: relative;
+}
+
+.controls label:has(#maxBalloons)::after {
+    content: attr(data-current);
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8em;
+    color: #888;
+}
+
+/* Remove all debug-related CSS classes below pause-text */
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+    #gun {
+        width: 40px;
+        height: 20px;
+        bottom: 60px; /* Add space for mobile controls */
+    }
+
+    .gun-base {
+        width: 40px;
+        height: 20px;
+    }
+
+    .balloon {
+        --base-size: calc(var(--base-balloon-size) * 0.8); /* Slightly smaller balloons on mobile */
+    }
+
+    .bullet {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+/* Touch-specific optimizations */
+@media (hover: none) {
+    .balloon {
+        min-width: 40px; /* Ensure minimum touch target size */
+        min-height: 40px;
+    }
+}

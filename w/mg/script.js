@@ -763,43 +763,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('generate-name').addEventListener('click', handlers.onGenerateName);
     document.getElementById('start-game').addEventListener('click', handlers.onStartGame);
     document.getElementById('reset-game').addEventListener('click', handlers.onResetGame);
-    // ... other event listeners...
-    initializeNumberPad();
+    // ... other event listeners
 });
-
-// Add this to your initialization code
-function initializeNumberPad() {
-    const numKeys = document.querySelectorAll('.num-key');
-    const answerInput = document.getElementById('answer');
-    const toggleKeyboard = document.getElementById('toggle-keyboard');
-    const backspace = document.getElementById('backspace');
-    const clear = document.getElementById('clear');
-
-    numKeys.forEach(key => {
-        if (!['toggle-keyboard', 'backspace', 'clear', 'submit-answer'].includes(key.id)) {
-            key.addEventListener('click', () => {
-                const currentValue = answerInput.value;
-                const keyValue = key.textContent;
-                answerInput.value = currentValue + keyValue;
-                game.enableSubmitButton();
-            });
-        }
-    });
-
-    // Add backspace functionality
-    backspace.addEventListener('click', () => {
-        const currentValue = answerInput.value;
-        answerInput.value = currentValue.slice(0, -1);
-        game.enableSubmitButton();
-    });
-
-    // Add clear functionality
-    clear.addEventListener('click', () => {
-        answerInput.value = '';
-        game.enableSubmitButton();
-    });
-
-    toggleKeyboard.addEventListener('click', () => {
-        answerInput.focus();
-    });
-}

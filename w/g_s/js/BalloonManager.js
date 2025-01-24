@@ -158,6 +158,17 @@ export class BalloonManager {
     burstBalloon(balloon) {
         if (!balloon || !balloon.isConnected) return;
         
+        const rect = balloon.getBoundingClientRect();
+        const color = balloon.style.backgroundColor;
+        
+        // Create burst ring
+        this.createBurstRing(
+            rect.left + rect.width/2, 
+            rect.top + rect.height/2, 
+            rect.width * 0.85, // 85% of balloon size
+            color
+        );
+        
         balloon.classList.add('bursting');
         this.game.score++;
         document.getElementById('score').textContent = this.game.score;
@@ -166,36 +177,119 @@ export class BalloonManager {
         setTimeout(() => balloon.remove(), 300);
     }
 
+    createBurstRing(x, y, diameter, color) {
+        const numSplashes = 4; // Number of overlapping splashes
+        const container = document.createElement('div');
+        container.className = 'burst-ring';
+        container.style.left = `${x}px`;
+        container.style.top = `${y}px`;
+        
+        for (let i = 0; i < numSplashes; i++) {
+            const splash = document.createElement('div');
+            splash.className = 'burst-splash';
+            
+            // Random size variation for each splash
+            const size = diameter * (0.8 + Math.random() * 0.4);
+            splash.style.width = `${size}px`;
+            splash.style.height = `${size}px`;
+            
+            // Random position offset
+            const offsetX = (Math.random() - 0.5) * (diameter * 0.3);
+            const offsetY = (Math.random() - 0.5) * (diameter * 0.3);
+            splash.style.left = `${offsetX}px`;
+            splash.style.top = `${offsetY}px`;
+            
+            // Create organic shape using multiple radial gradients
+            const gradients = [];
+            for (let j = 0; j < 3; j++) {
+                const angle = Math.random() * 360;
+                const distance = 50 + Math.random() * 50;
+                gradients.push(`radial-gradient(
+                    circle at ${Math.random() * 100}% ${Math.random() * 100}%,
+                    ${color} 0%,
+                    transparent ${distance}%
+                )`);
+            }
+            splash.style.background = gradients.join(', ');
+            
+            container.appendChild(splash);
+            
+            // Animate each splash independently
+            splash.animate([
+                {
+                    opacity: 0.4,
+                    transform: 'scale(0.8) rotate(0deg)',
+                    filter: 'blur(5px)'
+                },
+                {
+                    opacity: 0.2,
+                    transform: `scale(1.1) rotate(${Math.random() * 30}deg)`,
+                    filter: 'blur(8px)',
+                    offset: 0.7
+                },
+                {
+                    opacity: 0,
+                    transform: `scale(1.2) rotate(${Math.random() * 45}deg)`,
+                    filter: 'blur(10px)'
+                }
+            ], {
+                duration: 15000, // 15 seconds
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                fill: 'forwards',
+                delay: Math.random() * 200 // Stagger the animations slightly
+            });
+        }
+        
+        this.game.container.appendChild(container);
+        setTimeout(() => container.remove(), 15000);
+    }
+
     createBurstParticles(balloon) {
         const rect = balloon.getBoundingClientRect();
-        const centerX = rect.left + rect.width/2;
-        const centerY = rect.top + rect.height/2;
         const color = balloon.style.backgroundColor;
         
-        for(let i = 0; i < 8; i++) {
+        // Create container at the exact position relative to viewport
+        const particleContainer = document.createElement('div');
+        particleContainer.className = 'particle-container';
+        particleContainer.style.left = '0';
+        particleContainer.style.top = '0';
+        particleContainer.style.width = '100%';
+        particleContainer.style.height = '100%';
+        document.body.appendChild(particleContainer);
+        
+        for(let i = 0; i < 12; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
-            particle.style.left = centerX + 'px';
-            particle.style.top = centerY + 'px';
             particle.style.backgroundColor = color;
+            // Position particle at balloon's position
+            particle.style.left = rect.left + (rect.width / 2) + 'px';
+            particle.style.top = rect.top + (rect.height / 2) + 'px';
             
-            const angle = (i / 8) * Math.PI * 2;
-            const tx = Math.cos(angle) * 50;
-            const ty = Math.sin(angle) * 50;
+            const angle = (i / 12) * Math.PI * 2;
+            const distance = rect.width/2 + Math.random() * 20;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            const rotation = Math.random() * 360;
             
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
-            
-            this.game.container.appendChild(particle);
+            particleContainer.appendChild(particle);
             
             particle.animate([
-                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                { 
+                    transform: 'translate(-50%, -50%) scale(1)',
+                    opacity: 1
+                },
+                { 
+                    transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${rotation}deg) scale(0)`,
+                    opacity: 0
+                }
             ], {
-                duration: 500,
-                easing: 'ease-out'
-            }).onfinish = () => particle.remove();
+                duration: 500 + Math.random() * 200,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                fill: 'forwards'
+            });
         }
+
+        setTimeout(() => particleContainer.remove(), 700);
     }
 
     pauseAllBalloons() {

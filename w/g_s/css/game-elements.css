@@ -90,26 +90,60 @@
     pointer-events: none;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
     filter: brightness(1.2);
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    z-index: 600; /* Above pause overlay (500) but below controls (1000) */
+    transform-origin: center;
+}
+
+/* Add style for particle container */
+.particle-container {
+    position: fixed; /* Change to fixed */
+    pointer-events: none;
+    z-index: 450; /* Between pause overlay and controls */
+    transform: translateZ(0); /* Create stacking context */
+    transform-style: preserve-3d;
+}
+
+/* Add style for burst ring effect */
+.burst-ring {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    filter: blur(8px);
+    opacity: 0;
+    background: transparent;
+}
+
+.burst-splash {
+    position: absolute;
+    transform-origin: center;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 4;
 }
 
 #gameContainer {
     position: fixed;
     inset: 50px 0 0 0; /* Add top margin for controls */
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow particles to show */
     transform: translateZ(0); /* Create new stacking context */
+    transform-style: preserve-3d; /* Create proper 3D context */
+    perspective: 1000px;
     z-index: 1;
 }
 
 .pause-overlay {
-    position: absolute;
-    inset: 0;
+    position: fixed; /* Change to fixed */
+    inset: 50px 0 0 0; /* Match gameContainer position */
     background: rgba(0, 0, 0, 0.5);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 500; /* Between balloons and controls */
-    transform: translateZ(0); /* Create new stacking context */
-    pointer-events: none; /* Allow clicks through */
+    z-index: 400;
+    pointer-events: none;
 }
 
 .pause-overlay.active {

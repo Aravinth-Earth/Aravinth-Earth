@@ -32,8 +32,8 @@ export class Game {
         pauseText.className = 'pause-text';
         pauseText.textContent = 'PAUSED';
         this.pauseOverlay.appendChild(pauseText);
-        // Add the overlay to gameContainer instead of body to keep controls accessible
-        this.container.appendChild(this.pauseOverlay);
+        // Add overlay to body instead of game container
+        document.body.appendChild(this.pauseOverlay);
     }
 
     togglePause() {

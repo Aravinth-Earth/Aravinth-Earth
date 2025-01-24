@@ -13,6 +13,10 @@ body {
 }
 
 #gameContainer {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
     width: 100vw;
     height: 100vh;
     position: relative;
@@ -39,5 +43,6 @@ body {
 }
 
 .controls {
+    touch-action: manipulation;
     z-index: 2000; /* Always on top */
 }

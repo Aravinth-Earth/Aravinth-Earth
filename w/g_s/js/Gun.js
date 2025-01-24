@@ -8,16 +8,48 @@ export class Gun {
         this.shootingInterval = null;
         this.lastBarrelIndex = 0;
         this.indicator = this.element.querySelector('.direction-indicator');
+        this.pointerActive = false;
+        this.bulletCount = 5; // Default values
+        this.bulletSpeed = 1;
         this.setupMouseTracking();
-        this.startAutoShooting();
+        this.setupTouchTracking();
+        this.updateSettingsReferences();
+        // Remove auto-start shooting
+        // this.startAutoShooting();
     }
 
     setupMouseTracking() {
+        this.game.container.addEventListener('mouseenter', () => this.pointerActive = true);
+        this.game.container.addEventListener('mouseleave', () => this.pointerActive = false);
         this.game.container.addEventListener('mousemove', (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-            this.rotateGun();
+            this.pointerActive = true;
+            this.updatePointerPosition(e.clientX, e.clientY);
         });
+    }
+
+    setupTouchTracking() {
+        this.game.container.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.pointerActive = true;
+            const touch = e.touches[0];
+            this.updatePointerPosition(touch.clientX, touch.clientY);
+        });
+
+        this.game.container.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            this.updatePointerPosition(touch.clientX, touch.clientY);
+        });
+
+        this.game.container.addEventListener('touchend', () => {
+            this.pointerActive = false;
+        });
+    }
+
+    updatePointerPosition(x, y) {
+        this.mouseX = x;
+        this.mouseY = y;
+        this.rotateGun();
     }
 
     rotateGun() {
@@ -48,11 +80,37 @@ export class Gun {
         });
     }
 
-    shoot() {
-        if (this.game.isPaused) return;
+    updateSettingsReferences() {
+        // Get references to current settings
+        const configLayer = document.querySelector('.config-layer');
+        if (configLayer) {
+            const bulletCountInput = configLayer.querySelector('#bulletCount');
+            const bulletSpeedInput = configLayer.querySelector('#bulletSpeed');
+            
+            if (bulletCountInput) this.bulletCount = parseInt(bulletCountInput.value);
+            if (bulletSpeedInput) this.bulletSpeed = parseInt(bulletSpeedInput.value);
+        }
+    }
 
-        const bulletCount = parseInt(this.game.controls.bulletCount.value) || 1;
-        const speed = parseInt(this.game.controls.bulletSpeed.value) || 3;
+    updateBulletCount(count) {
+        this.bulletCount = count;
+    }
+
+    updateBulletSpeed(speed) {
+        this.bulletSpeed = speed;
+    }
+
+    updateSettings(settings) {
+        this.bulletCount = settings.bulletCount;
+        this.bulletSpeed = settings.bulletSpeed;
+    }
+
+    shoot() {
+        if (!this.game.gameStarted || this.game.isPaused || this.game.isGameOver) return;
+
+        // Always use class properties for settings
+        const bulletCount = this.bulletCount || 5;
+        const speed = this.bulletSpeed || 1;
         
         // Get gun base center position
         const gunRect = this.element.getBoundingClientRect();
@@ -120,9 +178,14 @@ export class Gun {
             clearInterval(this.shootingInterval);
         }
 
-        this.shootingInterval = setInterval(() => {
-            setTimeout(() => this.shoot(), Math.random() * 50);
-        }, 100);
+        // Only start if game isn't over
+        if (!this.game.isGameOver) {
+            this.shootingInterval = setInterval(() => {
+                if (!this.game.isGameOver) {
+                    setTimeout(() => this.shoot(), Math.random() * 50);
+                }
+            }, 100);
+        }
     }
 
     updateBarrels() {}
@@ -130,6 +193,7 @@ export class Gun {
     cleanup() {
         if (this.shootingInterval) {
             clearInterval(this.shootingInterval);
+            this.shootingInterval = null;
         }
     }
 }

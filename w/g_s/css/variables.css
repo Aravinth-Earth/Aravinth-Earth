@@ -7,4 +7,5 @@
     --shadow-default: 0 0 10px rgba(0, 0, 0, 0.5);
     --border-radius: 8px;
     --base-balloon-size: 40px;
+    --color-primary-rgb: 76, 175, 80; /* Add RGB values for primary color */
 }

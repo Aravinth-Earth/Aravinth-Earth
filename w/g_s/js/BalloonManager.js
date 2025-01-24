@@ -11,8 +11,10 @@ export class BalloonManager {
         this.spawnBatchSize = 3; // Spawn multiple balloons at once
         this.spawnInterval = 500; // Spawn every 500ms instead of 1000ms
         this.setupControls();
-        this.spawnBalloons();
         this.balloonAnimations = new Map(); // Track balloon animations
+        this.balloonSpeed = 1;
+        this.balloonSize = 5;
+        this.updateSettingsReferences();
     }
 
     setupControls() {
@@ -20,6 +22,26 @@ export class BalloonManager {
         document.getElementById('maxBalloons').addEventListener('change', (e) => {
             this.maxBalloons = parseInt(e.target.value);
         });
+    }
+
+    updateSettingsReferences() {
+        // Get references to current settings
+        const configLayer = document.querySelector('.config-layer');
+        if (configLayer) {
+            const speedInput = configLayer.querySelector('#balloonSpeed');
+            const sizeInput = configLayer.querySelector('#balloonSize');
+            const maxBalloonsInput = configLayer.querySelector('#maxBalloons');
+            
+            if (speedInput) this.balloonSpeed = parseInt(speedInput.value);
+            if (sizeInput) this.balloonSize = parseInt(sizeInput.value);
+            if (maxBalloonsInput) this.maxBalloons = parseInt(maxBalloonsInput.value);
+        }
+    }
+
+    updateSettings(settings) {
+        this.balloonSpeed = settings.balloonSpeed;
+        this.balloonSize = settings.balloonSize;
+        this.maxBalloons = settings.maxBalloons;
     }
 
     getRandomColor() {
@@ -34,6 +56,10 @@ export class BalloonManager {
         }
 
         this.spawnIntervalId = setInterval(() => {
+            if (this.game.isGameOver) {
+                clearInterval(this.spawnIntervalId);
+                return;
+            }
             const currentBalloons = document.querySelectorAll('.balloon:not(.bursting)').length;
             const targetCount = Math.floor(this.maxBalloons * this.targetBalloonPercentage);
             
@@ -91,8 +117,7 @@ export class BalloonManager {
         balloon.style.left = `${position.x}vw`;
         balloon.style.top = `${position.y}vh`;
         
-        const sizeInput = parseInt(this.game.controls.balloonSize?.value) || this.maxBalloonSize;
-        const sizeMultiplier = (sizeInput / this.maxBalloonSize) * 2;
+        const sizeMultiplier = (this.balloonSize / this.maxBalloonSize) * 2;
         balloon.style.setProperty('--size-multiplier', sizeMultiplier);
         
         this.game.container.appendChild(balloon);
@@ -105,7 +130,7 @@ export class BalloonManager {
     }
 
     setupBalloonBehavior(balloon) {
-        const speed = parseInt(this.game.controls.balloonSpeed.value) || 1;
+        const speed = this.balloonSpeed || 1;
         const duration = 6000;  // Base duration
         
         const gunRect = this.game.gun.element.getBoundingClientRect();
@@ -307,12 +332,19 @@ export class BalloonManager {
     cleanup() {
         if (this.spawnIntervalId) {
             clearInterval(this.spawnIntervalId);
+            this.spawnIntervalId = null;
         }
+
         // Only remove balloons if game is over
         if (this.game.isGameOver) {
             document.querySelectorAll('.balloon').forEach(balloon => {
-                balloon.remove();
-                this.balloonAnimations.delete(balloon);
+                const animation = this.balloonAnimations.get(balloon);
+                if (animation) {
+                    animation.pause();
+                    this.balloonAnimations.delete(balloon);
+                }
+                // Remove balloons after a short delay
+                setTimeout(() => balloon.remove(), 100);
             });
         }
     }

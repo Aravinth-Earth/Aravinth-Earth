@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Balloon Shooter</title>
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -11,20 +11,28 @@
     <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
-    <div class="controls" role="toolbar" aria-label="Game Controls">
-        <label>Bullets per shot (1-5): <input type="number" id="bulletCount" min="1" max="5" value="5"></label>
-        <label>Bullet Speed (1-10): <input type="number" id="bulletSpeed" min="1" max="10" value="1"></label>
-        <label>Balloon Speed: <input type="number" id="balloonSpeed" min="1" max="5" value="1"></label>
-        <label>Balloon Size: <input type="number" id="balloonSize" min="1" max="5" value="5"></label>
-        <label>Max Balloons: 
-            <input type="range" id="maxBalloonsRange" min="5" max="50" value="20">
-            <input type="number" id="maxBalloons" min="5" max="50" value="20">
-        </label>
+    <div class="game-hud" role="status" aria-live="polite">
+        <div class="score-display">Score: <span id="score">0</span></div>
+        <div class="lives-display">Lives: <span id="lives">5</span></div>
+    </div>
+    
+    <div class="game-controls">
         <button id="pauseButton" aria-label="Pause Game">Pause</button>
-        <span role="status" aria-live="polite">
-            Score: <span id="score">0</span>
-            Lives: <span id="lives">5</span>
-        </span>
+        <button id="configButton" aria-label="Game Settings">⚙️</button>
+    </div>
+
+    <div class="controls-overlay" id="controlsOverlay">
+        <div class="controls" id="controls" role="toolbar" aria-label="Game Controls">
+            <label>Bullets per shot (1-5): <input type="number" id="bulletCount" min="1" max="5" value="5"></label>
+            <label>Bullet Speed (1-10): <input type="number" id="bulletSpeed" min="1" max="10" value="1"></label>
+            <label>Balloon Speed: <input type="number" id="balloonSpeed" min="1" max="5" value="1"></label>
+            <label>Balloon Size: <input type="number" id="balloonSize" min="1" max="5" value="5"></label>
+            <label>Max Balloons: 
+                <input type="range" id="maxBalloonsRange" min="5" max="50" value="20">
+                <input type="number" id="maxBalloons" min="5" max="50" value="20">
+            </label>
+        </div>
+        <button class="start-button" id="startButton">Start Game</button>
     </div>
     <div id="gameContainer" role="application" aria-label="Game Area">
         <div id="gun" role="img" aria-label="Gun">
@@ -36,4 +44,7 @@
     </div>
     <script src="js/index.js" type="module"></script>
 </body>
+<footer style="display: none; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
+    <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
+</footer> 
 </html>

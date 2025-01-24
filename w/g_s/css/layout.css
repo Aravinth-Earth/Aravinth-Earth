@@ -1,9 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
 #gameContainer {
     width: 100vw;
     height: 100vh;
     position: relative;
     overflow: hidden;
     background: var(--color-bg);
+    margin: 0;
+    padding: 0;
 }
 
 .game-over {

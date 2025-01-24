@@ -30,24 +30,23 @@ export class BalloonManager {
     }
 
     getRandomBalloonPosition() {
-        const edge = Math.floor(Math.random() * 3);
         const position = { x: 0, y: 0 };
-
-        switch (edge) {
-            case 0:
-                position.x = Math.random() * 100;
-                position.y = -10;
-                break;
-            case 1:
-                position.x = -10;
-                position.y = Math.random() * 40;
-                break;
-            case 2:
-                position.x = 110;
-                position.y = Math.random() * 40;
-                break;
+        const spawnArea = Math.random();
+        
+        if (spawnArea < 0.4) {
+            // Top edge
+            position.x = Math.random() * 100;
+            position.y = -10;
+        } else if (spawnArea < 0.7) {
+            // Left edge
+            position.x = -10;
+            position.y = Math.random() * 30; // Only top 30% of screen height
+        } else {
+            // Right edge
+            position.x = 110;
+            position.y = Math.random() * 30; // Only top 30% of screen height
         }
-
+        
         return position;
     }
 
@@ -78,7 +77,9 @@ export class BalloonManager {
         
         const gunRect = this.game.gun.element.getBoundingClientRect();
         const gunCenterX = gunRect.left + gunRect.width/2;
-        const gunCenterY = gunRect.top + gunRect.height/2;
+        
+        // Aim slightly above the gun to create better gameplay
+        const gunCenterY = gunRect.top;
         
         const startX = balloon.offsetLeft;
         const startY = balloon.offsetTop;

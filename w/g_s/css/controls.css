@@ -1,13 +1,16 @@
 .controls {
     position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 100;
-    background: rgba(30, 30, 40, 0.9);
-    padding: 15px;
-    border-radius: var(--border-radius);
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 1000;
     color: var(--color-text);
-    box-shadow: var(--shadow-default);
 }
 
 .controls input, 

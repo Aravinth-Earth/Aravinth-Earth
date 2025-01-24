@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balloon Shooter</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/controls.css">
+    <link rel="stylesheet" href="css/game-elements.css">
+    <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
-    <div class="controls">
+    <div class="controls" role="toolbar" aria-label="Game Controls">
         <label>Bullets per shot (1-5): <input type="number" id="bulletCount" min="1" max="5" value="5"></label>
         <label>Bullet Speed (1-10): <input type="number" id="bulletSpeed" min="1" max="10" value="1"></label>
         <label>Balloon Speed: <input type="number" id="balloonSpeed" min="1" max="5" value="1"></label>
         <label>Balloon Size: <input type="number" id="balloonSize" min="1" max="5" value="5"></label>
         <label>Max Balloons: <input type="number" id="maxBalloons" min="5" max="50" value="20"></label>
-        <button id="pauseButton">Pause</button>
-        <span>Score: <span id="score">0</span></span>
-        <span>Lives: <span id="lives">5</span></span>
+        <button id="pauseButton" aria-label="Pause Game">Pause</button>
+        <span role="status" aria-live="polite">
+            Score: <span id="score">0</span>
+            Lives: <span id="lives">5</span>
+        </span>
     </div>
-    <div id="gameContainer">
-        <div id="gun"></div>
+    <div id="gameContainer" role="application" aria-label="Game Area">
+        <div id="gun" role="img" aria-label="Gun"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="js/index.js" type="module"></script>
 </body>
 </html>

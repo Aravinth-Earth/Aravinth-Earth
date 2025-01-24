@@ -1,0 +1,44 @@
+@keyframes burst {
+    0% { 
+        transform: scale(1); 
+        opacity: 1;
+        filter: brightness(1.5);
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+        filter: brightness(2);
+    }
+    100% { 
+        transform: scale(2); 
+        opacity: 0;
+        filter: brightness(0);
+    }
+}
+
+@keyframes particleFade {
+    0% { 
+        transform: translate(0, 0) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(var(--tx), var(--ty)) scale(0); 
+        opacity: 0; 
+    }
+}
+
+.bursting {
+    animation: burst 0.3s ease-out forwards;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Performance Optimizations */
+.bullet, 
+.balloon, 
+.particle {
+    will-change: transform;
+    contain: layout style;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}

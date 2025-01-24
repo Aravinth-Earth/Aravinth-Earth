@@ -1,0 +1,22 @@
+#gameContainer {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: var(--color-bg);
+}
+
+.game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 30, 0.95);
+    color: var(--color-text);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    font-size: 24px;
+    z-index: 1000;
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-border);
+}

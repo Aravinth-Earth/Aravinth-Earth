@@ -1,0 +1,10 @@
+:root {
+    --color-bg: #1a1a2e;
+    --color-text: #fff;
+    --color-input-bg: #2a2a3a;
+    --color-border: #444;
+    --color-hover: #3a3a4a;
+    --shadow-default: 0 0 10px rgba(0, 0, 0, 0.5);
+    --border-radius: 8px;
+    --base-balloon-size: 40px;
+}

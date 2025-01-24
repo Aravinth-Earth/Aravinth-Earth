@@ -1,0 +1,52 @@
+.controls {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 100;
+    background: rgba(30, 30, 40, 0.9);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    color: var(--color-text);
+    box-shadow: var(--shadow-default);
+}
+
+.controls input, 
+.controls button {
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.controls input {
+    width: 50px;
+}
+
+.controls button {
+    padding: 4px 12px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.controls button:hover {
+    background: var(--color-hover);
+}
+
+.controls label {
+    margin-right: 15px;
+    color: #bbb;
+}
+
+#score {
+    color: #4CAF50;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+#lives {
+    color: #ff4444;
+    font-weight: bold;
+    margin-left: 10px;
+    text-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
+}

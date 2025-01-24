@@ -28,22 +28,24 @@ export class Gun {
     }
 
     setupTouchTracking() {
-        this.game.container.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.pointerActive = true;
-            const touch = e.touches[0];
-            this.updatePointerPosition(touch.clientX, touch.clientY);
-        });
-
-        this.game.container.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            this.updatePointerPosition(touch.clientX, touch.clientY);
-        });
-
+        this.game.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+        this.game.container.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: true });
         this.game.container.addEventListener('touchend', () => {
             this.pointerActive = false;
         });
+    }
+
+    handleTouchStart(event) {
+        const touch = event.touches[0];
+        this.lastTouchX = touch.clientX;
+        this.lastTouchY = touch.clientY;
+    }
+
+    handleTouchMove(event) {
+        const touch = event.touches[0];
+        const deltaX = touch.clientX - this.lastTouchX;
+        const deltaY = touch.clientY - this.lastTouchY;
+        this.updatePointerPosition(touch.clientX, touch.clientY);
     }
 
     updatePointerPosition(x, y) {

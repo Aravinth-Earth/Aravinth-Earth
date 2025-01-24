@@ -173,3 +173,34 @@
 }
 
 /* Remove all debug-related CSS classes below pause-text */
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+    #gun {
+        width: 40px;
+        height: 20px;
+        bottom: 60px; /* Add space for mobile controls */
+    }
+
+    .gun-base {
+        width: 40px;
+        height: 20px;
+    }
+
+    .balloon {
+        --base-size: calc(var(--base-balloon-size) * 0.8); /* Slightly smaller balloons on mobile */
+    }
+
+    .bullet {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+/* Touch-specific optimizations */
+@media (hover: none) {
+    .balloon {
+        min-width: 40px; /* Ensure minimum touch target size */
+        min-height: 40px;
+    }
+}

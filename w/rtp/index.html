@@ -20,8 +20,8 @@
         <option value="180">3h</option>
         <option value="360">6h</option>
       </select>
-      <button id="import-json" aria-label="Import JSON" onclick="document.getElementById('load-plan').click()">📂</button>
-      <button id="export-json" aria-label="Export JSON" onclick="exportPlan()">💾</button>
+      <button id="import-json" aria-label="Import JSON" onclick="document.getElementById('load-plan').click()">📥</button>
+      <button id="export-json" aria-label="Export JSON" onclick="exportPlan()">📤</button>
       <button id="clear-data" aria-label="Clear Data" onclick="clearData()">🗑️</button>
       <button id="generate-random" aria-label="Generate Random Data" onclick="generateRandomData()">🎲</button>
     </div>
@@ -42,10 +42,12 @@
           <div class="event">
             <input type="text" name="eventName" placeholder="Name" required>
             <input type="number" name="eventDuration" placeholder="Mins" min="1" required>
-            <button type="button" class="remove-event" aria-label="Remove">✖️</button>
+            <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
+            <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
+            <button type="button" class="remove-event" aria-label="Remove">🗑️</button>
           </div>
         </div>
-        <button type="button" id="add-event" aria-label="Add Event">➕ Add</button>
+        <button type="button" id="add-event" aria-label="Add Event">➕</button>
       </form>
     </section>
 

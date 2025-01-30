@@ -176,29 +176,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Save Plan
   function savePlan() {
-    const eventName = document.getElementById('event-name').value;
     const targetEndTime = document.getElementById('target-end-time').value;
+    if (!targetEndTime) {
+      alert('Please set a target end time first');
+      return;
+    }
+
+    const eventName = document.getElementById('event-name').value;
     const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => ({
       name: eventDiv.querySelector('input[name="eventName"]').value,
       duration: parseInt(eventDiv.querySelector('input[name="eventDuration"]').value)
     }));
 
-    const plan = {
-      eventName,
-      targetEndTime,
-      events
-    };
+    if (events.length === 0) {
+      alert('Please add at least one event');
+      return;
+    }
 
-    const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const timestamp = new Date(targetEndTime).toISOString().replace(/[:]/g, '-').slice(0, 16);
-    const filename = eventName ? `${eventName}_${timestamp}.json` : `timeline-plan_${timestamp}.json`;
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+    exportToFile({ eventName, targetEndTime, events });
+  }
+
+  function exportToFile(plan) {
+    try {
+      const timestamp = new Date(plan.targetEndTime).toISOString().replace(/[:]/g, '-').slice(0, 16);
+      const filename = plan.eventName ? `${plan.eventName}_${timestamp}.json` : `timeline-plan_${timestamp}.json`;
+      
+      const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error saving plan:', error);
+      alert('Error saving plan. Please check your inputs and try again.');
+    }
   }
 
   // Cache Management
@@ -252,22 +265,27 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.onload = (event) => {
       try {
         const plan = JSON.parse(event.target.result);
-        if (plan.eventName) {
-          document.getElementById('event-name').value = plan.eventName;
-        }
-        document.getElementById('target-end-time').value = plan.targetEndTime;
-        eventsContainer.innerHTML = '';
-        plan.events.forEach(event => {
-          const eventDiv = createEventElement(event.name, event.duration);
-          eventsContainer.appendChild(eventDiv);
-        });
+        loadPlanData(plan);
         updateTimeline();
       } catch (error) {
+        console.error('Error loading plan:', error);
         alert('Invalid file format.');
       }
     };
     reader.readAsText(file);
   });
+
+  function loadPlanData(plan) {
+    document.getElementById('event-name').value = plan.eventName || '';
+    document.getElementById('target-end-time').value = plan.targetEndTime || '';
+    eventsContainer.innerHTML = '';
+    if (plan.events && Array.isArray(plan.events)) {
+      plan.events.forEach(event => {
+        const eventDiv = createEventElement(event.name || '', event.duration || '');
+        eventsContainer.appendChild(eventDiv);
+      });
+    }
+  }
 
   // Clear Data
   function clearData() {

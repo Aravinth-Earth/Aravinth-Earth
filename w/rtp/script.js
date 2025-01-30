@@ -122,16 +122,29 @@ document.addEventListener('DOMContentLoaded', () => {
       const eventBlock = document.createElement('div');
       eventBlock.className = 'timeline-event-block';
       
-      // Calculate how many time blocks this event should span
-      const blocksCount = Math.ceil(event.duration / intervalMinutes);
-      eventBlock.style.height = `calc(var(--time-block-height) * ${blocksCount})`;
+      const interval = intervalSelect.value;
+      const intervalMinutes = getIntervalMinutes(interval);
+      const minimumHeight = 40; // 2.5rem equivalent
+      
+      // Calculate heights and check for compression
+      const timeScale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--time-block-height'));
+      const calculatedHeight = (event.duration / intervalMinutes) * timeScale;
+      
+      if (calculatedHeight < minimumHeight) {
+        eventBlock.classList.add('compressed');
+      } else {
+        // Add duration-based class for non-compressed events
+        eventBlock.classList.add(getDurationClass(event.duration));
+      }
+      
+      eventBlock.style.height = `${Math.max(calculatedHeight, minimumHeight)}px`;
       
       const startTime = event.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
       const endTime = event.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
       const duration = `${Math.floor(event.duration / 60).toString().padStart(2, '0')}:${(event.duration % 60).toString().padStart(2, '0')}`;
 
       eventBlock.innerHTML = `
-        <span>[ ${startTime} > ${duration} > ${endTime} ] => ${event.name} </span>
+        <span>[ ${startTime} > ${duration} > ${endTime} ] => ${event.name}</span>
       `;
       eventsColumn.appendChild(eventBlock);
     });
@@ -151,6 +164,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getIntervalMinutes(interval) {
     return parseInt(interval);
+  }
+
+  function getDurationClass(duration) {
+    if (duration <= 15) return 'duration-xs';
+    if (duration <= 30) return 'duration-s';
+    if (duration <= 60) return 'duration-m';
+    if (duration <= 120) return 'duration-l';
+    return 'duration-xl';
   }
 
   // Save Plan

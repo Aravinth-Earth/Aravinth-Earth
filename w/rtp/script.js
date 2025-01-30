@@ -1,66 +1,89 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loadPlanInput = document.getElementById('load-plan');
-  const addEventBtn = document.getElementById('add-event');
-  const eventsContainer = document.getElementById('events-container');
-  const timelineDiv = document.getElementById('timeline');
-  const intervalSelect = document.getElementById('time-interval');
+// Timeline State Management
+class TimelineState {
+  constructor() {
+    this.events = [];
+    this.targetEndTime = null;
+    this.eventName = '';
+  }
+}
 
-  intervalSelect.addEventListener('change', updateTimeline);
-
-  // Add keyboard accessibility for buttons
-  document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        button.click();
-      }
-    });
-  });
-
-  // Add Event
-  addEventBtn.addEventListener('click', () => {
-    const eventDiv = createEventElement();
-    eventsContainer.appendChild(eventDiv);
-    updateTimeline();
-  });
-
-  // Create Event Element
-  function createEventElement(name = '', duration = '') {
-    const eventDiv = document.createElement('div');
-    eventDiv.className = 'event';
-    eventDiv.innerHTML = `
-      <input type="text" name="eventName" placeholder="Event Name" value="${name}" required>
-      <input type="number" name="eventDuration" placeholder="Duration (minutes)" value="${duration}" min="1" required>
-      <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
-      <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
-      <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
-    `;
-    return eventDiv;
+// Timeline UI Handler
+class TimelineUI {
+  constructor() {
+    this.state = new TimelineState();
+    this.initializeElements();
+    this.attachEventListeners();
+    this.loadInitialState();
   }
 
-  // Remove Event
-  eventsContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('move-up')) {
-      const eventDiv = e.target.parentElement;
-      if (eventDiv.previousElementSibling) {
-        eventsContainer.insertBefore(eventDiv, eventDiv.previousElementSibling);
-        updateTimeline();
-      }
-    } else if (e.target.classList.contains('move-down')) {
-      const eventDiv = e.target.parentElement;
-      if (eventDiv.nextElementSibling) {
-        eventsContainer.insertBefore(eventDiv.nextElementSibling, eventDiv);
-        updateTimeline();
-      }
-    } else if (e.target.classList.contains('remove-event')) {
-      e.target.parentElement.remove();
-      updateTimeline();
-    }
-  });
+  initializeElements() {
+    this.loadPlanInput = document.getElementById('load-plan');
+    this.addEventBtn = document.getElementById('add-event');
+    this.eventsContainer = document.getElementById('events-container');
+    this.timelineDiv = document.getElementById('timeline');
+    this.intervalSelect = document.getElementById('time-interval');
+  }
 
-  // Update Timeline
-  function updateTimeline() {
+  attachEventListeners() {
+    this.intervalSelect.addEventListener('change', this.updateTimeline.bind(this));
+
+    // Add keyboard accessibility for buttons
+    document.querySelectorAll('button').forEach(button => {
+      button.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          button.click();
+        }
+      });
+    });
+
+    // Add Event
+    this.addEventBtn.addEventListener('click', () => {
+      const eventDiv = EventManager.createEventElement();
+      this.eventsContainer.appendChild(eventDiv);
+      this.updateTimeline();
+    });
+
+    // Remove Event
+    this.eventsContainer.addEventListener('click', (e) => {
+      EventManager.handleEventControls(e, this.eventsContainer);
+      this.updateTimeline();
+    });
+
+    // Load Plan
+    this.loadPlanInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const plan = JSON.parse(event.target.result);
+          this.loadPlanData(plan);
+          this.updateTimeline();
+        } catch (error) {
+          console.error('Error loading plan:', error);
+          alert('Invalid file format.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Update timeline when target end time changes
+    document.getElementById('target-end-time').addEventListener('change', () => {
+      this.updateTimeline();
+      StorageManager.saveToCache(this.state); // Changed from savePlan to saveToCache
+    });
+
+    // Update timeline when event details change
+    this.eventsContainer.addEventListener('input', () => {
+      this.updateTimeline();
+      StorageManager.saveToCache(this.state); // Changed from savePlan to saveToCache
+    });
+  }
+
+  updateTimeline() {
     const targetEndTime = new Date(document.getElementById('target-end-time').value);
-    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => {
+    const events = Array.from(this.eventsContainer.getElementsByClassName('event')).map(eventDiv => {
       const name = eventDiv.querySelector('input[name="eventName"]').value;
       const duration = parseInt(eventDiv.querySelector('input[name="eventDuration"]').value);
       return { name, duration };
@@ -68,48 +91,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reversedEvents = events.slice();
 
-    const calculatedEvents = calculateReverseTimeline(targetEndTime, reversedEvents);
-    displayTimeline(calculatedEvents);
+    const calculatedEvents = TimelineCalculator.calculateReverseTimeline(targetEndTime, reversedEvents);
+    this.displayTimeline(calculatedEvents);
   }
 
-  // Calculate Reverse Timeline
-  function calculateReverseTimeline(targetEndTime, events) {
-    let currentTime = new Date(targetEndTime);
-    const result = [];
-
-    for (let i = 0; i < events.length; i++) {
-      const event = events[i];
-      const endTime = new Date(currentTime);
-      currentTime.setMinutes(currentTime.getMinutes() - event.duration);
-      const startTime = new Date(currentTime);
-      result.push({
-        name: event.name,
-        duration: event.duration,
-        startTime,
-        endTime
-      });
-    }
-
-    return result;
-  }
-
-  // Display Timeline
-  function displayTimeline(events) {
+  displayTimeline(events) {
     if (events.length === 0) {
-      timelineDiv.innerHTML = `
+      this.timelineDiv.innerHTML = `
         <p class="no-events-message">No events to display. Please add events to see the timeline.</p>
       `;
       return;
     }
 
-    const interval = intervalSelect.value;
-    const intervalMinutes = getIntervalMinutes(interval);
+    const interval = this.intervalSelect.value;
+    const intervalMinutes = this.getIntervalMinutes(interval);
 
     // Set CSS variable for interval minutes
     document.documentElement.style.setProperty('--interval-minutes', intervalMinutes);
 
     // Update timeline content to only contain the events column
-    timelineDiv.innerHTML = `
+    this.timelineDiv.innerHTML = `
       <div class="timeline-content">
         <div class="timeline-events-column" id="timeline-events-column"></div>
       </div>
@@ -122,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const eventBlock = document.createElement('div');
       eventBlock.className = 'timeline-event-block';
       
-      const interval = intervalSelect.value;
-      const intervalMinutes = getIntervalMinutes(interval);
+      const interval = this.intervalSelect.value;
+      const intervalMinutes = this.getIntervalMinutes(interval);
       const minimumHeight = 40; // 2.5rem equivalent
       
       // Calculate heights and check for compression
@@ -134,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventBlock.classList.add('compressed');
       } else {
         // Add duration-based class for non-compressed events
-        eventBlock.classList.add(getDurationClass(event.duration));
+        eventBlock.classList.add(TimelineCalculator.getDurationClass(event.duration));
       }
       
       eventBlock.style.height = `${Math.max(calculatedHeight, minimumHeight)}px`;
@@ -162,41 +163,161 @@ document.addEventListener('DOMContentLoaded', () => {
     eventsColumn.appendChild(targetEndBlock);
   }
 
-  function getIntervalMinutes(interval) {
+  getIntervalMinutes(interval) {
     return parseInt(interval);
   }
 
-  function getDurationClass(duration) {
+  loadPlanData(plan) {
+    document.getElementById('event-name').value = plan.eventName || '';
+    document.getElementById('target-end-time').value = plan.targetEndTime || '';
+    this.eventsContainer.innerHTML = '';
+    if (plan.events && Array.isArray(plan.events)) {
+      plan.events.forEach(event => {
+        const eventDiv = EventManager.createEventElement(event.name || '', event.duration || '');
+        this.eventsContainer.appendChild(eventDiv);
+      });
+    }
+  }
+
+  loadInitialState() {
+    if (!StorageManager.loadFromCache()) {
+      this.prefillForm();
+    }
+  }
+
+  prefillForm() {
+    const targetEndTime = new Date();
+    targetEndTime.setDate(targetEndTime.getDate() + 1); // Set target end time to 1 day in the future
+    document.getElementById('target-end-time').value = targetEndTime.toISOString().slice(0, 16);
+
+    const eventNames = ['Meeting', 'Workout', 'Lunch', 'Project Work', 'Reading', 'Shopping', 'Cooking', 'Cleaning', 'Study', 'Relax'];
+    this.eventsContainer.innerHTML = '';
+
+    const events = [];
+    for (let i = 0; i < 10; i++) {
+      const randomDuration = Math.floor(Math.random() * (150 - 15 + 1)) + 15;
+      const eventName = eventNames[i % eventNames.length];
+      const eventDiv = EventManager.createEventElement(eventName, randomDuration);
+      this.eventsContainer.appendChild(eventDiv);
+      events.push({ name: eventName, duration: randomDuration });
+    }
+
+    const calculatedEvents = TimelineCalculator.calculateReverseTimeline(targetEndTime, events);
+    this.displayTimeline(calculatedEvents);
+  }
+
+  clearData() {
+    // Clear form inputs
+    document.getElementById('event-name').value = '';
+    document.getElementById('target-end-time').value = '';
+    this.eventsContainer.innerHTML = '';
+    
+    // Clear local storage
+    localStorage.removeItem('timelinePlan');
+    
+    // Update timeline to show empty state
+    this.updateTimeline();
+  }
+}
+
+// Event Management
+class EventManager {
+  static createEventElement(name = '', duration = '') {
+    const eventDiv = document.createElement('div');
+    eventDiv.className = 'event';
+    eventDiv.innerHTML = `
+      <input type="text" name="eventName" placeholder="Event Name" value="${name}" required>
+      <input type="number" name="eventDuration" placeholder="Duration (minutes)" value="${duration}" min="1" required>
+      <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
+      <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
+      <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
+    `;
+    return eventDiv;
+  }
+
+  static handleEventControls(event, container) {
+    if (event.target.classList.contains('move-up')) {
+      const eventDiv = event.target.parentElement;
+      if (eventDiv.previousElementSibling) {
+        container.insertBefore(eventDiv, eventDiv.previousElementSibling);
+      }
+    } else if (event.target.classList.contains('move-down')) {
+      const eventDiv = event.target.parentElement;
+      if (eventDiv.nextElementSibling) {
+        container.insertBefore(eventDiv.nextElementSibling, eventDiv);
+      }
+    } else if (event.target.classList.contains('remove-event')) {
+      event.target.parentElement.remove();
+    }
+  }
+}
+
+// Timeline Calculations
+class TimelineCalculator {
+  static calculateReverseTimeline(targetEndTime, events) {
+    let currentTime = new Date(targetEndTime);
+    const result = [];
+
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      const endTime = new Date(currentTime);
+      currentTime.setMinutes(currentTime.getMinutes() - event.duration);
+      const startTime = new Date(currentTime);
+      result.push({
+        name: event.name,
+        duration: event.duration,
+        startTime,
+        endTime
+      });
+    }
+
+    return result;
+  }
+
+  static getDurationClass(duration) {
     if (duration <= 15) return 'duration-xs';
     if (duration <= 30) return 'duration-s';
     if (duration <= 60) return 'duration-m';
     if (duration <= 120) return 'duration-l';
     return 'duration-xl';
   }
+}
 
-  // Save Plan
-  function savePlan() {
-    const targetEndTime = document.getElementById('target-end-time').value;
-    if (!targetEndTime) {
-      alert('Please set a target end time first');
-      return;
-    }
-
+// Storage Management
+class StorageManager {
+  static saveToCache(state) {
     const eventName = document.getElementById('event-name').value;
-    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => ({
+    const targetEndTime = document.getElementById('target-end-time').value;
+    const events = Array.from(document.getElementById('events-container').getElementsByClassName('event')).map(eventDiv => ({
       name: eventDiv.querySelector('input[name="eventName"]').value,
       duration: parseInt(eventDiv.querySelector('input[name="eventDuration"]').value)
     }));
 
-    if (events.length === 0) {
-      alert('Please add at least one event');
-      return;
-    }
-
-    exportToFile({ eventName, targetEndTime, events });
+    const plan = {
+      eventName,
+      targetEndTime,
+      events
+    };
+    localStorage.setItem('timelinePlan', JSON.stringify(plan));
   }
 
-  function exportToFile(plan) {
+  static loadFromCache() {
+    const cached = localStorage.getItem('timelinePlan');
+    if (cached) {
+      const plan = JSON.parse(cached);
+      document.getElementById('event-name').value = plan.eventName || '';
+      document.getElementById('target-end-time').value = plan.targetEndTime;
+      document.getElementById('events-container').innerHTML = '';
+      plan.events.forEach(event => {
+        const eventDiv = EventManager.createEventElement(event.name, event.duration);
+        document.getElementById('events-container').appendChild(eventDiv);
+      });
+      return true;
+    }
+    return false;
+  }
+
+  static exportToFile(plan) {
     try {
       const timestamp = new Date(plan.targetEndTime).toISOString().replace(/[:]/g, '-').slice(0, 16);
       const filename = plan.eventName ? `${plan.eventName}_${timestamp}.json` : `timeline-plan_${timestamp}.json`;
@@ -214,137 +335,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Cache Management
-  function saveToCache() {
-    const eventName = document.getElementById('event-name').value;
+  static exportPlan() {
     const targetEndTime = document.getElementById('target-end-time').value;
-    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => ({
+    if (!targetEndTime) {
+      alert('Please set a target end time first');
+      return;
+    }
+
+    const eventName = document.getElementById('event-name').value;
+    const events = Array.from(document.getElementById('events-container').getElementsByClassName('event')).map(eventDiv => ({
       name: eventDiv.querySelector('input[name="eventName"]').value,
       duration: parseInt(eventDiv.querySelector('input[name="eventDuration"]').value)
     }));
 
-    const plan = {
-      eventName,
-      targetEndTime,
-      events
-    };
-    localStorage.setItem('timelinePlan', JSON.stringify(plan));
-  }
-
-  function loadFromCache() {
-    const cached = localStorage.getItem('timelinePlan');
-    if (cached) {
-      const plan = JSON.parse(cached);
-      document.getElementById('event-name').value = plan.eventName || '';
-      document.getElementById('target-end-time').value = plan.targetEndTime;
-      eventsContainer.innerHTML = '';
-      plan.events.forEach(event => {
-        const eventDiv = createEventElement(event.name, event.duration);
-        eventsContainer.appendChild(eventDiv);
-      });
-      updateTimeline();
-      return true;
-    }
-    return false;
-  }
-
-  // Export Plan
-  function exportPlan() {
-    savePlan();
-  }
-
-  // Attach exportPlan to the window object
-  window.exportPlan = exportPlan;
-
-  // Load Plan
-  loadPlanInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const plan = JSON.parse(event.target.result);
-        loadPlanData(plan);
-        updateTimeline();
-      } catch (error) {
-        console.error('Error loading plan:', error);
-        alert('Invalid file format.');
-      }
-    };
-    reader.readAsText(file);
-  });
-
-  function loadPlanData(plan) {
-    document.getElementById('event-name').value = plan.eventName || '';
-    document.getElementById('target-end-time').value = plan.targetEndTime || '';
-    eventsContainer.innerHTML = '';
-    if (plan.events && Array.isArray(plan.events)) {
-      plan.events.forEach(event => {
-        const eventDiv = createEventElement(event.name || '', event.duration || '');
-        eventsContainer.appendChild(eventDiv);
-      });
-    }
-  }
-
-  // Clear Data
-  function clearData() {
-    document.getElementById('event-name').value = '';
-    document.getElementById('target-end-time').value = '';
-    eventsContainer.innerHTML = '';
-    localStorage.removeItem('timelinePlan');
-    updateTimeline();
-  }
-
-  // Attach clearData to the window object
-  window.clearData = clearData;
-
-  // Generate Random Data
-  function generateRandomData() {
-    prefillForm();
-  }
-
-  // Attach generateRandomData to the window object
-  window.generateRandomData = generateRandomData;
-
-  // Pre-fill form with future date and random events
-  function prefillForm() {
-    const targetEndTime = new Date();
-    targetEndTime.setDate(targetEndTime.getDate() + 1); // Set target end time to 1 day in the future
-    document.getElementById('target-end-time').value = targetEndTime.toISOString().slice(0, 16);
-
-    const eventNames = ['Meeting', 'Workout', 'Lunch', 'Project Work', 'Reading', 'Shopping', 'Cooking', 'Cleaning', 'Study', 'Relax'];
-    eventsContainer.innerHTML = '';
-
-    const events = [];
-    for (let i = 0; i < 10; i++) {
-      const randomDuration = Math.floor(Math.random() * (150 - 15 + 1)) + 15;
-      const eventName = eventNames[i % eventNames.length];
-      const eventDiv = createEventElement(eventName, randomDuration);
-      eventsContainer.appendChild(eventDiv);
-      events.push({ name: eventName, duration: randomDuration });
+    if (events.length === 0) {
+      alert('Please add at least one event');
+      return;
     }
 
-    const calculatedEvents = calculateReverseTimeline(targetEndTime, events);
-    displayTimeline(calculatedEvents);
+    const plan = { eventName, targetEndTime, events };
+    this.exportToFile(plan);
   }
+}
 
-  // Replace the prefillForm call with cache check
-  if (!loadFromCache()) {
-    prefillForm();
-  }
+// Make exportPlan globally accessible
+let timeline; // Add this at the top level
 
-  // Update timeline when target end time changes
-  document.getElementById('target-end-time').addEventListener('change', () => {
-    updateTimeline();
-    saveToCache(); // Changed from savePlan to saveToCache
-  });
-
-  // Update timeline when event details change
-  eventsContainer.addEventListener('input', () => {
-    updateTimeline();
-    saveToCache(); // Changed from savePlan to saveToCache
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  timeline = new TimelineUI(); // Store the instance in the global variable
 });
 
-// the background dotted line logic is not yet proper
+// Update the global methods
+window.exportPlan = () => StorageManager.exportPlan();
+window.clearData = () => timeline.clearData();
+window.generateRandomData = () => timeline.prefillForm();

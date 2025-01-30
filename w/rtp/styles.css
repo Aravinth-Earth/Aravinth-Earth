@@ -221,9 +221,41 @@ select:hover {
   align-items: center;
   padding: 0.5rem;
   border-top: 1px solid var(--accent-color); /* Add a line between events */
-  background-color: var(--input-bg);
+  background-color: rgba(40, 44, 52, 0.3); /* subtle dark background */
   color: var(--input-text);
   width: 100%;
+  position: relative;
+  min-height: 2.5rem;
+}
+
+/* Update compressed section indicator */
+.timeline-event-block.compressed {
+  background-color: rgba(30, 136, 229, 0.15); /* var(--accent-color) with transparency */
+  border-left: 3px solid var(--accent-color);
+}
+
+.timeline-event-block.compressed::after {
+  content: "⚡";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--accent-color);
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.timeline-event-block.compressed span {
+  background: var(--input-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 24px;
+  display: inline-block;
+}
+
+/* Remove tooltip hover effect */
+.timeline-event-block.compressed:hover::before {
+  display: none;
 }
 
 /* Remove margin-bottom to eliminate gaps between event blocks */
@@ -362,4 +394,173 @@ button:active {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  header {
+    padding: 0.5rem;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  .header-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .header-controls button,
+  .header-controls select {
+    padding: 0.35rem;
+    font-size: 1rem;
+  }
+
+  /* Hide button text, show only icons on mobile */
+  .header-controls button span {
+    display: none;
+  }
+
+  main {
+    padding: 0.5rem;
+  }
+
+  section {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="datetime-local"],
+  input[type="text"],
+  input[type="number"],
+  select {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #events-container .event {
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  #events-container .event input {
+    padding: 0.35rem;
+  }
+
+  .timeline-event-block {
+    padding: 0.35rem;
+    font-size: 0.9rem;
+  }
+
+  .timeline-target-end-block {
+    padding: 0.35rem;
+    font-size: 0.9rem;
+  }
+
+  /* Make move/remove buttons more compact */
+  .move-up,
+  .move-down,
+  .remove-event {
+    padding: 0.25rem;
+    font-size: 1rem;
+  }
+
+  /* Input section optimizations */
+  #input-section {
+    padding: 0.35rem;
+  }
+
+  form {
+    max-width: 100%;
+  }
+
+  label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  h2, h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #events-container {
+    margin-top: 0.5rem;
+  }
+
+  #events-container .event {
+    flex-direction: row; /* Keep in single line */
+    flex-wrap: wrap;
+    padding: 0.25rem;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    margin-bottom: 0.35rem;
+  }
+
+  #events-container .event input[name="eventName"] {
+    flex: 1 1 100px;
+    min-width: 100px;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  #events-container .event input[name="eventDuration"] {
+    flex: 0 1 60px;
+    min-width: 60px;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* Compact control buttons */
+  .move-up, .move-down, .remove-event {
+    padding: 0.2rem;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Make Add Event button more compact */
+  #add-event {
+    padding: 0.35rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Optimize datetime input */
+  input[type="datetime-local"] {
+    font-size: 0.9rem;
+    padding: 0.35rem;
+  }
+}
+
+/* Duration-based colors for non-compressed events */
+.timeline-event-block.duration-xs {
+  background-color: rgba(33, 150, 243, 0.15); /* Blue */
+}
+
+.timeline-event-block.duration-s {
+  background-color: rgba(76, 175, 80, 0.15); /* Green */
+}
+
+.timeline-event-block.duration-m {
+  background-color: rgba(255, 193, 7, 0.15); /* Yellow */
+}
+
+.timeline-event-block.duration-l {
+  background-color: rgba(255, 87, 34, 0.15); /* Orange */
+}
+
+.timeline-event-block.duration-xl {
+  background-color: rgba(156, 39, 176, 0.15); /* Purple */
+}
+
+/* Make text more readable on patterned backgrounds */
+.timeline-event-block span {
+  background: var(--input-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-right: 24px;
+  display: inline-block;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }

@@ -168,9 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
       events
     };
 
-    // Save to localStorage
-    saveToCache(plan);
-
     const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const timestamp = new Date(targetEndTime).toISOString().replace(/[:]/g, '-').slice(0, 16);
@@ -184,7 +181,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Cache Management
-  function saveToCache(plan) {
+  function saveToCache() {
+    const eventName = document.getElementById('event-name').value;
+    const targetEndTime = document.getElementById('target-end-time').value;
+    const events = Array.from(eventsContainer.getElementsByClassName('event')).map(eventDiv => ({
+      name: eventDiv.querySelector('input[name="eventName"]').value,
+      duration: parseInt(eventDiv.querySelector('input[name="eventDuration"]').value)
+    }));
+
+    const plan = {
+      eventName,
+      targetEndTime,
+      events
+    };
     localStorage.setItem('timelinePlan', JSON.stringify(plan));
   }
 
@@ -289,13 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update timeline when target end time changes
   document.getElementById('target-end-time').addEventListener('change', () => {
     updateTimeline();
-    savePlan(); // This will update the cache
+    saveToCache(); // Changed from savePlan to saveToCache
   });
 
   // Update timeline when event details change
   eventsContainer.addEventListener('input', () => {
     updateTimeline();
-    savePlan(); // This will update the cache
+    saveToCache(); // Changed from savePlan to saveToCache
   });
 });
 

@@ -1,28 +1,37 @@
+/* Theme Variables */
 :root {
+  /* Colors */
   --bg-color: #0a0a0a;
-  --text-color: #ffffff;
-  --input-bg: #1a1a1a;
-  --accent-color: #FF5D8F; /* Vibrant pink */
-  --accent-secondary: #7C4DFF; /* Vibrant purple */
-  --accent-tertiary: #00E5FF; /* Vibrant cyan */
-  --accent-success: #00E676; /* Vibrant green */
-  --accent-warning: #FFD740; /* Vibrant yellow */
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --input-text: #FFFFFF;
-  --button-bg: #1F1F1F;
-  --border-radius: 8px;
-  --time-block-height: 40px; /* Fixed height for time blocks */
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
+  --input-bg: #1a1a1a;
+  --button-bg: #1F1F1F;
+  
+  /* Text Colors */
+  --text-color: #ffffff;
   --text-primary: #c9d1d9;
   --text-secondary: #8b949e;
+  --input-text: #FFFFFF;
+  
+  /* Accent Colors */
+  --accent-color: #FF5D8F;
   --accent-primary: #58a6ff;
-  --accent-secondary: #1f6feb;
+  --accent-secondary: #7C4DFF;
+  --accent-tertiary: #00E5FF;
+  --accent-success: #00E676;
+  --accent-warning: #FFD740;
+  
+  /* Status Colors */
   --success: #238636;
   --error: #f85149;
+  
+  /* Layout */
   --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --time-block-height: 40px;
 }
 
+/* Reset & Base Styles */
 * {
   box-sizing: border-box;
 }
@@ -34,13 +43,14 @@ body {
   color: var(--text-color);
 }
 
+/* Layout Components */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
   background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
-  color: var(--button-text);
+  color: var(--text-color);
   box-shadow: var(--box-shadow);
 }
 
@@ -246,6 +256,7 @@ select:hover {
   width: 100%;
   position: relative;
   min-height: 2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 /* Update compressed section indicator */

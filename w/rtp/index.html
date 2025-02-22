@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Reverse timeline planning tool">
   <title>Timeline Planner</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,24 +12,24 @@
     <h1>Timeline Planner</h1>
     <div class="header-controls">
       <select id="time-interval" aria-label="Select Time Interval">
-        <option value="5">5 mins</option>
-        <option value="10">10 mins</option>
-        <option value="15">15 mins</option>
-        <option value="30" selected>30 mins</option>
-        <option value="60">1 hr</option>
-        <option value="120">2 hr</option>
-        <option value="180">3 hr</option>
-        <option value="360">6 hr</option>
+        <option value="5">5m</option>
+        <option value="10">10m</option>
+        <option value="15">15m</option>
+        <option value="30" selected>30m</option>
+        <option value="60">1h</option>
+        <option value="120">2h</option>
+        <option value="180">3h</option>
+        <option value="360">6h</option>
       </select>
-      <button id="import-json" aria-label="Import JSON" onclick="document.getElementById('load-plan').click()">📂 Import</button>
-      <button id="export-json" aria-label="Export JSON" onclick="exportPlan()">💾 Export</button>
-      <button id="clear-data" aria-label="Clear Data" onclick="clearData()">🗑️ Clear</button>
-      <button id="generate-random" aria-label="Generate Random Data" onclick="generateRandomData()">🎲 Random</button>
+      <button id="import-json" aria-label="Import JSON" onclick="document.getElementById('load-plan').click()">📥</button>
+      <button id="export-json" aria-label="Export JSON" onclick="window.exportPlan()">📤</button>
+      <button id="clear-data" aria-label="Clear Data" onclick="clearData()">🗑️</button>
+      <button id="generate-random" aria-label="Generate Random Data" onclick="generateRandomData()">🎲</button>
     </div>
   </header>
 
   <main>
-    <section id="input-section">
+    <section id="input-section" aria-label="Timeline Input">
       <h2>Plan Your Timeline</h2>
       <form id="timeline-form">
         <label for="event-name">Event Name (optional):</label>
@@ -40,16 +41,18 @@
         <div id="events-container">
           <h3>Events</h3>
           <div class="event">
-            <input type="text" name="eventName" placeholder="Event Name" required>
-            <input type="number" name="eventDuration" placeholder="Duration (minutes)" min="1" required>
-            <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
+            <input type="text" name="eventName" placeholder="Name" required>
+            <input type="number" name="eventDuration" placeholder="Mins" min="1" required>
+            <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
+            <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
+            <button type="button" class="remove-event" aria-label="Remove">🗑️</button>
           </div>
         </div>
-        <button type="button" id="add-event" aria-label="Add Event">Add Event</button>
+        <button type="button" id="add-event" aria-label="Add Event">➕</button>
       </form>
     </section>
 
-    <section id="timeline-section">
+    <section id="timeline-section" aria-label="Timeline Display">
       <h2>Calculated Timeline</h2>
       <div id="timeline">
         <div class="timeline-content">
@@ -59,9 +62,9 @@
     </section>
   </main>
 
-  <input type="file" id="load-plan" accept=".json" style="display: none;" aria-label="Load Plan">
+  <input type="file" id="load-plan" accept=".json" hidden aria-label="Load Plan">
 
-  <script src="script.js"></script>
+  <script src="script.js" type="module"></script>
 </body>
 <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
   <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>

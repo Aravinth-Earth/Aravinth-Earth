@@ -51,6 +51,8 @@
                 backdrop-filter: blur(8px);
                 border-radius: 16px;
                 border: 1px solid var(--border-glow);
+                left: 50%;
+                transform: translateX(-50%);
             }
 
             h3, h4 {
@@ -65,33 +67,73 @@
             #loading-overlay {
                 background-color: var(--bg-primary) !important;
             }
+
+            .info {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .info h4 {
+                margin-bottom: 1rem;
+            }
+            
+            .info p {
+                margin: 1rem 0;
+                line-height: 1.6;
+            }
+
+            .info ul {
+                margin: 1rem 0;
+                padding-left: 1.5rem;
+                list-style-type: disc;
+            }
+
+            .info li {
+                margin: 0.5rem 0;
+                padding: 0;
+                background: none;
+                color: var(--text-secondary);
+            }
+
+            .info li:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .tool-container {
+                margin: 2rem auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                max-width: 1000px;
+                width: 100%;
+                position: relative;
+            }
+
+            .tool-container iframe {
+                margin: 0 auto;
+                display: block;
+                transform-origin: center;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <header>
                 <h3>📊 Security Sentiment Analysis</h3>
-                <p class="subtitle">Analyze news sentiment for securities</p>
             </header>
 
             <main>
-                <section class="disclaimer">
-                    <div class="warning-box">
-                        <h4>⚠️ Important Disclaimer</h4>
-                        <ul>
-                            <li>This is a proof-of-concept application for demonstration purposes only</li>
-                            <li>Not to be used for actual financial decisions</li>
-                            <li>Neither the application nor its creator provides financial advice</li>
-                            <li>Past performance does not guarantee future results</li>
-                            <li>Always consult licensed financial advisors for investment decisions</li>
-                        </ul>
-                    </div>
-                </section>
-
                 <section class="info">
                     <h4>ℹ️ About this tool</h4>
-                    <p>This experimental tool analyzes news sentiment related to securities using natural language processing. 
-                       Please note that this is a technical demonstration and results should be treated as exploratory only.</p>
+                    <p>This AI tool analyzes news sentiment on stocks. It’s an experimental demo for exploration only.</p>
+                    
+                    <h4>⚠️ Important Disclaimer</h4>
+                    <ul>
+                        <li>Not for real financial decisions or advice</li>
+                        <li>Past results don’t predict future performance</li>
+                        <li>Consult a licensed financial advisor before investing</li>
+                    </ul>
                 </section>
 
                 <section class="tool-container">

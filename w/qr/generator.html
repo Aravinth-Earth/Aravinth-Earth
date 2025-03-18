@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Aravinth's Site</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="qr-styles.css">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="description" content="Generate different types of QR codes offline. Create QR codes for URLs, text, contact information, and more.">
+    
+    <!-- PWA support -->
+    <link rel="manifest" href="../../manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <!-- Schema.org metadata -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "QR Code Generator",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QR Code Generator</h1>
+            <p class="subtitle">Generate QR codes for various purposes - works offline!</p>
+        </header>
+
+        <main>
+            <section class="qr-options">
+                <div class="type-selector">
+                    <h2>QR Code Type</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="text">Text</button>
+                        <button class="tab-btn" data-tab="url">URL</button>
+                        <button class="tab-btn" data-tab="contact">Contact</button>
+                        <button class="tab-btn" data-tab="email">Email</button>
+                        <button class="tab-btn" data-tab="sms">SMS</button>
+                        <button class="tab-btn" data-tab="wifi">WiFi</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Text Tab Content -->
+                    <div class="tab-pane active" id="text-tab">
+                        <div class="form-group">
+                            <label for="text-input">Text Content</label>
+                            <textarea id="text-input" rows="4" placeholder="Enter your text here..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- URL Tab Content -->
+                    <div class="tab-pane" id="url-tab">
+                        <div class="form-group">
+                            <label for="url-input">Website URL</label>
+                            <input type="url" id="url-input" placeholder="https://example.com">
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Tab Content -->
+                    <div class="tab-pane" id="contact-tab">
+                        <div class="form-group">
+                            <label for="contact-name">Name</label>
+                            <input type="text" id="contact-name" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-phone">Phone</label>
+                            <input type="tel" id="contact-phone" placeholder="123-456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-address">Address</label>
+                            <textarea id="contact-address" rows="2" placeholder="123 Main St, City, Country"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Email Tab Content -->
+                    <div class="tab-pane" id="email-tab">
+                        <div class="form-group">
+                            <label for="email-address">Email Address</label>
+                            <input type="email" id="email-address" placeholder="recipient@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-subject">Subject</label>
+                            <input type="text" id="email-subject" placeholder="Email Subject">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-body">Message Body</label>
+                            <textarea id="email-body" rows="3" placeholder="Your message here..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- SMS Tab Content -->
+                    <div class="tab-pane" id="sms-tab">
+                        <div class="form-group">
+                            <label for="sms-number">Phone Number</label>
+                            <input type="tel" id="sms-number" placeholder="123-456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label for="sms-message">Message</label>
+                            <textarea id="sms-message" rows="3" placeholder="Your SMS message here..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- WiFi Tab Content -->
+                    <div class="tab-pane" id="wifi-tab">
+                        <div class="form-group">
+                            <label for="wifi-ssid">Network Name (SSID)</label>
+                            <input type="text" id="wifi-ssid" placeholder="WiFi Network Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="wifi-password">Password</label>
+                            <input type="password" id="wifi-password" placeholder="WiFi Password">
+                            <button type="button" id="toggle-password" class="toggle-password">Show</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="wifi-security">Security Type</label>
+                            <select id="wifi-security">
+                                <option value="WPA">WPA/WPA2/WPA3</option>
+                                <option value="WEP">WEP</option>
+                                <option value="nopass">No Password</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wifi-hidden">Hidden Network</label>
+                            <input type="checkbox" id="wifi-hidden">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="qr-settings">
+                    <h3>QR Code Settings</h3>
+                    <div class="settings-controls">
+                        <div class="form-group">
+                            <label for="qr-size">Size</label>
+                            <input type="range" id="qr-size" min="100" max="400" value="200">
+                            <span id="size-display">200×200</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="qr-color">Foreground Color</label>
+                            <input type="color" id="qr-color" value="#000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="qr-bg-color">Background Color</label>
+                            <input type="color" id="qr-bg-color" value="#ffffff">
+                            <div class="color-tip">Tip: Inverting colors (white foreground on black background) may improve scanning on digital screens.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="generate-qr" class="primary-btn">Generate QR Code</button>
+                    <button id="reset-form" class="secondary-btn">Reset Form</button>
+                </div>
+            </section>
+            
+            <section class="qr-result">
+                <h2>Your QR Code</h2>
+                <div id="qrcode-container">
+                    <div id="qrcode"></div>
+                    <p class="offline-notice">✅ This QR code generator works offline!</p>
+                </div>
+                <div class="result-actions">
+                    <button id="download-png" class="action-btn" disabled>Download PNG</button>
+                    <button id="download-svg" class="action-btn" disabled>Download SVG</button>
+                    <button id="print-qr" class="action-btn" disabled>Print</button>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <h2>About QR Codes</h2>
+                <p>QR codes (Quick Response codes) were invented in 1994 by Denso Wave. They can store various types of information and are widely used for contactless information sharing.</p>
+                <details>
+                    <summary>Offline Capability</summary>
+                    <p>This tool works completely offline once loaded. It uses Progressive Web App technology to cache all necessary resources on your device.</p>
+                </details>
+                <details>
+                    <summary>Privacy & Security</summary>
+                    <p>All QR codes are generated locally on your device. No data is sent to any server or third parties.</p>
+                </details>
+            </section>
+        </main>
+
+        <footer>
+            <p>Created with <a href="https://github.com/davidshimjs/qrcodejs" target="_blank" rel="noopener noreferrer">qrcode.js</a> - an open-source library</p>
+            <p><a href="../../index.html">Back to Home</a></p>
+            <div class="visitor-badge">
+                <a href="https://www.332321.xyz/index.html">
+                    <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
+                         alt="Visitor Badge"
+                         loading="lazy">
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Required libraries -->
+    <script>
+        // Try to load from CDN first, then fallback to local copy if needed
+        function loadQRCodeLib() {
+            const cdnScript = document.createElement('script');
+            cdnScript.src = 'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js';
+            cdnScript.onerror = function() {
+                // If CDN fails, try to load from local file
+                console.log('CDN QR library failed to load, using local fallback...');
+                const localScript = document.createElement('script');
+                localScript.src = '2025_03_18_qrcode.mini.js'; // Local fallback file
+                document.body.appendChild(localScript);
+            };
+            document.body.appendChild(cdnScript);
+        }
+        loadQRCodeLib();
+    </script>
+    <script src="qr-script.js"></script>
+</body>
+</html>

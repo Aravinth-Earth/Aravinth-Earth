@@ -158,6 +158,17 @@
                             <input type="color" id="qr-bg-color" value="#ffffff">
                             <div class="color-tip">Tip: Inverting colors (white foreground on black background) may improve scanning on digital screens.</div>
                         </div>
+                        <!-- Add error correction level selection -->
+                        <div class="form-group">
+                            <label for="qr-error-correction">Error Correction</label>
+                            <select id="qr-error-correction">
+                                <option value="L">Low (7%)</option>
+                                <option value="M" selected>Medium (15%)</option>
+                                <option value="Q">Quartile (25%)</option>
+                                <option value="H">High (30%)</option>
+                            </select>
+                            <div class="color-tip">Higher error correction allows QR code to be readable even if partially damaged or obscured.</div>
+                        </div>
                     </div>
                 </div>
                 

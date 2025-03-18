@@ -18,9 +18,50 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let qrCodeInstance = null;
     
+    // Add library loading status indicator
+    const qrLibraryLoading = document.createElement('div');
+    qrLibraryLoading.id = 'qr-library-status';
+    qrLibraryLoading.className = 'library-status';
+    qrLibraryLoading.innerHTML = 'Loading QR library... <span class="loading-spinner"></span>';
+    document.querySelector('.qr-options').prepend(qrLibraryLoading);
+
+    // Check library loading status periodically
+    const checkLibraryLoaded = setInterval(() => {
+        if (typeof QRCode !== 'undefined') {
+            qrLibraryLoading.className = 'library-status loaded';
+            qrLibraryLoading.textContent = 'QR library loaded successfully';
+            clearInterval(checkLibraryLoaded);
+            // Auto-hide after 2 seconds
+            setTimeout(() => {
+                qrLibraryLoading.style.display = 'none';
+            }, 2000);
+        }
+    }, 200);
+
+    // After 5 seconds, stop checking and show error if library not loaded
+    setTimeout(() => {
+        if (typeof QRCode === 'undefined') {
+            qrLibraryLoading.className = 'library-status error';
+            qrLibraryLoading.innerHTML = 'Could not load QR library. Some features may be unavailable.';
+        }
+        clearInterval(checkLibraryLoaded);
+    }, 5000);
+    
     // Add invert colors checkbox after the background color
-    const colorGroup = document.querySelector('.form-group:has(#qr-bg-color)');
-    if (colorGroup) {
+    let bgColorGroup = document.querySelector('.form-group:has(#qr-bg-color)');
+    
+    // If that doesn't work (browser doesn't support :has), use alternate approach
+    if (!bgColorGroup) {
+        const allFormGroups = document.querySelectorAll('.form-group');
+        allFormGroups.forEach(group => {
+            if (group.querySelector('#qr-bg-color')) {
+                bgColorGroup = group;
+            }
+        });
+    }
+    
+    // Now add the invert checkbox to the found element
+    if (bgColorGroup) {
         const invertCheckboxContainer = document.createElement('div');
         invertCheckboxContainer.className = 'invert-option';
         
@@ -34,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         invertCheckboxContainer.appendChild(invertCheckbox);
         invertCheckboxContainer.appendChild(invertCheckboxLabel);
-        colorGroup.appendChild(invertCheckboxContainer);
+        bgColorGroup.appendChild(invertCheckboxContainer);
         
         invertCheckbox.addEventListener('change', () => {
             if (invertCheckbox.checked) {
@@ -63,58 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-    }
-    
-    // Add fallback for browsers that don't support :has()
-    if (!colorGroup) {
-        const colorGroups = document.querySelectorAll('.form-group');
-        let bgColorGroup = null;
-        
-        // Find the group containing the background color input
-        colorGroups.forEach(group => {
-            if (group.querySelector('#qr-bg-color')) {
-                bgColorGroup = group;
-            }
-        });
-        
-        if (bgColorGroup) {
-            const invertCheckboxContainer = document.createElement('div');
-            invertCheckboxContainer.className = 'invert-option';
-            
-            const invertCheckboxLabel = document.createElement('label');
-            invertCheckboxLabel.htmlFor = 'invert-colors';
-            invertCheckboxLabel.textContent = 'Invert Colors (Better for scanning)';
-            
-            const invertCheckbox = document.createElement('input');
-            invertCheckbox.type = 'checkbox';
-            invertCheckbox.id = 'invert-colors';
-            
-            invertCheckboxContainer.appendChild(invertCheckbox);
-            invertCheckboxContainer.appendChild(invertCheckboxLabel);
-            bgColorGroup.appendChild(invertCheckboxContainer);
-            
-            invertCheckbox.addEventListener('change', () => {
-                if (invertCheckbox.checked) {
-                    invertCheckbox.setAttribute('data-original-fg', qrColor.value);
-                    invertCheckbox.setAttribute('data-original-bg', qrBgColor.value);
-                    qrColor.value = '#FFFFFF';
-                    qrBgColor.value = '#000000';
-                } else {
-                    const originalFg = invertCheckbox.getAttribute('data-original-fg');
-                    const originalBg = invertCheckbox.getAttribute('data-original-bg');
-                    if (originalFg) qrColor.value = originalFg;
-                    if (originalBg) qrBgColor.value = originalBg;
-                }
-                
-                if (qrCodeInstance) {
-                    const activeTabId = document.querySelector('.tab-btn.active').getAttribute('data-tab');
-                    const content = getContentForQR(activeTabId);
-                    if (content) {
-                        generateQRCode(content);
-                    }
-                }
-            });
-        }
     }
     
     // Tab switching
@@ -215,34 +204,53 @@ document.addEventListener('DOMContentLoaded', () => {
             const activeTabId = document.querySelector('.tab-btn.active').getAttribute('data-tab');
             const svgData = new XMLSerializer().serializeToString(svgElement);
             
-            // Safari/iOS workaround
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || 
-                             /iPad|iPhone|iPod/.test(navigator.userAgent);
-            
-            if (isSafari) {
-                // For Safari: Use data URL approach
+            try {
                 const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const reader = new FileReader();
-                reader.onload = function(e) {
+                const fileName = `qrcode-${activeTabId}-${new Date().getTime()}.svg`;
+                
+                // Try the standard modern approach first
+                if (navigator.msSaveBlob) {
+                    // IE/Edge specific method
+                    navigator.msSaveBlob(svgBlob, fileName);
+                } else if ('download' in document.createElement('a')) {
+                    // Chrome, Firefox, Opera, Safari >10
                     const link = document.createElement('a');
-                    link.download = `qrcode-${activeTabId}-${new Date().getTime()}.svg`;
-                    link.href = e.target.result;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                };
-                reader.readAsDataURL(svgBlob);
-            } else {
-                // For other browsers: Use blob URL approach
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const svgUrl = URL.createObjectURL(svgBlob);
-                const link = document.createElement('a');
-                link.download = `qrcode-${activeTabId}-${new Date().getTime()}.svg`;
-                link.href = svgUrl;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(svgUrl);
+                    link.download = fileName;
+                    
+                    // Check if Safari version needs special handling
+                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || 
+                                   /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    
+                    if (isSafari) {
+                        // Safari needs data URL approach
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            link.href = e.target.result;
+                            document.body.appendChild(link);
+                            link.click();
+                            setTimeout(() => {
+                                document.body.removeChild(link);
+                            }, 100);
+                        };
+                        reader.readAsDataURL(svgBlob);
+                    } else {
+                        // Other browsers can use blob URL
+                        const svgUrl = URL.createObjectURL(svgBlob);
+                        link.href = svgUrl;
+                        document.body.appendChild(link);
+                        link.click();
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(svgUrl);
+                        }, 100);
+                    }
+                } else {
+                    // Fallback - open in new window
+                    window.open("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgData));
+                }
+            } catch (error) {
+                console.error('Failed to download SVG:', error);
+                alert('Failed to download SVG. Try a different browser.');
             }
         }
     });
@@ -382,6 +390,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (!ssid) return null;
                 
+                // Password validation
+                if (security !== 'nopass' && !password) {
+                    alert('Password is required for ' + security + ' encryption.');
+                    return null;
+                }
+                
                 // Format according to WiFi Network config format
                 let wifiString = 'WIFI:';
                 wifiString += `S:${ssid};`;
@@ -410,6 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if QRCode library is loaded
         if (typeof QRCode === 'undefined') {
             qrContainer.innerHTML = '<div class="error-message">QR Code library failed to load. Please check your internet connection and refresh the page.</div>';
+            disableActionButtons();
             return;
         }
         
@@ -434,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enableActionButtons();
         } catch (error) {
             console.error('Failed to generate QR code:', error);
-            qrContainer.innerHTML = '<div class="error-message">Failed to generate QR code. Please try again.</div>';
+            qrContainer.innerHTML = '<div class="error-message">Failed to generate QR code: ' + (error.message || 'Unknown error') + '</div>';
             disableActionButtons();
         }
     }

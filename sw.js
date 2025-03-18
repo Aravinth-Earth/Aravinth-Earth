@@ -52,7 +52,23 @@ self.addEventListener('fetch', event => {
                         })
                         .catch(error => {
                             console.error('Fetch failed:', error);
-                            // No specific fallback here as the HTML will handle the CDN failure
+                            
+                            // Try to return the local fallback file instead of the CDN resource
+                            return caches.match('/w/qr/2025_03_18_qrcode.mini.js')
+                                .then(fallbackResponse => {
+                                    if (fallbackResponse) {
+                                        return fallbackResponse;
+                                    }
+                                    
+                                    // If we don't have the fallback cached either, create a simple error response
+                                    return new Response(
+                                        'console.error("Failed to load QR code library");', 
+                                        { 
+                                            status: 200, 
+                                            headers: {'Content-Type': 'application/javascript'} 
+                                        }
+                                    );
+                                });
                         });
                 })
         );

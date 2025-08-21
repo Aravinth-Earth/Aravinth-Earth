@@ -1,15 +1,20 @@
 # Expense Splitter 💰
 
-A modern, responsive web application for splitting expenses fairly among group members during trips or shared activities. Built with Vue.js 3, Quasar Framework, and powered by IndexedDB for offline storage.
+A modern, responsive web application for splitting expenses fairly among group members during trips or shared activities. Built with Vanilla JavaScript and powered by localStorage for offline storage.
 
 ## ✨ Features
 
 ### Core Functionality
-- **Trip Management**: Create and manage multiple trips/groups
-- **Member Management**: Add/edit group members with custom avatars
+- **Trip Management**: Create and manage trips/groups
+- **Member Management**: Add/edit group members
 - **Expense Tracking**: Record expenses with detailed split options
-- **Real-time Calculations**: Live balance updates and settlement suggestions
+- **Real-time Calculations**: Live settlement calculations and suggestions
 - **Smart Settlements**: Minimize transactions with optimized payment suggestions
+
+### Enhanced Analytics
+- **Dual Chart Views**: Toggle between "Expenses Paid" and "Expenses Incurred" per person
+- **Consolidated Settlement Overview**: Single unified view showing both balances and settlement suggestions
+- **Real-time Balance Tracking**: Live updates of who owes what to whom
 
 ### Split Options
 - **Payment Modes**: Single payer or multiple payers
@@ -20,34 +25,30 @@ A modern, responsive web application for splitting expenses fairly among group m
   - Share-based splits
 
 ### Data Management
-- **Offline First**: Works completely offline with IndexedDB
+- **Offline First**: Works completely offline with localStorage
 - **Import/Export**: JSON backup and restore functionality
 - **Data Persistence**: Automatic local data caching
-- **Multiple Trips**: Support for concurrent trip management
 
 ### User Experience
 - **Responsive Design**: Optimized for mobile to desktop
-- **Dark Theme Ready**: Modern dark theme support
-- **Intuitive Interface**: Step-by-step expense entry wizard
+- **Dark Theme**: Modern dark theme interface
+- **Intuitive Interface**: Step-by-step expense entry
 - **Real-time Updates**: Live balance calculations
-- **Visual Charts**: Balance overview with Chart.js
+- **Visual Charts**: Dual-view expense analysis with Chart.js
 
 ## 🚀 Technology Stack
 
 ### Frontend Framework
-- **Vue.js 3**: Composition API for reactive components
-- **Quasar Framework**: Material Design UI components
-- **Chart.js**: Data visualization for balance charts
+- **Vanilla JavaScript**: Pure JavaScript with ES6+ features
+- **Chart.js**: Data visualization for expense analysis
 
 ### Data & Storage
-- **IndexedDB**: Client-side database via Dexie.js
+- **localStorage**: Client-side data storage
 - **JSON Import/Export**: Portable data format
-- **Local Storage**: Settings and preferences
 
 ### Build & Deployment
 - **Static Site**: No server required
 - **CDN Dependencies**: Minimal setup, fast loading
-- **Progressive Enhancement**: Works with JavaScript disabled (basic functionality)
 
 ## 📱 Responsive Design
 

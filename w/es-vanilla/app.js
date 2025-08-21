@@ -62,6 +62,7 @@ function init() {
     // Calculate and display balances if we have data
     if (expenses.length > 0) {
         calculateAndDisplayBalances();
+        setupChartControls(); // Initialize chart controls
     }
     
     console.log('✅ App initialized successfully');
@@ -308,17 +309,32 @@ function showTripView() {
         elements.expensesSection.style.display = 'block';
         renderExpenses();
         
-        // Show live sections
-        document.getElementById('balance-overview').style.display = 'block';
-        document.getElementById('settlements-section').style.display = 'block';
-        document.getElementById('chart-section').style.display = 'block';
+        // Calculate and display balances/settlements
+        calculateAndDisplayBalances();
+        
+        // Show consolidated settlement section
+        const settlementOverview = document.getElementById('settlement-overview');
+        const chartSection = document.getElementById('chart-section');
+        
+        if (settlementOverview) {
+            settlementOverview.style.display = 'block';
+        }
+        if (chartSection) {
+            chartSection.style.display = 'block';
+        }
     } else {
         elements.expensesSection.style.display = 'none';
         
-        // Hide live sections
-        document.getElementById('balance-overview').style.display = 'none';
-        document.getElementById('settlements-section').style.display = 'none';
-        document.getElementById('chart-section').style.display = 'none';
+        // Hide settlement and chart sections
+        const settlementOverview = document.getElementById('settlement-overview');
+        const chartSection = document.getElementById('chart-section');
+        
+        if (settlementOverview) {
+            settlementOverview.style.display = 'none';
+        }
+        if (chartSection) {
+            chartSection.style.display = 'none';
+        }
     }
 }
 
@@ -1157,45 +1173,76 @@ function calculateAndDisplayBalances() {
         });
     });
     
-    displayBalances(balances);
-    calculateSettlements(balances);
+    displayConsolidatedSettlement(balances);
     updateExpenseChart();
 }
 
-function displayBalances(balances) {
-    const container = document.getElementById('balance-overview');
-    const balanceGrid = document.getElementById('balance-cards');
+function displayConsolidatedSettlement(balances) {
+    console.log('💸 Displaying consolidated settlement');
     
-    if (!balanceGrid) {
-        console.error('Balance grid element not found');
+    // Calculate settlements
+    const settlements = calculateOptimalSettlements(balances);
+    
+    // Display settlements list
+    const settlementsList = document.getElementById('settlements-list');
+    if (!settlementsList) {
+        console.error('Settlements list element not found');
         return;
     }
     
-    balanceGrid.innerHTML = '';
+    settlementsList.innerHTML = '';
     
-    Object.entries(balances).forEach(([member, balance]) => {
-        const balanceCard = document.createElement('div');
-        balanceCard.className = `balance-card ${balance >= 0 ? 'positive' : 'negative'}`;
-        
-        balanceCard.innerHTML = `
-            <div class="balance-name">${member}</div>
-            <div class="balance-amount ${balance >= 0 ? 'positive' : 'negative'}">
-                ${formatCurrency(Math.abs(balance), currentTrip.currency)}
-            </div>
-            <div class="balance-status">
-                ${balance >= 0 ? 'Gets back' : 'Owes'}
-            </div>
-        `;
-        
-        balanceGrid.appendChild(balanceCard);
-    });
+    if (settlements.length === 0) {
+        settlementsList.innerHTML = '<p style="text-align: center; color: #28a745; font-weight: bold; padding: 20px;">🎉 All settled up!</p>';
+    } else {
+        settlements.forEach(settlement => {
+            const settlementItem = document.createElement('div');
+            settlementItem.className = 'settlement-item';
+            
+            settlementItem.innerHTML = `
+                <div class="settlement-text">
+                    <strong>${settlement.from}</strong> owes <strong>${settlement.to}</strong>
+                    <span class="settlement-amount">${formatCurrency(settlement.amount, currentTrip.currency)}</span>
+                </div>
+            `;
+            
+            settlementsList.appendChild(settlementItem);
+        });
+    }
     
-    container.style.display = 'block';
+    // Display balance summary
+    displayBalanceSummary(balances);
+    
+    const settlementOverview = document.getElementById('settlement-overview');
+    if (settlementOverview) {
+        settlementOverview.style.display = 'block';
+    }
 }
 
-function calculateSettlements(balances) {
-    console.log('💸 Calculating settlements');
+function displayBalanceSummary(balances) {
+    const balanceSummary = document.getElementById('balance-summary');
+    if (!balanceSummary) return;
     
+    let summaryHTML = '<h4>💰 Balance Summary</h4>';
+    
+    Object.entries(balances).forEach(([member, balance]) => {
+        const balanceClass = balance > 0.01 ? 'positive' : balance < -0.01 ? 'negative' : 'zero';
+        const balanceText = balance > 0.01 ? 'gets back' : balance < -0.01 ? 'owes' : 'settled';
+        
+        summaryHTML += `
+            <div class="balance-item">
+                <span class="balance-name">${member}</span>
+                <span class="balance-amount ${balanceClass}">
+                    ${balanceClass === 'zero' ? 'Settled' : formatCurrency(Math.abs(balance), currentTrip.currency)}
+                </span>
+            </div>
+        `;
+    });
+    
+    balanceSummary.innerHTML = summaryHTML;
+}
+
+function calculateOptimalSettlements(balances) {
     // Separate creditors and debtors
     const creditors = [];
     const debtors = [];
@@ -1234,49 +1281,20 @@ function calculateSettlements(balances) {
         if (debtor.amount < 0.01) debtors.shift();
     }
     
-    displaySettlements(settlements);
-}
-
-function displaySettlements(settlements) {
-    const container = document.getElementById('settlements-section');
-    const settlementsList = document.getElementById('settlements-list');
-    
-    if (!settlementsList) {
-        console.error('Settlements list element not found');
-        return;
-    }
-    
-    settlementsList.innerHTML = '';
-    
-    if (settlements.length === 0) {
-        settlementsList.innerHTML = '<p style="text-align: center; color: #28a745; font-weight: bold;">🎉 All settled up!</p>';
-        container.style.display = 'block';
-        return;
-    }
-    
-    settlements.forEach(settlement => {
-        const settlementItem = document.createElement('div');
-        settlementItem.className = 'settlement-item';
-        
-        settlementItem.innerHTML = `
-            <div class="settlement-text">
-                <strong>${settlement.from}</strong> owes <strong>${settlement.to}</strong>
-                <span class="settlement-amount">${formatCurrency(settlement.amount, currentTrip.currency)}</span>
-            </div>
-        `;
-        
-        settlementsList.appendChild(settlementItem);
-    });
-    
-    container.style.display = 'block';
+    return settlements;
 }
 
 // Chart Functions
 let expenseChart = null;
+let currentChartType = 'paid'; // 'paid' or 'incurred'
 
 function updateExpenseChart() {
+    console.log('📊 Updating expense chart, current type:', currentChartType);
     const canvas = document.getElementById('expense-chart');
-    if (!canvas) return;
+    if (!canvas) {
+        console.error('❌ Canvas element not found');
+        return;
+    }
     
     const ctx = canvas.getContext('2d');
     
@@ -1287,22 +1305,21 @@ function updateExpenseChart() {
     
     if (expenses.length === 0) {
         // Show empty state
-        document.getElementById('chart-section').style.display = 'none';
+        const chartSection = document.getElementById('chart-section');
+        if (chartSection) {
+            chartSection.style.display = 'none';
+        }
         return;
     }
     
-    // Calculate expense totals by member
-    const memberTotals = {};
-    members.forEach(member => {
-        memberTotals[member.name] = 0;
-    });
+    // Setup chart controls if not already done
+    setupChartControls();
     
-    expenses.forEach(expense => {
-        memberTotals[expense.paidBy] += expense.amount;
-    });
+    // Calculate data based on current chart type
+    const chartData = currentChartType === 'paid' ? getExpensesPaidData() : getExpensesIncurredData();
     
-    const labels = Object.keys(memberTotals);
-    const data = Object.values(memberTotals);
+    const labels = Object.keys(chartData);
+    const data = Object.values(chartData);
     const colors = [
         '#667eea', '#764ba2', '#f093fb', '#f5576c', 
         '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'
@@ -1313,7 +1330,7 @@ function updateExpenseChart() {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Expenses Paid',
+                label: currentChartType === 'paid' ? 'Expenses Paid' : 'Expenses Incurred',
                 data: data,
                 backgroundColor: colors.slice(0, labels.length),
                 borderWidth: 2,
@@ -1340,7 +1357,94 @@ function updateExpenseChart() {
         }
     });
     
-    document.getElementById('chart-section').style.display = 'block';
+    updateChartSummary(chartData);
+    
+    const chartSection = document.getElementById('chart-section');
+    if (chartSection) {
+        chartSection.style.display = 'block';
+    }
+}
+
+function getExpensesPaidData() {
+    const memberTotals = {};
+    members.forEach(member => {
+        memberTotals[member.name] = 0;
+    });
+    
+    expenses.forEach(expense => {
+        memberTotals[expense.paidBy] += expense.amount;
+    });
+    
+    return memberTotals;
+}
+
+function getExpensesIncurredData() {
+    const memberTotals = {};
+    members.forEach(member => {
+        memberTotals[member.name] = 0;
+    });
+    
+    expenses.forEach(expense => {
+        Object.entries(expense.splitData).forEach(([memberName, memberAmount]) => {
+            memberTotals[memberName] += memberAmount;
+        });
+    });
+    
+    return memberTotals;
+}
+
+function setupChartControls() {
+    console.log('🔧 Setting up chart controls');
+    const paidBtn = document.getElementById('chart-paid-btn');
+    const incurredBtn = document.getElementById('chart-incurred-btn');
+    
+    if (!paidBtn || !incurredBtn) {
+        console.error('❌ Chart control buttons not found:', { paidBtn: !!paidBtn, incurredBtn: !!incurredBtn });
+        return;
+    }
+    
+    // Remove existing listeners
+    paidBtn.removeEventListener('click', switchToPaidChart);
+    incurredBtn.removeEventListener('click', switchToIncurredChart);
+    
+    // Add event listeners
+    paidBtn.addEventListener('click', switchToPaidChart);
+    incurredBtn.addEventListener('click', switchToIncurredChart);
+}
+
+function switchToPaidChart() {
+    currentChartType = 'paid';
+    updateChartButtons();
+    updateExpenseChart();
+}
+
+function switchToIncurredChart() {
+    currentChartType = 'incurred';
+    updateChartButtons();
+    updateExpenseChart();
+}
+
+function updateChartButtons() {
+    const paidBtn = document.getElementById('chart-paid-btn');
+    const incurredBtn = document.getElementById('chart-incurred-btn');
+    
+    if (!paidBtn || !incurredBtn) return;
+    
+    paidBtn.classList.toggle('active', currentChartType === 'paid');
+    incurredBtn.classList.toggle('active', currentChartType === 'incurred');
+}
+
+function updateChartSummary(chartData) {
+    const summaryDiv = document.getElementById('chart-summary');
+    if (!summaryDiv) return;
+    
+    const total = Object.values(chartData).reduce((sum, amount) => sum + amount, 0);
+    const chartTypeLabel = currentChartType === 'paid' ? 'paid for expenses' : 'incurred in expenses';
+    
+    summaryDiv.innerHTML = `
+        Showing how much each person ${chartTypeLabel}. 
+        Total: ${formatCurrency(total, currentTrip.currency)}
+    `;
 }
 
 function displayExpenses() {

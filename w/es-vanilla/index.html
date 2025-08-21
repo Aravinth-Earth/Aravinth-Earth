@@ -49,22 +49,24 @@
             </div>
         </div>
 
-        <!-- Live Balance Overview - Auto-calculated -->
-        <div id="balance-overview" class="balance-section" style="display: none;">
-            <h3>💰 Live Balance Overview</h3>
-            <div id="balance-cards" class="balance-grid"></div>
+        <!-- Consolidated Settlement Overview -->
+        <div id="settlement-overview" class="settlement-section" style="display: none;">
+            <h3>💰 Settlement Overview</h3>
+            <div id="settlement-content">
+                <div id="settlements-list" class="settlements-list"></div>
+                <div id="balance-summary" class="balance-summary"></div>
+            </div>
         </div>
 
-        <!-- Live Settlement Suggestions - Auto-calculated -->
-        <div id="settlements-section" class="settlements-section" style="display: none;">
-            <h3>🔄 Settlement Suggestions</h3>
-            <div id="settlements-list" class="settlements-list"></div>
-        </div>
-
-        <!-- Live Expense Chart -->
+        <!-- Enhanced Expense Charts -->
         <div id="chart-section" class="chart-section" style="display: none;">
-            <h3>📊 Expense Breakdown</h3>
+            <h3>� Expense Analysis</h3>
+            <div class="chart-controls">
+                <button id="chart-paid-btn" class="btn btn-secondary chart-toggle active">Expenses Paid</button>
+                <button id="chart-incurred-btn" class="btn btn-secondary chart-toggle">Expenses Incurred</button>
+            </div>
             <canvas id="expense-chart" width="400" height="200"></canvas>
+            <div id="chart-summary" class="chart-summary"></div>
         </div>
 
         <!-- Welcome Screen -->

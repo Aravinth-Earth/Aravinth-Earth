@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Splitter - Vanilla</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>💰 Expense Splitter</h1>
+            <div class="header-actions">
+                <button id="export-data-btn" class="btn btn-secondary">📤 Export</button>
+                <button id="import-data-btn" class="btn btn-secondary">📥 Import</button>
+                <button id="new-trip-btn" class="btn btn-primary">New Trip</button>
+            </div>
+        </header>
+
+        <!-- Current Trip Display -->
+        <div id="current-trip" class="trip-card" style="display: none;">
+            <div class="trip-header">
+                <div>
+                    <h2 id="trip-name">Trip Name</h2>
+                    <p id="trip-dates">Start - End</p>
+                </div>
+                <button id="edit-trip-btn" class="btn btn-secondary">✏️ Edit</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="total-expenses">₹0.00</h3>
+                    <p>Total Expenses</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="member-count">0</h3>
+                    <p>Members</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="expense-count">0</h3>
+                    <p>Expenses</p>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="add-member-btn" class="btn btn-primary">Add Member</button>
+                <button id="add-expense-btn" class="btn btn-primary">Add Expense</button>
+            </div>
+        </div>
+
+        <!-- Live Balance Overview - Auto-calculated -->
+        <div id="balance-overview" class="balance-section" style="display: none;">
+            <h3>💰 Live Balance Overview</h3>
+            <div id="balance-cards" class="balance-grid"></div>
+        </div>
+
+        <!-- Live Settlement Suggestions - Auto-calculated -->
+        <div id="settlements-section" class="settlements-section" style="display: none;">
+            <h3>🔄 Settlement Suggestions</h3>
+            <div id="settlements-list" class="settlements-list"></div>
+        </div>
+
+        <!-- Live Expense Chart -->
+        <div id="chart-section" class="chart-section" style="display: none;">
+            <h3>📊 Expense Breakdown</h3>
+            <canvas id="expense-chart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="welcome">
+            <h2>Welcome to Expense Splitter</h2>
+            <p>Create a trip to start splitting expenses fairly among your group</p>
+            <button id="create-first-trip-btn" class="btn btn-primary btn-large">Create Your First Trip</button>
+        </div>
+
+        <!-- Members List -->
+        <div id="members-section" style="display: none;">
+            <h3>Members</h3>
+            <div id="members-list" class="members-grid"></div>
+        </div>
+
+        <!-- Expenses List -->
+        <div id="expenses-section" style="display: none;">
+            <h3>Recent Expenses</h3>
+            <div id="expenses-list" class="expenses-list"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Trip Creation/Editing -->
+    <div id="trip-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modal-title">Create Trip</h3>
+            <form id="trip-form">
+                <input type="text" id="trip-name-input" placeholder="Trip Name" required>
+                <input type="date" id="start-date" placeholder="Start Date (optional)">
+                <input type="date" id="end-date" placeholder="End Date (optional)">
+                <select id="currency">
+                    <option value="INR">INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                </select>
+                <textarea id="description" placeholder="Trip Description (optional)"></textarea>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-trip">Cancel</button>
+                    <button type="submit" id="save-trip">Save Trip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Member Addition -->
+    <div id="member-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Member</h3>
+            <form id="member-form">
+                <input type="text" id="member-name" placeholder="Member Name" required>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-member">Cancel</button>
+                    <button type="submit" id="save-member">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Expense Addition -->
+    <div id="expense-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Expense</h3>
+            <form id="expense-form">
+                <input type="text" id="expense-description" placeholder="What was this expense for?" required>
+                <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
+                <select id="expense-paid-by" required>
+                    <option value="">Who paid?</option>
+                </select>
+                <div class="split-options">
+                    <label>
+                        <input type="radio" name="split-type" value="equal" checked>
+                        Split equally among all members
+                    </label>
+                    <label>
+                        <input type="radio" name="split-type" value="custom">
+                        Custom split
+                    </label>
+                </div>
+                <div id="custom-split" style="display: none;">
+                    <p>Select who should pay for this expense:</p>
+                    <div id="member-checkboxes"></div>
+                </div>
+                <div class="datetime-container">
+                    <input type="date" id="expense-date" placeholder="Date (optional)">
+                    <input type="time" id="expense-time" placeholder="Time (optional)">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-expense">Cancel</button>
+                    <button type="submit" id="save-expense">Add Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+    <script src="app.js"></script>
+</body>
+</html>

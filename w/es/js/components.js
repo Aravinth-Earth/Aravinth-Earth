@@ -1,4 +1,5 @@
 // Vue.js Components for Expense Splitter
+console.log('Loading components.js');
 
 // Expense Card Component
 const ExpenseCard = {
@@ -328,15 +329,20 @@ const CreateTripDialog = {
         name: '',
         startDate: '',
         endDate: '',
-        currency: 'USD',
+        currency: 'INR',
         description: ''
       },
       currencies: [
-        { label: 'US Dollar', value: 'USD' },
-        { label: 'Euro', value: 'EUR' },
-        { label: 'British Pound', value: 'GBP' },
-        { label: 'Indian Rupee', value: 'INR' },
-        { label: 'Japanese Yen', value: 'JPY' }
+        { label: 'Indian Rupee (₹)', value: 'INR' },
+        { label: 'US Dollar ($)', value: 'USD' },
+        { label: 'Euro (€)', value: 'EUR' },
+        { label: 'British Pound (£)', value: 'GBP' },
+        { label: 'Japanese Yen (¥)', value: 'JPY' },
+        { label: 'Australian Dollar (A$)', value: 'AUD' },
+        { label: 'Canadian Dollar (C$)', value: 'CAD' },
+        { label: 'Singapore Dollar (S$)', value: 'SGD' },
+        { label: 'Swiss Franc (CHF)', value: 'CHF' },
+        { label: 'Chinese Yuan (¥)', value: 'CNY' }
       ]
     };
   },
@@ -424,7 +430,7 @@ const CreateTripDialog = {
           name: '',
           startDate: '',
           endDate: '',
-          currency: 'USD',
+          currency: 'INR',
           description: ''
         };
         

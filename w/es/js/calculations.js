@@ -1,4 +1,6 @@
 // Calculation utilities for expense splitting
+console.log('Loading calculations.js');
+
 class ExpenseCalculations {
   
   // Calculate member balances for a trip
@@ -216,13 +218,33 @@ class ExpenseCalculations {
     return Math.round(number * factor) / factor;
   }
 
-  static formatCurrency(amount, currency = 'USD') {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
+  static formatCurrency(amount, currency = 'INR') {
+    const currencySettings = {
+      'INR': { locale: 'en-IN', symbol: '₹' },
+      'USD': { locale: 'en-US', symbol: '$' },
+      'EUR': { locale: 'de-DE', symbol: '€' },
+      'GBP': { locale: 'en-GB', symbol: '£' },
+      'JPY': { locale: 'ja-JP', symbol: '¥' },
+      'AUD': { locale: 'en-AU', symbol: 'A$' },
+      'CAD': { locale: 'en-CA', symbol: 'C$' },
+      'SGD': { locale: 'en-SG', symbol: 'S$' },
+      'CHF': { locale: 'de-CH', symbol: 'CHF' },
+      'CNY': { locale: 'zh-CN', symbol: '¥' }
+    };
+
+    const setting = currencySettings[currency] || currencySettings['INR'];
+    
+    try {
+      return new Intl.NumberFormat(setting.locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: currency === 'JPY' ? 0 : 2,
+        maximumFractionDigits: currency === 'JPY' ? 0 : 2
+      }).format(amount);
+    } catch (error) {
+      console.warn('Currency formatting failed, using fallback:', error);
+      return `${setting.symbol}${amount.toFixed(currency === 'JPY' ? 0 : 2)}`;
+    }
   }
 
   static formatPercentage(percentage) {

@@ -44,9 +44,9 @@
                     <!-- No Trip State -->
                     <div v-if="!currentTrip" class="text-center q-pa-xl">
                         <q-icon name="luggage" size="100px" color="grey-5" />
-                        <h5 class="q-mt-md text-grey-7">No Active Trip</h5>
-                        <p class="text-grey-6">Create a new trip to start splitting expenses</p>
-                        <q-btn color="primary" icon="add" label="Create Trip" @click="showCreateTrip = true" />
+                        <h5 class="q-mt-md text-grey-7">Welcome to Expense Splitter</h5>
+                        <p class="text-grey-6">Create your trip to start splitting expenses fairly</p>
+                        <q-btn color="primary" icon="add" label="Create Trip" @click="showCreateTrip = true" size="lg" />
                     </div>
 
                     <!-- Trip Dashboard -->
@@ -170,12 +170,36 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.14.1/dist/quasar.umd.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.min.js"></script>
     
     <!-- App Scripts -->
+    <script>
+        // Debug logging
+        console.log('Starting Expense Splitter app...');
+        
+        // Check if required libraries are loaded
+        window.addEventListener('load', () => {
+            console.log('Window loaded');
+            console.log('Vue available:', !!window.Vue);
+            console.log('Quasar available:', !!window.Quasar);
+            console.log('Chart available:', !!window.Chart);
+            console.log('Dexie available:', !!window.Dexie);
+            
+            if (!window.Vue || !window.Quasar || !window.Dexie) {
+                console.error('Required libraries not loaded!');
+                document.getElementById('app').innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <h3>Loading Error</h3>
+                        <p>Required libraries failed to load. Please check your internet connection and refresh the page.</p>
+                        <button onclick="location.reload()">Refresh Page</button>
+                    </div>
+                `;
+            }
+        });
+    </script>
     <script src="js/database.js"></script>
     <script src="js/components.js"></script>
     <script src="js/calculations.js"></script>

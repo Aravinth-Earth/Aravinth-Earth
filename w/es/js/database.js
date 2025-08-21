@@ -1,7 +1,10 @@
 // Database layer using Dexie.js for IndexedDB
+console.log('Loading database.js');
+
 class ExpenseSplitterDB extends Dexie {
   constructor() {
     super('ExpenseSplitterDB');
+    console.log('Initializing ExpenseSplitterDB');
     
     this.version(1).stores({
       trips: '++id, name, startDate, endDate, currency, createdAt, updatedAt',
@@ -13,6 +16,7 @@ class ExpenseSplitterDB extends Dexie {
 }
 
 // Initialize database
+console.log('Creating database instance');
 const db = new ExpenseSplitterDB();
 
 // Database operations
@@ -214,9 +218,10 @@ db.ready(async () => {
   // Set default settings if they don't exist
   const currency = await DatabaseService.getSetting('currency');
   if (!currency) {
-    await DatabaseService.setSetting('currency', 'USD');
+    console.log('Setting default settings');
+    await DatabaseService.setSetting('currency', 'INR');
     await DatabaseService.setSetting('theme', 'light');
-    await DatabaseService.setSetting('dateFormat', 'MM/DD/YYYY');
+    await DatabaseService.setSetting('dateFormat', 'DD/MM/YYYY');
     await DatabaseService.setSetting('precision', 2);
   }
 });

@@ -1,4 +1,6 @@
 // Main Vue.js Application for Expense Splitter
+console.log('Loading app.js');
+
 const { createApp } = Vue;
 
 const ExpenseSplitterApp = {
@@ -21,9 +23,9 @@ const ExpenseSplitterApp = {
       
       // Settings
       settings: {
-        currency: 'USD',
+        currency: 'INR',
         theme: 'light',
-        dateFormat: 'MM/DD/YYYY'
+        dateFormat: 'DD/MM/YYYY'
       }
     };
   },
@@ -44,23 +46,34 @@ const ExpenseSplitterApp = {
   },
   
   async mounted() {
+    console.log('App mounted, initializing...');
     try {
+      console.log('Loading settings...');
       await this.loadSettings();
+      console.log('Loading trips...');
       await this.loadTrips();
+      console.log('Loading current trip...');
       await this.loadCurrentTrip();
+      console.log('App initialization complete');
       this.loading = false;
     } catch (error) {
       console.error('Failed to initialize app:', error);
       this.loading = false;
+      this.$q?.notify({
+        type: 'negative',
+        message: 'Failed to initialize application'
+      });
     }
   },
   
   methods: {
     // Data loading methods
     async loadSettings() {
-      this.settings.currency = await DatabaseService.getSetting('currency', 'USD');
+      console.log('DatabaseService available:', !!window.DatabaseService);
+      this.settings.currency = await DatabaseService.getSetting('currency', 'INR');
       this.settings.theme = await DatabaseService.getSetting('theme', 'light');
-      this.settings.dateFormat = await DatabaseService.getSetting('dateFormat', 'MM/DD/YYYY');
+      this.settings.dateFormat = await DatabaseService.getSetting('dateFormat', 'DD/MM/YYYY');
+      console.log('Settings loaded:', this.settings);
     },
     
     async loadTrips() {
@@ -238,6 +251,7 @@ const AddExpenseDialog = {
         amount: 0,
         category: '',
         date: new Date().toISOString().split('T')[0],
+        time: '',
         paidBy: {
           mode: 'single',
           memberId: null,
@@ -253,11 +267,14 @@ const AddExpenseDialog = {
       },
       categories: [
         'Food & Dining',
-        'Transportation',
+        'Transportation', 
         'Accommodation',
         'Entertainment',
         'Shopping',
+        'Groceries',
         'Utilities',
+        'Medical',
+        'Fuel',
         'Other'
       ]
     };
@@ -290,10 +307,16 @@ const AddExpenseDialog = {
                 
                 <q-input
                   v-model="expenseData.date"
-                  label="Date"
+                  label="Date (optional)"
                   type="date"
                   filled
-                  required
+                />
+                
+                <q-input
+                  v-model="expenseData.time"
+                  label="Time (optional)"
+                  type="time"
+                  filled
                 />
                 
                 <q-select
@@ -301,6 +324,12 @@ const AddExpenseDialog = {
                   label="Category"
                   :options="categories"
                   filled
+                  use-input
+                  hide-selected
+                  fill-input
+                  input-debounce="0"
+                  @new-value="createCategory"
+                  hint="Select from list or type a custom category"
                 />
               </q-form>
               
@@ -458,6 +487,15 @@ const AddExpenseDialog = {
     formatCurrency(amount) {
       return ExpenseCalculations.formatCurrency(amount);
     },
+    createCategory(val, done) {
+      // Allow users to create custom categories
+      if (val.length > 0) {
+        if (!this.categories.includes(val)) {
+          this.categories.push(val);
+        }
+        done(val, 'toggle');
+      }
+    },
     getPaidByPreview() {
       if (this.expenseData.paidBy.mode === 'single') {
         const member = this.members.find(m => m.id === this.expenseData.paidBy.memberId);
@@ -511,6 +549,7 @@ const AddExpenseDialog = {
         amount: 0,
         category: '',
         date: new Date().toISOString().split('T')[0],
+        time: '',
         paidBy: {
           mode: 'single',
           memberId: null,
@@ -551,17 +590,29 @@ const SettingsDialog = {
 };
 
 // Create and mount the Vue app
+console.log('Creating Vue app...');
 const app = createApp(ExpenseSplitterApp);
 
 // Use Quasar
+console.log('Configuring Quasar...');
 app.use(Quasar, {
   config: {
-    dark: false // or 'auto' or true
+    dark: false, // or 'auto' or true
+    notify: {
+      position: 'top'
+    }
   }
 });
 
 // Register additional components
+console.log('Registering components...');
 app.component('AddExpenseDialog', AddExpenseDialog);
 app.component('SettingsDialog', SettingsDialog);
 
+// Global error handler
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Vue error:', err, info);
+};
+
+console.log('Mounting app...');
 app.mount('#app');

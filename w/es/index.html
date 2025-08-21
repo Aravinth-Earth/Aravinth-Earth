@@ -42,11 +42,10 @@
             <!-- Main Content -->
             <q-page-container>
                 <q-page class="q-pa-md">
-                    <!-- MINIMAL TEST -->
-                    <div class="text-h4">HELLO WORLD TEST</div>
-                    <div>activeTab: {{ activeTab }}</div>
-                    <div>debugCounter: {{ debugCounter }}</div>
-                    <q-btn @click="debugCounter++" label="Click Test" color="primary" />
+                    <!-- DEBUG: Basic functionality test -->
+                    <div class="q-pa-sm bg-grey-3 q-mb-md" style="border-radius: 4px;">
+                        <div class="text-caption">Debug: {{ currentTrip ? 'Trip Loaded: ' + currentTrip.name : 'No Trip' }}</div>
+                    </div>
                     
                     <!-- Test if condition logic -->
                     <div v-if="!currentTrip" class="text-center q-pa-xl">
@@ -59,17 +58,17 @@
                         <!-- Trip Header -->
                         <div class="row q-mb-lg">
                             <div class="col-12">
-                                <q-card flat bordered class="bg-grey-1">
-                                    <q-card-section>
+                                <q-card flat bordered class="bg-white shadow-2">
+                                    <q-card-section class="bg-primary text-white">
                                         <div class="row items-center">
                                             <div class="col">
-                                                <h6 class="q-ma-none">{{ currentTrip?.name || 'Loading...' }}</h6>
-                                                <p class="text-caption text-grey-6 q-ma-none">
+                                                <h6 class="q-ma-none text-white">{{ currentTrip?.name || 'Loading...' }}</h6>
+                                                <p class="text-caption text-blue-2 q-ma-none">
                                                     {{ currentTrip?.startDate || 'N/A' }} - {{ currentTrip?.endDate || 'N/A' }}
                                                 </p>
                                             </div>
                                             <div class="col-auto">
-                                                <q-btn flat round icon="edit" @click="editTrip" />
+                                                <q-btn flat round icon="edit" color="white" @click="editTrip" />
                                             </div>
                                         </div>
                                     </q-card-section>

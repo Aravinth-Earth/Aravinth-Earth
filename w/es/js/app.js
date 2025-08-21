@@ -18,6 +18,9 @@ const ExpenseSplitterApp = {
       showAddExpense: false,
       showSettings: false,
       
+      // Debug
+      debugCounter: 0,
+      
       // Loading states
       loading: true,
       

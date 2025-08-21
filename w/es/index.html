@@ -113,6 +113,8 @@
 
                         <div class="q-pa-md">
                             <div class="text-body2">Debug: Current activeTab = {{ activeTab }}</div>
+                            <div class="text-body2">Debug: Click counter = {{ debugCounter || 0 }}</div>
+                            <q-btn @click="debugCounter = (debugCounter || 0) + 1" label="Test Vue Reactivity" color="warning" size="sm" />
                         </div>
 
                         <!-- Tab Panels -->

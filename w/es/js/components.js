@@ -558,140 +558,23 @@ const AddMemberDialog = {
   }
 };
 
-// Edit Trip Dialog Component
+// Edit Trip Dialog Component - MINIMAL TEST VERSION
 const EditTripDialog = {
   props: ['modelValue', 'trip'],
   emits: ['update:modelValue', 'updated'],
-  data() {
-    return {
-      tripData: {
-        name: '',
-        startDate: '',
-        endDate: '',
-        currency: 'INR',
-        description: ''
-      }
-    };
-  },
-  watch: {
-    trip: {
-      handler(newTrip) {
-        console.log('EditTripDialog: Trip data changed:', newTrip);
-        if (newTrip) {
-          this.tripData = { ...newTrip };
-        }
-      },
-      immediate: true
-    },
-    modelValue(newVal) {
-      console.log('EditTripDialog: Dialog visibility changed:', newVal);
-    }
-  },
   template: `
-    <q-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" persistent>
-      <q-card style="min-width: 400px;">
+    <q-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)">
+      <q-card style="min-width: 300px;">
         <q-card-section>
-          <div class="text-h6">Edit Trip</div>
+          <div class="text-h6">EDIT DIALOG TEST</div>
+          <div>Trip: {{ trip?.name || 'No trip' }}</div>
         </q-card-section>
-        
-        <q-card-section>
-          <div class="q-gutter-md">
-            <q-input
-              v-model="tripData.name"
-              label="Trip Name *"
-              outlined
-              :rules="[val => !!val || 'Trip name is required']"
-            />
-            
-            <div class="row q-col-gutter-md">
-              <div class="col">
-                <q-input
-                  v-model="tripData.startDate"
-                  label="Start Date *"
-                  type="date"
-                  outlined
-                  :rules="[val => !!val || 'Start date is required']"
-                />
-              </div>
-              <div class="col">
-                <q-input
-                  v-model="tripData.endDate"
-                  label="End Date *"
-                  type="date"
-                  outlined
-                  :rules="[val => !!val || 'End date is required']"
-                />
-              </div>
-            </div>
-            
-            <q-select
-              v-model="tripData.currency"
-              label="Currency"
-              outlined
-              :options="['INR', 'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'SGD', 'CHF', 'CNY']"
-            />
-            
-            <q-input
-              v-model="tripData.description"
-              label="Description"
-              type="textarea"
-              outlined
-              rows="3"
-            />
-          </div>
-        </q-card-section>
-        
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" @click="$emit('update:modelValue', false)" />
-          <q-btn color="primary" label="Update Trip" @click="updateTrip" />
+          <q-btn flat label="Close" @click="$emit('update:modelValue', false)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
-  `,
-  methods: {
-    async updateTrip() {
-      console.log('EditTripDialog: Update trip clicked:', this.tripData);
-      
-      if (!this.tripData.name || !this.tripData.startDate || !this.tripData.endDate) {
-        console.log('EditTripDialog: Validation failed - missing required fields');
-        this.$q.notify({
-          type: 'negative',
-          message: 'Please fill in all required fields'
-        });
-        return;
-      }
-      
-      if (new Date(this.tripData.startDate) > new Date(this.tripData.endDate)) {
-        console.log('EditTripDialog: Validation failed - invalid date range');
-        this.$q.notify({
-          type: 'negative',
-          message: 'End date must be after start date'
-        });
-        return;
-      }
-      
-      try {
-        console.log('EditTripDialog: Updating trip in database...');
-        await DatabaseService.updateTrip(this.tripData);
-        
-        console.log('EditTripDialog: Trip updated successfully, emitting updated event');
-        this.$emit('updated', this.tripData);
-        this.$emit('update:modelValue', false);
-        
-        this.$q.notify({
-          type: 'positive',
-          message: 'Trip updated successfully!'
-        });
-        
-      } catch (error) {
-        console.error('EditTripDialog: Error updating trip:', error);
-        this.$q.notify({
-          type: 'negative',
-          message: 'Error updating trip: ' + error.message
-        });
-      }
-    }
-  }
+  `
 };
 
 // Export components globally

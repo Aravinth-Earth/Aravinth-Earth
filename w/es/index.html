@@ -45,6 +45,8 @@
                     <!-- DEBUG: Basic functionality test -->
                     <div class="q-pa-sm bg-grey-3 q-mb-md" style="border-radius: 4px;">
                         <div class="text-caption">Debug: {{ currentTrip ? 'Trip Loaded: ' + currentTrip.name : 'No Trip' }}</div>
+                        <div class="text-caption">showEditTrip: {{ showEditTrip }}</div>
+                        <div class="text-caption">EditTripDialog Available: {{ $options.components['edit-trip-dialog'] ? 'YES' : 'NO' }}</div>
                     </div>
                     
                     <!-- Test if condition logic -->
@@ -196,8 +198,19 @@
         <create-trip-dialog v-model="showCreateTrip" @created="onTripCreated" />
         <add-member-dialog v-model="showAddMember" @added="onMemberAdded" />
         <add-expense-dialog v-model="showAddExpense" :members="currentTrip?.members || []" @added="onExpenseAdded" />
-        <edit-trip-dialog v-model="showEditTrip" :trip="currentTrip" @updated="onTripUpdated" />
+        <!-- DEBUG: Force visible edit dialog for testing -->
+        <edit-trip-dialog 
+          v-model="showEditTrip" 
+          :trip="currentTrip" 
+          @updated="onTripUpdated"
+          style="z-index: 9999 !important;" 
+        />
         <settings-dialog v-model="showSettings" />
+        
+        <!-- DEBUG: Test if dialog is rendered but hidden -->
+        <div v-if="showEditTrip" style="position: fixed; top: 10px; right: 10px; background: red; color: white; padding: 10px; z-index: 10000;">
+          EDIT DIALOG SHOULD BE VISIBLE!
+        </div>
     </div>
 
     <!-- Scripts -->

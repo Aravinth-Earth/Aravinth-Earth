@@ -235,6 +235,7 @@ const ExpenseSplitterApp = {
     editTrip() {
       console.log('APP: Edit trip button clicked');
       console.log('APP: Current trip data:', this.currentTrip);
+      console.log('APP: showEditTrip BEFORE:', this.showEditTrip);
       
       if (!this.currentTrip) {
         console.error('APP: No current trip to edit');
@@ -247,6 +248,13 @@ const ExpenseSplitterApp = {
       
       console.log('APP: Opening edit trip dialog');
       this.showEditTrip = true;
+      console.log('APP: showEditTrip AFTER:', this.showEditTrip);
+      
+      // Force Vue to update the DOM
+      this.$nextTick(() => {
+        console.log('APP: NextTick - showEditTrip:', this.showEditTrip);
+        console.log('APP: NextTick - DOM should be updated now');
+      });
     },
     
     // Handle trip update from dialog
@@ -672,6 +680,11 @@ app.use(Quasar, {
 
 // Register additional components
 console.log('Registering components...');
+console.log('Available components:', {
+  EditTripDialog: !!window.EditTripDialog,
+  CreateTripDialog: !!window.CreateTripDialog,
+  AddMemberDialog: !!window.AddMemberDialog
+});
 app.component('add-expense-dialog', AddExpenseDialog);
 app.component('settings-dialog', SettingsDialog);
 

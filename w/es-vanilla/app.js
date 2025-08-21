@@ -32,6 +32,7 @@ const elements = {
     // Modals
     tripModal: document.getElementById('trip-modal'),
     memberModal: document.getElementById('member-modal'),
+    expenseModal: document.getElementById('expense-modal'),
     
     // Forms
     tripForm: document.getElementById('trip-form'),
@@ -45,6 +46,9 @@ const elements = {
 // Initialize App
 function init() {
     console.log('📱 Initializing Expense Splitter App');
+    
+    // Ensure all modals are closed on startup
+    closeModals();
     
     // Load data from localStorage
     loadData();
@@ -97,6 +101,16 @@ function setupEventListeners() {
         });
     });
     
+    // Expense amount change handler (for updating totals in shares and custom)
+    document.getElementById('expense-amount').addEventListener('input', function() {
+        const splitType = document.querySelector('input[name="split-type"]:checked')?.value;
+        if (splitType === 'shares') {
+            updateSharesTotal();
+        } else if (splitType === 'custom') {
+            updateCustomTotal();
+        }
+    });
+    
     // Modal close buttons
     document.querySelectorAll('.close').forEach(closeBtn => {
         closeBtn.addEventListener('click', closeModals);
@@ -139,7 +153,7 @@ function openTripModal(isEdit = false) {
         form.dataset.mode = 'create';
     }
     
-    modal.style.display = 'block';
+    modal.classList.add('show');
     console.log('✅ Trip modal opened');
 }
 
@@ -197,8 +211,11 @@ function openMemberModal() {
         return;
     }
     
-    elements.memberModal.style.display = 'block';
+    elements.memberModal.classList.add('show');
     elements.memberForm.reset();
+    
+    // Debug: Confirm modal is shown
+    console.log('Member modal opened, visible:', elements.memberModal.classList.contains('show'));
 }
 
 function handleMemberSubmit(e) {
@@ -313,12 +330,24 @@ function renderMembers() {
     members.forEach(member => {
         const memberCard = document.createElement('div');
         memberCard.className = 'member-card';
+        
+        // Check if member is involved in any expense
+        const isInvolvedInExpenses = expenses.some(expense => 
+            expense.paidBy === member.name || expense.involvedMembers.includes(member.name)
+        );
+        
         memberCard.innerHTML = `
             <div class="member-info">
                 <h4>${member.name}</h4>
                 <p>Added ${new Date(member.addedAt).toLocaleDateString()}</p>
             </div>
-            <button class="btn btn-secondary" onclick="deleteMember(${member.id})">Remove</button>
+            <div class="member-actions">
+                <button class="btn btn-secondary btn-small" onclick="editMember(${member.id})">✏️ Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deleteMember(${member.id})" 
+                    ${isInvolvedInExpenses ? 'disabled title="Cannot delete: Member is involved in expenses"' : ''}>
+                    🗑️ Delete
+                </button>
+            </div>
         `;
         elements.membersList.appendChild(memberCard);
     });
@@ -332,12 +361,54 @@ function renderExpenses() {
     expenses.forEach(expense => {
         const expenseItem = document.createElement('div');
         expenseItem.className = 'expense-item';
+        
+        // Generate split info based on split type
+        let splitInfo = '';
+        switch (expense.splitType) {
+            case 'equal':
+                splitInfo = `Split equally among all members`;
+                break;
+            case 'select-equal':
+                splitInfo = `Split equally among: ${expense.involvedMembers.join(', ')}`;
+                break;
+            case 'percentage':
+                const percentages = expense.involvedMembers.map(member => {
+                    const percentage = ((expense.splitData[member] / expense.amount) * 100).toFixed(1);
+                    return `${member} (${percentage}%)`;
+                }).join(', ');
+                splitInfo = `Split by %: ${percentages}`;
+                break;
+            case 'shares':
+                const shares = expense.involvedMembers.map(member => {
+                    const amount = expense.splitData[member];
+                    return `${member} (${formatCurrency(amount, currentTrip.currency)})`;
+                }).join(', ');
+                splitInfo = `Split by shares: ${shares}`;
+                break;
+            case 'custom':
+                const amounts = expense.involvedMembers.map(member => {
+                    const amount = expense.splitData[member];
+                    return `${member} (${formatCurrency(amount, currentTrip.currency)})`;
+                }).join(', ');
+                splitInfo = `Custom split: ${amounts}`;
+                break;
+            default:
+                splitInfo = `Split among: ${expense.involvedMembers.join(', ')}`;
+        }
+        
         expenseItem.innerHTML = `
             <div class="expense-info">
                 <h4>${expense.description}</h4>
                 <p>Paid by ${expense.paidBy} • ${formatDate(expense.date)}${expense.time ? ` at ${expense.time}` : ''}</p>
+                <p class="expense-split-info">${splitInfo}</p>
             </div>
-            <div class="expense-amount">${formatCurrency(expense.amount, currentTrip.currency)}</div>
+            <div class="expense-right">
+                <div class="expense-amount">${formatCurrency(expense.amount, currentTrip.currency)}</div>
+                <div class="expense-actions">
+                    <button class="btn btn-secondary btn-small" onclick="editExpense(${expense.id})">✏️ Edit</button>
+                    <button class="btn btn-danger btn-small" onclick="deleteExpense(${expense.id})">🗑️ Delete</button>
+                </div>
+            </div>
         `;
         elements.expensesList.appendChild(expenseItem);
     });
@@ -366,14 +437,155 @@ function formatDate(dateString) {
 function deleteMember(memberId) {
     console.log('🗑️ Deleting member:', memberId);
     
-    const memberIndex = members.findIndex(m => m.id === memberId);
-    if (memberIndex > -1) {
-        const memberName = members[memberIndex].name;
-        members.splice(memberIndex, 1);
+    const member = members.find(m => m.id === memberId);
+    if (!member) return;
+    
+    // Check if member is involved in any expense
+    const isInvolvedInExpenses = expenses.some(expense => 
+        expense.paidBy === member.name || expense.involvedMembers.includes(member.name)
+    );
+    
+    if (isInvolvedInExpenses) {
+        showMessage('Cannot delete member: They are involved in existing expenses. Delete related expenses first.', 'error');
+        return;
+    }
+    
+    if (confirm(`Are you sure you want to delete ${member.name}?`)) {
+        const memberIndex = members.findIndex(m => m.id === memberId);
+        if (memberIndex > -1) {
+            members.splice(memberIndex, 1);
+            saveData();
+            updateDisplay();
+            showMessage(`${member.name} removed successfully!`, 'success');
+        }
+    }
+}
+
+function editMember(memberId) {
+    console.log('✏️ Editing member:', memberId);
+    
+    const member = members.find(m => m.id === memberId);
+    if (!member) return;
+    
+    const newName = prompt('Enter new name:', member.name);
+    if (newName && newName.trim() !== '' && newName !== member.name) {
+        // Check for duplicate names
+        if (members.find(m => m.name.toLowerCase() === newName.toLowerCase() && m.id !== memberId)) {
+            showMessage('Member with this name already exists', 'error');
+            return;
+        }
+        
+        const oldName = member.name;
+        member.name = newName.trim();
+        
+        // Update expenses that reference this member
+        expenses.forEach(expense => {
+            if (expense.paidBy === oldName) {
+                expense.paidBy = member.name;
+            }
+            if (expense.involvedMembers.includes(oldName)) {
+                const index = expense.involvedMembers.indexOf(oldName);
+                expense.involvedMembers[index] = member.name;
+            }
+        });
+        
         saveData();
         updateDisplay();
-        showMessage(`${memberName} removed successfully!`, 'success');
+        calculateAndDisplayBalances();
+        showMessage(`Member updated from ${oldName} to ${member.name}!`, 'success');
     }
+}
+
+function deleteExpense(expenseId) {
+    console.log('🗑️ Deleting expense:', expenseId);
+    
+    const expense = expenses.find(e => e.id === expenseId);
+    if (!expense) return;
+    
+    if (confirm(`Are you sure you want to delete the expense "${expense.description}"?`)) {
+        const expenseIndex = expenses.findIndex(e => e.id === expenseId);
+        if (expenseIndex > -1) {
+            expenses.splice(expenseIndex, 1);
+            saveData();
+            updateDisplay();
+            calculateAndDisplayBalances();
+            showMessage(`Expense "${expense.description}" deleted successfully!`, 'success');
+        }
+    }
+}
+
+function editExpense(expenseId) {
+    console.log('✏️ Editing expense:', expenseId);
+    
+    const expense = expenses.find(e => e.id === expenseId);
+    if (!expense) return;
+    
+    // Pre-fill the expense form with existing data
+    openExpenseModal();
+    
+    // Set the form to edit mode
+    const form = document.getElementById('expense-form');
+    form.dataset.mode = 'edit';
+    form.dataset.expenseId = expenseId;
+    
+    // Fill the form with existing values
+    document.getElementById('expense-description').value = expense.description;
+    document.getElementById('expense-amount').value = expense.amount;
+    document.getElementById('expense-paid-by').value = expense.paidBy;
+    document.getElementById('expense-date').value = expense.date;
+    document.getElementById('expense-time').value = expense.time || '';
+    
+    // Set split type and update options
+    const splitTypeRadio = document.querySelector(`input[name="split-type"][value="${expense.splitType}"]`);
+    if (splitTypeRadio) {
+        splitTypeRadio.checked = true;
+        updateSplitOptions(expense.splitType);
+        
+        // Pre-fill split data based on type
+        setTimeout(() => {
+            switch (expense.splitType) {
+                case 'select-equal':
+                    expense.involvedMembers.forEach(memberName => {
+                        const checkbox = document.querySelector(`[name="selected-members"][value="${memberName}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                    break;
+                    
+                case 'percentage':
+                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
+                        const percentage = (amount / expense.amount * 100).toFixed(1);
+                        const input = document.querySelector(`[name="percentage-${memberName}"]`);
+                        if (input) input.value = percentage;
+                    });
+                    updatePercentageTotal();
+                    break;
+                    
+                case 'shares':
+                    // Calculate shares from amounts (reverse engineering)
+                    const totalAmount = Object.values(expense.splitData).reduce((sum, amt) => sum + amt, 0);
+                    const baseShare = Math.min(...Object.values(expense.splitData));
+                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
+                        const shares = Math.round(amount / baseShare);
+                        const input = document.querySelector(`[name="shares-${memberName}"]`);
+                        if (input) input.value = shares;
+                    });
+                    updateSharesTotal();
+                    break;
+                    
+                case 'custom':
+                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
+                        const input = document.querySelector(`[name="custom-${memberName}"]`);
+                        if (input) input.value = amount.toFixed(2);
+                    });
+                    updateCustomTotal();
+                    break;
+            }
+        }, 100);
+    }
+    
+    // Change modal title and button text
+    elements.expenseModal.querySelector('h3').textContent = 'Edit Expense';
+    document.getElementById('save-expense').textContent = 'Update Expense';
 }
 
 function showMessage(text, type = 'success') {
@@ -396,9 +608,16 @@ function showMessage(text, type = 'success') {
 
 function closeModals() {
     console.log('❌ Closing all modals');
-    elements.tripModal.style.display = 'none';
-    elements.memberModal.style.display = 'none';
-    document.getElementById('expense-modal').style.display = 'none';
+    elements.tripModal.classList.remove('show');
+    elements.memberModal.classList.remove('show');
+    elements.expenseModal.classList.remove('show');
+    
+    // Debug: Log modal states
+    console.log('Modal states after close:', {
+        trip: elements.tripModal.classList.contains('show'),
+        member: elements.memberModal.classList.contains('show'),
+        expense: elements.expenseModal.classList.contains('show')
+    });
 }
 
 // Data Persistence
@@ -450,27 +669,32 @@ function openExpenseModal() {
         return;
     }
     
+    // Reset modal to add mode
+    const form = document.getElementById('expense-form');
+    form.reset();
+    delete form.dataset.mode;
+    delete form.dataset.expenseId;
+    
+    // Reset modal title and button text
+    elements.expenseModal.querySelector('h3').textContent = 'Add Expense';
+    document.getElementById('save-expense').textContent = 'Add Expense';
+    
+    // Populate the paid-by dropdown
     populateMemberCheckboxes();
-    document.getElementById('expense-modal').style.display = 'block';
+    
+    // Initialize split options (default to equal)
+    updateSplitOptions('equal');
+    
+    elements.expenseModal.classList.add('show');
 }
 
 function populateMemberCheckboxes() {
-    const container = document.getElementById('member-checkboxes');
     const paidBySelect = document.getElementById('expense-paid-by');
     
     // Clear existing options
-    container.innerHTML = '';
     paidBySelect.innerHTML = '<option value="">Who paid?</option>';
     
     members.forEach(member => {
-        // Add to checkboxes
-        const label = document.createElement('label');
-        label.innerHTML = `
-            <input type="checkbox" name="members" value="${member.name}" checked>
-            ${member.name}
-        `;
-        container.appendChild(label);
-        
         // Add to paid-by select
         const option = document.createElement('option');
         option.value = member.name;
@@ -480,12 +704,259 @@ function populateMemberCheckboxes() {
 }
 
 function updateSplitOptions(splitType) {
-    const customSplit = document.getElementById('custom-split');
+    const splitConfig = document.getElementById('split-config');
+    const sections = [
+        'select-members-section',
+        'percentage-split-section', 
+        'shares-split-section',
+        'custom-split-section'
+    ];
     
-    if (splitType === 'custom') {
-        customSplit.style.display = 'block';
+    // Hide all sections first
+    sections.forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    
+    if (splitType === 'equal') {
+        splitConfig.style.display = 'none';
     } else {
-        customSplit.style.display = 'none';
+        splitConfig.style.display = 'block';
+        
+        switch (splitType) {
+            case 'select-equal':
+                document.getElementById('select-members-section').style.display = 'block';
+                populateSelectMemberCheckboxes();
+                break;
+            case 'percentage':
+                document.getElementById('percentage-split-section').style.display = 'block';
+                populatePercentageInputs();
+                break;
+            case 'shares':
+                document.getElementById('shares-split-section').style.display = 'block';
+                populateSharesInputs();
+                break;
+            case 'custom':
+                document.getElementById('custom-split-section').style.display = 'block';
+                populateCustomInputs();
+                break;
+        }
+    }
+}
+
+function populateSelectMemberCheckboxes() {
+    const container = document.getElementById('select-member-checkboxes');
+    container.innerHTML = '';
+    
+    members.forEach(member => {
+        const label = document.createElement('label');
+        label.innerHTML = `
+            <input type="checkbox" name="selected-members" value="${member.name}" checked>
+            <span>${member.name}</span>
+        `;
+        container.appendChild(label);
+    });
+}
+
+function populatePercentageInputs() {
+    const container = document.getElementById('percentage-inputs');
+    container.innerHTML = '';
+    
+    members.forEach(member => {
+        const div = document.createElement('div');
+        div.className = 'split-input-item';
+        div.innerHTML = `
+            <label>${member.name}</label>
+            <input type="number" 
+                   name="percentage-${member.name}" 
+                   placeholder="0" 
+                   min="0" 
+                   max="100" 
+                   step="0.1"
+                   oninput="updatePercentageTotal()">
+        `;
+        container.appendChild(div);
+    });
+    
+    updatePercentageTotal();
+}
+
+function populateSharesInputs() {
+    const container = document.getElementById('shares-inputs');
+    container.innerHTML = '';
+    
+    members.forEach(member => {
+        const div = document.createElement('div');
+        div.className = 'split-input-item';
+        div.innerHTML = `
+            <label>${member.name}</label>
+            <input type="number" 
+                   name="shares-${member.name}" 
+                   placeholder="0" 
+                   min="0" 
+                   step="1"
+                   oninput="updateSharesTotal()">
+        `;
+        container.appendChild(div);
+    });
+    
+    updateSharesTotal();
+}
+
+function populateCustomInputs() {
+    const container = document.getElementById('custom-inputs');
+    container.innerHTML = '';
+    
+    members.forEach(member => {
+        const div = document.createElement('div');
+        div.className = 'split-input-item';
+        div.innerHTML = `
+            <label>${member.name}</label>
+            <input type="number" 
+                   name="custom-${member.name}" 
+                   placeholder="0.00" 
+                   min="0" 
+                   step="0.01"
+                   oninput="updateCustomTotal()">
+        `;
+        container.appendChild(div);
+    });
+    
+    updateCustomTotal();
+}
+
+function updatePercentageTotal() {
+    const inputs = document.querySelectorAll('[name^="percentage-"]');
+    let total = 0;
+    
+    inputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        total += value;
+        
+        // Update input styling
+        if (value > 0 && value <= 100) {
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+        } else if (value > 100) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+        } else {
+            input.classList.remove('valid', 'invalid');
+        }
+    });
+    
+    const totalSpan = document.getElementById('percentage-total');
+    const statusSpan = document.getElementById('percentage-status');
+    
+    totalSpan.textContent = `${total.toFixed(1)}%`;
+    
+    if (total === 100) {
+        statusSpan.textContent = '✓ Perfect!';
+        statusSpan.className = 'tally-status valid';
+        totalSpan.style.color = 'var(--accent-green)';
+    } else if (total > 100) {
+        statusSpan.textContent = `⚠ Over by ${(total - 100).toFixed(1)}%`;
+        statusSpan.className = 'tally-status invalid';
+        totalSpan.style.color = 'var(--accent-red)';
+    } else if (total > 0) {
+        statusSpan.textContent = `⚠ Under by ${(100 - total).toFixed(1)}%`;
+        statusSpan.className = 'tally-status warning';
+        totalSpan.style.color = 'var(--accent-yellow)';
+    } else {
+        statusSpan.textContent = '';
+        statusSpan.className = 'tally-status';
+        totalSpan.style.color = 'var(--text-primary)';
+    }
+}
+
+function updateSharesTotal() {
+    const inputs = document.querySelectorAll('[name^="shares-"]');
+    let total = 0;
+    const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
+    
+    inputs.forEach(input => {
+        const value = parseInt(input.value) || 0;
+        total += value;
+        
+        // Update input styling
+        if (value > 0) {
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+        } else {
+            input.classList.remove('valid', 'invalid');
+        }
+    });
+    
+    document.getElementById('shares-total').textContent = total;
+    
+    // Update breakdown
+    const breakdown = document.getElementById('shares-breakdown');
+    if (total > 0 && expenseAmount > 0) {
+        breakdown.style.display = 'block';
+        let breakdownHTML = '<h4>Share Breakdown:</h4>';
+        
+        inputs.forEach(input => {
+            const shares = parseInt(input.value) || 0;
+            if (shares > 0) {
+                const memberName = input.name.replace('shares-', '');
+                const percentage = (shares / total * 100).toFixed(1);
+                const amount = (expenseAmount * shares / total).toFixed(2);
+                breakdownHTML += `
+                    <div class="share-breakdown-item">
+                        <span>${memberName} (${shares} shares)</span>
+                        <span>${percentage}% = ${formatCurrency(parseFloat(amount), currentTrip?.currency || 'INR')}</span>
+                    </div>
+                `;
+            }
+        });
+        
+        breakdown.innerHTML = breakdownHTML;
+    } else {
+        breakdown.style.display = 'none';
+    }
+}
+
+function updateCustomTotal() {
+    const inputs = document.querySelectorAll('[name^="custom-"]');
+    const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
+    let total = 0;
+    
+    inputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        total += value;
+        
+        // Update input styling
+        if (value > 0) {
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+        } else {
+            input.classList.remove('valid', 'invalid');
+        }
+    });
+    
+    const totalSpan = document.getElementById('custom-total');
+    const statusSpan = document.getElementById('custom-status');
+    
+    totalSpan.textContent = formatCurrency(total, currentTrip?.currency || 'INR');
+    
+    if (expenseAmount > 0) {
+        const diff = total - expenseAmount;
+        if (Math.abs(diff) < 0.01) {
+            statusSpan.textContent = '✓ Perfect!';
+            statusSpan.className = 'tally-status valid';
+            totalSpan.style.color = 'var(--accent-green)';
+        } else if (diff > 0) {
+            statusSpan.textContent = `⚠ Over by ${formatCurrency(diff, currentTrip?.currency || 'INR')}`;
+            statusSpan.className = 'tally-status invalid';
+            totalSpan.style.color = 'var(--accent-red)';
+        } else {
+            statusSpan.textContent = `⚠ Under by ${formatCurrency(Math.abs(diff), currentTrip?.currency || 'INR')}`;
+            statusSpan.className = 'tally-status warning';
+            totalSpan.style.color = 'var(--accent-yellow)';
+        }
+    } else {
+        statusSpan.textContent = '';
+        statusSpan.className = 'tally-status';
+        totalSpan.style.color = 'var(--text-primary)';
     }
 }
 
@@ -493,7 +964,10 @@ function handleExpenseSubmit(e) {
     e.preventDefault();
     console.log('💰 Handling expense submission');
     
-    const formData = new FormData(e.target);
+    const form = e.target;
+    const isEdit = form.dataset.mode === 'edit';
+    const expenseId = isEdit ? parseInt(form.dataset.expenseId) : Date.now();
+    
     const description = document.getElementById('expense-description').value.trim();
     const amount = parseFloat(document.getElementById('expense-amount').value);
     const paidBy = document.getElementById('expense-paid-by').value;
@@ -505,39 +979,149 @@ function handleExpenseSubmit(e) {
         return;
     }
     
-    // Get involved members
-    let involvedMembers;
-    if (splitType === 'equal') {
-        involvedMembers = members.map(m => m.name);
-    } else if (splitType === 'custom') {
-        const checkedBoxes = document.querySelectorAll('#member-checkboxes input[type="checkbox"]:checked');
-        involvedMembers = Array.from(checkedBoxes).map(cb => cb.value);
-        
-        if (involvedMembers.length === 0) {
-            showMessage('Please select at least one member for the expense!', 'error');
+    // Get involved members and their splits
+    let splitData = {};
+    let involvedMembers = [];
+    
+    switch (splitType) {
+        case 'equal':
+            involvedMembers = members.map(m => m.name);
+            const equalAmount = amount / involvedMembers.length;
+            involvedMembers.forEach(name => {
+                splitData[name] = equalAmount;
+            });
+            break;
+            
+        case 'select-equal':
+            const selectedBoxes = document.querySelectorAll('[name="selected-members"]:checked');
+            involvedMembers = Array.from(selectedBoxes).map(cb => cb.value);
+            if (involvedMembers.length === 0) {
+                showMessage('Please select at least one member!', 'error');
+                return;
+            }
+            const selectEqualAmount = amount / involvedMembers.length;
+            involvedMembers.forEach(name => {
+                splitData[name] = selectEqualAmount;
+            });
+            break;
+            
+        case 'percentage':
+            const percentageInputs = document.querySelectorAll('[name^="percentage-"]');
+            let totalPercentage = 0;
+            
+            percentageInputs.forEach(input => {
+                const percentage = parseFloat(input.value) || 0;
+                if (percentage > 0) {
+                    const memberName = input.name.replace('percentage-', '');
+                    involvedMembers.push(memberName);
+                    splitData[memberName] = (amount * percentage / 100);
+                }
+                totalPercentage += percentage;
+            });
+            
+            if (Math.abs(totalPercentage - 100) > 0.1) {
+                showMessage(`Percentages must total 100%. Current total: ${totalPercentage.toFixed(1)}%`, 'error');
+                return;
+            }
+            
+            if (involvedMembers.length === 0) {
+                showMessage('Please enter percentages for at least one member!', 'error');
+                return;
+            }
+            break;
+            
+        case 'shares':
+            const sharesInputs = document.querySelectorAll('[name^="shares-"]');
+            let totalShares = 0;
+            
+            sharesInputs.forEach(input => {
+                const shares = parseInt(input.value) || 0;
+                if (shares > 0) {
+                    const memberName = input.name.replace('shares-', '');
+                    involvedMembers.push(memberName);
+                    totalShares += shares;
+                }
+            });
+            
+            if (totalShares === 0) {
+                showMessage('Please enter shares for at least one member!', 'error');
+                return;
+            }
+            
+            // Calculate amounts based on shares
+            sharesInputs.forEach(input => {
+                const shares = parseInt(input.value) || 0;
+                if (shares > 0) {
+                    const memberName = input.name.replace('shares-', '');
+                    splitData[memberName] = (amount * shares / totalShares);
+                }
+            });
+            break;
+            
+        case 'custom':
+            const customInputs = document.querySelectorAll('[name^="custom-"]');
+            let totalCustom = 0;
+            
+            customInputs.forEach(input => {
+                const customAmount = parseFloat(input.value) || 0;
+                if (customAmount > 0) {
+                    const memberName = input.name.replace('custom-', '');
+                    involvedMembers.push(memberName);
+                    splitData[memberName] = customAmount;
+                }
+                totalCustom += customAmount;
+            });
+            
+            if (Math.abs(totalCustom - amount) > 0.01) {
+                showMessage(`Custom amounts must total ${formatCurrency(amount, currentTrip.currency)}. Current total: ${formatCurrency(totalCustom, currentTrip.currency)}`, 'error');
+                return;
+            }
+            
+            if (involvedMembers.length === 0) {
+                showMessage('Please enter amounts for at least one member!', 'error');
+                return;
+            }
+            break;
+            
+        default:
+            showMessage('Invalid split type selected!', 'error');
             return;
-        }
     }
     
-    // Create expense
-    const expense = {
-        id: Date.now(),
+    // Create or update expense
+    const expenseData = {
+        id: expenseId,
         description,
         amount,
         paidBy,
         splitType,
         involvedMembers,
+        splitData, // Store individual amounts for each member
         date: document.getElementById('expense-date').value || new Date().toISOString().split('T')[0],
-        time: document.getElementById('expense-time').value || '',
-        createdAt: new Date().toISOString(),
-        splitAmount: amount / involvedMembers.length
+        time: document.getElementById('expense-time').value || ''
     };
     
-    expenses.push(expense);
-    console.log('✅ Expense added:', expense);
+    if (isEdit) {
+        // Update existing expense
+        const expenseIndex = expenses.findIndex(e => e.id === expenseId);
+        if (expenseIndex > -1) {
+            expenseData.createdAt = expenses[expenseIndex].createdAt; // Preserve original creation time
+            expenses[expenseIndex] = expenseData;
+            console.log('✅ Expense updated:', expenseData);
+            showMessage(`Expense "${description}" updated successfully!`, 'success');
+        }
+    } else {
+        // Add new expense
+        expenseData.createdAt = new Date().toISOString();
+        expenses.push(expenseData);
+        console.log('✅ Expense added:', expenseData);
+        showMessage(`Expense "${description}" added successfully!`, 'success');
+    }
     
     // Reset form and close modal
     e.target.reset();
+    delete form.dataset.mode;
+    delete form.dataset.expenseId;
     closeModals();
     
     // Save data and update display
@@ -545,7 +1129,9 @@ function handleExpenseSubmit(e) {
     updateDisplay();
     calculateAndDisplayBalances();
     
-    showMessage(`Expense "${description}" added successfully!`, 'success');
+    // Debug: Log current state
+    console.log('💾 Current expenses in memory:', expenses);
+    console.log('💾 Current localStorage:', localStorage.getItem('expenseSplitter'));
 }
 
 // Balance Calculation Functions
@@ -560,14 +1146,14 @@ function calculateAndDisplayBalances() {
     
     // Calculate balances from expenses
     expenses.forEach(expense => {
-        const { paidBy, amount, involvedMembers, splitAmount } = expense;
+        const { paidBy, amount, splitData } = expense;
         
         // Person who paid gets credited
         balances[paidBy] += amount;
         
-        // All involved members get debited their share
-        involvedMembers.forEach(member => {
-            balances[member] -= splitAmount;
+        // All involved members get debited their individual share
+        Object.entries(splitData).forEach(([memberName, memberAmount]) => {
+            balances[memberName] -= memberAmount;
         });
     });
     

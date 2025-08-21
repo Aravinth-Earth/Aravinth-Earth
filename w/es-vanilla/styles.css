@@ -104,9 +104,86 @@ body {
     border-color: var(--accent-blue);
 }
 
-.btn-large {
-    padding: 12px 24px;
-    font-size: 16px;
+.btn-small {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 6px;
+}
+
+.btn-danger {
+    background: var(--accent-red);
+    color: white;
+    border: 1px solid var(--accent-red);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-danger:disabled {
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    border-color: var(--border-color);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.btn-danger:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Member card improvements */
+.member-card {
+    background: var(--bg-tertiary);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.member-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Expense item improvements */
+.expense-item {
+    background: var(--bg-tertiary);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: all 0.2s ease;
+}
+
+.expense-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.expense-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.expense-split-info {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 2px;
+    font-style: italic;
 }
 
 /* Trip Card */
@@ -290,7 +367,7 @@ body {
 
 /* Modal Styles */
 .modal {
-    display: none;
+    display: none !important;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -299,12 +376,16 @@ body {
     height: 100%;
     background-color: rgba(0,0,0,0.8);
     backdrop-filter: blur(4px);
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: block !important;
 }
 
 .modal-content {
     background: var(--bg-card);
-    margin: 3% auto;
-    padding: 24px;
+    margin: 2% auto;
     border-radius: 12px;
     width: 90%;
     max-width: 480px;
@@ -312,6 +393,10 @@ body {
     animation: slideIn 0.3s ease;
     border: 1px solid var(--border-color);
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    max-height: 95vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
 }
 
 @keyframes slideIn {
@@ -319,9 +404,31 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
+.modal-header {
+    padding: 20px 24px 0 24px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.modal-footer {
+    padding: 0 24px 20px 24px;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+    background: var(--bg-card);
+    border-radius: 0 0 12px 12px;
+}
+
 .modal-content h3 {
     color: var(--text-primary);
-    margin-bottom: 20px;
+    margin: 0 0 16px 0;
     font-size: 18px;
     font-weight: 600;
 }
@@ -332,10 +439,11 @@ body {
     font-size: 24px;
     font-weight: bold;
     position: absolute;
-    right: 12px;
-    top: 8px;
+    right: 20px;
+    top: 16px;
     cursor: pointer;
     transition: color 0.2s ease;
+    z-index: 1001;
 }
 
 .close:hover {
@@ -343,10 +451,11 @@ body {
 }
 
 /* Form Styles */
-form {
+.modal-body form {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    height: 100%;
 }
 
 input, select, textarea {
@@ -384,7 +493,46 @@ textarea {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-    margin-top: 16px;
+    margin-top: 0;
+}
+
+.modal-actions .btn {
+    min-width: 80px;
+}
+
+.modal-actions button[type="button"] {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-actions button[type="button"]:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+}
+
+.modal-actions button[type="submit"] {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+    color: white;
+    border: 1px solid var(--accent-purple);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-actions button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
 }
 
 /* Mobile Optimizations */
@@ -484,6 +632,13 @@ textarea {
     
     .member-card {
         padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .member-actions {
+        align-self: flex-end;
     }
     
     .expense-item {
@@ -491,23 +646,49 @@ textarea {
         margin-bottom: 6px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px;
+        gap: 8px;
+    }
+    
+    .expense-right {
+        align-self: flex-end;
+        align-items: flex-end;
     }
     
     .expense-amount {
-        align-self: flex-end;
         font-size: 14px;
     }
     
     .modal-content {
-        margin: 8% auto;
-        padding: 20px;
+        margin: 1% auto;
         width: 95%;
+        max-height: 98vh;
+    }
+    
+    .modal-header {
+        padding: 16px 20px 0 20px;
+    }
+    
+    .modal-body {
+        padding: 16px 20px;
+    }
+    
+    .modal-footer {
+        padding: 0 20px 16px 20px;
+    }
+    
+    .close {
+        right: 16px;
+        top: 12px;
+        font-size: 22px;
     }
     
     .modal-actions {
         flex-direction: column;
         gap: 8px;
+    }
+    
+    #split-config {
+        max-height: 50vh;
     }
     
     .balance-grid {
@@ -692,33 +873,172 @@ textarea {
     font-weight: 600;
 }
 
-#custom-split {
+/* Split Configuration */
+#split-config {
     background: var(--bg-tertiary);
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 8px;
+    padding: 16px;
+    border-radius: 10px;
+    margin-top: 12px;
     border: 1px solid var(--border-color);
+    /* Ensure this section can be scrolled if it gets too long */
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
-#custom-split p {
-    margin-bottom: 8px;
+.split-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.split-header p {
+    margin: 0;
     font-weight: 600;
     color: var(--accent-blue);
     font-size: 13px;
 }
 
-#member-checkboxes {
+.split-tally {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.tally-amount {
+    color: var(--text-primary);
+    background: var(--bg-card);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    min-width: 60px;
+    text-align: center;
+}
+
+.tally-status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.tally-status.valid {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tally-status.invalid {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--accent-red);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.tally-status.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--accent-yellow);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Split Input Grids */
+.split-inputs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.member-checkboxes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 8px;
     margin-top: 8px;
 }
 
-#member-checkboxes label {
+.split-input-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.split-input-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.split-input-item input {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.split-input-item input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.split-input-item input.invalid {
+    border-color: var(--accent-red);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.split-input-item input.valid {
+    border-color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+/* Shares Breakdown */
+.shares-breakdown {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.shares-breakdown h4 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: var(--accent-cyan);
+    font-weight: 600;
+}
+
+.share-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.share-breakdown-item:last-child {
+    border-top: 1px solid var(--border-color);
+    padding-top: 8px;
+    margin-top: 4px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Member Checkboxes for Select Equal */
+.member-checkboxes-grid label {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 8px;
+    padding: 8px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
@@ -727,9 +1047,38 @@ textarea {
     transition: all 0.2s ease;
 }
 
-#member-checkboxes label:hover {
+.member-checkboxes-grid label:hover {
     background: rgba(59, 130, 246, 0.05);
     border-color: var(--accent-blue);
+}
+
+.member-checkboxes-grid input[type="checkbox"]:checked + span {
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
+/* Mobile Optimizations for Split Options */
+@media (max-width: 768px) {
+    .split-inputs-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .member-checkboxes-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .split-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .split-tally {
+        align-self: stretch;
+        justify-content: space-between;
+    }
 }
 
 /* Chart Section */

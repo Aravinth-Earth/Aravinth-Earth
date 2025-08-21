@@ -88,78 +88,152 @@
     </div>
 
     <!-- Modal for Trip Creation/Editing -->
-    <div id="trip-modal" class="modal">
+    <div id="trip-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3 id="modal-title">Create Trip</h3>
-            <form id="trip-form">
-                <input type="text" id="trip-name-input" placeholder="Trip Name" required>
-                <input type="date" id="start-date" placeholder="Start Date (optional)">
-                <input type="date" id="end-date" placeholder="End Date (optional)">
-                <select id="currency">
-                    <option value="INR">INR (₹)</option>
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                </select>
-                <textarea id="description" placeholder="Trip Description (optional)"></textarea>
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h3 id="modal-title">Create Trip</h3>
+            </div>
+            <div class="modal-body">
+                <form id="trip-form">
+                    <input type="text" id="trip-name-input" placeholder="Trip Name" required>
+                    <input type="date" id="start-date" placeholder="Start Date (optional)">
+                    <input type="date" id="end-date" placeholder="End Date (optional)">
+                    <select id="currency">
+                        <option value="INR">INR (₹)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                    </select>
+                    <textarea id="description" placeholder="Trip Description (optional)"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
                 <div class="modal-actions">
                     <button type="button" id="cancel-trip">Cancel</button>
-                    <button type="submit" id="save-trip">Save Trip</button>
+                    <button type="submit" id="save-trip" form="trip-form">Save Trip</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Modal for Member Addition -->
-    <div id="member-modal" class="modal">
+    <div id="member-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add Member</h3>
-            <form id="member-form">
-                <input type="text" id="member-name" placeholder="Member Name" required>
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h3>Add Member</h3>
+            </div>
+            <div class="modal-body">
+                <form id="member-form">
+                    <input type="text" id="member-name" placeholder="Enter member name" required>
+                </form>
+            </div>
+            <div class="modal-footer">
                 <div class="modal-actions">
                     <button type="button" id="cancel-member">Cancel</button>
-                    <button type="submit" id="save-member">Add Member</button>
+                    <button type="submit" id="save-member" form="member-form">Add Member</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Modal for Expense Addition -->
-    <div id="expense-modal" class="modal">
+    <div id="expense-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add Expense</h3>
-            <form id="expense-form">
-                <input type="text" id="expense-description" placeholder="What was this expense for?" required>
-                <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
-                <select id="expense-paid-by" required>
-                    <option value="">Who paid?</option>
-                </select>
-                <div class="split-options">
-                    <label>
-                        <input type="radio" name="split-type" value="equal" checked>
-                        Split equally among all members
-                    </label>
-                    <label>
-                        <input type="radio" name="split-type" value="custom">
-                        Custom split
-                    </label>
-                </div>
-                <div id="custom-split" style="display: none;">
-                    <p>Select who should pay for this expense:</p>
-                    <div id="member-checkboxes"></div>
-                </div>
-                <div class="datetime-container">
-                    <input type="date" id="expense-date" placeholder="Date (optional)">
-                    <input type="time" id="expense-time" placeholder="Time (optional)">
-                </div>
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h3>Add Expense</h3>
+            </div>
+            <div class="modal-body">
+                <form id="expense-form">
+                    <input type="text" id="expense-description" placeholder="What was this expense for?" required>
+                    <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
+                    <select id="expense-paid-by" required>
+                        <option value="">Who paid?</option>
+                    </select>
+                    <div class="split-options">
+                        <label>
+                            <input type="radio" name="split-type" value="equal" checked>
+                            <span>Split equally among all members</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="split-type" value="select-equal">
+                            <span>Split equally among selected members</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="split-type" value="percentage">
+                            <span>Split by percentage</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="split-type" value="shares">
+                            <span>Split by shares</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="split-type" value="custom">
+                            <span>Custom amounts</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Split Configuration Section -->
+                    <div id="split-config" style="display: none;">
+                        <!-- Select Members (for select-equal) -->
+                        <div id="select-members-section" style="display: none;">
+                            <p>Select members to split equally:</p>
+                            <div id="select-member-checkboxes" class="member-checkboxes-grid"></div>
+                        </div>
+                        
+                        <!-- Percentage Split -->
+                        <div id="percentage-split-section" style="display: none;">
+                            <div class="split-header">
+                                <p>Enter percentage for each member:</p>
+                                <div class="split-tally">
+                                    <span>Total: </span>
+                                    <span id="percentage-total" class="tally-amount">0%</span>
+                                    <span id="percentage-status" class="tally-status"></span>
+                                </div>
+                            </div>
+                            <div id="percentage-inputs" class="split-inputs-grid"></div>
+                        </div>
+                        
+                        <!-- Shares Split -->
+                        <div id="shares-split-section" style="display: none;">
+                            <div class="split-header">
+                                <p>Enter shares for each member:</p>
+                                <div class="split-tally">
+                                    <span>Total shares: </span>
+                                    <span id="shares-total" class="tally-amount">0</span>
+                                </div>
+                            </div>
+                            <div id="shares-inputs" class="split-inputs-grid"></div>
+                            <div id="shares-breakdown" class="shares-breakdown"></div>
+                        </div>
+                        
+                        <!-- Custom Amounts -->
+                        <div id="custom-split-section" style="display: none;">
+                            <div class="split-header">
+                                <p>Enter custom amount for each member:</p>
+                                <div class="split-tally">
+                                    <span>Total: </span>
+                                    <span id="custom-total" class="tally-amount">$0.00</span>
+                                    <span id="custom-status" class="tally-status"></span>
+                                </div>
+                            </div>
+                            <div id="custom-inputs" class="split-inputs-grid"></div>
+                        </div>
+                    </div>
+                    <div class="datetime-container">
+                        <input type="date" id="expense-date" placeholder="Date (optional)">
+                        <input type="time" id="expense-time" placeholder="Time (optional)">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
                 <div class="modal-actions">
                     <button type="button" id="cancel-expense">Cancel</button>
-                    <button type="submit" id="save-expense">Add Expense</button>
+                    <button type="submit" id="save-expense" form="expense-form">Add Expense</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 

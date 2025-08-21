@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Splitter - Smart Trip Expense Management</title>
+    <meta name="description" content="Split expenses fairly among group members with real-time calculations and settlement suggestions">
+    
+    <!-- Quasar CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.14.1/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div id="app">
+        <q-layout view="lHh Lpr lFf">
+            <!-- Header -->
+            <q-header elevated class="bg-primary text-white">
+                <q-toolbar>
+                    <q-toolbar-title class="flex items-center">
+                        <q-icon name="account_balance_wallet" size="md" class="q-mr-sm" />
+                        Expense Splitter
+                    </q-toolbar-title>
+                    
+                    <q-space />
+                    
+                    <!-- Actions -->
+                    <q-btn-group flat>
+                        <q-btn flat round icon="file_download" @click="exportData" />
+                        <q-btn flat round icon="file_upload" @click="importData" />
+                        <q-btn flat round icon="settings" @click="showSettings = true" />
+                    </q-btn-group>
+                </q-toolbar>
+            </q-header>
+
+            <!-- Main Content -->
+            <q-page-container>
+                <q-page class="q-pa-md">
+                    <!-- No Trip State -->
+                    <div v-if="!currentTrip" class="text-center q-pa-xl">
+                        <q-icon name="luggage" size="100px" color="grey-5" />
+                        <h5 class="q-mt-md text-grey-7">No Active Trip</h5>
+                        <p class="text-grey-6">Create a new trip to start splitting expenses</p>
+                        <q-btn color="primary" icon="add" label="Create Trip" @click="showCreateTrip = true" />
+                    </div>
+
+                    <!-- Trip Dashboard -->
+                    <div v-else>
+                        <!-- Trip Header -->
+                        <div class="row q-mb-lg">
+                            <div class="col-12">
+                                <q-card flat bordered class="bg-grey-1">
+                                    <q-card-section>
+                                        <div class="row items-center">
+                                            <div class="col">
+                                                <h6 class="q-ma-none">{{ currentTrip.name }}</h6>
+                                                <p class="text-caption text-grey-6 q-ma-none">
+                                                    {{ currentTrip.startDate }} - {{ currentTrip.endDate }}
+                                                </p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <q-btn flat round icon="edit" @click="editTrip" />
+                                            </div>
+                                        </div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="row q-col-gutter-md q-mb-lg">
+                            <div class="col-12 col-md-4">
+                                <q-card flat bordered>
+                                    <q-card-section class="text-center">
+                                        <div class="text-h4 text-primary">{{ formatCurrency(totalExpenses) }}</div>
+                                        <div class="text-caption text-grey-6">Total Expenses</div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <q-card flat bordered>
+                                    <q-card-section class="text-center">
+                                        <div class="text-h4 text-secondary">{{ currentTrip.members.length }}</div>
+                                        <div class="text-caption text-grey-6">Members</div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <q-card flat bordered>
+                                    <q-card-section class="text-center">
+                                        <div class="text-h4 text-accent">{{ expenses.length }}</div>
+                                        <div class="text-caption text-grey-6">Expenses</div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                        </div>
+
+                        <!-- Tab Navigation -->
+                        <q-tabs v-model="activeTab" dense class="text-grey-6" active-color="primary" indicator-color="primary" align="left">
+                            <q-tab name="expenses" icon="receipt" label="Expenses" />
+                            <q-tab name="members" icon="group" label="Members" />
+                            <q-tab name="balances" icon="account_balance" label="Balances" />
+                            <q-tab name="settlements" icon="swap_horiz" label="Settlements" />
+                        </q-tabs>
+
+                        <q-separator />
+
+                        <!-- Tab Panels -->
+                        <q-tab-panels v-model="activeTab" animated>
+                            <!-- Expenses Tab -->
+                            <q-tab-panel name="expenses">
+                                <div class="row q-col-gutter-md">
+                                    <div class="col-12">
+                                        <q-btn color="primary" icon="add" label="Add Expense" @click="showAddExpense = true" class="q-mb-md" />
+                                    </div>
+                                    
+                                    <!-- Expenses List -->
+                                    <div class="col-12" v-for="expense in expenses" :key="expense.id">
+                                        <expense-card :expense="expense" @edit="editExpense" @delete="deleteExpense" />
+                                    </div>
+                                    
+                                    <!-- Empty State -->
+                                    <div v-if="expenses.length === 0" class="col-12 text-center q-pa-xl">
+                                        <q-icon name="receipt_long" size="80px" color="grey-5" />
+                                        <h6 class="text-grey-6 q-mt-md">No expenses yet</h6>
+                                        <p class="text-grey-5">Add your first expense to get started</p>
+                                    </div>
+                                </div>
+                            </q-tab-panel>
+
+                            <!-- Members Tab -->
+                            <q-tab-panel name="members">
+                                <div class="row q-col-gutter-md">
+                                    <div class="col-12">
+                                        <q-btn color="secondary" icon="person_add" label="Add Member" @click="showAddMember = true" class="q-mb-md" />
+                                    </div>
+                                    
+                                    <!-- Members List -->
+                                    <div class="col-12 col-md-6 col-lg-4" v-for="member in currentTrip.members" :key="member.id">
+                                        <member-card :member="member" @edit="editMember" @delete="deleteMember" />
+                                    </div>
+                                </div>
+                            </q-tab-panel>
+
+                            <!-- Balances Tab -->
+                            <q-tab-panel name="balances">
+                                <balance-overview :balances="memberBalances" />
+                            </q-tab-panel>
+
+                            <!-- Settlements Tab -->
+                            <q-tab-panel name="settlements">
+                                <settlement-suggestions :settlements="settlements" />
+                            </q-tab-panel>
+                        </q-tab-panels>
+                    </div>
+                </q-page>
+            </q-page-container>
+        </q-layout>
+
+        <!-- Dialogs -->
+        <create-trip-dialog v-model="showCreateTrip" @created="onTripCreated" />
+        <add-member-dialog v-model="showAddMember" @added="onMemberAdded" />
+        <add-expense-dialog v-model="showAddExpense" :members="currentTrip?.members || []" @added="onExpenseAdded" />
+        <settings-dialog v-model="showSettings" />
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.14.1/dist/quasar.umd.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/database.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

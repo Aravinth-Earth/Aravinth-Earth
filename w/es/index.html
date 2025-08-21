@@ -196,6 +196,7 @@
         <create-trip-dialog v-model="showCreateTrip" @created="onTripCreated" />
         <add-member-dialog v-model="showAddMember" @added="onMemberAdded" />
         <add-expense-dialog v-model="showAddExpense" :members="currentTrip?.members || []" @added="onExpenseAdded" />
+        <edit-trip-dialog v-model="showEditTrip" :trip="currentTrip" @updated="onTripUpdated" />
         <settings-dialog v-model="showSettings" />
     </div>
 

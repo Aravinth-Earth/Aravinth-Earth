@@ -16,6 +16,7 @@ const ExpenseSplitterApp = {
       showCreateTrip: false,
       showAddMember: false,
       showAddExpense: false,
+      showEditTrip: false,
       showSettings: false,
       
       // Debug
@@ -232,8 +233,33 @@ const ExpenseSplitterApp = {
     
     // Trip editing
     editTrip() {
-      // TODO: Implement trip editing dialog
-      console.log('Edit trip:', this.currentTrip);
+      console.log('APP: Edit trip button clicked');
+      console.log('APP: Current trip data:', this.currentTrip);
+      
+      if (!this.currentTrip) {
+        console.error('APP: No current trip to edit');
+        this.$q.notify({
+          type: 'negative',
+          message: 'No trip selected to edit'
+        });
+        return;
+      }
+      
+      console.log('APP: Opening edit trip dialog');
+      this.showEditTrip = true;
+    },
+    
+    // Handle trip update from dialog
+    onTripUpdated(updatedTrip) {
+      console.log('APP: Trip updated event received:', updatedTrip);
+      
+      // Update current trip data
+      this.currentTrip = { ...this.currentTrip, ...updatedTrip };
+      console.log('APP: Current trip updated in app:', this.currentTrip);
+      
+      // Refresh the display
+      this.$forceUpdate();
+      console.log('APP: Forced Vue update to refresh display');
     },
     
     // Clear current trip and start fresh
@@ -274,7 +300,8 @@ const ExpenseSplitterApp = {
     'balance-overview': window.BalanceOverview,
     'settlement-suggestions': window.SettlementSuggestions,
     'create-trip-dialog': window.CreateTripDialog,
-    'add-member-dialog': window.AddMemberDialog
+    'add-member-dialog': window.AddMemberDialog,
+    'edit-trip-dialog': window.EditTripDialog
   }
 };
 

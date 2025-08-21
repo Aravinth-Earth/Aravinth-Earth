@@ -118,6 +118,7 @@
                                 <div class="row q-col-gutter-md">
                                     <div class="col-12">
                                         <q-btn color="primary" icon="add" label="Add Expense" @click="showAddExpense = true" class="q-mb-md" />
+                                        <div class="text-caption">Debug: activeTab = {{ activeTab }}</div>
                                     </div>
                                     
                                     <!-- Expenses List -->
@@ -139,10 +140,11 @@
                                 <div class="row q-col-gutter-md">
                                     <div class="col-12">
                                         <q-btn color="secondary" icon="person_add" label="Add Member" @click="showAddMember = true" class="q-mb-md" />
+                                        <div class="text-caption">Debug: members count = {{ currentTrip?.members?.length || 0 }}</div>
                                     </div>
                                     
                                     <!-- Members List -->
-                                    <div class="col-12 col-md-6 col-lg-4" v-for="member in currentTrip.members" :key="member.id">
+                                    <div class="col-12 col-md-6 col-lg-4" v-for="member in currentTrip?.members || []" :key="member.id">
                                         <member-card :member="member" @edit="editMember" @delete="deleteMember" />
                                     </div>
                                 </div>

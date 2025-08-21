@@ -654,4 +654,13 @@ app.config.errorHandler = (err, instance, info) => {
 };
 
 console.log('Mounting app...');
-app.mount('#app');
+console.log('Target element:', document.getElementById('app'));
+console.log('Target element innerHTML before mount:', document.getElementById('app')?.innerHTML?.substring(0, 100));
+
+try {
+  const mountedApp = app.mount('#app');
+  console.log('App mounted successfully:', !!mountedApp);
+  console.log('Target element innerHTML after mount:', document.getElementById('app')?.innerHTML?.substring(0, 100));
+} catch (error) {
+  console.error('MOUNT FAILED:', error);
+}

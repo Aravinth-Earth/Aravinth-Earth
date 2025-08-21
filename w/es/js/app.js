@@ -263,14 +263,12 @@ const ExpenseSplitterApp = {
   
   // Register components
   components: {
-    'expense-card': ExpenseCard,
-    'member-card': MemberCard,
-    'balance-overview': BalanceOverview,
-    'settlement-suggestions': SettlementSuggestions,
-    'create-trip-dialog': CreateTripDialog,
-    'add-member-dialog': AddMemberDialog,
-    'add-expense-dialog': AddExpenseDialog,
-    'settings-dialog': SettingsDialog
+    'expense-card': window.ExpenseCard,
+    'member-card': window.MemberCard,
+    'balance-overview': window.BalanceOverview,
+    'settlement-suggestions': window.SettlementSuggestions,
+    'create-trip-dialog': window.CreateTripDialog,
+    'add-member-dialog': window.AddMemberDialog
   }
 };
 
@@ -641,8 +639,8 @@ app.use(Quasar, {
 
 // Register additional components
 console.log('Registering components...');
-app.component('AddExpenseDialog', AddExpenseDialog);
-app.component('SettingsDialog', SettingsDialog);
+app.component('add-expense-dialog', AddExpenseDialog);
+app.component('settings-dialog', SettingsDialog);
 
 // Global error handler
 app.config.errorHandler = (err, instance, info) => {

@@ -1365,3 +1365,41 @@ textarea {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Footer styling */
+footer {
+    background: rgba(25, 25, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #333;
+    z-index: 1000;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+}
+
+footer img {
+    max-height: 20px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+footer img:hover {
+    opacity: 1;
+}
+
+/* Add bottom padding to body to prevent footer overlap */
+body {
+    padding-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 50px;
+    }
+    
+    footer {
+        padding: 8px !important;
+    }
+    
+    footer img {
+        max-height: 18px;
+    }
+}

@@ -74,9 +74,9 @@
                                     <q-card-section>
                                         <div class="row items-center">
                                             <div class="col">
-                                                <h6 class="q-ma-none">{{ currentTrip.name }}</h6>
+                                                <h6 class="q-ma-none">{{ currentTrip?.name || 'Loading...' }}</h6>
                                                 <p class="text-caption text-grey-6 q-ma-none">
-                                                    {{ currentTrip.startDate }} - {{ currentTrip.endDate }}
+                                                    {{ currentTrip?.startDate || 'N/A' }} - {{ currentTrip?.endDate || 'N/A' }}
                                                 </p>
                                             </div>
                                             <div class="col-auto">

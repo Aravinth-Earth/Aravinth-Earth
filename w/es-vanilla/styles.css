@@ -30,6 +30,7 @@ body {
     min-height: 100vh;
     color: var(--text-primary);
     line-height: 1.6;
+    padding-bottom: 80px; /* Adjusted to match footer height */
 }
 
 .container {
@@ -1368,38 +1369,25 @@ textarea {
 
 /* Footer styling */
 footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background: rgba(25, 25, 25, 0.95);
     backdrop-filter: blur(10px);
     border-top: 1px solid #333;
     z-index: 1000;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    padding: 15px 0; /* Increased padding for better height */
+    text-align: center;
 }
 
 footer img {
-    max-height: 20px;
+    max-height: 24px; /* Adjusted height for better visibility */
     opacity: 0.8;
     transition: opacity 0.3s ease;
 }
 
 footer img:hover {
     opacity: 1;
-}
-
-/* Add bottom padding to body to prevent footer overlap */
-body {
-    padding-bottom: 60px;
-}
-
-@media (max-width: 768px) {
-    body {
-        padding-bottom: 50px;
-    }
-    
-    footer {
-        padding: 8px !important;
-    }
-    
-    footer img {
-        max-height: 18px;
-    }
 }

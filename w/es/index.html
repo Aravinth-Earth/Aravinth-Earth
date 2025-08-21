@@ -54,19 +54,8 @@
                         <q-btn color="primary" label="Create Trip Test" @click="debugCounter++" />
                     </div>
                     
-                    <!-- Original content commented out temporarily -->
-                    <!-- 
-                    <div v-if="!currentTrip" class="text-center q-pa-xl">
-                        <q-icon name="luggage" size="100px" color="grey-5" />
-                        <h5 class="q-mt-md text-grey-7">Welcome to Expense Splitter</h5>
-                        <p class="text-grey-6">Create your trip to start splitting expenses fairly</p>
-                        <q-btn color="primary" icon="add" label="Create Trip" @click="showCreateTrip = true" size="lg" />
-                    </div>
-                    -->
-
-                    <!-- Trip Dashboard - COMMENTED OUT TO FIX v-else ERROR -->
-                    <!--
-                    <div v-else>
+                    <!-- PROGRESSIVE RESTORATION: Trip Header Section -->
+                    <div v-if="currentTrip" class="q-mb-lg">
                         <!-- Trip Header -->
                         <div class="row q-mb-lg">
                             <div class="col-12">
@@ -87,7 +76,22 @@
                                 </q-card>
                             </div>
                         </div>
+                    </div>
+                    
+                    <!-- Original content commented out temporarily -->
+                    <!-- 
+                    <div v-if="!currentTrip" class="text-center q-pa-xl">
+                        <q-icon name="luggage" size="100px" color="grey-5" />
+                        <h5 class="q-mt-md text-grey-7">Welcome to Expense Splitter</h5>
+                        <p class="text-grey-6">Create your trip to start splitting expenses fairly</p>
+                        <q-btn color="primary" icon="add" label="Create Trip" @click="showCreateTrip = true" size="lg" />
+                    </div>
+                    -->
 
+                    <!-- Trip Dashboard - COMMENTED OUT TO FIX v-else ERROR -->
+                    <!--
+                    REMOVED: Trip header section restored above
+                        
                         <!-- Quick Stats -->
                         <div class="row q-col-gutter-md q-mb-lg">
                             <div class="col-12 col-md-4">

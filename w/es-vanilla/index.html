@@ -12,8 +12,8 @@
         <header class="header">
             <h1>💰 Expense Splitter</h1>
             <div class="header-actions">
-                <button id="export-data-btn" class="btn btn-secondary">📤 Export</button>
-                <button id="import-data-btn" class="btn btn-secondary">📥 Import</button>
+                <button id="export-data-btn" class="btn btn-export">📤 Export</button>
+                <button id="import-data-btn" class="btn btn-import">📥 Import</button>
                 <button id="new-trip-btn" class="btn btn-primary">New Trip</button>
             </div>
         </header>
@@ -21,7 +21,7 @@
         <!-- Current Trip Display -->
         <div id="current-trip" class="trip-card" style="display: none;">
             <div class="trip-header">
-                <div>
+                <div class="trip-info">
                     <h2 id="trip-name">Trip Name</h2>
                     <p id="trip-dates">Start - End</p>
                 </div>
@@ -52,10 +52,7 @@
         <!-- Consolidated Settlement Overview -->
         <div id="settlement-overview" class="settlement-section" style="display: none;">
             <h3>💰 Settlement Overview</h3>
-            <div id="settlement-content">
-                <div id="settlements-list" class="settlements-list"></div>
-                <div id="balance-summary" class="balance-summary"></div>
-            </div>
+            <div id="settlements-list" class="settlements-list"></div>
         </div>
 
         <!-- Enhanced Expense Charts -->

@@ -104,6 +104,29 @@ body {
     border-color: var(--accent-blue);
 }
 
+/* Special styles for export/import buttons */
+.btn-export {
+    background: linear-gradient(135deg, var(--accent-green), #059669);
+    color: white;
+    border: 1px solid var(--accent-green);
+}
+
+.btn-export:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-import {
+    background: linear-gradient(135deg, var(--accent-cyan), #0891b2);
+    color: white;
+    border: 1px solid var(--accent-cyan);
+}
+
+.btn-import:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+}
+
 .btn-small {
     padding: 4px 8px;
     font-size: 11px;
@@ -199,10 +222,14 @@ body {
 .trip-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border-color);
+}
+
+.trip-info {
+    flex: 1;
 }
 
 .trip-header h2 {
@@ -212,6 +239,7 @@ body {
     background-clip: text;
     margin-bottom: 4px;
     font-size: 20px;
+    font-weight: 700;
 }
 
 .trip-header p {
@@ -222,28 +250,67 @@ body {
 /* Stats Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-bottom: 20px;
 }
 
 .stat-card {
     background: var(--bg-tertiary);
-    padding: 16px;
+    padding: 16px 12px;
     border-radius: 10px;
     text-align: center;
     border: 1px solid var(--border-color);
     transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.stat-card:hover::before {
+    opacity: 1;
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
     border-color: var(--accent-purple);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
 }
 
-.stat-card:nth-child(1) h3 { color: var(--accent-green); }
-.stat-card:nth-child(2) h3 { color: var(--accent-blue); }
-.stat-card:nth-child(3) h3 { color: var(--accent-purple); }
+.stat-card:nth-child(1) h3 { 
+    color: var(--accent-green); 
+}
+
+.stat-card:nth-child(1)::before {
+    background: var(--accent-green);
+}
+
+.stat-card:nth-child(2) h3 { 
+    color: var(--accent-blue); 
+}
+
+.stat-card:nth-child(2)::before {
+    background: var(--accent-blue);
+}
+
+.stat-card:nth-child(3) h3 { 
+    color: var(--accent-purple); 
+}
+
+.stat-card:nth-child(3)::before {
+    background: var(--accent-purple);
+}
 
 .stat-card h3 {
     font-size: 22px;
@@ -328,6 +395,8 @@ body {
 /* Expenses List */
 .expenses-list {
     margin-top: 12px;
+    display: grid;
+    gap: 8px;
 }
 
 .expense-item {
@@ -335,9 +404,9 @@ body {
     padding: 12px;
     border-radius: 10px;
     border: 1px solid var(--border-color);
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
     align-items: center;
     transition: all 0.2s ease;
 }
@@ -357,12 +426,35 @@ body {
 .expense-info p {
     color: var(--text-secondary);
     font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.expense-split-info {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+.expense-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 120px;
 }
 
 .expense-amount {
     font-size: 16px;
     font-weight: 700;
     color: var(--accent-green);
+}
+
+.expense-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
 /* Modal Styles */
@@ -570,6 +662,10 @@ textarea {
         margin-bottom: 12px;
     }
     
+    .trip-info {
+        text-align: center;
+    }
+    
     .trip-header h2 {
         font-size: 18px;
     }
@@ -579,7 +675,7 @@ textarea {
     }
     
     .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         margin-bottom: 16px;
     }
@@ -626,7 +722,7 @@ textarea {
     }
     
     .members-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 8px;
     }
     
@@ -634,24 +730,37 @@ textarea {
         padding: 10px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 6px;
+        text-align: left;
+    }
+    
+    .member-info h4 {
+        font-size: 13px;
+    }
+    
+    .member-info p {
+        font-size: 10px;
     }
     
     .member-actions {
         align-self: flex-end;
+        width: 100%;
+        justify-content: flex-end;
     }
     
     .expense-item {
         padding: 10px;
-        margin-bottom: 6px;
-        flex-direction: column;
-        align-items: flex-start;
+        grid-template-columns: 1fr;
         gap: 8px;
+        text-align: left;
     }
     
     .expense-right {
-        align-self: flex-end;
-        align-items: flex-end;
+        align-self: stretch;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        min-width: auto;
     }
     
     .expense-amount {
@@ -751,60 +860,6 @@ textarea {
     font-weight: 600;
 }
 
-#settlement-content {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 20px;
-    align-items: start;
-}
-
-.balance-summary {
-    background: var(--bg-tertiary);
-    padding: 16px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    min-width: 200px;
-}
-
-.balance-summary h4 {
-    color: var(--accent-cyan);
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.balance-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    font-size: 13px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.balance-item:last-child {
-    border-bottom: none;
-}
-
-.balance-name {
-    font-weight: 500;
-}
-
-.balance-amount.positive {
-    color: var(--accent-green);
-    font-weight: 600;
-}
-
-.balance-amount.negative {
-    color: var(--accent-red);
-    font-weight: 600;
-}
-
-.balance-amount.zero {
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
 /* Chart Controls */
 .chart-controls {
     display: flex;
@@ -836,11 +891,6 @@ textarea {
 
 /* Mobile optimizations for new structure */
 @media (max-width: 768px) {
-    #settlement-content {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
     .chart-controls {
         flex-direction: column;
         gap: 6px;
@@ -1205,7 +1255,13 @@ textarea {
 
 #expense-chart {
     max-width: 100%;
-    height: 250px !important;
+    height: 300px !important;
+}
+
+@media (max-width: 768px) {
+    #expense-chart {
+        height: 250px !important;
+    }
 }
 
 /* Loading state */

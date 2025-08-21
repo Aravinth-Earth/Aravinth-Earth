@@ -382,31 +382,35 @@ function renderExpenses() {
         let splitInfo = '';
         switch (expense.splitType) {
             case 'equal':
-                splitInfo = `Split equally among all members`;
+                const equalAmounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
+                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
+                }).join(', ');
+                splitInfo = `Split equally: ${equalAmounts}`;
                 break;
             case 'select-equal':
-                splitInfo = `Split equally among: ${expense.involvedMembers.join(', ')}`;
+                const selectEqualAmounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
+                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
+                }).join(', ');
+                splitInfo = `Split equally among selected: ${selectEqualAmounts}`;
                 break;
             case 'percentage':
-                const percentages = expense.involvedMembers.map(member => {
-                    const percentage = ((expense.splitData[member] / expense.amount) * 100).toFixed(1);
-                    return `${member} (${percentage}%)`;
+                const percentages = Object.entries(expense.splitData).map(([memberName, amount]) => {
+                    const percentage = ((amount / expense.amount) * 100).toFixed(1);
+                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)} (${percentage}%)`;
                 }).join(', ');
-                splitInfo = `Split by %: ${percentages}`;
+                splitInfo = `${percentages}`;
                 break;
             case 'shares':
-                const shares = expense.involvedMembers.map(member => {
-                    const amount = expense.splitData[member];
-                    return `${member} (${formatCurrency(amount, currentTrip.currency)})`;
+                const shares = Object.entries(expense.splitData).map(([memberName, amount]) => {
+                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
                 }).join(', ');
-                splitInfo = `Split by shares: ${shares}`;
+                splitInfo = `${shares}`;
                 break;
             case 'custom':
-                const amounts = expense.involvedMembers.map(member => {
-                    const amount = expense.splitData[member];
-                    return `${member} (${formatCurrency(amount, currentTrip.currency)})`;
+                const amounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
+                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
                 }).join(', ');
-                splitInfo = `Custom split: ${amounts}`;
+                splitInfo = `${amounts}`;
                 break;
             default:
                 splitInfo = `Split among: ${expense.involvedMembers.join(', ')}`;
@@ -1210,8 +1214,8 @@ function displayConsolidatedSettlement(balances) {
         });
     }
     
-    // Display balance summary
-    displayBalanceSummary(balances);
+    // Balance summary removed for cleaner UI
+    // displayBalanceSummary(balances);
     
     const settlementOverview = document.getElementById('settlement-overview');
     if (settlementOverview) {
@@ -1326,32 +1330,67 @@ function updateExpenseChart() {
     ];
     
     expenseChart = new Chart(ctx, {
-        type: 'doughnut',
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: currentChartType === 'paid' ? 'Expenses Paid' : 'Expenses Incurred',
                 data: data,
-                backgroundColor: colors.slice(0, labels.length),
+                backgroundColor: colors.slice(0, labels.length).map(color => color + '80'), // Add transparency
+                borderColor: colors.slice(0, labels.length),
                 borderWidth: 2,
-                borderColor: '#fff'
+                borderRadius: 8,
+                borderSkipped: false,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            indexAxis: 'y', // Horizontal bars
             plugins: {
                 legend: {
-                    position: 'bottom',
+                    display: false, // Hide legend for cleaner look
                 },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const label = context.label || '';
-                            const value = formatCurrency(context.parsed, currentTrip.currency);
-                            return `${label}: ${value}`;
+                            const value = formatCurrency(context.parsed.x, currentTrip.currency);
+                            return `${value}`;
                         }
                     }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#8b949e',
+                        callback: function(value) {
+                            return formatCurrency(value, currentTrip.currency);
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#f0f6fc',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
                 }
             }
         }

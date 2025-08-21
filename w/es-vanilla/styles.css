@@ -392,6 +392,72 @@ body {
     font-size: 11px;
 }
 
+/* Section Headers with Controls */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.section-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.count-badge {
+    background: var(--accent-purple);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.expense-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.member-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sort-select {
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.sort-select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
 /* Expenses List */
 .expenses-list {
     margin-top: 12px;
@@ -719,6 +785,27 @@ textarea {
     .welcome p {
         font-size: 14px;
         margin-bottom: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .expense-controls {
+        align-self: stretch;
+        justify-content: flex-end;
+    }
+    
+    .member-controls {
+        align-self: stretch;
+        justify-content: flex-end;
+    }
+    
+    .sort-select {
+        min-width: 120px;
+        font-size: 11px;
     }
     
     .members-grid {

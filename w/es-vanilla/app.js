@@ -5,6 +5,8 @@ console.log('🚀 Expense Splitter - Vanilla Version Started');
 let currentTrip = null;
 let members = [];
 let expenses = [];
+let currentExpenseSort = 'date-desc'; // Default sort
+let currentMemberSort = 'name-asc'; // Default sort for members
 
 // DOM Elements
 const elements = {
@@ -111,6 +113,26 @@ function setupEventListeners() {
             updateCustomTotal();
         }
     });
+    
+    // Expense sorting
+    const expenseSortSelect = document.getElementById('expense-sort');
+    if (expenseSortSelect) {
+        expenseSortSelect.addEventListener('change', function() {
+            currentExpenseSort = this.value;
+            renderExpenses();
+            saveData(); // Save preference
+        });
+    }
+    
+    // Member sorting
+    const memberSortSelect = document.getElementById('member-sort');
+    if (memberSortSelect) {
+        memberSortSelect.addEventListener('change', function() {
+            currentMemberSort = this.value;
+            renderMembers();
+            saveData(); // Save preference
+        });
+    }
     
     // Modal close buttons
     document.querySelectorAll('.close').forEach(closeBtn => {
@@ -300,6 +322,13 @@ function showTripView() {
     // Show/hide sections based on data
     if (members.length > 0) {
         elements.membersSection.style.display = 'block';
+        
+        // Set the member sort dropdown value
+        const memberSortSelect = document.getElementById('member-sort');
+        if (memberSortSelect) {
+            memberSortSelect.value = currentMemberSort;
+        }
+        
         renderMembers();
     } else {
         elements.membersSection.style.display = 'none';
@@ -307,6 +336,13 @@ function showTripView() {
     
     if (expenses.length > 0) {
         elements.expensesSection.style.display = 'block';
+        
+        // Set the sort dropdown value
+        const expenseSortSelect = document.getElementById('expense-sort');
+        if (expenseSortSelect) {
+            expenseSortSelect.value = currentExpenseSort;
+        }
+        
         renderExpenses();
         
         // Calculate and display balances/settlements
@@ -338,12 +374,42 @@ function showTripView() {
     }
 }
 
+function getSortedMembers() {
+    const membersCopy = [...members];
+    
+    switch (currentMemberSort) {
+        case 'name-asc':
+            return membersCopy.sort((a, b) => a.name.localeCompare(b.name)); // A-Z
+            
+        case 'name-desc':
+            return membersCopy.sort((a, b) => b.name.localeCompare(a.name)); // Z-A
+            
+        case 'date-desc':
+            return membersCopy.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt)); // Recently added
+            
+        case 'date-asc':
+            return membersCopy.sort((a, b) => new Date(a.addedAt) - new Date(b.addedAt)); // First added
+            
+        default:
+            return membersCopy; // No sorting
+    }
+}
+
 function renderMembers() {
-    console.log('👥 Rendering members list');
+    console.log('👥 Rendering members list with sort:', currentMemberSort);
     
     elements.membersList.innerHTML = '';
     
-    members.forEach(member => {
+    // Sort members based on current sort option
+    const sortedMembers = getSortedMembers();
+    
+    // Update count badge
+    const countBadge = document.getElementById('member-count-badge');
+    if (countBadge) {
+        countBadge.textContent = sortedMembers.length;
+    }
+    
+    sortedMembers.forEach(member => {
         const memberCard = document.createElement('div');
         memberCard.className = 'member-card';
         
@@ -369,12 +435,62 @@ function renderMembers() {
     });
 }
 
+function getSortedExpenses() {
+    const expensesCopy = [...expenses];
+    
+    switch (currentExpenseSort) {
+        case 'date-desc':
+            return expensesCopy.sort((a, b) => {
+                const dateA = new Date(a.date + (a.time ? ` ${a.time}` : ''));
+                const dateB = new Date(b.date + (b.time ? ` ${b.time}` : ''));
+                return dateB - dateA; // Latest first
+            });
+            
+        case 'date-asc':
+            return expensesCopy.sort((a, b) => {
+                const dateA = new Date(a.date + (a.time ? ` ${a.time}` : ''));
+                const dateB = new Date(b.date + (b.time ? ` ${b.time}` : ''));
+                return dateA - dateB; // Oldest first
+            });
+            
+        case 'amount-desc':
+            return expensesCopy.sort((a, b) => b.amount - a.amount); // Highest first
+            
+        case 'amount-asc':
+            return expensesCopy.sort((a, b) => a.amount - b.amount); // Lowest first
+            
+        case 'paidby-asc':
+            return expensesCopy.sort((a, b) => a.paidBy.localeCompare(b.paidBy)); // A-Z
+            
+        case 'paidby-desc':
+            return expensesCopy.sort((a, b) => b.paidBy.localeCompare(a.paidBy)); // Z-A
+            
+        case 'name-asc':
+            return expensesCopy.sort((a, b) => a.description.localeCompare(b.description)); // A-Z
+            
+        case 'name-desc':
+            return expensesCopy.sort((a, b) => b.description.localeCompare(a.description)); // Z-A
+            
+        default:
+            return expensesCopy; // No sorting
+    }
+}
+
 function renderExpenses() {
-    console.log('💰 Rendering expenses list');
+    console.log('💰 Rendering expenses list with sort:', currentExpenseSort);
     
     elements.expensesList.innerHTML = '';
     
-    expenses.forEach(expense => {
+    // Sort expenses based on current sort option
+    const sortedExpenses = getSortedExpenses();
+    
+    // Update count badge
+    const countBadge = document.getElementById('expense-count-badge');
+    if (countBadge) {
+        countBadge.textContent = sortedExpenses.length;
+    }
+    
+    sortedExpenses.forEach(expense => {
         const expenseItem = document.createElement('div');
         expenseItem.className = 'expense-item';
         
@@ -646,6 +762,10 @@ function saveData() {
         currentTrip,
         members,
         expenses,
+        preferences: {
+            expenseSort: currentExpenseSort,
+            memberSort: currentMemberSort
+        },
         lastUpdated: new Date().toISOString()
     };
     
@@ -663,6 +783,13 @@ function loadData() {
             currentTrip = data.currentTrip;
             members = data.members || [];
             expenses = data.expenses || [];
+            
+            // Load preferences
+            if (data.preferences) {
+                currentExpenseSort = data.preferences.expenseSort || 'date-desc';
+                currentMemberSort = data.preferences.memberSort || 'name-asc';
+            }
+            
             console.log('✅ Data loaded successfully:', data);
         } catch (error) {
             console.error('❌ Error loading data:', error);

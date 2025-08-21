@@ -75,13 +75,37 @@
 
         <!-- Members List -->
         <div id="members-section" style="display: none;">
-            <h3>Members</h3>
+            <div class="section-header">
+                <h3>Members <span id="member-count-badge" class="count-badge"></span></h3>
+                <div class="member-controls">
+                    <select id="member-sort" class="sort-select">
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="date-desc">Recently Added</option>
+                        <option value="date-asc">First Added</option>
+                    </select>
+                </div>
+            </div>
             <div id="members-list" class="members-grid"></div>
         </div>
 
         <!-- Expenses List -->
         <div id="expenses-section" style="display: none;">
-            <h3>Recent Expenses</h3>
+            <div class="section-header">
+                <h3>Recent Expenses <span id="expense-count-badge" class="count-badge"></span></h3>
+                <div class="expense-controls">
+                    <select id="expense-sort" class="sort-select">
+                        <option value="date-desc">Latest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="amount-desc">Highest Amount</option>
+                        <option value="amount-asc">Lowest Amount</option>
+                        <option value="paidby-asc">Paid By (A-Z)</option>
+                        <option value="paidby-desc">Paid By (Z-A)</option>
+                        <option value="name-asc">Expense Name (A-Z)</option>
+                        <option value="name-desc">Expense Name (Z-A)</option>
+                    </select>
+                </div>
+            </div>
             <div id="expenses-list" class="expenses-list"></div>
         </div>
     </div>

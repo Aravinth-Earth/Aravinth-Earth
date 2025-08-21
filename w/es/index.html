@@ -48,6 +48,12 @@
                     <div>debugCounter: {{ debugCounter }}</div>
                     <q-btn @click="debugCounter++" label="Click Test" color="primary" />
                     
+                    <!-- Test if condition logic -->
+                    <div v-if="!currentTrip" class="text-center q-pa-xl">
+                        <h5>No Trip Selected</h5>
+                        <q-btn color="primary" label="Create Trip Test" @click="debugCounter++" />
+                    </div>
+                    
                     <!-- Original content commented out temporarily -->
                     <!-- 
                     <div v-if="!currentTrip" class="text-center q-pa-xl">
@@ -58,7 +64,8 @@
                     </div>
                     -->
 
-                    <!-- Trip Dashboard -->
+                    <!-- Trip Dashboard - COMMENTED OUT TO FIX v-else ERROR -->
+                    <!--
                     <div v-else>
                         <!-- Trip Header -->
                         <div class="row q-mb-lg">
@@ -173,7 +180,11 @@
                             <q-tab-panel name="settlements">
                                 <settlement-suggestions :settlements="settlements" />
                             </q-tab-panel>
-                    <!-- END MINIMAL TEST -->
+                        </q-tab-panels>
+                    </q-tabs>
+                </div>
+                -->
+                <!-- END MINIMAL TEST -->
                 </q-page>
             </q-page-container>
         </q-layout>

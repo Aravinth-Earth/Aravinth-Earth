@@ -558,10 +558,20 @@ const AddMemberDialog = {
   }
 };
 
-// Export components
+// Export components globally
+console.log('Exporting components globally...');
 window.ExpenseCard = ExpenseCard;
 window.MemberCard = MemberCard;
 window.BalanceOverview = BalanceOverview;
 window.SettlementSuggestions = SettlementSuggestions;
 window.CreateTripDialog = CreateTripDialog;
 window.AddMemberDialog = AddMemberDialog;
+
+console.log('Components exported:', {
+  ExpenseCard: !!window.ExpenseCard,
+  MemberCard: !!window.MemberCard,
+  BalanceOverview: !!window.BalanceOverview,
+  SettlementSuggestions: !!window.SettlementSuggestions,
+  CreateTripDialog: !!window.CreateTripDialog,
+  AddMemberDialog: !!window.AddMemberDialog
+});

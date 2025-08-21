@@ -31,6 +31,7 @@
                     
                     <!-- Actions -->
                     <q-btn-group flat>
+                        <q-btn flat round icon="refresh" @click="clearTrip" v-if="currentTrip" />
                         <q-btn flat round icon="file_download" @click="exportData" />
                         <q-btn flat round icon="file_upload" @click="importData" />
                         <q-btn flat round icon="settings" @click="showSettings = true" />

@@ -91,15 +91,18 @@ const ExpenseSplitterApp = {
     
     async selectTrip(tripId) {
       try {
+        console.log('Selecting trip:', tripId);
         this.currentTrip = await DatabaseService.getTrip(tripId);
         if (this.currentTrip) {
-          this.currentTrip.members = await DatabaseService.getTripMembers(tripId);
-          this.expenses = await DatabaseService.getTripExpenses(tripId);
+          console.log('Trip loaded:', this.currentTrip.name);
+          this.currentTrip.members = await DatabaseService.getTripMembers(tripId) || [];
+          this.expenses = await DatabaseService.getTripExpenses(tripId) || [];
+          console.log(`Loaded ${this.currentTrip.members.length} members and ${this.expenses.length} expenses`);
           await DatabaseService.setSetting('currentTripId', tripId);
         }
       } catch (error) {
         console.error('Failed to load trip:', error);
-        this.$q.notify({
+        this.$q?.notify({
           type: 'negative',
           message: 'Failed to load trip data'
         });
@@ -225,17 +228,49 @@ const ExpenseSplitterApp = {
     editTrip() {
       // TODO: Implement trip editing dialog
       console.log('Edit trip:', this.currentTrip);
+    },
+    
+    // Clear current trip and start fresh
+    clearTrip() {
+      this.$q.dialog({
+        title: 'Clear Trip',
+        message: 'This will clear the current trip and start fresh. This action cannot be undone.',
+        cancel: true,
+        persistent: true,
+        ok: {
+          label: 'Clear Trip',
+          color: 'negative'
+        }
+      }).onOk(async () => {
+        try {
+          this.currentTrip = null;
+          this.expenses = [];
+          await DatabaseService.setSetting('currentTripId', null);
+          this.$q.notify({
+            type: 'positive',
+            message: 'Trip cleared successfully'
+          });
+        } catch (error) {
+          console.error('Failed to clear trip:', error);
+          this.$q.notify({
+            type: 'negative',
+            message: 'Failed to clear trip'
+          });
+        }
+      });
     }
   },
   
   // Register components
   components: {
-    ExpenseCard,
-    MemberCard,
-    BalanceOverview,
-    SettlementSuggestions,
-    CreateTripDialog,
-    AddMemberDialog
+    'expense-card': ExpenseCard,
+    'member-card': MemberCard,
+    'balance-overview': BalanceOverview,
+    'settlement-suggestions': SettlementSuggestions,
+    'create-trip-dialog': CreateTripDialog,
+    'add-member-dialog': AddMemberDialog,
+    'add-expense-dialog': AddExpenseDialog,
+    'settings-dialog': SettingsDialog
   }
 };
 

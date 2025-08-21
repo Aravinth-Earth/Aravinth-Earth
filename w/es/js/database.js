@@ -77,8 +77,10 @@ class DatabaseService {
 
   static async deleteMember(id) {
     // Check if member has expenses
-    const expenses = await db.expenses.where('paidBy').equals(id).or('splitAmong').anyOf([id]).toArray();
-    if (expenses.length > 0) {
+    const expensesPaidBy = await db.expenses.where('paidBy.memberId').equals(id).toArray();
+    const expensesSplitAmong = await db.expenses.where('splitAmong.members').anyOf([id]).toArray();
+    
+    if (expensesPaidBy.length > 0 || expensesSplitAmong.length > 0) {
       throw new Error('Cannot delete member with existing expenses');
     }
     await db.members.delete(id);
@@ -96,7 +98,7 @@ class DatabaseService {
   }
 
   static async getTripExpenses(tripId) {
-    return await db.expenses.where('tripId').equals(tripId).orderBy('date').reverse().toArray();
+    return await db.expenses.where('tripId').equals(tripId).reverse().sortBy('date');
   }
 
   static async updateExpense(id, updates) {
@@ -212,8 +214,8 @@ class DatabaseService {
 }
 
 // Initialize database with default settings
-db.ready(async () => {
-  console.log('Database initialized');
+db.open().then(async () => {
+  console.log('Database initialized successfully');
   
   // Set default settings if they don't exist
   const currency = await DatabaseService.getSetting('currency');
@@ -224,10 +226,7 @@ db.ready(async () => {
     await DatabaseService.setSetting('dateFormat', 'DD/MM/YYYY');
     await DatabaseService.setSetting('precision', 2);
   }
-});
-
-// Error handling
-db.open().catch(err => {
+}).catch(err => {
   console.error('Failed to open database:', err);
 });
 

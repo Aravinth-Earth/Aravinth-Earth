@@ -86,7 +86,7 @@
                             <div class="col-12 col-md-4">
                                 <q-card flat bordered>
                                     <q-card-section class="text-center">
-                                        <div class="text-h4 text-secondary">{{ currentTrip.members.length }}</div>
+                                        <div class="text-h4 text-secondary">{{ currentTrip?.members?.length || 0 }}</div>
                                         <div class="text-caption text-grey-6">Members</div>
                                     </q-card-section>
                                 </q-card>

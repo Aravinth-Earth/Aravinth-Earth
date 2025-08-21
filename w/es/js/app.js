@@ -99,6 +99,9 @@ const ExpenseSplitterApp = {
           this.expenses = await DatabaseService.getTripExpenses(tripId) || [];
           console.log(`Loaded ${this.currentTrip.members.length} members and ${this.expenses.length} expenses`);
           await DatabaseService.setSetting('currentTripId', tripId);
+        } else {
+          // Ensure we have empty arrays even if trip doesn't exist
+          this.expenses = [];
         }
       } catch (error) {
         console.error('Failed to load trip:', error);

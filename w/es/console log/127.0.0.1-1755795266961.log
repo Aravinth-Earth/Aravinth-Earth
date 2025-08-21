@@ -1,0 +1,20 @@
+vue.global.js:12399 You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production.
+index.html:182 Starting Expense Splitter app...
+database.js:2 Loading database.js
+database.js:19 Creating database instance
+database.js:7 Initializing ExpenseSplitterDB
+components.js:2 Loading components.js
+components.js:562 Exporting components globally...
+components.js:570 Components exported: {ExpenseCard: true, MemberCard: true, BalanceOverview: true, SettlementSuggestions: true, CreateTripDialog: true, …}
+calculations.js:2 Loading calculations.js
+app.js:2 Loading app.js
+app.js:272 Uncaught ReferenceError: Cannot access 'AddExpenseDialog' before initialization
+    at app.js:272:27
+(anonymous) @ app.js:272
+index.html:186 Window loaded
+index.html:187 Vue available: true
+index.html:188 Quasar available: true
+index.html:189 Chart available: true
+index.html:190 Dexie available: true
+database.js:218 Database initialized successfully

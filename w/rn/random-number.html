@@ -12,108 +12,239 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start; /* use top space */
+            min-height: 100vh;
             margin: 0;
+            padding: 2rem 1rem 6rem; /* bottom padding to avoid footer overlap */
         }
 
         .generator-container {
             text-align: center;
-            padding: 2rem;
-            border-radius: 10px;
-            background: var(--bg-secondary);
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(18,20,24,0.9), rgba(20,22,26,0.85));
             box-shadow: var(--button-shadow);
+            width: min(900px, 85vw); /* wider on desktop, responsive */
+            max-width: 1000px;
+            margin: 1rem auto;
+        }
+
+        .generator-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .title-block {
+            text-align: left;
         }
 
         .generator-container h1 {
-            margin-bottom: 1rem;
+            margin: 0 0 0.25rem 0;
+            font-size: 1.25rem; /* smaller title */
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .generator-container button {
-            background: var(--gradient-blue);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: var(--button-shadow);
-        }
-
-        .generator-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer {
-            margin-top: 2rem;
-            text-align: center;
+        .subtitle {
+            margin: 0;
             font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         #random-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 0.5rem 0;
-            padding: 0.8rem;
-            background: var(--gradient-green);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            padding: 0.8rem 1rem;
+            background: linear-gradient(90deg, rgba(38,166,65,0.12), rgba(77,158,255,0.06));
             color: var(--text-primary);
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: var(--button-shadow);
+            display: inline-block;
+            min-width: 220px;
+            text-align: center;
         }
 
-        .limit-input {
-            margin: 1rem 0;
+        .controls-row {
             display: flex;
             gap: 0.5rem;
             align-items: center;
+            justify-content: center;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .limit-input {
+            margin: 0.75rem 0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .limit-input label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
         }
 
         .limit-input input {
-            padding: 0.5rem;
-            border: 1px solid var(--text-secondary);
-            border-radius: 5px;
-            width: 5rem;
+            padding: 0.45rem 0.6rem;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 6px;
+            width: 5.25rem;
             text-align: center;
+            background: transparent;
+            color: var(--text-primary);
         }
 
-        .home-btn {
-            margin-top: 1rem;
-            background: var(--gradient-blue);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+        /* toggle switch */
+        .mode-toggle-container { width: 52px; display:flex; align-items:center; justify-content:center; }
+        .mode-label-container { min-width: 110px; display:flex; flex-direction:column; }
+        /* preserve layout when hiding elements */
+        .preserve-hide { visibility: hidden; opacity: 0; pointer-events: none; }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+        /* keep checkbox tabbable and accessible; place it over the slider but invisible */
+        .switch input { position: absolute; opacity: 0; width: 52px; height: 28px; left: 0; top: 0; cursor: pointer; }
+        .slider {
+            position: absolute;
             cursor: pointer;
-            box-shadow: var(--button-shadow);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.08);
+            transition: .25s;
+            border-radius: 28px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px; width: 22px;
+            left: 3px; top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: .25s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .switch input:checked + .slider {
+            background: linear-gradient(90deg, #4d9eff, #a371f7);
+        }
+        .switch input:checked + .slider:before {
+            transform: translateX(24px);
+            background: #fff;
         }
 
-        .home-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        .precision-input {
+            width: 4.5rem;
+            padding: 0.35rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: transparent;
+            color: var(--text-primary);
         }
 
-        footer {
+        /* stronger button styles to ensure UI consistency */
+        .controls-row .btn-primary {
+            background: var(--gradient-blue) !important;
+            color: #fff !important;
+            border: none !important;
+            padding: 0.55rem 0.9rem !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            box-shadow: var(--button-shadow) !important;
+            font-weight: 600 !important;
+        }
+        .controls-row .btn-ghost {
+            background: transparent !important;
+            border: 1px solid rgba(255,255,255,0.06) !important;
+            color: var(--text-primary) !important;
+            padding: 0.45rem 0.7rem !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+        }
+
+        /* toast for transient messages */
+        #toast-container {
             position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            text-align: center;
-            padding: 10px;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .toast {
+            pointer-events: auto;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
     <div class="generator-container">
-        <h1>Random Number Generator</h1>
-        <p id="random-number">Click the button to generate a number</p>
-        <div class="limit-input">
-            <label for="min-limit">Min:</label>
-            <input type="number" id="min-limit" value="0">
-            <label for="max-limit">Max:</label>
-            <input type="number" id="max-limit" value="100">
+        <div class="generator-top">
+            <div class="title-block">
+                <h1>Random Number</h1>
+                <p class="subtitle">Fast, offline generator — secure if supported by your browser.</p>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:center;">
+                <div class="mode-toggle-container">
+                    <label class="switch" title="Toggle mode">
+                        <!-- checked = decimal by default -->
+                        <input type="checkbox" id="mode-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="mode-label-container">
+                    <span style="font-size:0.85rem;color:var(--text-secondary);">Mode</span>
+                    <span id="mode-label" style="font-weight:600">Decimal</span>
+                </div>
+                <div id="precision-wrapper" class="precision-wrapper">
+                    <label for="precision" style="font-size:0.85rem;color:var(--text-secondary);">Precision</label>
+                    <input id="precision" class="precision-input" type="number" min="1" max="20" value="10" title="Decimal digits" aria-label="Decimal precision">
+                </div>
+            </div>
+            <div class="meta-row" id="rng-method">RNG: detecting...</div>
         </div>
-        <button onclick="generateRandomNumber()">Generate</button>
+
+        <p id="random-number" aria-live="polite">—</p>
+
+        <div class="limit-input" role="group" aria-label="Random number limits">
+            <label for="min-limit">Min</label>
+            <input type="number" id="min-limit" value="0" inputmode="numeric">
+            <label for="max-limit">Max</label>
+            <input type="number" id="max-limit" value="1" inputmode="numeric">
+        </div>
+        <div class="meta-row" style="text-align:center; margin-top:0.25rem;">Tip: Min &amp; Max are inclusive — press Enter or click Generate to produce a number. Ensure Min &lt; Max.</div>
+
+        <!-- toast container for transient messages (copy etc.) -->
+        <div id="toast-container" aria-hidden="true"></div>
+
+        <div class="controls-row">
+            <button class="btn-primary" id="generate-btn" aria-label="Generate">Generate</button>
+            <button class="btn-ghost" id="copy-btn" aria-label="Copy last">Copy</button>
+        </div>
+
+        
     </div>
 
     <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
@@ -123,15 +254,254 @@
     </footer>
 
     <script>
+        // defaults per mode
+        const INT_DEFAULT_MIN = 1;
+        const INT_DEFAULT_MAX = 10000000000; // 10 billion
+        const DEC_DEFAULT_MIN = 0;
+        const DEC_DEFAULT_MAX = 1;
+        const DEC_DEFAULT_PRECISION = 10;
+        const UINT32_MAX_PLUS_ONE = 4294967296; // 2^32
+
+        // Helper: secure integer in [min, max] using crypto; supports large ranges via 64-bit sampling
+        function secureRandomInt(minArg, maxArg) {
+            // convert to BigInt for safety
+            let min = BigInt(Math.ceil(Number(minArg)));
+            let max = BigInt(Math.floor(Number(maxArg)));
+            if (min > max) return Number(min);
+            if (window.crypto && crypto.getRandomValues) {
+                const range = max - min + 1n;
+                // generate 64-bit random using two 32-bit words
+                const getRand64 = () => {
+                    const arr = new Uint32Array(2);
+                    crypto.getRandomValues(arr);
+                    return (BigInt(arr[0]) << 32n) + BigInt(arr[1]);
+                };
+                const maxUint64 = (1n << 64n) - 1n;
+                const threshold = (maxUint64 + 1n) / range * range;
+                let rv;
+                do {
+                    rv = getRand64();
+                } while (rv >= threshold);
+                const result = min + (rv % range);
+                return Number(result);
+            }
+            // fallback (may lose perfect uniformity for very large ranges)
+            const r = Math.random() * (Number(max - min) + 1);
+            return Math.floor(r) + Number(min);
+        }
+
+        // Secure float in [0,1)
+        function secureRandomFloat() {
+            if (window.crypto && crypto.getRandomValues) {
+                const arr = new Uint32Array(1);
+                crypto.getRandomValues(arr);
+                // divide by 2^32 to get in [0,1)
+                return arr[0] / UINT32_MAX_PLUS_ONE; // 2^32
+            }
+            return Math.random();
+        }
+
+        function updateRngMethod() {
+            const el = document.getElementById('rng-method');
+            if (window.crypto && crypto.getRandomValues) {
+                el.textContent = 'RNG: crypto.getRandomValues (secure)';
+            } else {
+                el.textContent = 'RNG: Math.random (fallback)';
+            }
+        }
+
+        function showNumber(text) {
+            const out = document.getElementById('random-number');
+            out.textContent = text;
+        }
+
+        function setModeUI(mode) {
+            const precisionEl = document.getElementById('precision');
+            const minEl = document.getElementById('min-limit');
+            const maxEl = document.getElementById('max-limit');
+            const modeLabel = document.getElementById('mode-label');
+            const precisionWrapper = document.getElementById('precision-wrapper');
+            if (mode === 'dec') {
+                // decimal mode: set to defaults 0-1 and disable min/max inputs
+                minEl.value = DEC_DEFAULT_MIN;
+                maxEl.value = DEC_DEFAULT_MAX;
+                minEl.disabled = true;
+                maxEl.disabled = true;
+                precisionEl.value = DEC_DEFAULT_PRECISION;
+                modeLabel.textContent = 'Decimal';
+                // show precision but preserve layout when hiding (use visibility if needed)
+                precisionWrapper.classList.remove('preserve-hide');
+            } else {
+                // integer mode: set to large default range and enable inputs
+                minEl.value = INT_DEFAULT_MIN;
+                maxEl.value = INT_DEFAULT_MAX;
+                minEl.disabled = false;
+                maxEl.disabled = false;
+                // keep existing precision but ensure at least 1
+                if (!precisionEl.value) precisionEl.value = DEC_DEFAULT_PRECISION;
+                modeLabel.textContent = 'Whole number';
+                // hide precision input visually but keep space
+                precisionWrapper.classList.add('preserve-hide');
+            }
+            // regenerate after switching modes so UI shows a number immediately
+            generateRandomNumber();
+        }
+        // Pre-compile regex for trimming trailing zeros
+        const TRAILING_ZERO_REGEX = /(?:\.0+|(?<=\.)0+)$/;
+
         function generateRandomNumber() {
-            const min = parseInt(document.getElementById('min-limit').value, 10) || 0;
-            const max = parseInt(document.getElementById('max-limit').value, 10) || 100;
+            // determine current mode from the toggle: checked = decimal, unchecked = integer
+            const mode = document.getElementById('mode-toggle').checked ? 'dec' : 'int';
+            if (mode === 'dec') {
+                const precision = Math.max(1, Math.min(20, parseInt(document.getElementById('precision').value, 10) || 10));
+                // default decimal in [0,1) with requested digits
+                const f = secureRandomFloat();
+                // format with fixed precision but trim trailing zeros
+                const formatted = f.toFixed(precision).replace(TRAILING_ZERO_REGEX, '');
+                showNumber(formatted);
+                lastGenerated = formatted;
+                return;
+            } 
+            
+            // integer mode
+            const minEl = document.getElementById('min-limit');
+            const maxEl = document.getElementById('max-limit');
+            let min = parseInt(minEl.value, 10);
+            let max = parseInt(maxEl.value, 10);
+            if (Number.isNaN(min)) min = 0;
+            if (Number.isNaN(max)) max = 100;
+            // validation: highlight invalid inputs
             if (min >= max) {
-                alert('Min limit should be less than Max limit.');
+                minEl.classList.add('invalid');
+                maxEl.classList.add('invalid');
+                showNumber('Invalid limits — Min must be less than Max.');
+                return;
+            } else {
+                minEl.classList.remove('invalid');
+                maxEl.classList.remove('invalid');
+            }
+            // allow large ranges up to 1e12 (10^12) — larger ranges may be slow or imprecise in fallback
+            const MAX_ALLOWED_SPAN = 1000000000000; // 1e12
+            if ((max - min) > MAX_ALLOWED_SPAN) {
+                showNumber('Range too large. Reduce the span below 1e12.');
                 return;
             }
-            const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById('random-number').textContent = `Random Number: ${randomNum}`;
+            const n = secureRandomInt(min, max);
+            showNumber(String(n));
+            lastGenerated = String(n);
+        }
+
+        async function copyLast() {
+            if (!lastGenerated) {
+                showToast('No number to copy. Generate first.');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(lastGenerated);
+                showToast('Copied to clipboard');
+            } catch (e) {
+                // fallback: select and prompt
+                const tmp = document.createElement('textarea');
+                tmp.value = lastGenerated;
+                document.body.appendChild(tmp);
+                tmp.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Copied to clipboard');
+                } catch (err) {
+                    showToast('Copy failed — select and copy manually.');
+                }
+                tmp.remove();
+            }
+        }
+
+        // show transient toast message
+        function showToast(message, ms = 1800) {
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = message;
+            container.appendChild(t);
+            // reveal
+            requestAnimationFrame(() => t.classList.add('show'));
+            // auto remove
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => t.remove(), 250);
+            }, ms);
+        }
+
+        let lastGenerated = '';
+        updateRngMethod();
+
+        // initial mode: decimal by default
+        const modeToggle = document.getElementById('mode-toggle');
+        // apply initial UI and defaults based on toggle (decimal checked by default)
+        setModeUI(modeToggle.checked ? 'dec' : 'int');
+
+        // event wiring
+        document.getElementById('generate-btn').addEventListener('click', generateRandomNumber);
+        document.getElementById('copy-btn').addEventListener('click', copyLast);
+
+        // toggle wiring
+        modeToggle.addEventListener('change', function (e) {
+            const mode = e.target.checked ? 'dec' : 'int';
+            setModeUI(mode);
+        });
+
+        // auto-generate when min/max change
+        document.getElementById('min-limit').addEventListener('input', onLimitInput);
+        document.getElementById('max-limit').addEventListener('input', onLimitInput);
+        // regenerate when precision changes in decimal mode
+        document.getElementById('precision').addEventListener('input', function () {
+            if (modeToggle.checked) generateRandomNumber();
+        });
+
+        // Enter key: generate unless toggle is focused (toggle should receive Enter/Space to change)
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+                const active = document.activeElement;
+                if (active && active.id === 'mode-toggle') {
+                    // let the toggle handle keys (Space/Enter) natively
+                    return;
+                }
+                const tag = active && active.tagName;
+                if (tag === 'INPUT' || tag === 'SELECT' || tag === 'BUTTON' || active === document.body) {
+                    e.preventDefault();
+                    generateRandomNumber();
+                }
+            }
+        });
+
+        // generate on first load
+        window.addEventListener('load', function () {
+            setTimeout(generateRandomNumber, 50);
+        });
+
+        // input handler for min/max to auto-generate and validation
+        function onLimitInput() {
+            const minEl = document.getElementById('min-limit');
+            const maxEl = document.getElementById('max-limit');
+            if (minEl.disabled || maxEl.disabled) return; // ignore in decimal mode
+            const min = parseFloat(minEl.value);
+            const max = parseFloat(maxEl.value);
+            if (Number.isNaN(min) || Number.isNaN(max)) {
+                // mark invalid fields
+                if (Number.isNaN(min)) minEl.classList.add('invalid'); else minEl.classList.remove('invalid');
+                if (Number.isNaN(max)) maxEl.classList.add('invalid'); else maxEl.classList.remove('invalid');
+                showNumber('Enter valid numeric Min and Max.');
+                return;
+            }
+            if (min >= max) {
+                minEl.classList.add('invalid');
+                maxEl.classList.add('invalid');
+                showNumber('Invalid limits — Min must be less than Max.');
+                return;
+            }
+            // valid: remove highlight and generate
+            minEl.classList.remove('invalid');
+            maxEl.classList.remove('invalid');
+            generateRandomNumber();
         }
     </script>
 </body>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        body {
+            background: var(--gradient-purple);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .generator-container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            box-shadow: var(--button-shadow);
+        }
+
+        .generator-container h1 {
+            margin-bottom: 1rem;
+        }
+
+        .generator-container button {
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+        }
+
+        .generator-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        #random-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            background: var(--gradient-green);
+            color: var(--text-primary);
+            border-radius: 8px;
+            box-shadow: var(--button-shadow);
+        }
+
+        .limit-input {
+            margin: 1rem 0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .limit-input input {
+            padding: 0.5rem;
+            border: 1px solid var(--text-secondary);
+            border-radius: 5px;
+            width: 5rem;
+            text-align: center;
+        }
+
+        .home-btn {
+            margin-top: 1rem;
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-container">
+        <h1>Random Number Generator</h1>
+        <p id="random-number">Click the button to generate a number</p>
+        <div class="limit-input">
+            <label for="min-limit">Min:</label>
+            <input type="number" id="min-limit" value="0">
+            <label for="max-limit">Max:</label>
+            <input type="number" id="max-limit" value="100">
+        </div>
+        <button onclick="generateRandomNumber()">Generate</button>
+    </div>
+
+    <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
+        <a href="../../index.html">
+            <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" alt="Visitor Badge">
+        </a>
+    </footer>
+
+    <script>
+        function generateRandomNumber() {
+            const min = parseInt(document.getElementById('min-limit').value, 10) || 0;
+            const max = parseInt(document.getElementById('max-limit').value, 10) || 100;
+            if (min >= max) {
+                alert('Min limit should be less than Max limit.');
+                return;
+            }
+            const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById('random-number').textContent = `Random Number: ${randomNum}`;
+        }
+    </script>
+</body>
+</html>

@@ -419,9 +419,30 @@ footer {
   .factor { padding: 0.875rem; }
 }
 
+/* Ultra-large screens - Scale up UI */
+@media (min-width: 1400px) {
+  html { font-size: 18px; }
+  .app { max-width: 1000px; }
+}
+
+@media (min-width: 2000px) {
+  html { font-size: 20px; }
+  .app { max-width: 1200px; }
+}
+
 /* Mobile small screen adjustments */
-@media (max-width: 360px) {
-  .header-text h1 { font-size: 0.95rem; }
+@media (max-width: 380px) {
+  body { padding: 0.75rem; }
+  .app { gap: 0.75rem; }
+  .header-text h1 { font-size: 0.9rem; }
   .header-text p { font-size: 0.6rem; }
-  .help-btn { padding: 0.3rem 0.5rem; font-size: 0.6rem; }
+  .factor { padding: 0.625rem; }
+  .choice label { padding: 0.3rem 0; }
+}
+
+@media (max-width: 320px) {
+  body { padding: 0.5rem; }
+  .logo { width: 2rem; height: 2rem; font-size: 0.9rem; }
+  .lang-btn { width: 1.75rem; height: 1.75rem; }
+  .help-btn { padding: 0.25rem 0.5rem; font-size: 0.6rem; }
 }

@@ -1,74 +1,6 @@
-// Decision Maker - Universal Edition
+// Decision Maker - Universal Edition with i18n
 (function() {
   'use strict';
-
-  // 6 Universal factors that work across any culture/situation
-  const factors = [
-    {
-      id: 'impact',
-      name: 'Impact',
-      hint: 'How much will this affect your life?',
-      low: 'Tiny',
-      high: 'Huge'
-    },
-    {
-      id: 'duration',
-      name: 'Duration',
-      hint: 'How long will this matter?',
-      low: 'Hours',
-      high: 'Years'
-    },
-    {
-      id: 'reversibility',
-      name: 'Reversible?',
-      hint: 'Can you undo or fix it later?',
-      low: 'Easy fix',
-      high: 'Permanent'
-    },
-    {
-      id: 'control',
-      name: 'Control',
-      hint: 'How much is within your power?',
-      low: 'Not mine',
-      high: 'Fully mine'
-    },
-    {
-      id: 'urgency',
-      name: 'Urgency',
-      hint: 'Does it need action right now?',
-      low: 'Can wait',
-      high: 'Now'
-    },
-    {
-      id: 'values',
-      name: 'Values',
-      hint: 'Does it touch what matters most to you?',
-      low: 'No link',
-      high: 'Core'
-    }
-  ];
-
-  // Results with actionable guidance
-  const results = {
-    small: {
-      label: 'Let It Go',
-      advice: 'This is a small thing. Note it, learn if needed, release it.',
-      action: 'Take a breath and move on. Your energy is better spent elsewhere.',
-      class: 'small'
-    },
-    medium: {
-      label: 'Handle & Move On',
-      advice: 'Worth addressing, but don\'t overthink it.',
-      action: 'Spend 5-15 minutes on it, make a decision, then let your mind move forward.',
-      class: 'medium'
-    },
-    important: {
-      label: 'Give It Focus',
-      advice: 'This deserves real attention and thoughtful action.',
-      action: 'Write it down, consider options, maybe sleep on it or talk to someone you trust.',
-      class: 'important'
-    }
-  };
 
   // DOM elements
   const els = {
@@ -79,16 +11,19 @@
     advice: document.getElementById('result-advice'),
     action: document.getElementById('result-action'),
     helpBtn: document.getElementById('help-btn'),
-    infoPanel: document.getElementById('info-panel')
+    infoPanel: document.getElementById('info-panel'),
+    langBtn: document.getElementById('lang-btn')
   };
 
   const CIRCUMFERENCE = 2 * Math.PI * 42;
-  const MIN_SCORE = factors.length;
-  const MAX_SCORE = factors.length * 5;
+  let currentLang = LangManager.get();
 
   // Build factor UI
-  function initFactors() {
-    factors.forEach(f => {
+  function buildFactors() {
+    const data = i18n[currentLang];
+    els.factors.innerHTML = '';
+    
+    data.factors.forEach(f => {
       els.factors.insertAdjacentHTML('beforeend', `
         <div class="factor">
           <div class="factor-top">
@@ -128,11 +63,17 @@
   }
 
   function updateResult() {
+    const data = i18n[currentLang];
+    const factors = data.factors;
+    const results = data.results;
+    
     const score = factors.reduce((sum, f) => sum + getValue(f.id), 0);
-    const normalized = (score - MIN_SCORE) / (MAX_SCORE - MIN_SCORE);
+    const minScore = factors.length;
+    const maxScore = factors.length * 5;
+    const normalized = (score - minScore) / (maxScore - minScore);
 
     // Update score display
-    els.scoreNum.innerHTML = `${score}<small>/${MAX_SCORE}</small>`;
+    els.scoreNum.innerHTML = `${score}<small>/${maxScore}</small>`;
 
     // Update ring
     const offset = CIRCUMFERENCE * (1 - normalized);
@@ -140,20 +81,22 @@
 
     // Determine result
     let result;
-    const pct = score / MAX_SCORE;
+    const pct = score / maxScore;
     if (pct <= 0.4) {
       result = results.small;
       els.scoreFill.style.stroke = 'var(--accent)';
+      els.badge.className = 'result-badge small';
     } else if (pct <= 0.6) {
       result = results.medium;
       els.scoreFill.style.stroke = 'var(--warn)';
+      els.badge.className = 'result-badge medium';
     } else {
       result = results.important;
       els.scoreFill.style.stroke = 'var(--danger)';
+      els.badge.className = 'result-badge important';
     }
 
     els.badge.textContent = result.label;
-    els.badge.className = `result-badge ${result.class}`;
     els.advice.textContent = result.advice;
     els.action.innerHTML = `<strong>→</strong> ${result.action}`;
   }
@@ -161,15 +104,34 @@
   // Help toggle
   function initHelp() {
     els.helpBtn.addEventListener('click', () => {
-      els.infoPanel.classList.toggle('show');
-      els.helpBtn.textContent = els.infoPanel.classList.contains('show') ? 'Close' : 'How it works';
+      const isOpen = els.infoPanel.classList.toggle('show');
+      const data = i18n[currentLang];
+      els.helpBtn.textContent = isOpen ? data.helpBtnClose : data.helpBtn;
+    });
+  }
+
+  // Language toggle
+  function initLang() {
+    els.langBtn.addEventListener('click', () => {
+      currentLang = LangManager.toggle();
+      updateUI(currentLang);
+      buildFactors();
+      updateResult();
+      
+      // Update help button text if panel is open
+      if (els.infoPanel.classList.contains('show')) {
+        els.helpBtn.textContent = i18n[currentLang].helpBtnClose;
+      }
     });
   }
 
   // Init
   function init() {
-    initFactors();
+    currentLang = LangManager.get();
+    updateUI(currentLang);
+    buildFactors();
     initHelp();
+    initLang();
     els.scoreFill.style.strokeDasharray = CIRCUMFERENCE;
     updateResult();
   }

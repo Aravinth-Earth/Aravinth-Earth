@@ -1,11 +1,26 @@
 // Stock Portfolio Split - App Logic
 
+// Configuration Constants
+const CONFIG = {
+    CURRENCY_SYMBOL: '₹',
+    CURRENCY_LOCALE: 'en-IN',
+    MAX_AMOUNT: 1000000000000, // 1 trillion max
+    MIN_AMOUNT: 0.01,
+    PIE_CHART_THRESHOLD: 20, // Switch to bar chart above this many holdings
+    LABEL_VISIBILITY_THRESHOLD: 3, // Show labels only for slices >3%
+    MAX_TICKER_LENGTH: 10,
+    NOTIFICATION_DURATION: 3000,
+    MAX_NOTIFICATIONS: 3
+};
+
 class PortfolioManager {
     constructor() {
         this.holdings = [];
         this.chart = null;
         this.editingIndex = null;
         this.forceChartType = null; // 'pie', 'bar', or null for auto
+        this.nextId = 1; // For unique holding IDs
+        this.activeNotifications = 0;
         this.init();
     }
 
@@ -41,6 +56,33 @@ class PortfolioManager {
         // Cancel edit button
         document.getElementById('cancel-edit-btn').addEventListener('click', () => this.cancelEdit());
 
+        // Event delegation for table actions (CSP-safe)
+        document.getElementById('portfolio-body').addEventListener('click', (e) => {
+            const target = e.target.closest('.btn-icon');
+            if (!target) return;
+            
+            const row = target.closest('tr');
+            if (!row) return;
+            
+            const holdingId = parseInt(row.dataset.holdingId);
+            if (isNaN(holdingId)) return;
+            
+            if (target.classList.contains('btn-edit')) {
+                this.editHoldingById(holdingId);
+            } else if (target.classList.contains('btn-delete')) {
+                this.deleteHoldingById(holdingId);
+            }
+        });
+
+        // Input validation
+        const amountInput = document.getElementById('amount');
+        amountInput.addEventListener('input', (e) => {
+            let value = parseFloat(e.target.value);
+            if (isNaN(value)) return;
+            if (value < 0) e.target.value = '';
+            if (value > CONFIG.MAX_AMOUNT) e.target.value = CONFIG.MAX_AMOUNT;
+        });
+
         // Close modal on outside click
         document.getElementById('import-modal').addEventListener('click', (e) => {
             if (e.target.id === 'import-modal') {
@@ -50,31 +92,52 @@ class PortfolioManager {
     }
 
     handleFormSubmit() {
-        const ticker = document.getElementById('ticker').value.trim().toUpperCase();
-        const amount = parseFloat(document.getElementById('amount').value);
+        const tickerInput = document.getElementById('ticker').value.trim().toUpperCase();
+        const amountInput = parseFloat(document.getElementById('amount').value);
 
-        if (!ticker || isNaN(amount) || amount <= 0) {
-            this.showNotification('Please enter valid ticker and amount', 'error');
+        // Sanitize ticker input (XSS protection)
+        const ticker = this.sanitizeTicker(tickerInput);
+        
+        if (!ticker || ticker.length > CONFIG.MAX_TICKER_LENGTH) {
+            this.showNotification(`Ticker must be 1-${CONFIG.MAX_TICKER_LENGTH} characters`, 'error');
+            return;
+        }
+
+        // Validate amount
+        const amount = this.validateAmount(amountInput);
+        if (amount === null) {
+            this.showNotification(
+                `Amount must be between ${CONFIG.CURRENCY_SYMBOL}${CONFIG.MIN_AMOUNT} and ${CONFIG.CURRENCY_SYMBOL}${CONFIG.MAX_AMOUNT.toLocaleString(CONFIG.CURRENCY_LOCALE)}`, 
+                'error'
+            );
             return;
         }
 
         if (this.editingIndex !== null) {
             // Update existing holding
-            this.holdings[this.editingIndex] = { ticker, amount };
+            const holding = this.holdings.find(h => h.id === this.editingIndex);
+            if (holding) {
+                holding.ticker = ticker;
+                holding.amount = amount;
+            }
             this.editingIndex = null;
             document.getElementById('add-btn').innerHTML = '➕ Add Holding';
             document.getElementById('cancel-edit-btn').style.display = 'none';
             this.showNotification('Holding updated successfully', 'success');
         } else {
             // Check for duplicate ticker
-            const existingIndex = this.holdings.findIndex(h => h.ticker === ticker);
-            if (existingIndex !== -1) {
+            const existingHolding = this.holdings.find(h => h.ticker === ticker);
+            if (existingHolding) {
                 // Update existing instead of creating duplicate
-                this.holdings[existingIndex].amount += amount;
-                this.showNotification(`Added to existing ${ticker} holding`, 'success');
+                existingHolding.amount += amount;
+                this.showNotification(`Added ${CONFIG.CURRENCY_SYMBOL}${amount.toLocaleString(CONFIG.CURRENCY_LOCALE)} to existing ${ticker} holding`, 'success');
             } else {
-                // Add new holding
-                this.holdings.push({ ticker, amount });
+                // Add new holding with unique ID
+                this.holdings.push({ 
+                    id: this.nextId++, 
+                    ticker, 
+                    amount 
+                });
                 this.showNotification('Holding added successfully', 'success');
             }
         }
@@ -84,9 +147,23 @@ class PortfolioManager {
         this.updateUI();
     }
 
-    editHolding(index) {
-        this.editingIndex = index;
-        const holding = this.holdings[index];
+    sanitizeTicker(ticker) {
+        // Remove any non-alphanumeric characters except dash and dot
+        return ticker.replace(/[^A-Z0-9.-]/g, '');
+    }
+
+    validateAmount(amount) {
+        if (isNaN(amount) || amount < CONFIG.MIN_AMOUNT || amount > CONFIG.MAX_AMOUNT) {
+            return null;
+        }
+        return amount;
+    }
+
+    editHoldingById(holdingId) {
+        const holding = this.holdings.find(h => h.id === holdingId);
+        if (!holding) return;
+        
+        this.editingIndex = holdingId;
         
         document.getElementById('ticker').value = holding.ticker;
         document.getElementById('amount').value = holding.amount;
@@ -95,6 +172,14 @@ class PortfolioManager {
         
         // Scroll to form
         document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    editHolding(index) {
+        const holding = this.holdings[index];
+        if (!holding || typeof holding.id === 'undefined') {
+            return;
+        }
+        this.editHoldingById(holding.id);
     }
 
     cancelEdit() {
@@ -112,18 +197,30 @@ class PortfolioManager {
         this.updateChart();
     }
 
-    deleteHolding(index) {
-        const holding = this.holdings[index];
+    deleteHoldingById(holdingId) {
+        const holding = this.holdings.find(h => h.id === holdingId);
+        if (!holding) return;
+        
         if (confirm(`Are you sure you want to delete ${holding.ticker}?`)) {
+            const index = this.holdings.findIndex(h => h.id === holdingId);
             this.holdings.splice(index, 1);
+            
+            // Clear editing state if deleting the holding being edited
+            if (this.editingIndex === holdingId) {
+                this.cancelEdit();
+            }
+            
             this.saveToLocalStorage();
             this.updateUI();
             this.showNotification('Holding deleted', 'success');
-            
-            if (this.editingIndex === index) {
-                this.cancelEdit();
-            }
         }
+    }
+
+    deleteHolding(index) {
+        // Legacy method - find by index
+        const holding = this.holdings[index];
+        if (!holding) return;
+        this.deleteHoldingById(holding.id);
     }
 
     resetForm() {
@@ -168,13 +265,13 @@ class PortfolioManager {
         // Sort holdings by amount descending
         const sortedHoldings = [...this.holdings].sort((a, b) => b.amount - a.amount);
 
-        tbody.innerHTML = sortedHoldings.map((holding, sortedIndex) => {
-            const originalIndex = this.holdings.findIndex(h => h.ticker === holding.ticker && h.amount === holding.amount);
+        // Use textContent for security, data attributes for IDs
+        tbody.innerHTML = sortedHoldings.map((holding) => {
             const percentage = total > 0 ? (holding.amount / total * 100).toFixed(2) : 0;
             
             return `
-                <tr>
-                    <td class="ticker">${holding.ticker}</td>
+                <tr data-holding-id="${holding.id}">
+                    <td class="ticker"></td>
                     <td class="amount">${this.formatCurrency(holding.amount)}</td>
                     <td>
                         <div class="allocation">
@@ -186,10 +283,10 @@ class PortfolioManager {
                     </td>
                     <td>
                         <div class="actions">
-                            <button class="btn-icon btn-edit" onclick="portfolioManager.editHolding(${originalIndex})" title="Edit">
+                            <button class="btn-icon btn-edit" title="Edit" aria-label="Edit ${this.escapeHtml(holding.ticker)}">
                                 ✏️
                             </button>
-                            <button class="btn-icon btn-delete" onclick="portfolioManager.deleteHolding(${originalIndex})" title="Delete">
+                            <button class="btn-icon btn-delete" title="Delete" aria-label="Delete ${this.escapeHtml(holding.ticker)}">
                                 🗑️
                             </button>
                         </div>
@@ -197,6 +294,23 @@ class PortfolioManager {
                 </tr>
             `;
         }).join('');
+        
+        // Safely set ticker text content (XSS protection)
+        sortedHoldings.forEach((holding, index) => {
+            const row = tbody.children[index];
+            if (row) {
+                const tickerCell = row.querySelector('.ticker');
+                if (tickerCell) {
+                    tickerCell.textContent = holding.ticker;
+                }
+            }
+        });
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     initChart() {
@@ -234,7 +348,7 @@ class PortfolioManager {
                                 const value = context.parsed || 0;
                                 const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                 const percentage = ((value / total) * 100).toFixed(2);
-                                return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
+                                return `${label}: ${CONFIG.CURRENCY_SYMBOL}${value.toLocaleString(CONFIG.CURRENCY_LOCALE)} (${percentage}%)`;
                             }
                         }
                     },
@@ -249,10 +363,10 @@ class PortfolioManager {
                             const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
                             const label = ctx.chart.data.labels[ctx.dataIndex];
-                            const amount = '₹' + value.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                            const amount = CONFIG.CURRENCY_SYMBOL + value.toLocaleString(CONFIG.CURRENCY_LOCALE, { maximumFractionDigits: 0 });
                             
                             // Show labels only if >3% to avoid clutter
-                            if (parseFloat(percentage) < 3) return '';
+                            if (parseFloat(percentage) < CONFIG.LABEL_VISIBILITY_THRESHOLD) return '';
                             
                             return `${label}\n${percentage}%\n${amount}`;
                         },
@@ -305,8 +419,11 @@ class PortfolioManager {
         if (this.forceChartType) {
             usePieChart = this.forceChartType === 'pie';
         } else {
-            usePieChart = sortedHoldings.length <= 20;
+            usePieChart = sortedHoldings.length <= CONFIG.PIE_CHART_THRESHOLD;
         }
+        
+        const currentType = this.chart.config.type;
+        const needsRecreate = currentType !== (usePieChart ? 'pie' : 'bar');
         
         // Adjust canvas height for bar charts with many items
         const wrapper = canvas.parentElement;
@@ -316,16 +433,42 @@ class PortfolioManager {
             wrapper.style.height = '';
         }
         
-        if (this.chart.config.type !== (usePieChart ? 'pie' : 'bar')) {
+        if (needsRecreate) {
+            // Only destroy and recreate if type actually changed
             this.chart.destroy();
+            this.chart = null;
             this.initChart();
-            // Change chart type
             this.chart.config.type = usePieChart ? 'pie' : 'bar';
             
             if (!usePieChart) {
                 // Configure for horizontal bar chart
-                this.chart.options.indexAxis = 'y';
-                this.chart.options.plugins.legend.display = false;
+
+            if (usePieChart) {
+                // Recreate default pie chart
+                this.initChart();
+            } else {
+                // Create a new bar chart directly with the correct type
+                const ctx = canvas.getContext('2d');
+                this.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            data: [],
+                            backgroundColor: []
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
                 this.chart.options.plugins.datalabels = {
                     color: '#f1f5f9',
                     anchor: 'end',
@@ -349,28 +492,6 @@ class PortfolioManager {
                         grid: { display: false },
                         ticks: { color: '#94a3b8', font: { size: 10 } }
                     }
-                };
-            } else {
-                // Reset to pie chart config
-                delete this.chart.options.indexAxis;
-                delete this.chart.options.scales;
-                this.chart.options.plugins.datalabels = {
-                    color: '#f1f5f9',
-                    font: { size: 11, weight: 500, family: "'Inter', sans-serif" },
-                    formatter: (value, ctx) => {
-                        const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                        const percentage = ((value / total) * 100).toFixed(1);
-                        const label = ctx.chart.data.labels[ctx.dataIndex];
-                        const amount = '₹' + value.toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                        if (parseFloat(percentage) < 3) return '';
-                        return `${label}\n${percentage}%\n${amount}`;
-                    },
-                    align: 'end',
-                    anchor: 'end',
-                    offset: 8,
-                    backgroundColor: 'rgba(15, 23, 42, 0.8)',
-                    borderRadius: 4,
-                    padding: 6
                 };
             }
         }
@@ -414,23 +535,52 @@ class PortfolioManager {
     }
 
     formatCurrency(amount) {
-        return `₹${amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+        return `${CONFIG.CURRENCY_SYMBOL}${amount.toLocaleString(CONFIG.CURRENCY_LOCALE, { maximumFractionDigits: 2 })}`;
     }
 
     // Local Storage
     saveToLocalStorage() {
-        localStorage.setItem('portfolio-holdings', JSON.stringify(this.holdings));
+        try {
+            const data = JSON.stringify({
+                holdings: this.holdings,
+                nextId: this.nextId
+            });
+            localStorage.setItem('portfolio-holdings', data);
+        } catch (e) {
+            if (e.name === 'QuotaExceededError') {
+                this.showNotification('Storage quota exceeded. Consider exporting your data.', 'error');
+            } else {
+                console.error('Failed to save to localStorage:', e);
+                this.showNotification('Failed to save data locally', 'error');
+            }
+        }
     }
 
     loadFromLocalStorage() {
-        const saved = localStorage.getItem('portfolio-holdings');
-        if (saved) {
-            try {
-                this.holdings = JSON.parse(saved);
-            } catch (e) {
-                console.error('Failed to load holdings:', e);
-                this.holdings = [];
+        try {
+            const saved = localStorage.getItem('portfolio-holdings');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                // Handle old format (array) and new format (object)
+                if (Array.isArray(data)) {
+                    // Migrate old format
+                    this.holdings = data.map((h, index) => ({
+                        id: index + 1,
+                        ticker: h.ticker,
+                        amount: parseFloat(h.amount)
+                    }));
+                    this.nextId = this.holdings.length + 1;
+                } else {
+                    this.holdings = data.holdings || [];
+                    this.nextId = data.nextId || this.holdings.length + 1;
+                }
             }
+        } catch (e) {
+            console.error('Failed to load holdings:', e);
+            this.holdings = [];
+            this.nextId = 1;
+            this.showNotification('Failed to load saved data', 'error');
         }
     }
 
@@ -494,23 +644,64 @@ class PortfolioManager {
                 throw new Error('Data must be an array');
             }
 
-            // Validate and clean structure
-            const validItems = imported.filter(item => {
-                if (!item.ticker || typeof item.ticker !== 'string') return false;
-                const amt = parseFloat(item.amount);
-                if (isNaN(amt) || amt <= 0) return false;
-                return true;
+            if (imported.length === 0) {
+                throw new Error('No data to import');
+            }
+
+            // Validate and clean structure with detailed error tracking
+            const validItems = [];
+            const errors = [];
+            
+            imported.forEach((item, index) => {
+                if (!item.ticker || typeof item.ticker !== 'string') {
+                    errors.push(`Row ${index + 1}: Missing or invalid ticker`);
+                    return;
+                }
+                
+                const sanitizedTicker = this.sanitizeTicker(item.ticker.toUpperCase());
+                if (sanitizedTicker.length === 0 || sanitizedTicker.length > CONFIG.MAX_TICKER_LENGTH) {
+                    errors.push(`Row ${index + 1}: Ticker "${item.ticker}" is invalid (must be 1-${CONFIG.MAX_TICKER_LENGTH} characters)`);
+                    return;
+                }
+                
+                const amount = parseFloat(item.amount);
+                if (isNaN(amount)) {
+                    errors.push(`Row ${index + 1}: Amount is not a number`);
+                    return;
+                }
+                
+                if (amount < CONFIG.MIN_AMOUNT) {
+                    errors.push(`Row ${index + 1}: Amount too small (min: ${CONFIG.CURRENCY_SYMBOL}${CONFIG.MIN_AMOUNT})`);
+                    return;
+                }
+                
+                if (amount > CONFIG.MAX_AMOUNT) {
+                    errors.push(`Row ${index + 1}: Amount too large (max: ${CONFIG.CURRENCY_SYMBOL}${CONFIG.MAX_AMOUNT.toLocaleString(CONFIG.CURRENCY_LOCALE)})`);
+                    return;
+                }
+                
+                validItems.push({
+                    ticker: sanitizedTicker,
+                    amount: amount
+                });
             });
 
             if (validItems.length === 0) {
-                throw new Error('No valid holdings found. Each item must have ticker (string) and amount (positive number)');
+                const errorMsg = errors.length > 0 
+                    ? 'No valid holdings found:\\n\\n' + errors.slice(0, 5).join('\\n') + (errors.length > 5 ? `\\n...and ${errors.length - 5} more` : '')
+                    : 'No valid holdings found';
+                throw new Error(errorMsg);
             }
 
-            if (validItems.length < imported.length) {
-                const skipped = imported.length - validItems.length;
-                if (!confirm(`${skipped} invalid entries will be skipped. Import ${validItems.length} valid holdings?`)) {
-                    return;
-                }
+            // Show warnings if some items were skipped
+            if (errors.length > 0) {
+                const proceed = confirm(
+                    `${errors.length} invalid entries found:\\n\\n` +
+                    errors.slice(0, 3).join('\\n') +
+                    (errors.length > 3 ? `\\n...and ${errors.length - 3} more` : '') +
+                    `\\n\\nImport ${validItems.length} valid holdings?`
+                );
+                if (!proceed) return;
             }
 
             // Confirm before replacing
@@ -520,9 +711,11 @@ class PortfolioManager {
                 }
             }
 
+            // Assign unique IDs to imported items
             this.holdings = validItems.map(item => ({
-                ticker: item.ticker.toUpperCase(),
-                amount: parseFloat(item.amount)
+                id: this.nextId++,
+                ticker: item.ticker,
+                amount: item.amount
             }));
 
             this.saveToLocalStorage();
@@ -551,42 +744,71 @@ class PortfolioManager {
 
     // Notifications
     showNotification(message, type = 'info') {
+        // Limit number of active notifications
+        if (this.activeNotifications >= CONFIG.MAX_NOTIFICATIONS) {
+            return;
+        }
+
+        this.activeNotifications++;
+
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        notification.textContent = message;
         
-        // Add styles
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            padding: '1rem 1.5rem',
-            background: type === 'success' ? '#10b981' : '#ef4444',
-            color: 'white',
-            borderRadius: '0.5rem',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            zIndex: '9999',
-            fontWeight: '500',
-            animation: 'slideIn 0.3s ease',
-            maxWidth: '300px'
-        });
+        // Use textContent for security
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        notification.appendChild(messageSpan);
 
         document.body.appendChild(notification);
 
-        // Remove after 3 seconds
+        // Remove after duration
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.classList.add('notification-exit');
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+                this.activeNotifications--;
             }, 300);
-        }, 3000);
+        }, CONFIG.NOTIFICATION_DURATION);
     }
 }
 
-// Add animations
+// Add notification styles
 const style = document.createElement('style');
 style.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        font-weight: 500;
+        max-width: 300px;
+        animation: slideIn 0.3s ease;
+        font-family: var(--font-sans);
+    }
+    
+    .notification-success {
+        background: var(--primary, #10b981);
+    }
+    
+    .notification-error {
+        background: var(--danger, #ef4444);
+    }
+    
+    .notification-info {
+        background: var(--secondary, #3b82f6);
+    }
+    
+    .notification-exit {
+        animation: slideOut 0.3s ease;
+    }
+    
     @keyframes slideIn {
         from {
             transform: translateX(400px);

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Split</title>
+    <meta name="description" content="Track your stock portfolio allocation with visual split analysis. Offline, no tracking.">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">📊</div>
+                <div class="header-text">
+                    <h1>Stock Portfolio Split</h1>
+                    <p>Track allocation • Visual analysis • Offline</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="chart-toggle-btn" class="btn btn-secondary" title="Toggle chart view" style="display: none;">
+                    📊 Switch View
+                </button>
+                <button id="import-btn" class="btn btn-secondary" title="Import portfolio data">
+                    📥 Import
+                </button>
+                <button id="export-btn" class="btn btn-secondary" title="Export portfolio data">
+                    📤 Export
+                </button>
+                <button id="clear-all-btn" class="btn btn-danger" title="Clear all holdings">
+                    🗑️ Clear
+                </button>
+            </div>
+        </header>
+
+        <!-- Input Form -->
+        <section class="form-card">
+            <h2>Add Holding</h2>
+            <form id="holding-form">
+                <div class="form-group">
+                    <label for="ticker">Ticker Symbol</label>
+                    <input 
+                        type="text" 
+                        id="ticker" 
+                        placeholder="e.g., AAPL, MSFT, TCS"
+                        required
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount (₹)</label>
+                    <input 
+                        type="number" 
+                        id="amount" 
+                        placeholder="e.g., 50000"
+                        min="0.01"
+                        max="1000000000000"
+                        step="0.01"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary" id="add-btn">
+                    ➕ Add Holding
+                </button>
+                <button type="button" class="btn btn-secondary" id="cancel-edit-btn" style="display: none;">
+                    ✖️ Cancel
+                </button>
+            </form>
+        </section>
+
+        <!-- Summary Cards -->
+        <section class="summary-grid">
+            <div class="stat-card total">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <h3 id="total-value">₹0</h3>
+                    <p>Total Portfolio Value</p>
+                </div>
+            </div>
+            <div class="stat-card count">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <h3 id="holding-count">0</h3>
+                    <p>Total Holdings</p>
+                </div>
+            </div>
+            <div class="stat-card avg">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <h3 id="avg-allocation">0%</h3>
+                    <p>Average Allocation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio View -->
+        <section class="portfolio-section">
+            <div class="portfolio-table-container">
+                <h2>Holdings</h2>
+                <div class="table-wrapper">
+                    <table id="portfolio-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Amount</th>
+                                <th>Allocation %</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolio-body">
+                            <tr class="empty-state">
+                                <td colspan="4">
+                                    <div class="empty-message">
+                                        <span class="empty-icon">📊</span>
+                                        <p>No holdings yet. Add your first stock above!</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Allocation Chart</h2>
+                <div class="chart-wrapper">
+                    <canvas id="allocation-chart"></canvas>
+                    <div id="no-data-message" class="no-data-message">
+                        <span>📊</span>
+                        <p>Add holdings to see the allocation chart</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Import/Export Modal -->
+        <div id="import-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Import Portfolio Data</h2>
+                    <button class="modal-close" id="close-import-modal">✖️</button>
+                </div>
+                <div class="modal-body">
+                    <p>Paste your JSON data below or upload a file:</p>
+                    <textarea id="import-textarea" placeholder='[{"ticker":"AAPL","amount":50000},{"ticker":"MSFT","amount":30000}]'></textarea>
+                    <div class="file-upload">
+                        <input type="file" id="import-file" accept=".json" style="display: none;">
+                        <button class="btn btn-secondary" id="choose-file-btn">
+                            📁 Choose File
+                        </button>
+                        <span id="file-name"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancel-import-btn">Cancel</button>
+                    <button class="btn btn-primary" id="confirm-import-btn">Import</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>📊 Stock Portfolio Split • Data stored locally • No tracking</p>
+        </footer>
+    </div>
+
+    <!-- Hidden visitor counter -->
+    <div style="display: none;">
+        <a href="https://www.332321.xyz/index.html">
+            <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2Fw%2Fsps&labelColor=%230d1117&countColor=%230d1117" alt="visitor count"/>
+        </a>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

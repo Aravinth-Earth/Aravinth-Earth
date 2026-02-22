@@ -28,6 +28,12 @@
         <!-- Stylesheet with media queries -->
         <link rel="stylesheet" href="css/refresh-button.css">
         <link rel="stylesheet" href="css/style.css">
+        
+        <!-- About/Privacy Modal Styles -->
+        <link rel="stylesheet" href="css/about-privacy.css">
+        
+        <!-- Optional: Uncomment below to auto-populate build info (requires running generate-build-info script) -->
+        <!-- <script src="js/build-info.js" defer></script> -->
 
     </head>
     <body>
@@ -171,12 +177,18 @@
                              width="auto"
                              height="20">
                     </div>
+                    <div class="footer-about-section">
+                        <a href="javascript:void(0)" class="footer-about-link" onclick="window.openAboutModal()">
+                            About & Privacy
+                        </a>
+                    </div>
                 </div>
             </footer>
         </div>
 
         <button class="refresh-btn" title="Refresh options" aria-label="Refresh page content">↻</button>
         <script src="js/refresh-handler.js" defer></script>
+        <script src="js/about-privacy.js" defer></script>
         <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')

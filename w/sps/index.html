@@ -6,6 +6,7 @@
     <title>Stock Portfolio Split</title>
     <meta name="description" content="Track your stock portfolio allocation with visual split analysis. Offline, no tracking.">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../css/about-privacy.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 </head>
@@ -162,6 +163,11 @@
 
         <footer class="footer">
             <p>📊 Stock Portfolio Split • Data stored locally • No tracking</p>
+            <div style="margin-top: 12px;">
+                <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">
+                    About & Privacy
+                </a>
+            </div>
         </footer>
     </div>
 
@@ -173,5 +179,6 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="../../js/about-privacy.js" defer></script>
 </body>
 </html>

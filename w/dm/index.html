@@ -6,6 +6,7 @@
   <title>Don't Get Stuck – Quick Decision Helper</title>
   <meta name="description" content="Score any situation in under a minute. Works offline, no tracking.">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../css/about-privacy.css">
 </head>
 <body>
   <div class="app">
@@ -59,6 +60,11 @@
 
     <footer>
       <span data-i18n="footer">A compass for decisions, not a rulebook.</span>
+      <div style="margin-top: 12px;">
+        <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">
+          About & Privacy
+        </a>
+      </div>
     </footer>
   </div>
 
@@ -71,5 +77,6 @@
 
   <script src="i18n.js"></script>
   <script src="app.js"></script>
+  <script src="../../js/about-privacy.js" defer></script>
 </body>
 </html>

@@ -13,3 +13,8 @@ package-lock.json
 *instructions*
 
 *.log
+
+# Maestro UI test artifacts
+log/
+ui-test-m/site-sanity/artifacts*/
+ui-test-m/site-sanity/debug*/

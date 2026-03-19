@@ -1,0 +1,6 @@
+url: https://www.332321.xyz/
+---
+- launchApp
+- assertVisible: "Hi, I'm Aravinth! 👋"
+- takeScreenshot: "01-before-intentional-failure"
+- assertVisible: "INTENTIONAL_FAILURE_SENTINEL_TEXT"

@@ -1,0 +1,4 @@
+url: https://www.332321.xyz/
+---
+- launchApp
+- assertVisible: "Hi, I'm Aravinth! 👋"

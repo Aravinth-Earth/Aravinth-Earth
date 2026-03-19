@@ -1,0 +1,2198 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <title>Calm Sweep</title>
+        <style>
+            :root {
+                --bg: #0b1220;
+                --bg-soft: #111b2e;
+                --panel: rgba(17, 27, 46, 0.78);
+                --panel-strong: rgba(15, 23, 42, 0.94);
+                --border: rgba(148, 163, 184, 0.16);
+                --text: #e8eef8;
+                --muted: #a5b3c7;
+                --accent: #5eead4;
+                --accent-soft: rgba(94, 234, 212, 0.18);
+                --ok: #7dd3fc;
+                --warn: #fca5a5;
+                --shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+                --radius-xl: 24px;
+                --radius-lg: 18px;
+                --radius-md: 14px;
+                --tile-size: clamp(54px, 14vw, 74px);
+                --transition: 180ms ease;
+                color-scheme: dark;
+                font-family:
+                    Inter,
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe UI",
+                    sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+            }
+            body {
+                margin: 0;
+                overflow: hidden;
+                background:
+                    radial-gradient(
+                        circle at top,
+                        rgba(94, 234, 212, 0.12),
+                        transparent 32%
+                    ),
+                    linear-gradient(
+                        180deg,
+                        #08101d 0%,
+                        #0b1220 38%,
+                        #0a1424 100%
+                    );
+                color: var(--text);
+                -webkit-font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
+            }
+
+            .app {
+                min-height: 100dvh;
+                height: 100dvh;
+                display: grid;
+                place-items: center;
+                padding: 18px 18px 62px;
+            }
+
+            .shell {
+                width: min(100%, 860px);
+                height: 100%;
+                max-height: 100%;
+                background: var(--panel);
+                backdrop-filter: blur(16px);
+                border: 1px solid var(--border);
+                border-radius: 28px;
+                box-shadow: var(--shadow);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 18px 18px 8px;
+            }
+
+            .brand {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .eyebrow {
+                font-size: 0.78rem;
+                color: var(--muted);
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: clamp(1.4rem, 4.8vw, 2rem);
+                line-height: 1.1;
+                font-weight: 750;
+            }
+
+            .subtle {
+                margin: 0;
+                color: var(--muted);
+                font-size: 0.96rem;
+                line-height: 1.45;
+            }
+
+            .icon-btn,
+            .btn {
+                border: 1px solid var(--border);
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--text);
+                border-radius: 999px;
+                cursor: pointer;
+                transition:
+                    transform var(--transition),
+                    background var(--transition),
+                    border-color var(--transition),
+                    opacity var(--transition);
+            }
+
+            .icon-btn {
+                min-width: 46px;
+                min-height: 46px;
+                padding: 0 14px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+            }
+
+            .icon-btn:hover,
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.08);
+            }
+            .icon-btn:active,
+            .btn:active {
+                transform: scale(0.98);
+            }
+            .icon-btn:focus-visible,
+            .btn:focus-visible,
+            .tile:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+
+            .content {
+                padding: 10px 18px 18px;
+                display: block;
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .screen {
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                overscroll-behavior: contain;
+                -webkit-overflow-scrolling: touch;
+                display: none;
+            }
+
+            .screen[hidden] {
+                display: none !important;
+            }
+
+            .screen.active {
+                display: grid;
+            }
+
+            .panel {
+                background: var(--panel-strong);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-xl);
+                padding: 16px;
+            }
+
+            .hero {
+                display: grid;
+                gap: 14px;
+                align-items: start;
+            }
+
+            .hero-grid {
+                display: grid;
+                gap: 12px;
+                grid-template-columns: 1fr;
+            }
+
+            .chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 40px;
+                padding: 0 14px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 0.92rem;
+            }
+
+            .target-chip {
+                color: var(--text);
+                background: linear-gradient(
+                    180deg,
+                    rgba(94, 234, 212, 0.16),
+                    rgba(94, 234, 212, 0.08)
+                );
+                border-color: rgba(94, 234, 212, 0.32);
+            }
+
+            .swatch,
+            .shape-preview {
+                width: 24px;
+                height: 24px;
+                display: inline-grid;
+                place-items: center;
+                flex: 0 0 auto;
+            }
+
+            .swatch {
+                display: none;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .stat {
+                background: rgba(255, 255, 255, 0.035);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 12px;
+            }
+
+            .stat-label {
+                color: var(--muted);
+                font-size: 0.82rem;
+                margin-bottom: 6px;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                min-height: 48px;
+                padding: 0 18px;
+                font-size: 0.98rem;
+                font-weight: 650;
+            }
+
+            .btn-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.25em;
+                margin-right: 8px;
+                font-size: 1em;
+            }
+
+            .btn-label {
+                display: inline;
+            }
+
+            .btn-compact {
+                min-width: 0;
+                padding: 0 12px;
+                min-height: 42px;
+                width: auto;
+            }
+
+            .btn-primary {
+                background: linear-gradient(
+                    180deg,
+                    rgba(94, 234, 212, 0.22),
+                    rgba(94, 234, 212, 0.12)
+                );
+                border-color: rgba(94, 234, 212, 0.32);
+            }
+
+            .game-wrap {
+                gap: 14px;
+                min-height: 0;
+                padding-bottom: 4px;
+                position: relative;
+            }
+
+            .game-wrap.active {
+                grid-template-rows: auto minmax(0, 1fr) auto;
+                min-height: 0;
+            }
+
+            .hud {
+                display: grid;
+                gap: 12px;
+            }
+
+            .hud-top {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .target-card {
+                display: grid;
+                gap: 10px;
+                min-height: 96px;
+            }
+
+                .level-chip {
+                    justify-self: start;
+                    min-height: 28px;
+                    padding: 0 10px;
+                    font-size: 0.8rem;
+                    letter-spacing: 0.02em;
+                }
+
+                .difficulty-row {
+                    display: grid;
+                    gap: 8px;
+                }
+
+                .difficulty-buttons {
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+
+                .difficulty-btn {
+                    min-height: 30px;
+                    padding: 0 10px;
+                    font-size: 0.78rem;
+                }
+
+            .difficulty-btn.active {
+                    color: var(--text);
+                    border-color: rgba(94, 234, 212, 0.42);
+                    background: rgba(94, 234, 212, 0.12);
+                }
+
+                .lang-row {
+                    display: grid;
+                    gap: 8px;
+                    margin-top: 10px;
+                }
+
+                .lang-buttons {
+                    display: flex;
+                    gap: 8px;
+                }
+
+                .lang-btn {
+                    min-height: 30px;
+                    padding: 0 10px;
+                    font-size: 0.78rem;
+                }
+
+                .lang-btn.active {
+                    color: var(--text);
+                    border-color: rgba(125, 211, 252, 0.42);
+                    background: rgba(125, 211, 252, 0.12);
+                }
+
+                #gameWrap .difficulty-row {
+                    display: none;
+                }
+
+            .target-card h2 {
+                margin: 0;
+                font-size: 0.94rem;
+                color: var(--muted);
+                font-weight: 600;
+            }
+
+            .target-line {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                font-size: clamp(1rem, 4vw, 1.2rem);
+                font-weight: 700;
+            }
+
+            .progress-card {
+                min-width: 108px;
+                display: grid;
+                place-items: center;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .ring {
+                --p: 1;
+                width: 74px;
+                height: 74px;
+                border-radius: 50%;
+                background:
+                    radial-gradient(
+                        closest-side,
+                        var(--panel-strong) 78%,
+                        transparent 80% 100%
+                    ),
+                    conic-gradient(
+                        var(--accent) calc(var(--p) * 1turn),
+                        rgba(255, 255, 255, 0.08) 0
+                    );
+                display: grid;
+                place-items: center;
+            }
+
+            .ring span {
+                font-size: 1.02rem;
+                font-weight: 700;
+            }
+
+            .progress-card small {
+                color: var(--muted);
+            }
+
+                .hud-tools {
+                    display: flex;
+                    gap: 6px;
+                    flex-wrap: wrap;
+                    align-items: center;
+                }
+
+            .mini-btn {
+                min-height: 38px;
+                padding: 0 12px;
+                font-size: 0.85rem;
+                font-weight: 650;
+            }
+
+            .live-stats {
+                position: absolute;
+                inset: 10px;
+                z-index: 5;
+                display: grid;
+                gap: 6px;
+                padding: 8px;
+                border-radius: var(--radius-lg);
+                border: 1px solid var(--border);
+                background: rgba(8, 16, 29, 0.96);
+                box-shadow: var(--shadow);
+                backdrop-filter: blur(12px);
+                grid-template-rows: auto 1fr;
+            }
+
+            .live-stats[hidden] {
+                display: none !important;
+            }
+
+            .scorebar {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .score-pill {
+                padding: 12px;
+                border-radius: var(--radius-lg);
+                background: rgba(255, 255, 255, 0.035);
+                border: 1px solid var(--border);
+            }
+
+            .score-pill .k {
+                color: var(--muted);
+                font-size: 0.8rem;
+                margin-bottom: 5px;
+            }
+
+            .score-pill .v {
+                font-size: 1.1rem;
+                font-weight: 700;
+            }
+
+            .game-board {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 10px;
+                align-items: stretch;
+                flex: 1;
+                min-height: 0;
+                position: relative;
+            }
+
+            .pause-overlay {
+                position: absolute;
+                inset: 0;
+                display: none;
+                place-items: center;
+                background: rgba(8, 16, 29, 0.94);
+                backdrop-filter: blur(8px);
+                border-radius: inherit;
+                z-index: 3;
+                text-align: center;
+                padding: 18px;
+            }
+
+            .pause-overlay.active {
+                display: grid;
+            }
+
+            .pause-card {
+                display: grid;
+                gap: 8px;
+                justify-items: center;
+                max-width: 240px;
+            }
+
+            .pause-card h3 {
+                margin: 0;
+                font-size: 1.05rem;
+            }
+
+            .tile {
+                position: relative;
+                min-height: var(--tile-size);
+                aspect-ratio: 1 / 1;
+                border-radius: 20px;
+                border: 1px solid rgba(148, 163, 184, 0.18);
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.06),
+                    rgba(255, 255, 255, 0.02)
+                );
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                transition:
+                    transform var(--transition),
+                    opacity var(--transition),
+                    background var(--transition),
+                    border-color var(--transition),
+                    box-shadow var(--transition);
+            }
+
+            .tile:hover {
+                transform: translateY(-1px);
+            }
+            .tile:active {
+                transform: scale(0.98);
+            }
+            .tile.done {
+                opacity: 0.3;
+                pointer-events: none;
+                transform: scale(0.96);
+            }
+
+            .tile.correct {
+                border-color: rgba(94, 234, 212, 0.45);
+                box-shadow:
+                    0 0 0 3px rgba(94, 234, 212, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                background: linear-gradient(
+                    180deg,
+                    rgba(94, 234, 212, 0.15),
+                    rgba(255, 255, 255, 0.02)
+                );
+                animation: correctPop 280ms ease;
+            }
+
+            .tile.wrong {
+                animation: wrongShake 260ms ease;
+                border-color: rgba(252, 165, 165, 0.5);
+            }
+
+            .symbol {
+                width: 64%;
+                height: 64%;
+                display: block;
+                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.06));
+            }
+
+            .footer-note {
+                color: var(--muted);
+                text-align: center;
+                font-size: 0.86rem;
+                line-height: 1.5;
+                padding-bottom: 4px;
+            }
+
+            .app-footer {
+                position: fixed;
+                left: 50%;
+                bottom: 10px;
+                transform: translateX(-50%);
+                width: min(100%, 860px);
+                text-align: center;
+                pointer-events: none;
+                z-index: 6;
+            }
+
+            .app-footer a {
+                pointer-events: auto;
+            }
+
+            .app-footer .footer-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 8px;
+                color: #58a6ff;
+                text-decoration: none;
+                font-size: 0.9rem;
+            }
+
+            .results {
+                gap: 14px;
+            }
+
+            .stats-screen {
+                gap: 14px;
+            }
+
+            .results h2 {
+                margin: 0;
+                font-size: 1.35rem;
+            }
+
+            .results-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .results-screen {
+                display: grid;
+                gap: 14px;
+                align-content: start;
+            }
+
+            .overlay-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .overlay-head h3 {
+                margin: 0;
+                font-size: 1rem;
+            }
+
+            .overlay-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .overlay-head h3 {
+                margin: 0;
+                font-size: 1rem;
+            }
+
+            .muted {
+                color: var(--muted);
+            }
+
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            @keyframes wrongPulse {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(0.96);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes correctPop {
+                0% {
+                    transform: scale(1);
+                }
+                45% {
+                    transform: scale(1.06);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes wrongShake {
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+                20% {
+                    transform: translateX(-2px);
+                }
+                40% {
+                    transform: translateX(2px);
+                }
+                60% {
+                    transform: translateX(-1px);
+                }
+                80% {
+                    transform: translateX(1px);
+                }
+            }
+
+            @media (min-width: 700px) {
+                .hero-grid {
+                    grid-template-columns: 1.1fr 0.9fr;
+                }
+
+                .game-board {
+                    grid-template-columns: repeat(6, minmax(0, 1fr));
+                }
+            }
+
+            @media (max-width: 560px) {
+                .app {
+                    padding: 0;
+                }
+                .shell {
+                    width: 100%;
+                    height: 100dvh;
+                    border-radius: 0;
+                    border-left: 0;
+                    border-right: 0;
+                }
+                .topbar,
+                .content {
+                    padding-left: 14px;
+                    padding-right: 14px;
+                }
+                .content {
+                    padding-bottom: 14px;
+                }
+                .screen {
+                    inset: 10px 14px 14px;
+                }
+                .hud-top {
+                    grid-template-columns: 1fr;
+                }
+                .actions {
+                    flex-direction: row;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                .home-actions .btn-primary {
+                    width: 100%;
+                }
+                .home-actions .btn-compact {
+                    width: auto;
+                }
+                .results-grid,
+                .stats-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+                .game-wrap.active {
+                    grid-template-rows: auto minmax(0, 1fr) auto;
+                }
+                .target-card {
+                    min-height: 0;
+                    padding-right: 86px;
+                }
+                .progress-card {
+                    position: absolute;
+                    top: 14px;
+                    right: 14px;
+                    min-width: 60px;
+                    padding: 6px;
+                    gap: 2px;
+                    z-index: 2;
+                }
+                .ring {
+                    width: 40px;
+                    height: 40px;
+                }
+                .ring span {
+                    font-size: 0.76rem;
+                }
+                #timeText,
+                .progress-card small {
+                    display: none;
+                }
+                .game-board {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 5px;
+                    align-content: start;
+                    overflow: hidden;
+                }
+                .scorebar {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 8px;
+                }
+                .score-pill {
+                    padding: 10px;
+                }
+                .score-pill .v {
+                    font-size: 1rem;
+                }
+                .tile {
+                    border-radius: 12px;
+                    min-height: 0;
+                    aspect-ratio: 1 / 1;
+                }
+                .btn-label {
+                    display: none;
+                }
+                .btn {
+                    min-width: 38px;
+                    padding: 0 12px;
+                }
+                .btn-icon {
+                    width: 1.4em;
+                    margin-right: 0;
+                    font-size: 1.1em;
+                }
+                .btn-compact {
+                    min-height: 32px;
+                    padding: 0 7px;
+                }
+                #resetStatsBtn {
+                    display: none;
+                }
+                .mini-btn {
+                    min-height: 28px;
+                    padding: 0 7px;
+                    width: auto;
+                }
+            }
+
+            @media (max-width: 390px), (max-height: 700px) {
+                .hero-grid {
+                    gap: 10px;
+                }
+                .topbar {
+                    padding-top: 14px;
+                    padding-bottom: 6px;
+                }
+                h1 {
+                    font-size: 1.5rem;
+                }
+                .home .panel {
+                    padding: 12px;
+                }
+                .home .chips {
+                    gap: 6px;
+                }
+                .home .chip {
+                    min-height: 28px;
+                    padding: 0 9px;
+                    font-size: 0.8rem;
+                }
+                .home .footer-note {
+                    display: none;
+                }
+                .home .hero-grid > div:last-child {
+                    display: none;
+                }
+                .target-card {
+                    min-height: 0;
+                    padding: 10px;
+                    gap: 6px;
+                }
+                .target-card h2,
+                .target-card .subtle {
+                    display: none;
+                }
+                #targetSwatch {
+                    display: none;
+                }
+                .target-card h2 {
+                    font-size: 0.8rem;
+                }
+                .target-line {
+                    gap: 5px;
+                    font-size: 0.9rem;
+                    flex-wrap: nowrap;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .scorebar {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+                .results-grid,
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+                .results-grid .stat {
+                    padding: 10px;
+                }
+                .stats-grid .stat {
+                    padding: 10px;
+                }
+                .results-screen .subtle {
+                    font-size: 0.9rem;
+                }
+                .results-screen .actions {
+                    gap: 8px;
+                }
+                .score-pill {
+                    padding: 7px;
+                }
+                .score-pill .k {
+                    font-size: 0.68rem;
+                }
+                .score-pill .v {
+                    font-size: 0.88rem;
+                }
+                .game-board {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 5px;
+                }
+                .tile {
+                    border-radius: 12px;
+                    min-height: 0;
+                    aspect-ratio: 1 / 1;
+                }
+                .btn {
+                    min-height: 42px;
+                    font-size: 0.92rem;
+                }
+                .mini-btn {
+                    min-height: 34px;
+                    padding: 0 10px;
+                    font-size: 0.8rem;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation: none !important;
+                    transition: none !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <main class="shell" aria-live="polite">
+                <header class="topbar">
+                    <div class="brand">
+                        <div class="eyebrow">Calm attention game</div>
+                        <h1>Calm Sweep</h1>
+                    </div>
+                    <button
+                        id="soundBtn"
+                        class="icon-btn"
+                        type="button"
+                        aria-pressed="false"
+                        aria-label="Toggle sound"
+                    >
+                        🔈
+                    </button>
+                </header>
+
+                <section class="content">
+                    <section id="home" class="screen home active panel hero">
+                        <div class="hero-grid">
+                            <div>
+                                <p class="subtle">
+                                    A dark, soothing visual scanning game. Find
+                                    the matching symbols, stay gentle, and let
+                                    focus build without pressure.
+                                </p>
+                                <div class="chips" style="margin-top: 14px">
+                                    <span class="chip">Mobile-first</span>
+                                    <span class="chip">Local-only stats</span>
+                                    <span class="chip">Short rounds</span>
+                                </div>
+                                <div class="actions home-actions" style="margin-top: 16px">
+                                    <button
+                                        id="startBtn"
+                                        class="btn btn-primary"
+                                        type="button"
+                                    >
+                                        <span class="btn-icon" aria-hidden="true">▶</span>
+                                        <span class="btn-label">Start session</span>
+                                    </button>
+                                    <button
+                                        id="viewStatsBtn"
+                                        class="btn btn-compact"
+                                        type="button"
+                                    >
+                                        <span class="btn-icon" aria-hidden="true">↗</span>
+                                        <span class="btn-label">View stats</span>
+                                    </button>
+                                    <button
+                                        id="resetStatsBtn"
+                                        class="btn btn-compact"
+                                        type="button"
+                                    >
+                                        <span class="btn-icon" aria-hidden="true">↺</span>
+                                        <span class="btn-label">Reset local stats</span>
+                                    </button>
+                                </div>
+                                <div class="difficulty-row" style="margin-top: 10px">
+                                    <span class="stat-label">Difficulty</span>
+                                    <div class="difficulty-buttons" id="difficultyButtons">
+                                        <button class="chip difficulty-btn active" data-difficulty="easy" type="button">Easy</button>
+                                        <button class="chip difficulty-btn" data-difficulty="medium" type="button">Medium</button>
+                                        <button class="chip difficulty-btn" data-difficulty="hard" type="button">Hard</button>
+                                    </div>
+                                </div>
+                                <div class="lang-row">
+                                    <span class="stat-label" data-i18n="languageLabel">Language</span>
+                                    <div class="lang-buttons" id="languageButtons">
+                                        <button class="chip lang-btn active" data-language="en" type="button">English</button>
+                                        <button class="chip lang-btn" data-language="ta" type="button">தமிழ்</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="panel"
+                                style="padding: 14px; border-radius: 20px"
+                            >
+                                <div class="stat-label">How to play</div>
+                                <p class="subtle" style="margin-top: 0">
+                                    Tap only the symbols that match the target
+                                    shown at the top. Correct taps fade away.
+                                    Wrong taps add a small penalty.
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="footer-note">
+                            Inspired by attention-style scanning mechanics for
+                            play and practice. Not a clinical assessment.
+                        </p>
+                    </section>
+
+                    <section id="stats" hidden class="screen stats-screen panel" aria-labelledby="statsTitle">
+                        <div>
+                            <div class="eyebrow">Local stats</div>
+                            <h2 id="statsTitle">Your device-only progress</h2>
+                        </div>
+                        <div class="stats-grid" id="lifetimeStats"></div>
+                        <div class="actions">
+                            <button id="statsBackBtn" class="btn btn-primary" type="button">
+                                Back to home
+                            </button>
+                        </div>
+                    </section>
+
+                    <section id="gameWrap" hidden class="screen game-wrap">
+                        <div class="hud">
+                            <div class="hud-top">
+                                <div class="panel target-card">
+                                    <div class="chip level-chip" id="levelChip">Lv 1 · 3x5</div>
+                                    <div class="target-line">
+                                        <span
+                                            id="targetSwatch"
+                                            class="swatch"
+                                            aria-hidden="true"
+                                        ></span>
+                                        <span
+                                            id="targetShape"
+                                            class="shape-preview"
+                                            aria-hidden="true"
+                                        ></span>
+                                        <span id="targetText"
+                                            >Find all items</span
+                                        >
+                                    </div>
+                                    <p class="subtle" style="margin: 0">
+                                        Tap all matching tiles. Leave
+                                        non-targets alone.
+                                    </p>
+                                    <div class="hud-tools">
+                                        <button
+                                            id="liveStatsBtn"
+                                            class="btn mini-btn btn-compact"
+                                            type="button"
+                                        >
+                                            <span class="btn-icon" aria-hidden="true">▦</span><span class="btn-label">Live stats</span>
+                                        </button>
+                                        <button
+                                            id="restartBtn"
+                                            class="btn mini-btn btn-compact"
+                                            type="button"
+                                            aria-label="Restart"
+                                        >
+                                            <span class="btn-icon" aria-hidden="true">↺</span>
+                                        </button>
+                                        <button
+                                            id="pauseBtn"
+                                            class="btn mini-btn btn-compact"
+                                            type="button"
+                                            aria-pressed="false"
+                                        >
+                                            <span class="btn-icon" aria-hidden="true">⏸</span><span class="btn-label">Pause</span>
+                                        </button>
+                                        <button
+                                            id="backBtn"
+                                            class="btn mini-btn btn-compact"
+                                            type="button"
+                                            aria-label="Home"
+                                        >
+                                            <span class="btn-icon" aria-hidden="true">⌂</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                                <div class="panel progress-card">
+                                    <div class="ring" id="ring" style="--p: 1">
+                                        <span id="timeText">60</span>
+                                    </div>
+                                    <small>seconds left</small>
+                                </div>
+                            </div>
+
+                            <div id="liveStatsPanel" class="live-stats" hidden>
+                                <div class="overlay-head">
+                                    <h3>Live stats</h3>
+                                    <button
+                                        id="closeLiveStatsBtn"
+                                        class="icon-btn"
+                                        type="button"
+                                        aria-label="Close live stats"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                                <div class="scorebar">
+                                    <div class="score-pill">
+                                        <div class="k">Round</div>
+                                        <div class="v" id="roundValue">1</div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <div class="k">Score</div>
+                                        <div class="v" id="scoreValue">0</div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <div class="k">Hits</div>
+                                        <div class="v" id="hitsValue">0</div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <div class="k">Wrong</div>
+                                        <div class="v" id="wrongValue">0</div>
+                                    </div>
+                                    <div class="score-pill">
+                                        <div class="k">Remaining</div>
+                                        <div class="v" id="remainingValue">0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            id="board"
+                            class="panel game-board"
+                            role="grid"
+                            aria-label="Game board"
+                        ></div>
+                        <div id="pauseOverlay" class="pause-overlay" hidden>
+                            <div class="pause-card">
+                                <h3>Paused</h3>
+                                <p class="subtle" style="margin: 0">
+                                    The board is hidden until you resume.
+                                </p>
+                                <button id="resumeBtn" class="btn btn-primary" type="button">
+                                    Resume
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        id="results"
+                        hidden
+                        class="screen results-screen results panel"
+                        aria-labelledby="resultsTitle"
+                    >
+                        <div>
+                            <div class="eyebrow">Round complete</div>
+                            <h2 id="resultsTitle">Your calm sweep summary</h2>
+                            <p class="subtle">
+                                A gentle snapshot of this round, saved only on
+                                this device.
+                            </p>
+                        </div>
+
+                        <div class="results-grid" id="resultsGrid"></div>
+
+                        <div class="actions">
+                            <button
+                                id="playAgainBtn"
+                                class="btn btn-primary"
+                                type="button"
+                            >
+                                Play again
+                            </button>
+                            <button id="homeBtn" class="btn" type="button">
+                                Home
+                            </button>
+                        </div>
+                    </section>
+                </section>
+            </main>
+        </div>
+        <footer class="app-footer" style="display: none;">
+            <a href="https://www.332321.xyz/index.html">
+                <img
+                    src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz"
+                    alt="visitor count"
+                />
+            </a>
+            <div>
+                <a class="footer-link" href="https://www.332321.xyz/index.html">
+                    Home index
+                </a>
+            </div>
+        </footer>
+
+        <script>
+            const STORAGE_KEY = "calmSweepStats.v1";
+            const PREFS_KEY = "calmSweepPrefs.v1";
+            const ROUND_SECONDS = 60;
+            const DIFFICULTIES = {
+                easy: { label: "Easy", baseTime: 60, carryEvery: 5 },
+                medium: { label: "Medium", baseTime: 45, carryEvery: 6 },
+                hard: { label: "Hard", baseTime: 30, carryEvery: 8 },
+            };
+            const LANGUAGES = {
+                en: {
+                    title: "Calm Sweep",
+                    eyebrow: "Calm attention game",
+                    start: "Start session",
+                    viewStats: "View stats",
+                    resetStats: "Reset local stats",
+                    difficulty: "Difficulty",
+                    language: "Language",
+                    howToPlay: "How to play",
+                    howToPlayBody:
+                        "Tap only the symbols that match the target shown at the top. Correct taps fade away. Wrong taps add a small penalty.",
+                    localStats: "Local stats",
+                    progress: "Your device-only progress",
+                    backHome: "Back to home",
+                    currentTarget: "Current target",
+                    secondsLeft: "seconds left",
+                    liveStats: "Live stats",
+                    pause: "Pause",
+                    resume: "Resume",
+                    home: "Home",
+                    roundComplete: "Round complete",
+                    summary: "Your calm sweep summary",
+                    summaryBody:
+                        "A gentle snapshot of this round, saved only on this device.",
+                    playAgain: "Play again",
+                    paused: "Paused",
+                    pausedBody: "The board is hidden until you resume.",
+                    level: "Lv",
+                    tapAll: "Tap all",
+                    cleared: "Round cleared",
+                    roundsLeft: "rounds",
+                    completed: "Completed",
+                    timeExpired: "Time expired",
+                },
+                ta: {
+                    title: "அமைதி Sweep",
+                    eyebrow: "அமைதியான கவன விளையாட்டு",
+                    start: "விளையாட்டு தொடங்கு",
+                    viewStats: "புள்ளிவிவரங்கள்",
+                    resetStats: "புள்ளிவிவரங்களை மீட்டு அமை",
+                    difficulty: "கடினம்",
+                    language: "மொழி",
+                    howToPlay: "எப்படி விளையாடுவது",
+                    howToPlayBody:
+                        "மேலே காட்டப்படும் இலக்குடன் பொருந்தும் குறிகளை மட்டுமே தட்டவும். சரியான தட்டல்கள் மறையும். தவறான தட்டல்கள் சிறிய தண்டனை தரும்.",
+                    localStats: "உள்ளூர் புள்ளிவிவரங்கள்",
+                    progress: "உங்கள் சாதனத்தில் மட்டும் சேமிப்பு",
+                    backHome: "முகப்புக்கு",
+                    currentTarget: "தற்போதைய இலக்கு",
+                    secondsLeft: "விநாடிகள் மீதம்",
+                    liveStats: "நேரடி புள்ளிவிவரங்கள்",
+                    pause: "இடைநிறுத்தம்",
+                    resume: "தொடரவும்",
+                    home: "முகப்பு",
+                    roundComplete: "சுற்று முடிந்தது",
+                    summary: "உங்கள் அமைதியான சுருக்கம்",
+                    summaryBody:
+                        "இந்த சுற்றின் சுருக்கம், இந்த சாதனத்தில் மட்டும் சேமிக்கப்பட்டது.",
+                    playAgain: "மீண்டும் விளையாடு",
+                    paused: "இடைநிறுத்தப்பட்டது",
+                    pausedBody: "நீங்கள் தொடரும் வரை பலகை மறைக்கப்பட்டுள்ளது.",
+                    level: "நிலை",
+                    tapAll: "அனைத்து",
+                    cleared: "சுற்று முடிந்தது",
+                    roundsLeft: "சுற்றுகள்",
+                    completed: "முடிந்தது",
+                    timeExpired: "நேரம் முடிந்தது",
+                },
+            };
+            const MOBILE_ITEMS = 30;
+            const DESKTOP_ITEMS = 36;
+
+            const COLORS = [
+                { name: "teal", hex: "#5eead4" },
+                { name: "sky", hex: "#7dd3fc" },
+                { name: "violet", hex: "#c4b5fd" },
+                { name: "amber", hex: "#fcd34d" },
+                { name: "rose", hex: "#fda4af" },
+                { name: "lime", hex: "#bef264" },
+                { name: "orange", hex: "#fdba74" },
+                { name: "indigo", hex: "#a5b4fc" },
+            ];
+
+            const SHAPES = [
+                {
+                    name: "circle",
+                    svg: '<circle cx="50" cy="50" r="27" fill="currentColor" />',
+                },
+                {
+                    name: "triangle",
+                    svg: '<polygon points="50,18 82,78 18,78" fill="currentColor" />',
+                },
+                {
+                    name: "diamond",
+                    svg: '<polygon points="50,14 84,50 50,86 16,50" fill="currentColor" />',
+                },
+                {
+                    name: "square",
+                    svg: '<rect x="22" y="22" width="56" height="56" rx="10" fill="currentColor" />',
+                },
+            ];
+
+            const els = {
+                home: document.getElementById("home"),
+                gameWrap: document.getElementById("gameWrap"),
+                results: document.getElementById("results"),
+                stats: document.getElementById("stats"),
+                board: document.getElementById("board"),
+                targetSwatch: document.getElementById("targetSwatch"),
+                targetShape: document.getElementById("targetShape"),
+                targetText: document.getElementById("targetText"),
+                levelChip: document.getElementById("levelChip"),
+                ring: document.getElementById("ring"),
+                timeText: document.getElementById("timeText"),
+                roundValue: document.getElementById("roundValue"),
+                scoreValue: document.getElementById("scoreValue"),
+                hitsValue: document.getElementById("hitsValue"),
+                wrongValue: document.getElementById("wrongValue"),
+                remainingValue: document.getElementById("remainingValue"),
+                liveStatsPanel: document.getElementById("liveStatsPanel"),
+                closeLiveStatsBtn: document.getElementById("closeLiveStatsBtn"),
+                pauseBtn: document.getElementById("pauseBtn"),
+                pauseOverlay: document.getElementById("pauseOverlay"),
+                resumeBtn: document.getElementById("resumeBtn"),
+                lifetimeStats: document.getElementById("lifetimeStats"),
+                resultsGrid: document.getElementById("resultsGrid"),
+                soundBtn: document.getElementById("soundBtn"),
+                startBtn: document.getElementById("startBtn"),
+                viewStatsBtn: document.getElementById("viewStatsBtn"),
+                liveStatsBtn: document.getElementById("liveStatsBtn"),
+                restartBtn: document.getElementById("restartBtn"),
+                backBtn: document.getElementById("backBtn"),
+                homeBtn: document.getElementById("homeBtn"),
+                playAgainBtn: document.getElementById("playAgainBtn"),
+                resetStatsBtn: document.getElementById("resetStatsBtn"),
+                statsBackBtn: document.getElementById("statsBackBtn"),
+                difficultyButtons: document.getElementById("difficultyButtons"),
+                languageButtons: document.getElementById("languageButtons"),
+            };
+
+            const state = {
+                soundOn: false,
+                running: false,
+                ended: false,
+                paused: false,
+                timerId: null,
+                advanceId: null,
+                startedAt: 0,
+                timeLeft: ROUND_SECONDS,
+                score: 0,
+                hits: 0,
+                wrong: 0,
+                targetCount: 0,
+                sessionRound: 1,
+                roundsCleared: 0,
+                bonusSeconds: 0,
+                roundDuration: ROUND_SECONDS,
+                difficulty: "easy",
+                language: inferLanguage(),
+                items: [],
+                target: null,
+            };
+
+            function createShapeSVG(shape, colorHex) {
+                return `
+        <svg class="symbol" viewBox="0 0 100 100" aria-hidden="true" style="color: ${colorHex};">
+          ${shape.svg}
+        </svg>
+      `;
+            }
+
+            function renderMiniShape(el, shape, colorHex) {
+                el.innerHTML = `<svg viewBox="0 0 100 100" width="24" height="24" aria-hidden="true" style="color:${colorHex};">${shape.svg}</svg>`;
+            }
+
+            function setSwatch(el, colorHex) {
+                el.innerHTML = `<span style="display:block;width:18px;height:18px;border-radius:50%;background:${colorHex};box-shadow:0 0 0 2px rgba(255,255,255,0.08) inset, 0 0 18px ${colorHex}22;"></span>`;
+            }
+
+            function getDifficultyConfig() {
+                return DIFFICULTIES[state.difficulty] || DIFFICULTIES.easy;
+            }
+
+            function getLang() {
+                return LANGUAGES[state.language] || LANGUAGES.en;
+            }
+
+            function inferLanguage() {
+                const navLang = (navigator.language || navigator.userLanguage || "en")
+                    .toLowerCase();
+                if (navLang.startsWith("ta")) return "ta";
+                return "en";
+            }
+
+            function loadPrefs() {
+                try {
+                    const parsed = JSON.parse(localStorage.getItem(PREFS_KEY));
+                    if (parsed && typeof parsed === "object") return parsed;
+                } catch (_) {}
+                return {
+                    difficulty: "easy",
+                    language: inferLanguage(),
+                };
+            }
+
+            function savePrefs() {
+                localStorage.setItem(
+                    PREFS_KEY,
+                    JSON.stringify({
+                        difficulty: state.difficulty,
+                        language: state.language,
+                    }),
+                );
+            }
+
+            function syncLanguageButtons() {
+                const buttons = els.languageButtons?.querySelectorAll(
+                    "[data-language]",
+                );
+                buttons?.forEach((btn) => {
+                    btn.classList.toggle(
+                        "active",
+                        btn.dataset.language === state.language,
+                    );
+                });
+            }
+
+            function setText(selector, value) {
+                const node = document.querySelector(selector);
+                if (node) node.textContent = value;
+            }
+
+            function applyLanguage() {
+                const t = getLang();
+                document.title = t.title;
+                document.documentElement.lang = state.language === "ta" ? "ta" : "en";
+                setText(".eyebrow", t.eyebrow);
+                setText("h1", t.title);
+                setText("#startBtn .btn-label", t.start);
+                setText("#viewStatsBtn .btn-label", t.viewStats);
+                setText("#resetStatsBtn .btn-label", t.resetStats);
+                setText(".difficulty-row .stat-label", t.difficulty);
+                setText(".lang-row .stat-label", t.language);
+                setText("#home .hero-grid .panel .stat-label", t.howToPlay);
+                setText("#home .hero-grid .panel .subtle", t.howToPlayBody);
+                setText("#statsTitle", t.progress);
+                setText("#stats .eyebrow", t.localStats);
+                setText("#statsBackBtn .btn-label", t.backHome);
+                setText("#gameWrap .target-card .subtle", t.tapAll);
+                document.querySelector("#gameWrap .target-line")?.setAttribute(
+                    "aria-label",
+                    t.currentTarget,
+                );
+                setText("#gameWrap .progress-card small", t.secondsLeft);
+                setText("#liveStatsBtn .btn-label", t.liveStats);
+                setText("#pauseBtn .btn-label", state.paused ? t.resume : t.pause);
+                setText("#liveStatsPanel .overlay-head h3", t.liveStats);
+                setText("#pauseOverlay .pause-card h3", t.paused);
+                setText("#pauseOverlay .pause-card .subtle", t.pausedBody);
+                setText("#resultsTitle", t.summary);
+                setText("#results .eyebrow", t.roundComplete);
+                setText("#results .subtle", t.summaryBody);
+                setText("#playAgainBtn .btn-label", t.playAgain);
+                setText("#homeBtn .btn-label", t.home);
+                syncDifficultyButtons();
+                syncLanguageButtons();
+                renderLifetimeStats();
+                if (state.target) {
+                    renderTarget();
+                }
+            }
+
+            function loadStats() {
+                try {
+                    const parsed = JSON.parse(
+                        localStorage.getItem(STORAGE_KEY),
+                    );
+                    if (parsed && typeof parsed === "object") {
+                        if (Array.isArray(parsed.sessions)) return parsed;
+                        return {
+                            ...parsed,
+                            sessions: [],
+                        };
+                    }
+                } catch (_) {}
+                return {
+                    plays: 0,
+                    bestScore: 0,
+                    avgAccuracy: 0,
+                    totalHits: 0,
+                    bestAccuracy: 0,
+                    bestRounds: 0,
+                    totalRoundsCleared: 0,
+                    lastPlayed: null,
+                    sessions: [],
+                };
+            }
+
+            function saveStats(session) {
+                const stats = loadStats();
+                const plays = stats.plays + 1;
+                const accuracy =
+                    session.hits + session.wrong === 0
+                        ? 0
+                        : session.hits / (session.hits + session.wrong);
+                const avgAccuracy =
+                    (stats.avgAccuracy * stats.plays + accuracy) / plays;
+
+                const next = {
+                    plays,
+                    bestScore: Math.max(stats.bestScore, session.score),
+                    avgAccuracy,
+                    totalHits: stats.totalHits + session.hits,
+                    bestAccuracy: Math.max(stats.bestAccuracy, accuracy),
+                    bestRounds: Math.max(
+                        stats.bestRounds,
+                        session.roundsCleared,
+                    ),
+                    totalRoundsCleared:
+                        stats.totalRoundsCleared + session.roundsCleared,
+                    lastPlayed: new Date().toISOString(),
+                    sessions: [
+                        {
+                            playedAt: new Date().toISOString(),
+                            score: session.score,
+                            accuracy,
+                            roundsCleared: session.roundsCleared,
+                            roundReached: session.roundReached,
+                            difficulty: state.difficulty,
+                        },
+                        ...stats.sessions,
+                    ].slice(0, 25),
+                };
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+                renderLifetimeStats();
+            }
+
+            function resetStats() {
+                localStorage.removeItem(STORAGE_KEY);
+                renderLifetimeStats();
+            }
+
+            function renderLifetimeStats() {
+                const stats = loadStats();
+                const t = getLang();
+                const cards = [
+                    [t.totalSessions ?? "Total sessions", stats.plays],
+                    [t.bestScore ?? "Best score", stats.bestScore],
+                    [t.avgAccuracy ?? "Avg accuracy", `${Math.round(stats.avgAccuracy * 100)}%`],
+                    [t.totalHits ?? "Total hits", stats.totalHits],
+                    [t.bestRounds ?? "Best rounds", stats.bestRounds],
+                    [t.roundsCleared ?? "Rounds cleared", stats.totalRoundsCleared],
+                    [t.bestAccuracy ?? "Best accuracy", `${Math.round(stats.bestAccuracy * 100)}%`],
+                    [
+                        t.lastPlayed ?? "Last played",
+                        stats.lastPlayed
+                            ? new Date(stats.lastPlayed).toLocaleDateString()
+                            : "—",
+                    ],
+                ];
+
+                const sessionRows = stats.sessions
+                    .map(
+                        (session, index) => `
+        <div class="stat">
+          <div class="stat-label">${t.session ?? "Session"} ${stats.sessions.length - index}</div>
+          <div class="stat-value">${session.score} <span class="muted" style="font-size:0.78rem;font-weight:600;">${Math.round(session.accuracy * 100)}%</span></div>
+          <div class="muted" style="font-size:0.78rem; margin-top:6px;">${session.difficulty} · ${session.roundsCleared} rounds · ${new Date(session.playedAt).toLocaleDateString()}</div>
+        </div>
+      `,
+                    )
+                    .join("");
+
+                els.lifetimeStats.innerHTML =
+                    cards
+                        .map(
+                            ([label, value]) => `
+        <div class="stat">
+          <div class="stat-label">${label}</div>
+          <div class="stat-value">${value}</div>
+        </div>
+      `,
+                        )
+                        .join("") +
+                    sessionRows;
+            }
+
+            function chooseTarget() {
+                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                return { color, shape };
+            }
+
+            function getBoardDimensions(level) {
+                const band = Math.max(0, Math.floor((level - 1) / 5));
+                const cols = 3 + Math.ceil(band / 2);
+                const rows = 5 + Math.floor(band / 2);
+                return { cols, rows, total: cols * rows };
+            }
+
+            function formatLevelChip(level) {
+                const { cols, rows } = getBoardDimensions(level);
+                return `Lv ${level} · ${cols}x${rows}`;
+            }
+
+            function buildItems() {
+                const { total } = getBoardDimensions(state.sessionRound);
+                const items = [];
+                state.target = chooseTarget();
+
+                const minTargets = Math.max(4, Math.floor(total * 0.22));
+                const maxTargets = Math.max(
+                    minTargets + 1,
+                    Math.floor(total * 0.34),
+                );
+                const targetCount = randomInt(minTargets, maxTargets);
+                state.targetCount = targetCount;
+
+                for (let i = 0; i < targetCount; i++) {
+                    items.push({
+                        id: cryptoRandomId(),
+                        color: state.target.color,
+                        shape: state.target.shape,
+                        isTarget: true,
+                        done: false,
+                    });
+                }
+
+                while (items.length < total) {
+                    const color =
+                        COLORS[Math.floor(Math.random() * COLORS.length)];
+                    const shape =
+                        SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                    const isTarget =
+                        color.name === state.target.color.name &&
+                        shape.name === state.target.shape.name;
+                    if (isTarget) continue;
+
+                    items.push({
+                        id: cryptoRandomId(),
+                        color,
+                        shape,
+                        isTarget: false,
+                        done: false,
+                    });
+                }
+
+                shuffle(items);
+                state.items = items;
+            }
+
+            function renderTarget() {
+                const { color, shape } = state.target;
+                setSwatch(els.targetSwatch, color.hex);
+                renderMiniShape(els.targetShape, shape, color.hex);
+                const t = getLang();
+                els.targetText.textContent = `${t.tapAll} ${color.name} ${shape.name}s`;
+                els.levelChip.textContent = formatLevelChip(state.sessionRound);
+            }
+
+            function syncDifficultyButtons() {
+                const buttons = els.difficultyButtons?.querySelectorAll(
+                    "[data-difficulty]",
+                );
+                buttons?.forEach((btn) => {
+                    btn.classList.toggle(
+                        "active",
+                        btn.dataset.difficulty === state.difficulty,
+                    );
+                });
+            }
+
+            function renderBoard() {
+                els.board.innerHTML = "";
+                const { cols } = getBoardDimensions(state.sessionRound);
+                els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                state.items.forEach((item) => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "tile";
+                    button.setAttribute("role", "gridcell");
+                    button.setAttribute(
+                        "aria-label",
+                        `${item.color.name} ${item.shape.name}`,
+                    );
+                    button.dataset.id = item.id;
+                    button.innerHTML = createShapeSVG(
+                        item.shape,
+                        item.color.hex,
+                    );
+                    button.addEventListener("click", () =>
+                        handleTileClick(item.id, button),
+                    );
+                    els.board.appendChild(button);
+                });
+                updateHUD();
+            }
+
+            function handleTileClick(id, tileEl) {
+                if (!state.running || state.ended || state.paused) return;
+
+                const item = state.items.find((entry) => entry.id === id);
+                if (!item || item.done) return;
+
+                if (item.isTarget) {
+                    item.done = true;
+                    state.hits += 1;
+                    state.score += 10;
+                    tileEl.classList.add("correct", "done");
+                    setTimeout(() => tileEl.classList.remove("correct"), 280);
+                    playTone(720, 0.03, "sine");
+                } else {
+                    state.wrong += 1;
+                    state.score = Math.max(0, state.score - 3);
+                    const wrongPenalty = {
+                        easy: 1,
+                        medium: 2,
+                        hard: 3,
+                    }[state.difficulty] || 1;
+                    state.timeLeft = Math.max(0, state.timeLeft - wrongPenalty);
+                    state.roundDuration = Math.max(
+                        state.timeLeft,
+                        state.roundDuration - wrongPenalty,
+                    );
+                    tileEl.classList.remove("wrong");
+                    void tileEl.offsetWidth;
+                    tileEl.classList.add("wrong");
+                    setTimeout(() => tileEl.classList.remove("wrong"), 260);
+                    playTone(220, 0.04, "triangle");
+                }
+
+                updateHUD();
+
+                if (
+                    state.items.filter((entry) => entry.isTarget && !entry.done)
+                        .length === 0
+                ) {
+                    completeRound();
+                }
+            }
+
+            function updateHUD() {
+                const remaining = state.items.filter(
+                    (entry) => entry.isTarget && !entry.done,
+                ).length;
+                els.roundValue.textContent = state.sessionRound;
+                els.scoreValue.textContent = state.score;
+                els.hitsValue.textContent = state.hits;
+                els.wrongValue.textContent = state.wrong;
+                els.remainingValue.textContent = remaining;
+                els.timeText.textContent = Math.ceil(state.timeLeft);
+                els.ring.style.setProperty(
+                    "--p",
+                    Math.max(0, state.timeLeft / state.roundDuration),
+                );
+            }
+
+            function startSession() {
+                clearTimer();
+                clearAdvance();
+                state.running = false;
+                state.ended = false;
+                state.sessionRound = 1;
+                state.roundsCleared = 0;
+                state.score = 0;
+                state.hits = 0;
+                state.wrong = 0;
+                state.bonusSeconds = 0;
+                syncDifficultyButtons();
+                beginRound();
+            }
+
+            function beginRound() {
+                clearTimer();
+                clearAdvance();
+                state.running = true;
+                state.ended = false;
+                state.paused = false;
+                const difficulty = getDifficultyConfig();
+                state.roundDuration = difficulty.baseTime + state.bonusSeconds;
+                state.timeLeft = state.roundDuration;
+                state.startedAt = performance.now();
+                els.liveStatsPanel.hidden = true;
+                els.pauseOverlay.hidden = true;
+                els.pauseOverlay.classList.remove("active");
+                els.pauseBtn.setAttribute("aria-pressed", "false");
+                els.pauseBtn.querySelector(".btn-label").textContent = getLang().pause;
+                buildItems();
+                renderTarget();
+                renderBoard();
+                showScreen("game");
+                tick();
+            }
+
+            function clearTimer() {
+                if (state.timerId) {
+                    clearTimeout(state.timerId);
+                    state.timerId = null;
+                }
+            }
+
+            function clearAdvance() {
+                if (state.advanceId) {
+                    clearTimeout(state.advanceId);
+                    state.advanceId = null;
+                }
+            }
+
+            function tick() {
+                updateHUD();
+                if (!state.running || state.ended || state.paused) return;
+
+                const elapsed = (performance.now() - state.startedAt) / 1000;
+                state.timeLeft = Math.max(0, state.roundDuration - elapsed);
+                updateHUD();
+
+                if (state.timeLeft <= 0) {
+                    finishSession();
+                    return;
+                }
+
+                state.timerId = setTimeout(tick, 100);
+            }
+
+            function completeRound() {
+                if (!state.running || state.ended) return;
+                state.running = false;
+                clearTimer();
+                clearAdvance();
+
+                const difficulty = getDifficultyConfig();
+                const carryBonus = Math.floor(state.timeLeft / difficulty.carryEvery);
+                if (carryBonus > 0) state.bonusSeconds += carryBonus;
+                state.roundsCleared += 1;
+                state.score += Math.round(state.timeLeft * 2);
+                updateHUD();
+
+                els.targetText.textContent = `Round ${state.sessionRound} cleared. Next one is loading...`;
+                els.targetText.textContent = getLang().cleared;
+                playTone(960, 0.07, "sine");
+
+                state.advanceId = setTimeout(() => {
+                    state.sessionRound += 1;
+                    beginRound();
+                }, 850);
+            }
+
+            function finishSession() {
+                state.running = false;
+                state.ended = true;
+                state.paused = false;
+                state.bonusSeconds = 0;
+                clearTimer();
+                clearAdvance();
+                els.pauseOverlay.hidden = true;
+                els.pauseOverlay.classList.remove("active");
+
+                const remaining = state.items.filter(
+                    (entry) => entry.isTarget && !entry.done,
+                ).length;
+                const accuracy =
+                    state.hits + state.wrong === 0
+                        ? 0
+                        : state.hits / (state.hits + state.wrong);
+                const session = {
+                    score: state.score,
+                    hits: state.hits,
+                    wrong: state.wrong,
+                    accuracy,
+                    remaining,
+                    roundsCleared: state.roundsCleared,
+                    roundReached: state.sessionRound,
+                };
+
+                saveStats(session);
+                renderResults(session);
+                showScreen("results");
+            }
+
+            function renderResults(session) {
+                const compact =
+                    window.innerWidth <= 390 || window.innerHeight <= 700;
+                const t = getLang();
+                const cards = compact
+                    ? [
+                          [t.finalScore ?? "Final score", session.score],
+                          [t.accuracy ?? "Accuracy", `${Math.round(session.accuracy * 100)}%`],
+                          [
+                              t.finish ?? "Finish",
+                              session.remaining === 0
+                                  ? t.completed
+                                  : t.timeExpired,
+                          ],
+                      ]
+                    : [
+                          [t.finalScore ?? "Final score", session.score],
+                          [t.accuracy ?? "Accuracy", `${Math.round(session.accuracy * 100)}%`],
+                          [t.roundsCleared ?? "Rounds cleared", session.roundsCleared],
+                          [t.roundReached ?? "Round reached", session.roundReached],
+                          [t.correctTaps ?? "Correct taps", session.hits],
+                          [t.wrongTaps ?? "Wrong taps", session.wrong],
+                          [t.targetsLeft ?? "Targets left", session.remaining],
+                          [
+                              t.finish ?? "Finish",
+                              session.remaining === 0
+                                  ? t.roundCompletedCleanly ?? "Round completed cleanly"
+                                  : t.timeExpired,
+                          ],
+                      ];
+
+                els.resultsGrid.innerHTML = cards
+                    .map(
+                        ([label, value]) => `
+        <div class="stat">
+          <div class="stat-label">${label}</div>
+          <div class="stat-value">${value}</div>
+        </div>
+      `,
+                    )
+                    .join("");
+
+                if (compact) {
+                    const summary = els.results.querySelector(".subtle");
+                    if (summary) {
+                        summary.textContent = t.summaryBody;
+                    }
+                }
+            }
+
+            function showScreen(screen) {
+                const screens = [els.home, els.gameWrap, els.results, els.stats];
+                for (const el of screens) {
+                    el.classList.remove("active");
+                    el.hidden = true;
+                }
+
+                const next =
+                    screen === "home"
+                        ? els.home
+                        : screen === "game"
+                          ? els.gameWrap
+                          : screen === "results"
+                            ? els.results
+                            : els.stats;
+                next.hidden = false;
+                next.classList.add("active");
+            }
+
+            function toggleLiveStats() {
+                if (els.liveStatsPanel.hidden) {
+                    els.liveStatsPanel.hidden = false;
+                    setPaused(true);
+                } else {
+                    els.liveStatsPanel.hidden = true;
+                    setPaused(false);
+                }
+            }
+
+            function closeLiveStats() {
+                els.liveStatsPanel.hidden = true;
+                setPaused(false);
+            }
+
+            function setPaused(paused) {
+                if (!state.running || state.ended) return;
+                state.paused = paused;
+                els.pauseBtn.setAttribute("aria-pressed", String(paused));
+                els.pauseBtn.querySelector(".btn-label").textContent = paused
+                    ? getLang().resume
+                    : getLang().pause;
+                if (paused) {
+                    clearTimer();
+                    els.pauseOverlay.hidden = false;
+                    els.pauseOverlay.classList.add("active");
+                } else {
+                    els.pauseOverlay.hidden = true;
+                    els.pauseOverlay.classList.remove("active");
+                    state.startedAt =
+                        performance.now() -
+                        (state.roundDuration - state.timeLeft) * 1000;
+                    tick();
+                }
+            }
+
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function cryptoRandomId() {
+                if (window.crypto?.randomUUID)
+                    return window.crypto.randomUUID();
+                return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+            }
+
+            let audioCtx = null;
+            function playTone(freq, duration = 0.04, type = "sine") {
+                if (!state.soundOn) return;
+                try {
+                    if (!audioCtx)
+                        audioCtx = new (
+                            window.AudioContext || window.webkitAudioContext
+                        )();
+                    const ctx = audioCtx;
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.exponentialRampToValueAtTime(0.04, now + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(
+                        0.001,
+                        now + duration,
+                    );
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + duration + 0.01);
+                } catch (_) {}
+            }
+
+            function toggleSound() {
+                state.soundOn = !state.soundOn;
+                els.soundBtn.setAttribute(
+                    "aria-pressed",
+                    String(state.soundOn),
+                );
+                els.soundBtn.textContent = state.soundOn ? "🔊" : "🔈";
+            }
+
+            function setLanguage(language) {
+                state.language = language === "ta" ? "ta" : "en";
+                savePrefs();
+                syncLanguageButtons();
+                applyLanguage();
+            }
+
+            els.startBtn.addEventListener("click", startSession);
+            els.viewStatsBtn.addEventListener("click", () => showScreen("stats"));
+            els.liveStatsBtn.addEventListener("click", toggleLiveStats);
+            els.closeLiveStatsBtn.addEventListener("click", closeLiveStats);
+            els.pauseBtn.addEventListener("click", () => setPaused(!state.paused));
+            els.resumeBtn.addEventListener("click", () => setPaused(false));
+            els.restartBtn.addEventListener("click", startSession);
+            els.playAgainBtn.addEventListener("click", startSession);
+            els.backBtn.addEventListener("click", () => {
+                clearTimer();
+                clearAdvance();
+                state.running = false;
+                state.ended = true;
+                state.paused = false;
+                state.bonusSeconds = 0;
+                els.liveStatsPanel.hidden = true;
+                els.pauseOverlay.hidden = true;
+                showScreen("home");
+            });
+            els.homeBtn.addEventListener("click", () => {
+                clearTimer();
+                clearAdvance();
+                state.running = false;
+                state.ended = true;
+                state.paused = false;
+                state.bonusSeconds = 0;
+                els.liveStatsPanel.hidden = true;
+                els.pauseOverlay.hidden = true;
+                showScreen("home");
+            });
+            els.soundBtn.addEventListener("click", toggleSound);
+            els.resetStatsBtn.addEventListener("click", resetStats);
+            els.statsBackBtn.addEventListener("click", () => showScreen("home"));
+            els.difficultyButtons
+                ?.querySelectorAll("[data-difficulty]")
+                .forEach((button) => {
+                    button.addEventListener("click", () => {
+                        state.difficulty = button.dataset.difficulty;
+                        savePrefs();
+                        syncDifficultyButtons();
+                    });
+                });
+            els.languageButtons
+                ?.querySelectorAll("[data-language]")
+                .forEach((button) => {
+                    button.addEventListener("click", () => {
+                        setLanguage(button.dataset.language);
+                    });
+                });
+
+            window.addEventListener("resize", () => {
+                if (state.running) {
+                    // Keep current round stable; do not rebuild board mid-play.
+                    return;
+                }
+                if (state.target) {
+                    renderTarget();
+                    const { cols } = getBoardDimensions(state.sessionRound);
+                    els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                }
+            });
+
+            const prefs = loadPrefs();
+            state.difficulty = prefs.difficulty === "medium" || prefs.difficulty === "hard"
+                ? prefs.difficulty
+                : "easy";
+            state.language = prefs.language === "ta" ? "ta" : inferLanguage();
+            applyLanguage();
+            syncDifficultyButtons();
+            syncLanguageButtons();
+            renderLifetimeStats();
+            state.target = chooseTarget();
+            renderTarget();
+        </script>
+    </body>
+</html>

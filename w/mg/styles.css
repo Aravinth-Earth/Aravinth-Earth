@@ -67,6 +67,10 @@ body[class*="theme-"] {
     color: var(--color-text);
 }
 
+body.game-active footer {
+    display: none;
+}
+
 body.theme-green {
     --color-primary: #2ecc71;
     --color-secondary: #27ae60;

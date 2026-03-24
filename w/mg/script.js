@@ -336,6 +336,7 @@ const game = {
         document.getElementById('back-to-menu').addEventListener('click', () => {
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('welcome-screen').classList.remove('hidden');
+            ui.setGameActive(false);
         });
         document.querySelectorAll('.toggle-theme').forEach(button => {
             button.addEventListener('click', ui.toggleTheme);
@@ -569,6 +570,10 @@ const ui = {
         // ... cache other frequently used elements
     },
 
+    setGameActive(isActive) {
+        document.body.classList.toggle('game-active', isActive);
+    },
+
     createFloatingScore(score, x, y) {
         const el = document.createElement('div');
         el.className = 'floating-score';
@@ -741,6 +746,7 @@ const handlers = {
         
         document.getElementById('welcome-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
+        ui.setGameActive(true);
         
         // Start the game
         game.generateQuestion();
@@ -759,6 +765,7 @@ const handlers = {
 // Initialize game when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     game.init();
+    ui.setGameActive(!document.getElementById('game-screen').classList.contains('hidden'));
     // Setup event listeners
     document.getElementById('generate-name').addEventListener('click', handlers.onGenerateName);
     document.getElementById('start-game').addEventListener('click', handlers.onStartGame);

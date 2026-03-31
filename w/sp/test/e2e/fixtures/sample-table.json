@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "exportedAt": "2024-03-30 12:00:00",
+  "name": "Sample Tasks",
+  "columns": [
+    {
+      "name": "Task Name",
+      "type": "freetext",
+      "options": [],
+      "maxLength": 500
+    },
+    {
+      "name": "Priority",
+      "type": "dropdown",
+      "options": ["High", "Medium", "Low"],
+      "maxLength": 150
+    },
+    {
+      "name": "Due Date",
+      "type": "date",
+      "options": [],
+      "maxLength": null
+    }
+  ],
+  "rows": [
+    {
+      "cells": ["Complete project documentation", "High", "2024-04-15"],
+      "createdAt": "2024-03-01 10:00:00",
+      "updatedAt": "2024-03-15 14:30:00"
+    },
+    {
+      "cells": ["Review pull requests", "Medium", "2024-04-10"],
+      "createdAt": "2024-03-05 09:00:00",
+      "updatedAt": "2024-03-10 11:15:00"
+    },
+    {
+      "cells": ["Update dependencies", "Low", "2024-04-20"],
+      "createdAt": "2024-03-10 08:00:00",
+      "updatedAt": "2024-03-12 16:45:00"
+    }
+  ]
+}

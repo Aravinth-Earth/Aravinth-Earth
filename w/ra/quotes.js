@@ -34,20 +34,23 @@ const PHILOSOPHICAL_QUOTES = [
     {
         tamil: "நாம் எங்கள் முன்னோர்களிடமிருந்து பூமியை பரம்பரை வழியாக பெறவில்லை; நம் குழந்தைகளிடமிருந்து கடன் வாங்குகிறோம்",
         english: "We do not inherit the Earth from our ancestors; we borrow it from our children"
+    },
+    {
+        tamil: "வாழ்க்கை என்பது திடீர் விடைபெறுதல்களைப் பற்றியது, அதை அன்புடன் கையாளுங்கள்",
+        english: "Life is all about sudden goodbyes, handle it with care",
+        source: "Movie: Couple Friendly (2026)"
     }
 ];
 
 class QuoteManager {
     constructor() {
         this.container = document.getElementById('quoteContainer');
-        this.quoteElement = document.getElementById('quote');
-        this.updateInterval = 8000;
+        this.tamilEl = document.getElementById('quoteTamil');
+        this.englishEl = document.getElementById('quoteEnglish');
+        this.sourceEl = document.getElementById('quoteSource');
+        this.displayDuration = 10000;
         this.fadeTime = 1000;
-        this.gapTime = 2000; // 2 seconds gap between Tamil and English
-        this.longGapTime = 5000; // 5 seconds gap before next quote
-        this.previousQuoteIndex = -1; // Track previous quote index
-        // Start with container hidden
-        this.container.style.opacity = '0';
+        this.previousQuoteIndex = -1;
     }
 
     getRandomQuote() {
@@ -59,52 +62,34 @@ class QuoteManager {
         return PHILOSOPHICAL_QUOTES[index];
     }
 
-    async showQuote(quote, language) {
-        // Set quote text and styling
-        this.quoteElement.textContent = quote[language];
-        this.quoteElement.classList.toggle('tamil', language === 'tamil');
-        this.quoteElement.classList.toggle('english', language === 'english');
+    async showQuote(quote) {
+        this.tamilEl.textContent = quote.tamil;
+        this.englishEl.textContent = quote.english;
 
-        // Fade in
-        this.quoteElement.classList.remove('fade-out');
-        this.quoteElement.classList.add('fade-in');
+        if (quote.source) {
+            this.sourceEl.textContent = `— ${quote.source}`;
+            this.sourceEl.style.display = 'block';
+        } else {
+            this.sourceEl.style.display = 'none';
+        }
 
-        // Wait for display duration
-        await new Promise(resolve => setTimeout(resolve, this.updateInterval));
+        this.container.classList.remove('fade-out');
+        this.container.classList.add('fade-in');
 
-        // Fade out
-        this.quoteElement.classList.remove('fade-in');
-        this.quoteElement.classList.add('fade-out');
+        await new Promise(resolve => setTimeout(resolve, this.displayDuration));
+
+        this.container.classList.remove('fade-in');
+        this.container.classList.add('fade-out');
 
         await new Promise(resolve => setTimeout(resolve, this.fadeTime));
     }
 
     async start() {
-        // Wait for loading screen to disappear + extra gap
         setTimeout(async () => {
-            // Show container with transition
-            this.container.style.opacity = '1';
-
-            // Start the quote cycle
             while (true) {
                 const quote = this.getRandomQuote();
-
-                // Show Tamil variant
-                await this.showQuote(quote, 'tamil');
-
-                // 2 seconds gap
-                this.container.style.opacity = '0'; // Hide container during gap
-                await new Promise(resolve => setTimeout(resolve, this.gapTime));
-                this.container.style.opacity = '1'; // Show container before next quote
-
-                // Show English variant
-                await this.showQuote(quote, 'english');
-
-                // 5 seconds gap
-                this.container.style.opacity = '0'; // Hide container during gap
-                await new Promise(resolve => setTimeout(resolve, this.longGapTime));
-                this.container.style.opacity = '1'; // Show container before next quote
+                await this.showQuote(quote);
             }
-        }, 2500); // 1500ms loading screen + 1000ms gap
+        }, 2500);
     }
 }

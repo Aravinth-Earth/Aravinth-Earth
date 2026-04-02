@@ -71,6 +71,7 @@ window.addEventListener('load', () => {
 });
 
 const artGenerator = new ArtGenerator();
+window.artGenerator = artGenerator;
 artGenerator.start();
 
 // Add click handler to start audio

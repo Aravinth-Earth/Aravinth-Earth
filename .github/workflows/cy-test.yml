@@ -1,33 +1,28 @@
-# .github/workflows/notify-private-repo.yml
-name: Notify Private Repo
+name: Trigger Private Cypress Tests
 
-# don't thing it will work !
 on:
   deployment_status:
-    types: [success] # Trigger when deployment status is successful
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  notify:
+  trigger-private-cypress:
+    if: github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Private Repo Workflow
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { Octokit } = require('@octokit/rest');
-            const octokit = new Octokit({
-              auth: process.env.GH_TOKEN
-            });
 
-            await octokit.request('POST /repos/{owner}/{repo}/dispatches', {
-              owner: process.env.PRIVATE_REPO_OWNER,
-              repo: process.env.PRIVATE_REPO_NAME,
-              event_type: 'deploy',
-              client_payload: {
-                ref: 'main'
-              }
-            });
+    steps:
+      - name: Trigger test-my-site-cypress workflow
+        uses: actions/github-script@v7
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          PRIVATE_REPO_OWNER: ${{ secrets.PRIVATE_REPO_OWNER }}
-          PRIVATE_REPO_NAME: ${{ secrets.PRIVATE_REPO_NAME }}
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'Aravinth-Earth',
+              repo: 'test-my-site-cypress',
+              workflow_id: 'cypress.yml',
+              ref: 'main'
+            });

@@ -33,11 +33,129 @@
                 height: 200px; /* Fixed height for each iframe */
                 box-sizing: border-box;
                 margin-left: 10px; /* Add margin to avoid starting from the screen edge */
+                background-color: #000;
+                position: relative;
+            }
+            .custom-streams-section[hidden] {
+                display: none;
             }
             iframe {
                 width: 100%; /* Ensures iframe fills the container */
                 height: 100%; /* Ensures iframe fills the container */
                 border: none;
+            }
+            .stream-select {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                z-index: 2;
+                display: none;
+                width: 22px;
+                height: 22px;
+                cursor: pointer;
+                accent-color: #bb86fc;
+            }
+            body.multi-select-mode .stream-select {
+                display: block;
+            }
+            .multi-view-mode-bar {
+                padding: 0 10px 20px;
+            }
+            .multi-view-toolbar {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 90;
+                display: none;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 14px;
+                background-color: rgba(18, 18, 18, 0.96);
+                border-top: 1px solid #333;
+            }
+            .multi-view-custom {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+            }
+            .multi-view-custom input {
+                width: min(360px, 70vw);
+                padding: 8px 10px;
+                border: 1px solid #555;
+                border-radius: 4px;
+                background-color: #080808;
+                color: #eee;
+            }
+            .multi-view-actions {
+                display: flex;
+                gap: 10px;
+            }
+            button {
+                background-color: #bb86fc;
+                color: #000;
+                border: none;
+                padding: 8px 14px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            button:disabled {
+                cursor: not-allowed;
+                opacity: 0.55;
+            }
+            .secondary-btn {
+                background-color: transparent;
+                color: #aaa;
+                border: 1px solid #555;
+            }
+            .multi-view-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+                display: none;
+                background-color: #000;
+            }
+            .multi-view-grid {
+                display: grid;
+                width: 100vw;
+                height: 100vh;
+                gap: 0;
+                background-color: #000;
+            }
+            .multi-view-grid.count-2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; }
+            .multi-view-grid.count-3,
+            .multi-view-grid.count-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+            .multi-view-grid.count-5,
+            .multi-view-grid.count-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+            .multi-view-grid.count-7,
+            .multi-view-grid.count-8 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
+            .multi-view-grid.count-9 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
+            .multi-view-grid.count-10,
+            .multi-view-grid.count-11,
+            .multi-view-grid.count-12,
+            .multi-view-grid.count-13,
+            .multi-view-grid.count-14,
+            .multi-view-grid.count-15,
+            .multi-view-grid.count-16 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
+            .multi-view-tile {
+                min-width: 0;
+                min-height: 0;
+                background-color: #000;
+            }
+            .multi-view-exit {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                z-index: 1001;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            .multi-view-overlay:hover .multi-view-exit,
+            .multi-view-exit:focus {
+                opacity: 1;
             }
             hr {
                 border: 0;
@@ -53,29 +171,53 @@
         Primarily famous tamil youtube news channels live streams, stream id's updated multiple times a day
     </div>
     <hr>
+    <div class="multi-view-mode-bar">
+        <button id="multi-view-mode-toggle" onclick="toggleMultiViewSelectionMode()">Multi Stream Mode</button>
+    </div>
+    <div class="multi-view-toolbar" id="multi-view-toolbar">
+        <span id="multi-view-count">0 streams selected</span>
+        <div class="multi-view-custom">
+            <input id="custom-stream-input" type="text" placeholder="YouTube stream ID or URL">
+            <button class="secondary-btn" onclick="addCustomStream()">Add Custom</button>
+        </div>
+        <div class="multi-view-actions">
+            <button class="secondary-btn" onclick="clearMultiViewSelection()">Clear</button>
+            <button class="secondary-btn" onclick="exitMultiViewSelectionMode()">Exit Mode</button>
+            <button id="multi-view-start" onclick="startMultiViewFullscreen()" disabled>Select 2-16 Streams</button>
+        </div>
+    </div>
+    <div class="multi-view-overlay" id="multi-view-overlay">
+        <button class="multi-view-exit" onclick="exitMultiViewFullscreen()">Exit</button>
+        <div class="multi-view-grid" id="multi-view-grid"></div>
+    </div>
     
         <div class="channel">
             <div class="channel-name">News 18 Tamil Nadu (@News18Tamilnadu)</div>
         <div class="live-streams">
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/iFJfXwqgT1I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="DmQiS5mpP3s" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/DmQiS5mpP3s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/EQqckmDqeIs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="3R8Lh7onYQE" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/3R8Lh7onYQE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/2Dd9v4kogog" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="eLl7oNZtGA0" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/eLl7oNZtGA0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="iJVxKxn4Mh4" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/iJVxKxn4Mh4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="n_tO-BMH3OE" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/n_tO-BMH3OE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        
-        <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/E4ndYFfdlb8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
         <div class="channel">
@@ -83,15 +225,28 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="kDl5nz_0O-0" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/kDl5nz_0O-0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="_ShIXa3ogis" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/_ShIXa3ogis" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/LMxCUHqC824" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="-JpIxtfiR1U" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/-JpIxtfiR1U" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/Bbstec5LaA4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="pxRHyteYn5k" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/pxRHyteYn5k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="WqmOknIGVyQ" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/WqmOknIGVyQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
         <div class="channel">
@@ -99,11 +254,28 @@
         <div class="live-streams">
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/ylvtk5GB1iU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="R_CCtGUDUJU" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/R_CCtGUDUJU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/gynWNinqmjw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="GFCIEeZJrUM" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/GFCIEeZJrUM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="SRr-wKcftQI" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/SRr-wKcftQI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="CHuJDKTpw0U" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/CHuJDKTpw0U" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="8z5vdDPRiRM" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/8z5vdDPRiRM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
         <div class="channel">
@@ -111,11 +283,28 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="HeUSrKzWfk0" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/HeUSrKzWfk0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/_BfJ_JIjZhE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="kCo9jkCv6XU" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/kCo9jkCv6XU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="YOOfh4JgMsg" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/YOOfh4JgMsg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="3CFDSlzoSVo" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/3CFDSlzoSVo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="RY2MZsmxYoA" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/RY2MZsmxYoA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
         <div class="channel">
@@ -123,11 +312,28 @@
         <div class="live-streams">
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/DRMkfwErKJM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="lC4pxhiGwSE" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/lC4pxhiGwSE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="live-stream">
-            <iframe data-src="https://www.youtube-nocookie.com/embed/8kjza8MzPXE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="checkbox" class="stream-select" value="9ILW3NciIEg" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/9ILW3NciIEg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="LU6pe4lHB6k" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/LU6pe4lHB6k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="MRGRpEKh1xg" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/MRGRpEKh1xg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="36sxWC5Cg_U" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/36sxWC5Cg_U" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
         <div class="channel">
@@ -135,6 +341,27 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="p3wDcz3ppjI" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/p3wDcz3ppjI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="Ek6nykUWypc" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/Ek6nykUWypc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="hCbsClC8Ucg" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/hCbsClC8Ucg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="jG17RgvsP_Y" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/jG17RgvsP_Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="pkFDQL4KG9I" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/pkFDQL4KG9I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
@@ -143,6 +370,12 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="WGrciow1l5c" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
+            <iframe data-src="https://www.youtube-nocookie.com/embed/WGrciow1l5c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="9M02G5c6x6w" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/9M02G5c6x6w" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
@@ -151,6 +384,7 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="Hr9rnAQk-4w" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/Hr9rnAQk-4w" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         </div></div><hr>
@@ -159,12 +393,40 @@
         <div class="live-streams">
         
         <div class="live-stream">
+            <input type="checkbox" class="stream-select" value="-4-dAzvubLM" title="Select for multi fullscreen" aria-label="Select stream for multi fullscreen">
             <iframe data-src="https://www.youtube-nocookie.com/embed/-4-dAzvubLM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-        </div></div><hr><div style="text-align: center;">Last updated on 2026-05-10 06:23:20 IST</div><hr>
+        </div></div><hr><div style="text-align: center;">Last updated on 2026-05-10 11:58:00 IST</div><hr>
+    <div class="channel custom-streams-section" id="custom-streams-section" hidden>
+        <div class="channel-name">Custom Streams</div>
+        <div class="live-streams" id="custom-streams"></div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const iframes = document.querySelectorAll('iframe[data-src]');
+            const CUSTOM_STREAMS_STORAGE_KEY = 'yt-news-custom-stream-ids';
+            const loadStoredCustomStreamIds = () => {
+                try {
+                    const storedValue = localStorage.getItem(CUSTOM_STREAMS_STORAGE_KEY);
+                    const storedStreamIds = storedValue ? JSON.parse(storedValue) : [];
+                    if (!Array.isArray(storedStreamIds)) {
+                        return [];
+                    }
+                    return storedStreamIds.filter(streamId => typeof streamId === 'string' && streamId.trim());
+                } catch (error) {
+                    return [];
+                }
+            };
+            const saveCustomStreamIds = () => {
+                try {
+                    localStorage.setItem(CUSTOM_STREAMS_STORAGE_KEY, JSON.stringify(customStreamIds));
+                } catch (error) {
+                    // Ignore storage failures so stream selection still works.
+                }
+            };
+            const selectedStreams = new Map();
+            const customStreamIds = loadStoredCustomStreamIds();
+            let multiSelectMode = false;
             
             const loadIframe = (iframe) => {
                 iframe.src = iframe.getAttribute('data-src');
@@ -186,6 +448,226 @@
             iframes.forEach(iframe => {
                 observer.observe(iframe);
             });
+
+            const updateMultiViewToolbar = () => {
+                const toolbar = document.getElementById('multi-view-toolbar');
+                const countLabel = document.getElementById('multi-view-count');
+                const startButton = document.getElementById('multi-view-start');
+                const modeToggle = document.getElementById('multi-view-mode-toggle');
+                const count = selectedStreams.size;
+
+                document.body.classList.toggle('multi-select-mode', multiSelectMode);
+                toolbar.style.display = multiSelectMode ? 'flex' : 'none';
+                modeToggle.textContent = multiSelectMode ? 'Exit Multi Stream Mode' : 'Multi Stream Mode';
+                countLabel.textContent = `${count} stream${count === 1 ? '' : 's'} selected`;
+                startButton.disabled = count < 2 || count > 16;
+                startButton.textContent = count < 2 ? 'Select 2-16 Streams' : 'Multi Fullscreen';
+            };
+
+            window.clearMultiViewSelection = () => {
+                selectedStreams.clear();
+                document.querySelectorAll('.stream-select:checked').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateMultiViewToolbar();
+            };
+
+            window.toggleMultiViewSelectionMode = () => {
+                multiSelectMode = !multiSelectMode;
+                if (!multiSelectMode) {
+                    window.clearMultiViewSelection();
+                    return;
+                }
+                updateMultiViewToolbar();
+            };
+
+            window.exitMultiViewSelectionMode = () => {
+                multiSelectMode = false;
+                window.clearMultiViewSelection();
+            };
+
+            const parseYouTubeStreamId = (value) => {
+                const input = value.trim();
+                if (!input) {
+                    return '';
+                }
+
+                try {
+                    const url = new URL(input);
+                    const videoParam = url.searchParams.get('v');
+                    if (videoParam) {
+                        return videoParam;
+                    }
+
+                    const parts = url.pathname.split('/').filter(Boolean);
+                    const embedIndex = parts.indexOf('embed');
+                    if (embedIndex >= 0 && parts[embedIndex + 1]) {
+                        return parts[embedIndex + 1];
+                    }
+
+                    if (url.hostname.includes('youtu.be') && parts[0]) {
+                        return parts[0];
+                    }
+
+                    if (parts.length) {
+                        return parts[parts.length - 1];
+                    }
+                } catch (error) {
+                    return input;
+                }
+
+                return input;
+            };
+
+            const getStreamDetailsFromCheckbox = (checkbox) => {
+                const liveStream = checkbox.closest('.live-stream');
+                const iframe = liveStream.querySelector('iframe');
+                const channel = checkbox.closest('.channel');
+                const channelNameNode = channel ? channel.querySelector('.channel-name') : null;
+                return {
+                    streamId: checkbox.value,
+                    channelName: channelNameNode ? channelNameNode.textContent : 'Selected stream',
+                    src: iframe.getAttribute('src') || iframe.getAttribute('data-src')
+                };
+            };
+
+            const registerStreamCheckbox = (checkbox) => {
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked && selectedStreams.size >= 16) {
+                        checkbox.checked = false;
+                        alert('Select up to 16 streams for multi fullscreen.');
+                        return;
+                    }
+
+                    if (checkbox.checked) {
+                        selectedStreams.set(checkbox.value, getStreamDetailsFromCheckbox(checkbox));
+                    } else {
+                        selectedStreams.delete(checkbox.value);
+                    }
+
+                    updateMultiViewToolbar();
+                });
+            };
+
+            const renderCustomStreams = () => {
+                const customSection = document.getElementById('custom-streams-section');
+                const customStreamsContainer = document.getElementById('custom-streams');
+                customStreamsContainer.innerHTML = '';
+                customSection.hidden = customStreamIds.length === 0;
+
+                customStreamIds.forEach(streamId => {
+                    const tile = document.createElement('div');
+                    tile.className = 'live-stream custom-stream-tile';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.className = 'stream-select';
+                    checkbox.type = 'checkbox';
+                    checkbox.value = streamId;
+                    checkbox.checked = selectedStreams.has(streamId);
+                    checkbox.setAttribute('aria-label', `Select custom stream ${streamId}`);
+
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${streamId}`;
+                    iframe.title = `Custom stream ${streamId}`;
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', '');
+
+                    tile.appendChild(checkbox);
+                    tile.appendChild(iframe);
+                    customStreamsContainer.appendChild(tile);
+                    registerStreamCheckbox(checkbox);
+                });
+            };
+
+            const ensureCustomStreamTile = (streamId) => {
+                if (!customStreamIds.includes(streamId)) {
+                    customStreamIds.push(streamId);
+                    saveCustomStreamIds();
+                    renderCustomStreams();
+                }
+
+                return Array.from(document.querySelectorAll('.custom-stream-tile input')).find(checkbox => checkbox.value === streamId);
+            };
+
+            window.addCustomStream = () => {
+                const input = document.getElementById('custom-stream-input');
+                const streamId = parseYouTubeStreamId(input.value);
+
+                if (!streamId) {
+                    return;
+                }
+
+                if (!selectedStreams.has(streamId) && selectedStreams.size >= 16) {
+                    alert('Select up to 16 streams for multi fullscreen.');
+                    return;
+                }
+
+                const checkbox = ensureCustomStreamTile(streamId);
+                checkbox.checked = true;
+                selectedStreams.set(streamId, getStreamDetailsFromCheckbox(checkbox));
+                input.value = '';
+                updateMultiViewToolbar();
+            };
+
+            window.startMultiViewFullscreen = async () => {
+                const streams = Array.from(selectedStreams.values());
+                if (streams.length < 2 || streams.length > 16) {
+                    alert('Select between 2 and 16 streams.');
+                    return;
+                }
+
+                const overlay = document.getElementById('multi-view-overlay');
+                const grid = document.getElementById('multi-view-grid');
+                grid.className = `multi-view-grid count-${streams.length}`;
+                grid.innerHTML = '';
+
+                streams.forEach(({ streamId, channelName }) => {
+                    const tile = document.createElement('div');
+                    tile.className = 'multi-view-tile';
+
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${streamId}?autoplay=1&mute=1`;
+                    iframe.title = channelName;
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', '');
+
+                    tile.appendChild(iframe);
+                    grid.appendChild(tile);
+                });
+
+                overlay.style.display = 'block';
+
+                if (overlay.requestFullscreen) {
+                    await overlay.requestFullscreen();
+                }
+            };
+
+            const closeMultiViewOverlay = () => {
+                const overlay = document.getElementById('multi-view-overlay');
+                const grid = document.getElementById('multi-view-grid');
+                overlay.style.display = 'none';
+                grid.innerHTML = '';
+                grid.className = 'multi-view-grid';
+            };
+
+            window.exitMultiViewFullscreen = () => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    closeMultiViewOverlay();
+                }
+            };
+
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    closeMultiViewOverlay();
+                }
+            });
+
+            document.querySelectorAll('.stream-select').forEach(registerStreamCheckbox);
+            renderCustomStreams();
         });
     </script>
 </body>

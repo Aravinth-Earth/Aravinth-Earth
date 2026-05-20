@@ -39,6 +39,11 @@ const PHILOSOPHICAL_QUOTES = [
         tamil: "வாழ்க்கை என்பது திடீர் விடைபெறுதல்களைப் பற்றியது, அதை அன்புடன் கையாளுங்கள்",
         english: "Life is all about sudden goodbyes, handle it with care",
         source: "Movie: Couple Friendly (2026)"
+    },
+    {
+        tamil: "மிஞ்சி போனால் மரணம் என்றபோது வாழ்க்கை வாழ வெட்கப்படலாமா / பயப்படலாமா ?",
+        english: "If the worst that can happen is death, should life be ashamed or afraid to live?",
+        source: "Read from a fellow human's Instagram profile"
     }
 ];
 

@@ -3,269 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Splitter - Vanilla</title>
+    <title>Expense Splitter</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>💰 Expense Splitter</h1>
-            <div class="header-actions">
+    <div id="toast-container"></div>
+
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="header-left">
+                <h1 class="app-logo">💰 Splitter</h1>
+                <div id="header-trip-info" class="header-trip-info" style="display:none">
+                    <span id="header-trip-name" class="header-trip-name"></span>
+                    <span id="header-trip-dates" class="header-trip-dates"></span>
+                    <span id="header-currency-badge" class="currency-badge"></span>
+                    <button id="edit-trip-btn" class="btn btn-ghost btn-sm" title="Edit trip">✏️</button>
+                </div>
+            </div>
+            <div class="header-center" id="header-stats" style="display:none">
+                <span class="stat-chip" id="chip-total">₹0.00</span>
+                <span class="stat-chip" id="chip-members">0 members</span>
+                <span class="stat-chip" id="chip-expenses">0 expenses</span>
+            </div>
+            <div class="header-right">
+                <button id="new-trip-btn" class="btn btn-primary">+ New Trip</button>
                 <button id="export-data-btn" class="btn btn-export">📤 Export</button>
                 <button id="import-data-btn" class="btn btn-import">📥 Import</button>
-                <button id="new-trip-btn" class="btn btn-primary">New Trip</button>
             </div>
         </header>
 
-        <!-- Current Trip Display -->
-        <div id="current-trip" class="trip-card" style="display: none;">
-            <div class="trip-header">
-                <div class="trip-info">
-                    <h2 id="trip-name">Trip Name</h2>
-                    <p id="trip-dates">Start - End</p>
-                </div>
-                <button id="edit-trip-btn" class="btn btn-secondary">✏️ Edit</button>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="total-expenses">₹0.00</h3>
-                    <p>Total Expenses</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="member-count">0</h3>
-                    <p>Members</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="expense-count">0</h3>
-                    <p>Expenses</p>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button id="add-member-btn" class="btn btn-primary">Add Member</button>
-                <button id="add-expense-btn" class="btn btn-primary">Add Expense</button>
-            </div>
-        </div>
-
-        <!-- Consolidated Settlement Overview -->
-        <div id="settlement-overview" class="settlement-section" style="display: none;">
-            <h3>💰 Settlement Overview</h3>
-            <div id="settlements-list" class="settlements-list"></div>
-        </div>
-
-        <!-- Enhanced Expense Charts -->
-        <div id="chart-section" class="chart-section" style="display: none;">
-            <h3>� Expense Analysis</h3>
-            <div class="chart-controls">
-                <button id="chart-paid-btn" class="btn btn-secondary chart-toggle active">Expenses Paid</button>
-                <button id="chart-incurred-btn" class="btn btn-secondary chart-toggle">Expenses Incurred</button>
-            </div>
-            <canvas id="expense-chart" width="400" height="200"></canvas>
-            <div id="chart-summary" class="chart-summary"></div>
-        </div>
-
-        <!-- Welcome Screen -->
         <div id="welcome-screen" class="welcome">
-            <h2>Welcome to Expense Splitter</h2>
-            <p>Create a trip to start splitting expenses fairly among your group</p>
-            <button id="create-first-trip-btn" class="btn btn-primary btn-large">Create Your First Trip</button>
+            <div class="welcome-content">
+                <h2>💰 Welcome to Expense Splitter</h2>
+                <p>Split expenses fairly among your group. No signup, no tracking, all local.</p>
+                <button id="create-first-trip-btn" class="btn btn-primary btn-large">Create Your First Trip</button>
+            </div>
         </div>
 
-        <!-- Members List -->
-        <div id="members-section" style="display: none;">
-            <div class="section-header">
-                <h3>Members <span id="member-count-badge" class="count-badge"></span></h3>
-                <div class="member-controls">
-                    <select id="member-sort" class="sort-select">
-                        <option value="name-asc">Name (A-Z)</option>
-                        <option value="name-desc">Name (Z-A)</option>
-                        <option value="date-desc">Recently Added</option>
-                        <option value="date-asc">First Added</option>
-                    </select>
-                </div>
-            </div>
-            <div id="members-list" class="members-grid"></div>
-        </div>
+        <div id="dashboard" class="dashboard" style="display:none">
+            <div class="dashboard-grid">
+                <!-- Column 1: People -->
+                <section class="panel panel-col1">
+                    <div class="panel-header">
+                        <h3>👥 People</h3>
+                        <button id="add-member-btn" class="btn btn-secondary btn-sm">+ Add</button>
+                    </div>
+                    <div id="members-list" class="members-list"></div>
+                </section>
 
-        <!-- Expenses List -->
-        <div id="expenses-section" style="display: none;">
-            <div class="section-header">
-                <h3>Recent Expenses <span id="expense-count-badge" class="count-badge"></span></h3>
-                <div class="expense-controls">
-                    <select id="expense-sort" class="sort-select">
-                        <option value="date-desc">Latest First</option>
-                        <option value="date-asc">Oldest First</option>
-                        <option value="amount-desc">Highest Amount</option>
-                        <option value="amount-asc">Lowest Amount</option>
-                        <option value="paidby-asc">Paid By (A-Z)</option>
-                        <option value="paidby-desc">Paid By (Z-A)</option>
-                        <option value="name-asc">Expense Name (A-Z)</option>
-                        <option value="name-desc">Expense Name (Z-A)</option>
-                    </select>
-                </div>
+                <!-- Column 2: All Visuals -->
+                <section class="panel panel-col2">
+                    <div class="panel-section">
+                        <div class="panel-header">
+                            <h3>⚖️ Balances</h3>
+                        </div>
+                        <div id="balance-bars" class="balance-bars"></div>
+                    </div>
+                    <div class="panel-section">
+                        <div class="panel-header">
+                            <h3>🔄 Settlements</h3>
+                            <span id="settle-status-badge" class="badge badge-success" style="display:none">✓ Settled</span>
+                        </div>
+                        <div id="settlements-visual" class="settlements-visual"></div>
+                        <div id="all-settled-msg" class="all-settled" style="display:none">
+                            <span>✓ All settled up</span>
+                        </div>
+                    </div>
+                    <div class="panel-section">
+                        <div class="panel-header">
+                            <h3>💰 Paid</h3>
+                        </div>
+                        <div class="chart-single">
+                            <canvas id="chart-paid"></canvas>
+                        </div>
+                    </div>
+                    <div class="panel-section">
+                        <div class="panel-header">
+                            <h3>💰 Incurred</h3>
+                        </div>
+                        <div class="chart-single">
+                            <canvas id="chart-incurred"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Column 3: Expenses -->
+                <section class="panel panel-col3">
+                    <div class="panel-header">
+                        <h3>🧾 Expenses</h3>
+                        <button id="add-expense-btn" class="btn btn-secondary btn-sm">+ Add</button>
+                    </div>
+                    <div class="expense-toolbar">
+                        <select id="expense-sort" class="sort-select">
+                            <option value="date-desc">Latest</option>
+                            <option value="date-asc">Oldest</option>
+                            <option value="amount-desc">Highest</option>
+                            <option value="amount-asc">Lowest</option>
+                            <option value="paidby-asc">Payer A-Z</option>
+                            <option value="paidby-desc">Payer Z-A</option>
+                        </select>
+                    </div>
+                    <div id="expenses-list" class="expenses-list"></div>
+                </section>
             </div>
-            <div id="expenses-list" class="expenses-list"></div>
         </div>
     </div>
 
-    <!-- Modal for Trip Creation/Editing -->
-    <div id="trip-modal" class="modal" style="display: none;">
+    <div id="trip-modal" class="modal" style="display:none">
+        <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <span class="close">&times;</span>
                 <h3 id="modal-title">Create Trip</h3>
+                <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="trip-form">
+            <form id="trip-form">
+                <div class="modal-body">
                     <input type="text" id="trip-name-input" placeholder="Trip Name" required>
-                    <input type="date" id="start-date" placeholder="Start Date (optional)">
-                    <input type="date" id="end-date" placeholder="End Date (optional)">
+                    <div class="form-row">
+                        <input type="date" id="start-date" placeholder="Start date">
+                        <input type="date" id="end-date" placeholder="End date">
+                    </div>
                     <select id="currency">
                         <option value="INR">INR (₹)</option>
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
                     </select>
-                    <textarea id="description" placeholder="Trip Description (optional)"></textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="modal-actions">
-                    <button type="button" id="cancel-trip">Cancel</button>
-                    <button type="submit" id="save-trip" form="trip-form">Save Trip</button>
+                    <textarea id="description" placeholder="Trip description (optional)" rows="2"></textarea>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-trip" class="btn btn-ghost">Cancel</button>
+                    <button type="submit" id="save-trip" class="btn btn-primary">Save Trip</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Modal for Member Addition -->
-    <div id="member-modal" class="modal" style="display: none;">
-        <div class="modal-content">
+    <div id="member-modal" class="modal" style="display:none">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-sm">
             <div class="modal-header">
-                <span class="close">&times;</span>
                 <h3>Add Member</h3>
+                <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="member-form">
+            <form id="member-form">
+                <div class="modal-body">
                     <input type="text" id="member-name" placeholder="Enter member name" required>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="modal-actions">
-                    <button type="button" id="cancel-member">Cancel</button>
-                    <button type="submit" id="save-member" form="member-form">Add Member</button>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-member" class="btn btn-ghost">Cancel</button>
+                    <button type="submit" id="save-member" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Modal for Expense Addition -->
-    <div id="expense-modal" class="modal" style="display: none;">
+    <div id="expense-modal" class="modal" style="display:none">
+        <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <span class="close">&times;</span>
                 <h3>Add Expense</h3>
+                <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="expense-form">
-                    <input type="text" id="expense-description" placeholder="What was this expense for?" required>
-                    <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
-                    <select id="expense-paid-by" required>
-                        <option value="">Who paid?</option>
-                    </select>
+            <form id="expense-form">
+                <div class="modal-body">
+                    <input type="text" id="expense-description" placeholder="What for?" required>
+                    <div class="form-row">
+                        <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
+                        <select id="expense-paid-by" required>
+                            <option value="">Who paid?</option>
+                        </select>
+                    </div>
                     <div class="split-options">
-                        <label>
-                            <input type="radio" name="split-type" value="equal" checked>
-                            <span>Split equally among all members</span>
+                        <label class="split-option selected" data-split="equal">
+                            <input type="radio" name="split-type" value="equal" checked hidden>
+                            <span class="split-option-label">Equally (all)</span>
                         </label>
-                        <label>
-                            <input type="radio" name="split-type" value="select-equal">
-                            <span>Split equally among selected members</span>
+                        <label class="split-option" data-split="select-equal">
+                            <input type="radio" name="split-type" value="select-equal" hidden>
+                            <span class="split-option-label">Equally (sel)</span>
                         </label>
-                        <label>
-                            <input type="radio" name="split-type" value="percentage">
-                            <span>Split by percentage</span>
+                        <label class="split-option" data-split="percentage">
+                            <input type="radio" name="split-type" value="percentage" hidden>
+                            <span class="split-option-label">By %</span>
                         </label>
-                        <label>
-                            <input type="radio" name="split-type" value="shares">
-                            <span>Split by shares</span>
+                        <label class="split-option" data-split="shares">
+                            <input type="radio" name="split-type" value="shares" hidden>
+                            <span class="split-option-label">By shares</span>
                         </label>
-                        <label>
-                            <input type="radio" name="split-type" value="custom">
-                            <span>Custom amounts</span>
+                        <label class="split-option" data-split="custom">
+                            <input type="radio" name="split-type" value="custom" hidden>
+                            <span class="split-option-label">Custom</span>
                         </label>
                     </div>
-                    
-                    <!-- Split Configuration Section -->
-                    <div id="split-config" style="display: none;">
-                        <!-- Select Members (for select-equal) -->
-                        <div id="select-members-section" style="display: none;">
-                            <p>Select members to split equally:</p>
-                            <div id="select-member-checkboxes" class="member-checkboxes-grid"></div>
+                    <div id="split-config" style="display:none">
+                        <div id="select-members-section" style="display:none">
+                            <p class="split-hint">Select members:</p>
+                            <div id="select-member-checkboxes" class="checkbox-grid"></div>
                         </div>
-                        
-                        <!-- Percentage Split -->
-                        <div id="percentage-split-section" style="display: none;">
-                            <div class="split-header">
-                                <p>Enter percentage for each member:</p>
-                                <div class="split-tally">
-                                    <span>Total: </span>
-                                    <span id="percentage-total" class="tally-amount">0%</span>
-                                    <span id="percentage-status" class="tally-status"></span>
-                                </div>
+                        <div id="percentage-split-section" style="display:none">
+                            <div class="split-hint-row">
+                                <span class="split-hint">Percentage:</span>
+                                <span id="percentage-total" class="split-total">0%</span>
                             </div>
-                            <div id="percentage-inputs" class="split-inputs-grid"></div>
+                            <div id="percentage-inputs" class="split-inputs"></div>
                         </div>
-                        
-                        <!-- Shares Split -->
-                        <div id="shares-split-section" style="display: none;">
-                            <div class="split-header">
-                                <p>Enter shares for each member:</p>
-                                <div class="split-tally">
-                                    <span>Total shares: </span>
-                                    <span id="shares-total" class="tally-amount">0</span>
-                                </div>
+                        <div id="shares-split-section" style="display:none">
+                            <div class="split-hint-row">
+                                <span class="split-hint">Shares:</span>
+                                <span id="shares-total" class="split-total">0 shares</span>
                             </div>
-                            <div id="shares-inputs" class="split-inputs-grid"></div>
-                            <div id="shares-breakdown" class="shares-breakdown"></div>
+                            <div id="shares-inputs" class="split-inputs"></div>
+                            <div id="shares-breakdown" class="shares-breakdown" style="display:none"></div>
                         </div>
-                        
-                        <!-- Custom Amounts -->
-                        <div id="custom-split-section" style="display: none;">
-                            <div class="split-header">
-                                <p>Enter custom amount for each member:</p>
-                                <div class="split-tally">
-                                    <span>Total: </span>
-                                    <span id="custom-total" class="tally-amount">$0.00</span>
-                                    <span id="custom-status" class="tally-status"></span>
-                                </div>
+                        <div id="custom-split-section" style="display:none">
+                            <div class="split-hint-row">
+                                <span class="split-hint">Each owes:</span>
+                                <span id="custom-total" class="split-total">₹0.00</span>
                             </div>
-                            <div id="custom-inputs" class="split-inputs-grid"></div>
+                            <div id="custom-inputs" class="split-inputs"></div>
                         </div>
                     </div>
-                    <div class="datetime-container">
-                        <input type="date" id="expense-date" placeholder="Date (optional)">
-                        <input type="time" id="expense-time" placeholder="Time (optional)">
+                    <div class="form-row">
+                        <input type="date" id="expense-date" placeholder="Date">
+                        <input type="time" id="expense-time" placeholder="Time">
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="modal-actions">
-                    <button type="button" id="cancel-expense">Cancel</button>
-                    <button type="submit" id="save-expense" form="expense-form">Add Expense</button>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-expense" class="btn btn-ghost">Cancel</button>
+                    <button type="submit" id="save-expense" class="btn btn-primary">Add Expense</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Hidden file input for import -->
-    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+    <input type="file" id="import-file-input" accept=".json" style="display:none">
 
     <script src="app.js"></script>
 </body>
-<footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
-    <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" /></a>
-</footer>
 </html>

@@ -17,6 +17,7 @@
   --radius: 10px;
   --radius-sm: 6px;
   --fs-xs: 10px;
+  --fs-xs: 10px;
   --fs-sm: 12px;
   --fs-base: 13px;
   --fs-md: 15px;
@@ -59,6 +60,7 @@ body {
 .header-center { display:flex; align-items:center; gap:4px }
 .stat-chip { background:var(--bg-surface); padding:4px 10px; border-radius:20px; font-size:var(--fs-sm); font-weight:500; color:var(--text-sec); border:1px solid var(--border); white-space:nowrap }
 .stat-chip#chip-total { color:var(--green); font-weight:600 }
+.ts-chip { font-size:var(--fs-xs); padding:2px 6px; background:var(--bg-hover) }
 .header-right { display:flex; gap:4px; align-items:center }
 
 /* ======= BUTTONS ======= */
@@ -373,6 +375,26 @@ body {
 .sort-select { padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-surface); color: var(--text); font-size: var(--fs-sm); cursor: pointer }
 .sort-select:focus { outline:none; border-color:var(--blue) }
 .sort-select option { background:var(--bg-card) }
+
+/* ======= CACHE INFO ======= */
+.cache-info {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cache-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-sm);
+}
+
+.cache-info-row .label { color: var(--text-muted) }
+.cache-info-row .value { color: var(--text); font-weight: 500 }
 
 /* ======= TOAST ======= */
 #toast-container {

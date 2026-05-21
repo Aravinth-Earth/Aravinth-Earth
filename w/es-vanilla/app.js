@@ -46,20 +46,75 @@ function saveData() {
   localStorage.setItem('expenseSplitter', JSON.stringify({
     currentTrip, members, expenses,
     preferences: { expenseSort: currentExpenseSort },
+    firstCachedAt: getCacheMeta().firstCachedAt || new Date().toISOString(),
     lastUpdated: new Date().toISOString()
   }));
 }
 
+function getCacheMeta() {
+  const raw = localStorage.getItem('expenseSplitter');
+  if (!raw) return null;
+  try { return JSON.parse(raw) } catch(e) { return null }
+}
+
 function loadData() {
-  const saved = localStorage.getItem('expenseSplitter');
-  if (!saved) return;
-  try {
-    const data = JSON.parse(saved);
-    currentTrip = data.currentTrip;
-    members = data.members || [];
-    expenses = data.expenses || [];
-    if (data.preferences) currentExpenseSort = data.preferences.expenseSort || 'date-desc';
-  } catch (e) { console.error('Load error:', e) }
+  const data = getCacheMeta();
+  if (!data) return;
+  currentTrip = data.currentTrip;
+  members = data.members || [];
+  expenses = data.expenses || [];
+  if (data.preferences) currentExpenseSort = data.preferences.expenseSort || 'date-desc';
+}
+
+function clearCache() {
+  if (!confirm('Clear all cached data from this browser?')) return;
+  localStorage.removeItem('expenseSplitter');
+  currentTrip = null; members = []; expenses = [];
+  updateDisplay();
+  showMessage('Cache cleared', 'success');
+}
+
+function formatDateTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+    + ' ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+
+function promptCache() {
+  const meta = getCacheMeta();
+  if (!meta) { updateDisplay(); if (expenses.length) calcSettlements(); return }
+  const modal = $('cache-modal');
+  const info = $('cache-info');
+  const tripName = meta.currentTrip?.name || 'Untitled Trip';
+  const created = meta.currentTrip?.createdAt || meta.firstCachedAt;
+  info.innerHTML = `
+    <div class="cache-info-row"><span class="label">Trip</span><span class="value">${tripName}</span></div>
+    <div class="cache-info-row"><span class="label">Members</span><span class="value">${(meta.members || []).length}</span></div>
+    <div class="cache-info-row"><span class="label">Expenses</span><span class="value">${(meta.expenses || []).length}</span></div>
+    <div class="cache-info-row"><span class="label">Trip created</span><span class="value">${formatDateTime(meta.currentTrip?.createdAt)}</span></div>
+    <div class="cache-info-row"><span class="label">Last updated</span><span class="value">${formatDateTime(meta.lastUpdated)}</span></div>`;
+  modal.style.display = 'flex';
+
+  $('cache-load-btn').onclick = () => {
+    loadData();
+    modal.style.display = 'none';
+    updateDisplay();
+    if (expenses.length) calcSettlements();
+  };
+
+  $('cache-fresh-btn').onclick = () => {
+    localStorage.removeItem('expenseSplitter');
+    currentTrip = null; members = []; expenses = [];
+    modal.style.display = 'none';
+    updateDisplay();
+    showMessage('Starting fresh', 'success');
+  };
+
+  $('cache-import-btn').onclick = () => {
+    modal.style.display = 'none';
+    $('import-file-input').click();
+  };
 }
 
 // ======= MODALS =======
@@ -80,9 +135,22 @@ function openTripModal(isEdit = false) {
   $('trip-modal').style.display = 'flex';
 }
 
-function openMemberModal() {
-  if (!currentTrip) { showMessage('Create a trip first', 'error'); return }
-  $('member-form').reset();
+function openMemberModal(editMemberData = null) {
+  if (!currentTrip && !editMemberData) { showMessage('Create a trip first', 'error'); return }
+  const form = $('member-form');
+  form.reset();
+  if (editMemberData) {
+    $('member-name').value = editMemberData.name;
+    form.dataset.mode = 'edit';
+    form.dataset.memberId = editMemberData.id;
+    qs('#member-modal h3').textContent = 'Edit Member';
+    $('save-member').textContent = 'Update';
+  } else {
+    delete form.dataset.mode;
+    delete form.dataset.memberId;
+    qs('#member-modal h3').textContent = 'Add Member';
+    $('save-member').textContent = 'Add Member';
+  }
   $('member-modal').style.display = 'flex';
 }
 
@@ -122,11 +190,29 @@ function handleTripSubmit(e) {
 // ======= MEMBERS =======
 function handleMemberSubmit(e) {
   e.preventDefault();
+  const form = e.target;
   const name = $('member-name').value.trim();
   if (!name) { showMessage('Enter a name', 'error'); return }
-  if (members.find(m => m.name.toLowerCase() === name.toLowerCase())) { showMessage('Name already exists', 'error'); return }
-  members.push({ id: Date.now(), name, balance: 0, addedAt: new Date().toISOString() });
-  saveData(); updateDisplay(); closeModals(); showMessage(`${name} added`, 'success');
+  const isEdit = form.dataset.mode === 'edit';
+  const memberId = parseInt(form.dataset.memberId);
+  if (members.find(m => m.name.toLowerCase() === name.toLowerCase() && m.id !== memberId)) { showMessage('Name already exists', 'error'); return }
+
+  if (isEdit) {
+    const m = members.find(x => x.id === memberId);
+    if (!m) return;
+    const old = m.name;
+    m.name = name;
+    expenses.forEach(e => {
+      if (e.paidBy === old) e.paidBy = m.name;
+      const idx = e.involvedMembers.indexOf(old);
+      if (idx > -1) e.involvedMembers[idx] = m.name;
+      if (e.splitData[old]) { e.splitData[m.name] = e.splitData[old]; delete e.splitData[old] }
+    });
+    saveData(); updateDisplay(); calcSettlements(); closeModals(); showMessage(`${name} updated`, 'success');
+  } else {
+    members.push({ id: Date.now(), name, balance: 0, addedAt: new Date().toISOString() });
+    saveData(); updateDisplay(); closeModals(); showMessage(`${name} added`, 'success');
+  }
 }
 
 function deleteMember(id) {
@@ -142,18 +228,7 @@ function deleteMember(id) {
 function editMember(id) {
   const m = members.find(x => x.id === id);
   if (!m) return;
-  const newName = prompt('New name:', m.name);
-  if (!newName || !newName.trim() || newName.trim() === m.name) return;
-  if (members.find(x => x.name.toLowerCase() === newName.trim().toLowerCase() && x.id !== id)) { showMessage('Name exists', 'error'); return }
-  const old = m.name;
-  m.name = newName.trim();
-  expenses.forEach(e => {
-    if (e.paidBy === old) e.paidBy = m.name;
-    const idx = e.involvedMembers.indexOf(old);
-    if (idx > -1) e.involvedMembers[idx] = m.name;
-    if (e.splitData[old]) { e.splitData[m.name] = e.splitData[old]; delete e.splitData[old] }
-  });
-  saveData(); updateDisplay(); calcSettlements();
+  openMemberModal(m);
 }
 
 // ======= RENDER MEMBERS (simple list, no balance) =======
@@ -553,12 +628,18 @@ function getIncurredData() {
 }
 
 // ======= EXPORT/IMPORT =======
+function formatLocalDT(sep) {
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}${sep}${pad(d.getHours())}${sep}${pad(d.getMinutes())}${sep}${pad(d.getSeconds())}`;
+}
+
 function exportData() {
   const data = { currentTrip, members, expenses, exportedAt: new Date().toISOString(), version: '1.0' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `expense-splitter-${(currentTrip?.name || 'data').replace(/\s+/g,'-')}-${new Date().toISOString().split('T')[0]}.json`;
+  link.download = `expense-splitter-${(currentTrip?.name || 'data').replace(/\s+/g,'-')}-${formatLocalDT('-')}.json`;
   document.body.appendChild(link); link.click(); document.body.removeChild(link);
   showMessage('Data exported!', 'success');
 }
@@ -594,6 +675,8 @@ function showWelcomeView() {
   $('dashboard').style.display = 'none';
   $('header-trip-info').style.display = 'none';
   $('header-stats').style.display = 'none';
+  $('chip-created').style.display = 'none';
+  $('chip-updated').style.display = 'none';
 }
 
 function showTripView() {
@@ -616,6 +699,19 @@ function showTripView() {
   $('chip-members').textContent = members.length + ' member' + (members.length !== 1 ? 's' : '');
   $('chip-expenses').textContent = expenses.length + ' expense' + (expenses.length !== 1 ? 's' : '');
 
+  const meta = getCacheMeta();
+  const createdChip = $('chip-created');
+  const updatedChip = $('chip-updated');
+  if (meta) {
+    createdChip.textContent = '📅 ' + formatDateTime(currentTrip.createdAt);
+    updatedChip.textContent = '🔄 ' + formatDateTime(meta.lastUpdated);
+    createdChip.style.display = 'inline-block';
+    updatedChip.style.display = 'inline-block';
+  } else {
+    createdChip.style.display = 'none';
+    updatedChip.style.display = 'none';
+  }
+
   renderMembers();
   $('expense-sort').value = currentExpenseSort;
   if (expenses.length) renderExpenses();
@@ -627,9 +723,6 @@ function showTripView() {
 // ======= INIT =======
 function init() {
   closeModals();
-  loadData();
-  updateDisplay();
-  if (expenses.length) calcSettlements();
 
   $('new-trip-btn').onclick = () => openTripModal();
   $('create-first-trip-btn').onclick = () => openTripModal();
@@ -637,6 +730,7 @@ function init() {
   $('export-data-btn').onclick = exportData;
   $('import-data-btn').onclick = () => $('import-file-input').click();
   $('import-file-input').onchange = importData;
+  $('clear-data-btn').onclick = clearCache;
   $('add-member-btn').onclick = openMemberModal;
   $('add-expense-btn').onclick = openExpenseModal;
   $('trip-form').onsubmit = handleTripSubmit;
@@ -657,6 +751,10 @@ function init() {
   $('expense-sort').onchange = function() { currentExpenseSort = this.value; if (expenses.length) renderExpenses(); saveData() };
 
   window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals() });
+
+  // Show cache prompt if data exists, otherwise normal load
+  if (getCacheMeta()) promptCache();
+  else { loadData(); updateDisplay(); if (expenses.length) calcSettlements() }
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -1,1712 +1,662 @@
-// Expense Splitter - Vanilla JavaScript
-console.log('🚀 Expense Splitter - Vanilla Version Started');
+// Expense Splitter
+let currentTrip = null, members = [], expenses = [];
+let currentExpenseSort = 'date-desc', currentMemberSort = 'name-asc';
+let chartPaid = null, chartIncurred = null;
 
-// Global State
-let currentTrip = null;
-let members = [];
-let expenses = [];
-let currentExpenseSort = 'date-desc'; // Default sort
-let currentMemberSort = 'name-asc'; // Default sort for members
+const $ = id => document.getElementById(id);
+const qs = (sel, ctx) => (ctx || document).querySelector(sel);
+const qsa = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
 
-// DOM Elements
-const elements = {
-    // Screens
-    welcomeScreen: document.getElementById('welcome-screen'),
-    currentTripDiv: document.getElementById('current-trip'),
-    membersSection: document.getElementById('members-section'),
-    expensesSection: document.getElementById('expenses-section'),
-    
-    // Trip Display
-    tripName: document.getElementById('trip-name'),
-    tripDates: document.getElementById('trip-dates'),
-    totalExpenses: document.getElementById('total-expenses'),
-    memberCount: document.getElementById('member-count'),
-    expenseCount: document.getElementById('expense-count'),
-    
-    // Buttons
-    newTripBtn: document.getElementById('new-trip-btn'),
-    createFirstTripBtn: document.getElementById('create-first-trip-btn'),
-    editTripBtn: document.getElementById('edit-trip-btn'),
-    addMemberBtn: document.getElementById('add-member-btn'),
-    addExpenseBtn: document.getElementById('add-expense-btn'),
-    viewBalancesBtn: document.getElementById('view-balances-btn'),
-    
-    // Modals
-    tripModal: document.getElementById('trip-modal'),
-    memberModal: document.getElementById('member-modal'),
-    expenseModal: document.getElementById('expense-modal'),
-    
-    // Forms
-    tripForm: document.getElementById('trip-form'),
-    memberForm: document.getElementById('member-form'),
-    
-    // Lists
-    membersList: document.getElementById('members-list'),
-    expensesList: document.getElementById('expenses-list')
-};
-
-// Initialize App
-function init() {
-    console.log('📱 Initializing Expense Splitter App');
-    
-    // Ensure all modals are closed on startup
-    closeModals();
-    
-    // Load data from localStorage
-    loadData();
-    
-    // Set up event listeners
-    setupEventListeners();
-    
-    // Update display
-    updateDisplay();
-    
-    // Calculate and display balances if we have data
-    if (expenses.length > 0) {
-        calculateAndDisplayBalances();
-        setupChartControls(); // Initialize chart controls
-    }
-    
-    console.log('✅ App initialized successfully');
-}
-
-// Event Listeners
-function setupEventListeners() {
-    console.log('🔧 Setting up event listeners');
-    
-    // Trip creation buttons
-    elements.newTripBtn.addEventListener('click', () => openTripModal());
-    elements.createFirstTripBtn.addEventListener('click', () => openTripModal());
-    elements.editTripBtn.addEventListener('click', () => openTripModal(true));
-    
-    // Export/Import functionality
-    document.getElementById('export-data-btn').addEventListener('click', exportData);
-    document.getElementById('import-data-btn').addEventListener('click', () => {
-        document.getElementById('import-file-input').click();
-    });
-    document.getElementById('import-file-input').addEventListener('change', importData);
-    
-    // Member management
-    elements.addMemberBtn.addEventListener('click', () => openMemberModal());
-    
-    // Expense management
-    document.getElementById('add-expense-btn').addEventListener('click', () => openExpenseModal());
-    
-    // Form submissions
-    elements.tripForm.addEventListener('submit', handleTripSubmit);
-    elements.memberForm.addEventListener('submit', handleMemberSubmit);
-    document.getElementById('expense-form').addEventListener('submit', handleExpenseSubmit);
-    
-    // Split type change handler
-    document.querySelectorAll('input[name="split-type"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            updateSplitOptions(this.value);
-        });
-    });
-    
-    // Expense amount change handler (for updating totals in shares and custom)
-    document.getElementById('expense-amount').addEventListener('input', function() {
-        const splitType = document.querySelector('input[name="split-type"]:checked')?.value;
-        if (splitType === 'shares') {
-            updateSharesTotal();
-        } else if (splitType === 'custom') {
-            updateCustomTotal();
-        }
-    });
-    
-    // Expense sorting
-    const expenseSortSelect = document.getElementById('expense-sort');
-    if (expenseSortSelect) {
-        expenseSortSelect.addEventListener('change', function() {
-            currentExpenseSort = this.value;
-            renderExpenses();
-            saveData(); // Save preference
-        });
-    }
-    
-    // Member sorting
-    const memberSortSelect = document.getElementById('member-sort');
-    if (memberSortSelect) {
-        memberSortSelect.addEventListener('change', function() {
-            currentMemberSort = this.value;
-            renderMembers();
-            saveData(); // Save preference
-        });
-    }
-    
-    // Modal close buttons
-    document.querySelectorAll('.close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', closeModals);
-    });
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            closeModals();
-        }
-    });
-    
-    // Cancel buttons
-    document.getElementById('cancel-trip').addEventListener('click', closeModals);
-    document.getElementById('cancel-member').addEventListener('click', closeModals);
-    document.getElementById('cancel-expense').addEventListener('click', closeModals);
-    
-    console.log('✅ Event listeners set up');
-}
-
-// Trip Modal Functions
-function openTripModal(isEdit = false) {
-    console.log(`📝 Opening trip modal (Edit: ${isEdit})`);
-    
-    const modal = elements.tripModal;
-    const title = document.getElementById('modal-title');
-    const form = elements.tripForm;
-    
-    if (isEdit && currentTrip) {
-        title.textContent = 'Edit Trip';
-        document.getElementById('trip-name-input').value = currentTrip.name;
-        document.getElementById('start-date').value = currentTrip.startDate;
-        document.getElementById('end-date').value = currentTrip.endDate;
-        document.getElementById('currency').value = currentTrip.currency;
-        document.getElementById('description').value = currentTrip.description || '';
-        form.dataset.mode = 'edit';
-    } else {
-        title.textContent = 'Create Trip';
-        form.reset();
-        form.dataset.mode = 'create';
-    }
-    
-    modal.classList.add('show');
-    console.log('✅ Trip modal opened');
-}
-
-function handleTripSubmit(e) {
-    e.preventDefault();
-    console.log('💾 Handling trip form submission');
-    
-    const formData = new FormData(elements.tripForm);
-    const tripData = {
-        id: currentTrip?.id || Date.now(),
-        name: document.getElementById('trip-name-input').value,
-        startDate: document.getElementById('start-date').value,
-        endDate: document.getElementById('end-date').value,
-        currency: document.getElementById('currency').value,
-        description: document.getElementById('description').value,
-        createdAt: currentTrip?.createdAt || new Date().toISOString()
-    };
-    
-    // Validation
-    if (!tripData.name) {
-        showMessage('Please enter a trip name', 'error');
-        return;
-    }
-    
-    if (tripData.startDate && tripData.endDate && new Date(tripData.startDate) > new Date(tripData.endDate)) {
-        showMessage('End date must be after start date', 'error');
-        return;
-    }
-    
-    const isEdit = elements.tripForm.dataset.mode === 'edit';
-    
-    if (isEdit) {
-        console.log('📝 Updating existing trip:', tripData);
-        currentTrip = { ...currentTrip, ...tripData };
-        showMessage('Trip updated successfully!', 'success');
-    } else {
-        console.log('🆕 Creating new trip:', tripData);
-        currentTrip = tripData;
-        members = [];
-        expenses = [];
-        showMessage('Trip created successfully!', 'success');
-    }
-    
-    saveData();
-    updateDisplay();
-    closeModals();
-}
-
-// Member Modal Functions
-function openMemberModal() {
-    console.log('👥 Opening member modal');
-    
-    if (!currentTrip) {
-        showMessage('Please create a trip first', 'error');
-        return;
-    }
-    
-    elements.memberModal.classList.add('show');
-    elements.memberForm.reset();
-    
-    // Debug: Confirm modal is shown
-    console.log('Member modal opened, visible:', elements.memberModal.classList.contains('show'));
-}
-
-function handleMemberSubmit(e) {
-    e.preventDefault();
-    console.log('👤 Handling member form submission');
-    
-    const memberData = {
-        id: Date.now(),
-        name: document.getElementById('member-name').value,
-        balance: 0,
-        addedAt: new Date().toISOString()
-    };
-    
-    if (!memberData.name) {
-        showMessage('Member name is required', 'error');
-        return;
-    }
-    
-    // Check for duplicate names
-    if (members.find(m => m.name.toLowerCase() === memberData.name.toLowerCase())) {
-        showMessage('Member with this name already exists', 'error');
-        return;
-    }
-    
-    console.log('✅ Adding new member:', memberData);
-    members.push(memberData);
-    
-    saveData();
-    updateDisplay();
-    closeModals();
-    showMessage(`${memberData.name} added successfully!`, 'success');
-}
-
-// Display Functions
-function updateDisplay() {
-    console.log('🔄 Updating display');
-    
-    if (currentTrip) {
-        showTripView();
-    } else {
-        showWelcomeView();
-    }
-}
-
-function showWelcomeView() {
-    console.log('🏠 Showing welcome view');
-    elements.welcomeScreen.style.display = 'block';
-    elements.currentTripDiv.style.display = 'none';
-    elements.membersSection.style.display = 'none';
-    elements.expensesSection.style.display = 'none';
-}
-
-function showTripView() {
-    console.log('🗺️ Showing trip view for:', currentTrip.name);
-    
-    elements.welcomeScreen.style.display = 'none';
-    elements.currentTripDiv.style.display = 'block';
-    
-    // Update trip info
-    elements.tripName.textContent = currentTrip.name;
-    
-    // Handle optional dates
-    let dateText = '';
-    if (currentTrip.startDate && currentTrip.endDate) {
-        dateText = `${formatDate(currentTrip.startDate)} - ${formatDate(currentTrip.endDate)}`;
-    } else if (currentTrip.startDate) {
-        dateText = `From ${formatDate(currentTrip.startDate)}`;
-    } else if (currentTrip.endDate) {
-        dateText = `Until ${formatDate(currentTrip.endDate)}`;
-    } else {
-        dateText = 'No dates set';
-    }
-    elements.tripDates.textContent = dateText;
-    
-    // Update stats
-    const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-    elements.totalExpenses.textContent = formatCurrency(totalExpenses, currentTrip.currency);
-    elements.memberCount.textContent = members.length;
-    elements.expenseCount.textContent = expenses.length;
-    
-    // Show/hide sections based on data
-    if (members.length > 0) {
-        elements.membersSection.style.display = 'block';
-        
-        // Set the member sort dropdown value
-        const memberSortSelect = document.getElementById('member-sort');
-        if (memberSortSelect) {
-            memberSortSelect.value = currentMemberSort;
-        }
-        
-        renderMembers();
-    } else {
-        elements.membersSection.style.display = 'none';
-    }
-    
-    if (expenses.length > 0) {
-        elements.expensesSection.style.display = 'block';
-        
-        // Set the sort dropdown value
-        const expenseSortSelect = document.getElementById('expense-sort');
-        if (expenseSortSelect) {
-            expenseSortSelect.value = currentExpenseSort;
-        }
-        
-        renderExpenses();
-        
-        // Calculate and display balances/settlements
-        calculateAndDisplayBalances();
-        
-        // Show consolidated settlement section
-        const settlementOverview = document.getElementById('settlement-overview');
-        const chartSection = document.getElementById('chart-section');
-        
-        if (settlementOverview) {
-            settlementOverview.style.display = 'block';
-        }
-        if (chartSection) {
-            chartSection.style.display = 'block';
-        }
-    } else {
-        elements.expensesSection.style.display = 'none';
-        
-        // Hide settlement and chart sections
-        const settlementOverview = document.getElementById('settlement-overview');
-        const chartSection = document.getElementById('chart-section');
-        
-        if (settlementOverview) {
-            settlementOverview.style.display = 'none';
-        }
-        if (chartSection) {
-            chartSection.style.display = 'none';
-        }
-    }
-}
-
-function getSortedMembers() {
-    const membersCopy = [...members];
-    
-    switch (currentMemberSort) {
-        case 'name-asc':
-            return membersCopy.sort((a, b) => a.name.localeCompare(b.name)); // A-Z
-            
-        case 'name-desc':
-            return membersCopy.sort((a, b) => b.name.localeCompare(a.name)); // Z-A
-            
-        case 'date-desc':
-            return membersCopy.sort((a, b) => new Date(b.addedAt) - new Date(a.addedAt)); // Recently added
-            
-        case 'date-asc':
-            return membersCopy.sort((a, b) => new Date(a.addedAt) - new Date(b.addedAt)); // First added
-            
-        default:
-            return membersCopy; // No sorting
-    }
-}
-
-function renderMembers() {
-    console.log('👥 Rendering members list with sort:', currentMemberSort);
-    
-    elements.membersList.innerHTML = '';
-    
-    // Sort members based on current sort option
-    const sortedMembers = getSortedMembers();
-    
-    // Update count badge
-    const countBadge = document.getElementById('member-count-badge');
-    if (countBadge) {
-        countBadge.textContent = sortedMembers.length;
-    }
-    
-    sortedMembers.forEach(member => {
-        const memberCard = document.createElement('div');
-        memberCard.className = 'member-card';
-        
-        // Check if member is involved in any expense
-        const isInvolvedInExpenses = expenses.some(expense => 
-            expense.paidBy === member.name || expense.involvedMembers.includes(member.name)
-        );
-        
-        memberCard.innerHTML = `
-            <div class="member-info">
-                <h4>${member.name}</h4>
-                <p>Added ${new Date(member.addedAt).toLocaleDateString()}</p>
-            </div>
-            <div class="member-actions">
-                <button class="btn btn-secondary btn-small" onclick="editMember(${member.id})">✏️ Edit</button>
-                <button class="btn btn-danger btn-small" onclick="deleteMember(${member.id})" 
-                    ${isInvolvedInExpenses ? 'disabled title="Cannot delete: Member is involved in expenses"' : ''}>
-                    🗑️ Delete
-                </button>
-            </div>
-        `;
-        elements.membersList.appendChild(memberCard);
-    });
-}
-
-function getSortedExpenses() {
-    const expensesCopy = [...expenses];
-    
-    switch (currentExpenseSort) {
-        case 'date-desc':
-            return expensesCopy.sort((a, b) => {
-                const dateA = new Date(a.date + (a.time ? ` ${a.time}` : ''));
-                const dateB = new Date(b.date + (b.time ? ` ${b.time}` : ''));
-                return dateB - dateA; // Latest first
-            });
-            
-        case 'date-asc':
-            return expensesCopy.sort((a, b) => {
-                const dateA = new Date(a.date + (a.time ? ` ${a.time}` : ''));
-                const dateB = new Date(b.date + (b.time ? ` ${b.time}` : ''));
-                return dateA - dateB; // Oldest first
-            });
-            
-        case 'amount-desc':
-            return expensesCopy.sort((a, b) => b.amount - a.amount); // Highest first
-            
-        case 'amount-asc':
-            return expensesCopy.sort((a, b) => a.amount - b.amount); // Lowest first
-            
-        case 'paidby-asc':
-            return expensesCopy.sort((a, b) => a.paidBy.localeCompare(b.paidBy)); // A-Z
-            
-        case 'paidby-desc':
-            return expensesCopy.sort((a, b) => b.paidBy.localeCompare(a.paidBy)); // Z-A
-            
-        case 'name-asc':
-            return expensesCopy.sort((a, b) => a.description.localeCompare(b.description)); // A-Z
-            
-        case 'name-desc':
-            return expensesCopy.sort((a, b) => b.description.localeCompare(a.description)); // Z-A
-            
-        default:
-            return expensesCopy; // No sorting
-    }
-}
-
-function renderExpenses() {
-    console.log('💰 Rendering expenses list with sort:', currentExpenseSort);
-    
-    elements.expensesList.innerHTML = '';
-    
-    // Sort expenses based on current sort option
-    const sortedExpenses = getSortedExpenses();
-    
-    // Update count badge
-    const countBadge = document.getElementById('expense-count-badge');
-    if (countBadge) {
-        countBadge.textContent = sortedExpenses.length;
-    }
-    
-    sortedExpenses.forEach(expense => {
-        const expenseItem = document.createElement('div');
-        expenseItem.className = 'expense-item';
-        
-        // Generate split info based on split type
-        let splitInfo = '';
-        switch (expense.splitType) {
-            case 'equal':
-                const equalAmounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
-                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
-                }).join(', ');
-                splitInfo = `Split equally: ${equalAmounts}`;
-                break;
-            case 'select-equal':
-                const selectEqualAmounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
-                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
-                }).join(', ');
-                splitInfo = `Split equally among selected: ${selectEqualAmounts}`;
-                break;
-            case 'percentage':
-                const percentages = Object.entries(expense.splitData).map(([memberName, amount]) => {
-                    const percentage = ((amount / expense.amount) * 100).toFixed(1);
-                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)} (${percentage}%)`;
-                }).join(', ');
-                splitInfo = `${percentages}`;
-                break;
-            case 'shares':
-                const shares = Object.entries(expense.splitData).map(([memberName, amount]) => {
-                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
-                }).join(', ');
-                splitInfo = `${shares}`;
-                break;
-            case 'custom':
-                const amounts = Object.entries(expense.splitData).map(([memberName, amount]) => {
-                    return `${memberName}: ${formatCurrency(amount, currentTrip.currency)}`;
-                }).join(', ');
-                splitInfo = `${amounts}`;
-                break;
-            default:
-                splitInfo = `Split among: ${expense.involvedMembers.join(', ')}`;
-        }
-        
-        expenseItem.innerHTML = `
-            <div class="expense-info">
-                <h4>${expense.description}</h4>
-                <p>Paid by ${expense.paidBy} • ${formatDate(expense.date)}${expense.time ? ` at ${expense.time}` : ''}</p>
-                <p class="expense-split-info">${splitInfo}</p>
-            </div>
-            <div class="expense-right">
-                <div class="expense-amount">${formatCurrency(expense.amount, currentTrip.currency)}</div>
-                <div class="expense-actions">
-                    <button class="btn btn-secondary btn-small" onclick="editExpense(${expense.id})">✏️ Edit</button>
-                    <button class="btn btn-danger btn-small" onclick="deleteExpense(${expense.id})">🗑️ Delete</button>
-                </div>
-            </div>
-        `;
-        elements.expensesList.appendChild(expenseItem);
-    });
-}
-
-// Utility Functions
 function formatCurrency(amount, currency = 'INR') {
-    const symbols = {
-        'INR': '₹',
-        'USD': '$',
-        'EUR': '€',
-        'GBP': '£'
-    };
-    
-    return `${symbols[currency] || '₹'}${amount.toFixed(2)}`;
+  const symbols = { INR: '₹', USD: '$', EUR: '€', GBP: '£' };
+  if (currency === 'INR') return '₹' + amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `${symbols[currency] || '$'}${amount.toFixed(2)}`;
 }
 
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-function deleteMember(memberId) {
-    console.log('🗑️ Deleting member:', memberId);
-    
-    const member = members.find(m => m.id === memberId);
-    if (!member) return;
-    
-    // Check if member is involved in any expense
-    const isInvolvedInExpenses = expenses.some(expense => 
-        expense.paidBy === member.name || expense.involvedMembers.includes(member.name)
-    );
-    
-    if (isInvolvedInExpenses) {
-        showMessage('Cannot delete member: They are involved in existing expenses. Delete related expenses first.', 'error');
-        return;
-    }
-    
-    if (confirm(`Are you sure you want to delete ${member.name}?`)) {
-        const memberIndex = members.findIndex(m => m.id === memberId);
-        if (memberIndex > -1) {
-            members.splice(memberIndex, 1);
-            saveData();
-            updateDisplay();
-            showMessage(`${member.name} removed successfully!`, 'success');
-        }
-    }
+function getAvatarColor(name) {
+  const colors = ['#a855f7','#3b82f6','#10b981','#ef4444','#f59e0b','#06b6d4','#ec4899','#8b5cf6'];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
 }
 
-function editMember(memberId) {
-    console.log('✏️ Editing member:', memberId);
-    
-    const member = members.find(m => m.id === memberId);
-    if (!member) return;
-    
-    const newName = prompt('Enter new name:', member.name);
-    if (newName && newName.trim() !== '' && newName !== member.name) {
-        // Check for duplicate names
-        if (members.find(m => m.name.toLowerCase() === newName.toLowerCase() && m.id !== memberId)) {
-            showMessage('Member with this name already exists', 'error');
-            return;
-        }
-        
-        const oldName = member.name;
-        member.name = newName.trim();
-        
-        // Update expenses that reference this member
-        expenses.forEach(expense => {
-            if (expense.paidBy === oldName) {
-                expense.paidBy = member.name;
-            }
-            if (expense.involvedMembers.includes(oldName)) {
-                const index = expense.involvedMembers.indexOf(oldName);
-                expense.involvedMembers[index] = member.name;
-            }
-        });
-        
-        saveData();
-        updateDisplay();
-        calculateAndDisplayBalances();
-        showMessage(`Member updated from ${oldName} to ${member.name}!`, 'success');
-    }
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 }
 
-function deleteExpense(expenseId) {
-    console.log('🗑️ Deleting expense:', expenseId);
-    
-    const expense = expenses.find(e => e.id === expenseId);
-    if (!expense) return;
-    
-    if (confirm(`Are you sure you want to delete the expense "${expense.description}"?`)) {
-        const expenseIndex = expenses.findIndex(e => e.id === expenseId);
-        if (expenseIndex > -1) {
-            expenses.splice(expenseIndex, 1);
-            saveData();
-            updateDisplay();
-            calculateAndDisplayBalances();
-            showMessage(`Expense "${expense.description}" deleted successfully!`, 'success');
-        }
-    }
-}
-
-function editExpense(expenseId) {
-    console.log('✏️ Editing expense:', expenseId);
-    
-    const expense = expenses.find(e => e.id === expenseId);
-    if (!expense) return;
-    
-    // Pre-fill the expense form with existing data
-    openExpenseModal();
-    
-    // Set the form to edit mode
-    const form = document.getElementById('expense-form');
-    form.dataset.mode = 'edit';
-    form.dataset.expenseId = expenseId;
-    
-    // Fill the form with existing values
-    document.getElementById('expense-description').value = expense.description;
-    document.getElementById('expense-amount').value = expense.amount;
-    document.getElementById('expense-paid-by').value = expense.paidBy;
-    document.getElementById('expense-date').value = expense.date;
-    document.getElementById('expense-time').value = expense.time || '';
-    
-    // Set split type and update options
-    const splitTypeRadio = document.querySelector(`input[name="split-type"][value="${expense.splitType}"]`);
-    if (splitTypeRadio) {
-        splitTypeRadio.checked = true;
-        updateSplitOptions(expense.splitType);
-        
-        // Pre-fill split data based on type
-        setTimeout(() => {
-            switch (expense.splitType) {
-                case 'select-equal':
-                    expense.involvedMembers.forEach(memberName => {
-                        const checkbox = document.querySelector(`[name="selected-members"][value="${memberName}"]`);
-                        if (checkbox) checkbox.checked = true;
-                    });
-                    break;
-                    
-                case 'percentage':
-                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
-                        const percentage = (amount / expense.amount * 100).toFixed(1);
-                        const input = document.querySelector(`[name="percentage-${memberName}"]`);
-                        if (input) input.value = percentage;
-                    });
-                    updatePercentageTotal();
-                    break;
-                    
-                case 'shares':
-                    // Calculate shares from amounts (reverse engineering)
-                    const totalAmount = Object.values(expense.splitData).reduce((sum, amt) => sum + amt, 0);
-                    const baseShare = Math.min(...Object.values(expense.splitData));
-                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
-                        const shares = Math.round(amount / baseShare);
-                        const input = document.querySelector(`[name="shares-${memberName}"]`);
-                        if (input) input.value = shares;
-                    });
-                    updateSharesTotal();
-                    break;
-                    
-                case 'custom':
-                    Object.entries(expense.splitData).forEach(([memberName, amount]) => {
-                        const input = document.querySelector(`[name="custom-${memberName}"]`);
-                        if (input) input.value = amount.toFixed(2);
-                    });
-                    updateCustomTotal();
-                    break;
-            }
-        }, 100);
-    }
-    
-    // Change modal title and button text
-    elements.expenseModal.querySelector('h3').textContent = 'Edit Expense';
-    document.getElementById('save-expense').textContent = 'Update Expense';
-}
-
+// ======= TOAST =======
 function showMessage(text, type = 'success') {
-    console.log(`💬 Showing ${type} message: ${text}`);
-    
-    // Remove existing messages
-    document.querySelectorAll('.message').forEach(msg => msg.remove());
-    
-    const message = document.createElement('div');
-    message.className = `message ${type}`;
-    message.textContent = text;
-    
-    document.querySelector('.container').insertBefore(message, document.querySelector('.container').firstChild);
-    
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-        message.remove();
-    }, 3000);
+  const container = $('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = text;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut .2s ease';
+    setTimeout(() => toast.remove(), 200);
+  }, 3000);
 }
 
-function closeModals() {
-    console.log('❌ Closing all modals');
-    elements.tripModal.classList.remove('show');
-    elements.memberModal.classList.remove('show');
-    elements.expenseModal.classList.remove('show');
-    
-    // Debug: Log modal states
-    console.log('Modal states after close:', {
-        trip: elements.tripModal.classList.contains('show'),
-        member: elements.memberModal.classList.contains('show'),
-        expense: elements.expenseModal.classList.contains('show')
-    });
-}
-
-// Data Persistence
+// ======= DATA =======
 function saveData() {
-    const data = {
-        currentTrip,
-        members,
-        expenses,
-        preferences: {
-            expenseSort: currentExpenseSort,
-            memberSort: currentMemberSort
-        },
-        lastUpdated: new Date().toISOString()
-    };
-    
-    localStorage.setItem('expenseSplitter', JSON.stringify(data));
-    console.log('💾 Data saved to localStorage');
+  localStorage.setItem('expenseSplitter', JSON.stringify({
+    currentTrip, members, expenses,
+    preferences: { expenseSort: currentExpenseSort },
+    lastUpdated: new Date().toISOString()
+  }));
 }
 
 function loadData() {
-    console.log('📂 Loading data from localStorage');
-    
-    const saved = localStorage.getItem('expenseSplitter');
-    if (saved) {
-        try {
-            const data = JSON.parse(saved);
-            currentTrip = data.currentTrip;
-            members = data.members || [];
-            expenses = data.expenses || [];
-            
-            // Load preferences
-            if (data.preferences) {
-                currentExpenseSort = data.preferences.expenseSort || 'date-desc';
-                currentMemberSort = data.preferences.memberSort || 'name-asc';
-            }
-            
-            console.log('✅ Data loaded successfully:', data);
-        } catch (error) {
-            console.error('❌ Error loading data:', error);
-            showMessage('Error loading saved data', 'error');
-        }
-    } else {
-        console.log('📝 No saved data found, starting fresh');
-    }
+  const saved = localStorage.getItem('expenseSplitter');
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    currentTrip = data.currentTrip;
+    members = data.members || [];
+    expenses = data.expenses || [];
+    if (data.preferences) currentExpenseSort = data.preferences.expenseSort || 'date-desc';
+  } catch (e) { console.error('Load error:', e) }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+// ======= MODALS =======
+function closeModals() { qsa('.modal').forEach(m => m.style.display = 'none') }
 
-// ========================
-// EXPENSE FUNCTIONALITY
-// ========================
+function openTripModal(isEdit = false) {
+  $('modal-title').textContent = isEdit ? 'Edit Trip' : 'Create Trip';
+  $('save-trip').textContent = isEdit ? 'Update Trip' : 'Save Trip';
+  const form = $('trip-form');
+  if (isEdit && currentTrip) {
+    $('trip-name-input').value = currentTrip.name;
+    $('start-date').value = currentTrip.startDate || '';
+    $('end-date').value = currentTrip.endDate || '';
+    $('currency').value = currentTrip.currency;
+    $('description').value = currentTrip.description || '';
+    form.dataset.mode = 'edit';
+  } else { form.reset(); delete form.dataset.mode }
+  $('trip-modal').style.display = 'flex';
+}
 
-// Expense Modal Functions
+function openMemberModal() {
+  if (!currentTrip) { showMessage('Create a trip first', 'error'); return }
+  $('member-form').reset();
+  $('member-modal').style.display = 'flex';
+}
+
 function openExpenseModal() {
-    console.log('📝 Opening expense modal');
-    
-    if (members.length === 0) {
-        showMessage('Please add members first before creating expenses!', 'error');
-        return;
-    }
-    
-    // Reset modal to add mode
-    const form = document.getElementById('expense-form');
-    form.reset();
-    delete form.dataset.mode;
-    delete form.dataset.expenseId;
-    
-    // Reset modal title and button text
-    elements.expenseModal.querySelector('h3').textContent = 'Add Expense';
-    document.getElementById('save-expense').textContent = 'Add Expense';
-    
-    // Populate the paid-by dropdown
-    populateMemberCheckboxes();
-    
-    // Initialize split options (default to equal)
-    updateSplitOptions('equal');
-    
-    elements.expenseModal.classList.add('show');
+  if (members.length === 0) { showMessage('Add members first', 'error'); return }
+  const form = $('expense-form');
+  form.reset(); delete form.dataset.mode; delete form.dataset.expenseId;
+  qs('#expense-modal h3').textContent = 'Add Expense';
+  $('save-expense').textContent = 'Add Expense';
+  populatePaidBy();
+  updateSplitOptions('equal');
+  $('expense-modal').style.display = 'flex';
 }
 
-function populateMemberCheckboxes() {
-    const paidBySelect = document.getElementById('expense-paid-by');
-    
-    // Clear existing options
-    paidBySelect.innerHTML = '<option value="">Who paid?</option>';
-    
-    members.forEach(member => {
-        // Add to paid-by select
-        const option = document.createElement('option');
-        option.value = member.name;
-        option.textContent = member.name;
-        paidBySelect.appendChild(option);
-    });
+// ======= TRIP =======
+function handleTripSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const tripData = {
+    id: currentTrip?.id || Date.now(),
+    name: $('trip-name-input').value.trim(),
+    startDate: $('start-date').value,
+    endDate: $('end-date').value,
+    currency: $('currency').value,
+    description: $('description').value,
+    createdAt: currentTrip?.createdAt || new Date().toISOString()
+  };
+  if (!tripData.name) { showMessage('Enter a trip name', 'error'); return }
+  if (tripData.startDate && tripData.endDate && new Date(tripData.startDate) > new Date(tripData.endDate)) {
+    showMessage('End must be after start', 'error'); return;
+  }
+  if (form.dataset.mode === 'edit') { currentTrip = { ...currentTrip, ...tripData }; showMessage('Trip updated', 'success') }
+  else { currentTrip = tripData; members = []; expenses = []; showMessage('Trip created!', 'success') }
+  saveData(); updateDisplay(); closeModals();
+}
+
+// ======= MEMBERS =======
+function handleMemberSubmit(e) {
+  e.preventDefault();
+  const name = $('member-name').value.trim();
+  if (!name) { showMessage('Enter a name', 'error'); return }
+  if (members.find(m => m.name.toLowerCase() === name.toLowerCase())) { showMessage('Name already exists', 'error'); return }
+  members.push({ id: Date.now(), name, balance: 0, addedAt: new Date().toISOString() });
+  saveData(); updateDisplay(); closeModals(); showMessage(`${name} added`, 'success');
+}
+
+function deleteMember(id) {
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+  if (expenses.some(e => e.paidBy === m.name || e.involvedMembers.includes(m.name))) {
+    showMessage('Member is in expenses. Delete those first.', 'error'); return;
+  }
+  members = members.filter(x => x.id !== id);
+  saveData(); updateDisplay();
+}
+
+function editMember(id) {
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+  const newName = prompt('New name:', m.name);
+  if (!newName || !newName.trim() || newName.trim() === m.name) return;
+  if (members.find(x => x.name.toLowerCase() === newName.trim().toLowerCase() && x.id !== id)) { showMessage('Name exists', 'error'); return }
+  const old = m.name;
+  m.name = newName.trim();
+  expenses.forEach(e => {
+    if (e.paidBy === old) e.paidBy = m.name;
+    const idx = e.involvedMembers.indexOf(old);
+    if (idx > -1) e.involvedMembers[idx] = m.name;
+    if (e.splitData[old]) { e.splitData[m.name] = e.splitData[old]; delete e.splitData[old] }
+  });
+  saveData(); updateDisplay(); calcSettlements();
+}
+
+// ======= RENDER MEMBERS (simple list, no balance) =======
+function renderMembers() {
+  const list = $('members-list');
+  list.innerHTML = '';
+  members.forEach(m => {
+    const card = document.createElement('div'); card.className = 'member-card';
+    card.innerHTML = `
+      <div class="member-avatar" style="background:${getAvatarColor(m.name)}">${getInitials(m.name)}</div>
+      <div class="member-info">
+        <div class="member-name">${m.name}</div>
+      </div>
+      <div class="member-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editMember(${m.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMember(${m.id})">🗑️</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ======= EXPENSES =======
+function populatePaidBy() {
+  const sel = $('expense-paid-by');
+  sel.innerHTML = '<option value="">Who paid?</option>';
+  members.forEach(m => { const o = document.createElement('option'); o.value = m.name; o.textContent = m.name; sel.appendChild(o) });
 }
 
 function updateSplitOptions(splitType) {
-    const splitConfig = document.getElementById('split-config');
-    const sections = [
-        'select-members-section',
-        'percentage-split-section', 
-        'shares-split-section',
-        'custom-split-section'
-    ];
-    
-    // Hide all sections first
-    sections.forEach(id => {
-        document.getElementById(id).style.display = 'none';
-    });
-    
-    if (splitType === 'equal') {
-        splitConfig.style.display = 'none';
-    } else {
-        splitConfig.style.display = 'block';
-        
-        switch (splitType) {
-            case 'select-equal':
-                document.getElementById('select-members-section').style.display = 'block';
-                populateSelectMemberCheckboxes();
-                break;
-            case 'percentage':
-                document.getElementById('percentage-split-section').style.display = 'block';
-                populatePercentageInputs();
-                break;
-            case 'shares':
-                document.getElementById('shares-split-section').style.display = 'block';
-                populateSharesInputs();
-                break;
-            case 'custom':
-                document.getElementById('custom-split-section').style.display = 'block';
-                populateCustomInputs();
-                break;
-        }
-    }
+  const cfg = $('split-config');
+  ['select-members-section','percentage-split-section','shares-split-section','custom-split-section'].forEach(id => $(id).style.display = 'none');
+  qsa('.split-option').forEach(el => el.classList.toggle('selected', el.dataset.split === splitType));
+  if (splitType === 'equal') { cfg.style.display = 'none'; return }
+  cfg.style.display = 'block';
+  if (splitType === 'select-equal') { $('select-members-section').style.display = 'block'; populateSelectMembers() }
+  else if (splitType === 'percentage') { $('percentage-split-section').style.display = 'block'; populatePercentages() }
+  else if (splitType === 'shares') { $('shares-split-section').style.display = 'block'; populateShares() }
+  else if (splitType === 'custom') { $('custom-split-section').style.display = 'block'; populateCustom() }
 }
 
-function populateSelectMemberCheckboxes() {
-    const container = document.getElementById('select-member-checkboxes');
-    container.innerHTML = '';
-    
-    members.forEach(member => {
-        const label = document.createElement('label');
-        label.innerHTML = `
-            <input type="checkbox" name="selected-members" value="${member.name}" checked>
-            <span>${member.name}</span>
-        `;
-        container.appendChild(label);
-    });
+qsa('.split-option').forEach(el => {
+  el.addEventListener('click', function() {
+    const radio = qs('input[type="radio"]', this);
+    if (radio) { radio.checked = true; updateSplitOptions(radio.value) }
+  });
+});
+
+function populateSelectMembers() {
+  const c = $('select-member-checkboxes'); c.innerHTML = '';
+  members.forEach(m => {
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="checkbox" name="selected-members" value="${m.name}" checked><span>${m.name}</span>`;
+    c.appendChild(l);
+  });
 }
 
-function populatePercentageInputs() {
-    const container = document.getElementById('percentage-inputs');
-    container.innerHTML = '';
-    
-    members.forEach(member => {
-        const div = document.createElement('div');
-        div.className = 'split-input-item';
-        div.innerHTML = `
-            <label>${member.name}</label>
-            <input type="number" 
-                   name="percentage-${member.name}" 
-                   placeholder="0" 
-                   min="0" 
-                   max="100" 
-                   step="0.1"
-                   oninput="updatePercentageTotal()">
-        `;
-        container.appendChild(div);
-    });
-    
-    updatePercentageTotal();
-}
-
-function populateSharesInputs() {
-    const container = document.getElementById('shares-inputs');
-    container.innerHTML = '';
-    
-    members.forEach(member => {
-        const div = document.createElement('div');
-        div.className = 'split-input-item';
-        div.innerHTML = `
-            <label>${member.name}</label>
-            <input type="number" 
-                   name="shares-${member.name}" 
-                   placeholder="0" 
-                   min="0" 
-                   step="1"
-                   oninput="updateSharesTotal()">
-        `;
-        container.appendChild(div);
-    });
-    
-    updateSharesTotal();
-}
-
-function populateCustomInputs() {
-    const container = document.getElementById('custom-inputs');
-    container.innerHTML = '';
-    
-    members.forEach(member => {
-        const div = document.createElement('div');
-        div.className = 'split-input-item';
-        div.innerHTML = `
-            <label>${member.name}</label>
-            <input type="number" 
-                   name="custom-${member.name}" 
-                   placeholder="0.00" 
-                   min="0" 
-                   step="0.01"
-                   oninput="updateCustomTotal()">
-        `;
-        container.appendChild(div);
-    });
-    
-    updateCustomTotal();
+function populatePercentages() {
+  const c = $('percentage-inputs'); c.innerHTML = '';
+  members.forEach(m => {
+    const d = document.createElement('div'); d.className = 'split-input-item';
+    d.innerHTML = `<label>${m.name}</label><input type="number" name="percentage-${m.name}" placeholder="0" min="0" max="100" step="0.1">`;
+    c.appendChild(d);
+  });
+  qsa('#percentage-inputs input').forEach(i => i.addEventListener('input', updatePercentageTotal));
+  updatePercentageTotal();
 }
 
 function updatePercentageTotal() {
-    const inputs = document.querySelectorAll('[name^="percentage-"]');
-    let total = 0;
-    
-    inputs.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        total += value;
-        
-        // Update input styling
-        if (value > 0 && value <= 100) {
-            input.classList.remove('invalid');
-            input.classList.add('valid');
-        } else if (value > 100) {
-            input.classList.add('invalid');
-            input.classList.remove('valid');
-        } else {
-            input.classList.remove('valid', 'invalid');
-        }
-    });
-    
-    const totalSpan = document.getElementById('percentage-total');
-    const statusSpan = document.getElementById('percentage-status');
-    
-    totalSpan.textContent = `${total.toFixed(1)}%`;
-    
-    if (total === 100) {
-        statusSpan.textContent = '✓ Perfect!';
-        statusSpan.className = 'tally-status valid';
-        totalSpan.style.color = 'var(--accent-green)';
-    } else if (total > 100) {
-        statusSpan.textContent = `⚠ Over by ${(total - 100).toFixed(1)}%`;
-        statusSpan.className = 'tally-status invalid';
-        totalSpan.style.color = 'var(--accent-red)';
-    } else if (total > 0) {
-        statusSpan.textContent = `⚠ Under by ${(100 - total).toFixed(1)}%`;
-        statusSpan.className = 'tally-status warning';
-        totalSpan.style.color = 'var(--accent-yellow)';
-    } else {
-        statusSpan.textContent = '';
-        statusSpan.className = 'tally-status';
-        totalSpan.style.color = 'var(--text-primary)';
-    }
+  const inputs = qsa('#percentage-inputs input');
+  let total = 0;
+  inputs.forEach(i => { const v = parseFloat(i.value) || 0; total += v; i.classList.toggle('valid', v > 0 && v <= 100); i.classList.toggle('invalid', v > 100) });
+  $('percentage-total').textContent = total.toFixed(1) + '%';
+  $('percentage-total').style.color = total === 100 ? 'var(--green)' : total > 100 ? 'var(--red)' : 'var(--yellow)';
+}
+
+function populateShares() {
+  const c = $('shares-inputs'); c.innerHTML = '';
+  members.forEach(m => {
+    const d = document.createElement('div'); d.className = 'split-input-item';
+    d.innerHTML = `<label>${m.name}</label><input type="number" name="shares-${m.name}" placeholder="0" min="0" step="1">`;
+    c.appendChild(d);
+  });
+  qsa('#shares-inputs input').forEach(i => i.addEventListener('input', updateSharesTotal));
+  updateSharesTotal();
 }
 
 function updateSharesTotal() {
-    const inputs = document.querySelectorAll('[name^="shares-"]');
-    let total = 0;
-    const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
-    
-    inputs.forEach(input => {
-        const value = parseInt(input.value) || 0;
-        total += value;
-        
-        // Update input styling
-        if (value > 0) {
-            input.classList.remove('invalid');
-            input.classList.add('valid');
-        } else {
-            input.classList.remove('valid', 'invalid');
-        }
+  const inputs = qsa('#shares-inputs input');
+  let total = 0;
+  const expenseAmount = parseFloat($('expense-amount').value) || 0;
+  inputs.forEach(i => { const v = parseInt(i.value) || 0; total += v; i.classList.toggle('valid', v > 0) });
+  $('shares-total').textContent = total + ' shares';
+  const bd = $('shares-breakdown');
+  if (total > 0 && expenseAmount > 0) {
+    bd.style.display = 'block';
+    let html = '<h4>Breakdown:</h4>';
+    inputs.forEach(i => {
+      const s = parseInt(i.value) || 0;
+      if (s > 0) {
+        const n = i.name.replace('shares-','');
+        html += `<div class="share-breakdown-item"><span>${n} (${s})</span><span>${(s/total*100).toFixed(1)}% = ${formatCurrency(expenseAmount*s/total, currentTrip?.currency)}</span></div>`;
+      }
     });
-    
-    document.getElementById('shares-total').textContent = total;
-    
-    // Update breakdown
-    const breakdown = document.getElementById('shares-breakdown');
-    if (total > 0 && expenseAmount > 0) {
-        breakdown.style.display = 'block';
-        let breakdownHTML = '<h4>Share Breakdown:</h4>';
-        
-        inputs.forEach(input => {
-            const shares = parseInt(input.value) || 0;
-            if (shares > 0) {
-                const memberName = input.name.replace('shares-', '');
-                const percentage = (shares / total * 100).toFixed(1);
-                const amount = (expenseAmount * shares / total).toFixed(2);
-                breakdownHTML += `
-                    <div class="share-breakdown-item">
-                        <span>${memberName} (${shares} shares)</span>
-                        <span>${percentage}% = ${formatCurrency(parseFloat(amount), currentTrip?.currency || 'INR')}</span>
-                    </div>
-                `;
-            }
-        });
-        
-        breakdown.innerHTML = breakdownHTML;
-    } else {
-        breakdown.style.display = 'none';
-    }
+    bd.innerHTML = html;
+  } else { bd.style.display = 'none' }
+}
+
+function populateCustom() {
+  const c = $('custom-inputs'); c.innerHTML = '';
+  members.forEach(m => {
+    const d = document.createElement('div'); d.className = 'split-input-item';
+    d.innerHTML = `<label>${m.name}</label><input type="number" name="custom-${m.name}" placeholder="0.00" min="0" step="0.01">`;
+    c.appendChild(d);
+  });
+  qsa('#custom-inputs input').forEach(i => i.addEventListener('input', updateCustomTotal));
+  updateCustomTotal();
 }
 
 function updateCustomTotal() {
-    const inputs = document.querySelectorAll('[name^="custom-"]');
-    const expenseAmount = parseFloat(document.getElementById('expense-amount').value) || 0;
-    let total = 0;
-    
-    inputs.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        total += value;
-        
-        // Update input styling
-        if (value > 0) {
-            input.classList.remove('invalid');
-            input.classList.add('valid');
-        } else {
-            input.classList.remove('valid', 'invalid');
-        }
-    });
-    
-    const totalSpan = document.getElementById('custom-total');
-    const statusSpan = document.getElementById('custom-status');
-    
-    totalSpan.textContent = formatCurrency(total, currentTrip?.currency || 'INR');
-    
-    if (expenseAmount > 0) {
-        const diff = total - expenseAmount;
-        if (Math.abs(diff) < 0.01) {
-            statusSpan.textContent = '✓ Perfect!';
-            statusSpan.className = 'tally-status valid';
-            totalSpan.style.color = 'var(--accent-green)';
-        } else if (diff > 0) {
-            statusSpan.textContent = `⚠ Over by ${formatCurrency(diff, currentTrip?.currency || 'INR')}`;
-            statusSpan.className = 'tally-status invalid';
-            totalSpan.style.color = 'var(--accent-red)';
-        } else {
-            statusSpan.textContent = `⚠ Under by ${formatCurrency(Math.abs(diff), currentTrip?.currency || 'INR')}`;
-            statusSpan.className = 'tally-status warning';
-            totalSpan.style.color = 'var(--accent-yellow)';
-        }
-    } else {
-        statusSpan.textContent = '';
-        statusSpan.className = 'tally-status';
-        totalSpan.style.color = 'var(--text-primary)';
-    }
+  const inputs = qsa('#custom-inputs input');
+  let total = 0;
+  const expenseAmount = parseFloat($('expense-amount').value) || 0;
+  inputs.forEach(i => { const v = parseFloat(i.value) || 0; total += v; i.classList.toggle('valid', v > 0) });
+  $('custom-total').textContent = formatCurrency(total, currentTrip?.currency);
+  $('custom-total').style.color = Math.abs(total - expenseAmount) < 0.01 ? 'var(--green)' : 'var(--red)';
 }
 
 function handleExpenseSubmit(e) {
-    e.preventDefault();
-    console.log('💰 Handling expense submission');
-    
-    const form = e.target;
-    const isEdit = form.dataset.mode === 'edit';
-    const expenseId = isEdit ? parseInt(form.dataset.expenseId) : Date.now();
-    
-    const description = document.getElementById('expense-description').value.trim();
-    const amount = parseFloat(document.getElementById('expense-amount').value);
-    const paidBy = document.getElementById('expense-paid-by').value;
-    const splitType = document.querySelector('input[name="split-type"]:checked').value;
-    
-    // Validation
-    if (!description || !amount || amount <= 0 || !paidBy) {
-        showMessage('Please fill in all required fields with valid values!', 'error');
-        return;
+  e.preventDefault();
+  const form = e.target;
+  const isEdit = form.dataset.mode === 'edit';
+  const expenseId = isEdit ? parseInt(form.dataset.expenseId) : Date.now();
+  const description = $('expense-description').value.trim();
+  const amount = parseFloat($('expense-amount').value);
+  const paidBy = $('expense-paid-by').value;
+  const splitType = qs('input[name="split-type"]:checked').value;
+  if (!description || !amount || amount <= 0 || !paidBy) { showMessage('Fill all fields', 'error'); return }
+  let splitData = {}, involvedMembers = [];
+  switch (splitType) {
+    case 'equal':
+      involvedMembers = members.map(m => m.name);
+      involvedMembers.forEach(n => splitData[n] = amount / involvedMembers.length);
+      break;
+    case 'select-equal': {
+      const sel = qsa('[name="selected-members"]:checked').map(cb => cb.value);
+      if (!sel.length) { showMessage('Select at least one member', 'error'); return }
+      involvedMembers = sel;
+      sel.forEach(n => splitData[n] = amount / sel.length);
+      break;
     }
-    
-    // Get involved members and their splits
-    let splitData = {};
-    let involvedMembers = [];
-    
-    switch (splitType) {
-        case 'equal':
-            involvedMembers = members.map(m => m.name);
-            const equalAmount = amount / involvedMembers.length;
-            involvedMembers.forEach(name => {
-                splitData[name] = equalAmount;
-            });
-            break;
-            
-        case 'select-equal':
-            const selectedBoxes = document.querySelectorAll('[name="selected-members"]:checked');
-            involvedMembers = Array.from(selectedBoxes).map(cb => cb.value);
-            if (involvedMembers.length === 0) {
-                showMessage('Please select at least one member!', 'error');
-                return;
-            }
-            const selectEqualAmount = amount / involvedMembers.length;
-            involvedMembers.forEach(name => {
-                splitData[name] = selectEqualAmount;
-            });
-            break;
-            
-        case 'percentage':
-            const percentageInputs = document.querySelectorAll('[name^="percentage-"]');
-            let totalPercentage = 0;
-            
-            percentageInputs.forEach(input => {
-                const percentage = parseFloat(input.value) || 0;
-                if (percentage > 0) {
-                    const memberName = input.name.replace('percentage-', '');
-                    involvedMembers.push(memberName);
-                    splitData[memberName] = (amount * percentage / 100);
-                }
-                totalPercentage += percentage;
-            });
-            
-            if (Math.abs(totalPercentage - 100) > 0.1) {
-                showMessage(`Percentages must total 100%. Current total: ${totalPercentage.toFixed(1)}%`, 'error');
-                return;
-            }
-            
-            if (involvedMembers.length === 0) {
-                showMessage('Please enter percentages for at least one member!', 'error');
-                return;
-            }
-            break;
-            
-        case 'shares':
-            const sharesInputs = document.querySelectorAll('[name^="shares-"]');
-            let totalShares = 0;
-            
-            sharesInputs.forEach(input => {
-                const shares = parseInt(input.value) || 0;
-                if (shares > 0) {
-                    const memberName = input.name.replace('shares-', '');
-                    involvedMembers.push(memberName);
-                    totalShares += shares;
-                }
-            });
-            
-            if (totalShares === 0) {
-                showMessage('Please enter shares for at least one member!', 'error');
-                return;
-            }
-            
-            // Calculate amounts based on shares
-            sharesInputs.forEach(input => {
-                const shares = parseInt(input.value) || 0;
-                if (shares > 0) {
-                    const memberName = input.name.replace('shares-', '');
-                    splitData[memberName] = (amount * shares / totalShares);
-                }
-            });
-            break;
-            
-        case 'custom':
-            const customInputs = document.querySelectorAll('[name^="custom-"]');
-            let totalCustom = 0;
-            
-            customInputs.forEach(input => {
-                const customAmount = parseFloat(input.value) || 0;
-                if (customAmount > 0) {
-                    const memberName = input.name.replace('custom-', '');
-                    involvedMembers.push(memberName);
-                    splitData[memberName] = customAmount;
-                }
-                totalCustom += customAmount;
-            });
-            
-            if (Math.abs(totalCustom - amount) > 0.01) {
-                showMessage(`Custom amounts must total ${formatCurrency(amount, currentTrip.currency)}. Current total: ${formatCurrency(totalCustom, currentTrip.currency)}`, 'error');
-                return;
-            }
-            
-            if (involvedMembers.length === 0) {
-                showMessage('Please enter amounts for at least one member!', 'error');
-                return;
-            }
-            break;
-            
-        default:
-            showMessage('Invalid split type selected!', 'error');
-            return;
+    case 'percentage': {
+      let totalPct = 0;
+      qsa('[name^="percentage-"]').forEach(i => { const pct = parseFloat(i.value) || 0; if (pct > 0) { involvedMembers.push(i.name.replace('percentage-','')); totalPct += pct } });
+      if (Math.abs(totalPct - 100) > 0.1) { showMessage('Percentages must total 100%', 'error'); return }
+      qsa('[name^="percentage-"]').forEach(i => { const pct = parseFloat(i.value) || 0; if (pct > 0) splitData[i.name.replace('percentage-','')] = amount * pct / 100 });
+      break;
     }
-    
-    // Create or update expense
-    const expenseData = {
-        id: expenseId,
-        description,
-        amount,
-        paidBy,
-        splitType,
-        involvedMembers,
-        splitData, // Store individual amounts for each member
-        date: document.getElementById('expense-date').value || new Date().toISOString().split('T')[0],
-        time: document.getElementById('expense-time').value || ''
-    };
-    
-    if (isEdit) {
-        // Update existing expense
-        const expenseIndex = expenses.findIndex(e => e.id === expenseId);
-        if (expenseIndex > -1) {
-            expenseData.createdAt = expenses[expenseIndex].createdAt; // Preserve original creation time
-            expenses[expenseIndex] = expenseData;
-            console.log('✅ Expense updated:', expenseData);
-            showMessage(`Expense "${description}" updated successfully!`, 'success');
-        }
+    case 'shares': {
+      let totalShares = 0;
+      qsa('[name^="shares-"]').forEach(i => { const s = parseInt(i.value) || 0; if (s > 0) { involvedMembers.push(i.name.replace('shares-','')); totalShares += s } });
+      if (!totalShares) { showMessage('Enter shares for some member', 'error'); return }
+      qsa('[name^="shares-"]').forEach(i => { const s = parseInt(i.value) || 0; if (s > 0) splitData[i.name.replace('shares-','')] = amount * s / totalShares });
+      break;
+    }
+    case 'custom': {
+      let totalC = 0;
+      qsa('[name^="custom-"]').forEach(i => { const a = parseFloat(i.value) || 0; if (a > 0) { involvedMembers.push(i.name.replace('custom-','')); totalC += a } });
+      if (Math.abs(totalC - amount) > 0.01) { showMessage('Amounts must total ' + formatCurrency(amount, currentTrip?.currency), 'error'); return }
+      qsa('[name^="custom-"]').forEach(i => { const a = parseFloat(i.value) || 0; if (a > 0) splitData[i.name.replace('custom-','')] = a });
+      break;
+    }
+    default: showMessage('Invalid split type', 'error'); return;
+  }
+  const expenseData = { id: expenseId, description, amount, paidBy, splitType, involvedMembers, splitData, date: $('expense-date').value || new Date().toISOString().split('T')[0], time: $('expense-time').value || '', createdAt: new Date().toISOString() };
+  if (isEdit) { const idx = expenses.findIndex(e => e.id === expenseId); if (idx > -1) { expenseData.createdAt = expenses[idx].createdAt; expenses[idx] = expenseData } showMessage('Expense updated', 'success') }
+  else { expenses.push(expenseData); showMessage('Expense added', 'success') }
+  form.reset(); closeModals(); saveData(); updateDisplay(); calcSettlements();
+}
+
+function getSortedExpenses() {
+  const copy = [...expenses];
+  switch (currentExpenseSort) {
+    case 'date-desc': return copy.sort((a,b) => new Date(b.date+' '+b.time) - new Date(a.date+' '+a.time));
+    case 'date-asc': return copy.sort((a,b) => new Date(a.date+' '+a.time) - new Date(b.date+' '+b.time));
+    case 'amount-desc': return copy.sort((a,b) => b.amount - a.amount);
+    case 'amount-asc': return copy.sort((a,b) => a.amount - b.amount);
+    case 'paidby-asc': return copy.sort((a,b) => a.paidBy.localeCompare(b.paidBy));
+    case 'paidby-desc': return copy.sort((a,b) => b.paidBy.localeCompare(a.paidBy));
+    default: return copy;
+  }
+}
+
+function renderExpenses() {
+  const list = $('expenses-list');
+  list.innerHTML = '';
+  const sorted = getSortedExpenses();
+  sorted.forEach(exp => {
+    const row = document.createElement('div'); row.className = 'expense-row';
+    row.innerHTML = `
+      <div class="expense-main">
+        <div class="expense-desc">${exp.description}</div>
+        <div class="expense-meta"><span class="payer">${exp.paidBy}</span> • ${formatDate(exp.date)}</div>
+      </div>
+      <div class="expense-amount-col">${formatCurrency(exp.amount, currentTrip?.currency)}</div>
+      <div class="expense-actions-col">
+        <button class="btn btn-secondary btn-sm" onclick="editExpense(${exp.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteExpense(${exp.id})">🗑️</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function editExpense(id) {
+  const exp = expenses.find(e => e.id === id);
+  if (!exp) return;
+  openExpenseModal();
+  const form = $('expense-form');
+  form.dataset.mode = 'edit'; form.dataset.expenseId = id;
+  $('expense-description').value = exp.description;
+  $('expense-amount').value = exp.amount;
+  $('expense-paid-by').value = exp.paidBy;
+  $('expense-date').value = exp.date;
+  $('expense-time').value = exp.time || '';
+  qs('#expense-modal h3').textContent = 'Edit Expense';
+  $('save-expense').textContent = 'Update Expense';
+  const radio = qs(`input[name="split-type"][value="${exp.splitType}"]`);
+  if (radio) { radio.checked = true; updateSplitOptions(exp.splitType) }
+  setTimeout(() => {
+    switch (exp.splitType) {
+      case 'select-equal': exp.involvedMembers.forEach(n => { const cb = qs(`[name="selected-members"][value="${n}"]`); if (cb) cb.checked = true }); break;
+      case 'percentage': Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="percentage-${n}"]`); if (i) i.value = (a/exp.amount*100).toFixed(1) }); updatePercentageTotal(); break;
+      case 'shares': { const base = Math.min(...Object.values(exp.splitData)); Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="shares-${n}"]`); if (i) i.value = Math.round(a/base) }); updateSharesTotal(); break }
+      case 'custom': Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="custom-${n}"]`); if (i) i.value = a.toFixed(2) }); updateCustomTotal(); break;
+    }
+  }, 100);
+}
+
+function deleteExpense(id) {
+  const exp = expenses.find(e => e.id === id);
+  if (!exp || !confirm(`Delete "${exp.description}"?`)) return;
+  expenses = expenses.filter(e => e.id !== id);
+  saveData(); updateDisplay(); calcSettlements();
+}
+
+// ======= BALANCE CALCULATIONS =======
+function calcBalances() {
+  const b = {};
+  members.forEach(m => b[m.name] = 0);
+  expenses.forEach(e => { b[e.paidBy] += e.amount; Object.entries(e.splitData).forEach(([n, a]) => b[n] -= a) });
+  return b;
+}
+
+function calcOptimalSettlements(balances) {
+  const creditors = [], debtors = [];
+  Object.entries(balances).forEach(([n, b]) => {
+    if (b > 0.01) creditors.push({ name: n, amount: b });
+    else if (b < -0.01) debtors.push({ name: n, amount: Math.abs(b) });
+  });
+  creditors.sort((a, b) => b.amount - a.amount);
+  debtors.sort((a, b) => b.amount - a.amount);
+  const settlements = [];
+  while (creditors.length && debtors.length) {
+    const amt = Math.min(creditors[0].amount, debtors[0].amount);
+    settlements.push({ from: debtors[0].name, to: creditors[0].name, amount: amt });
+    creditors[0].amount -= amt; debtors[0].amount -= amt;
+    if (creditors[0].amount < 0.01) creditors.shift();
+    if (debtors[0].amount < 0.01) debtors.shift();
+  }
+  return settlements;
+}
+
+function calcSettlements() {
+  const balances = calcBalances();
+  renderBalanceBars(balances);
+  renderSettlementFlow(balances);
+  updateCharts();
+}
+
+// ======= BIDIRECTIONAL BAR GRAPH (segment 1) =======
+function renderBalanceBars(balances) {
+  const container = $('balance-bars');
+  container.innerHTML = '';
+  const entries = Object.entries(balances);
+  if (!entries.length) return;
+  const maxAbs = Math.max(...entries.map(([,v]) => Math.abs(v)), 0.01);
+  entries.forEach(([name, bal]) => {
+    const absBal = Math.abs(bal);
+    const pct = Math.max(3, (absBal / maxAbs) * 100);
+    const row = document.createElement('div'); row.className = 'bidir-row';
+    if (bal > 0.01) {
+      row.innerHTML = `
+        <span class="bidir-label">${name}</span>
+        <div class="bidir-track-wrap">
+          <div class="bidir-track"></div>
+          <div class="bidir-divider"></div>
+          <div class="bidir-track"><div class="bidir-bar positive" style="width:${pct}%"></div></div>
+        </div>
+        <span class="bidir-amt positive">+${formatCurrency(bal, currentTrip?.currency)}</span>`;
+    } else if (bal < -0.01) {
+      row.innerHTML = `
+        <span class="bidir-label">${name}</span>
+        <div class="bidir-track-wrap">
+          <div class="bidir-track"><div class="bidir-bar negative" style="width:${pct}%"></div></div>
+          <div class="bidir-divider"></div>
+          <div class="bidir-track"></div>
+        </div>
+        <span class="bidir-amt negative">${formatCurrency(absBal, currentTrip?.currency)}</span>`;
     } else {
-        // Add new expense
-        expenseData.createdAt = new Date().toISOString();
-        expenses.push(expenseData);
-        console.log('✅ Expense added:', expenseData);
-        showMessage(`Expense "${description}" added successfully!`, 'success');
+      row.innerHTML = `
+        <span class="bidir-label">${name}</span>
+        <div class="bidir-track-wrap">
+          <div class="bidir-track"></div>
+          <div class="bidir-divider"></div>
+          <div class="bidir-track"></div>
+        </div>
+        <span class="bidir-amt zero">Settled</span>`;
     }
-    
-    // Reset form and close modal
-    e.target.reset();
-    delete form.dataset.mode;
-    delete form.dataset.expenseId;
-    closeModals();
-    
-    // Save data and update display
-    saveData();
-    updateDisplay();
-    calculateAndDisplayBalances();
-    
-    // Debug: Log current state
-    console.log('💾 Current expenses in memory:', expenses);
-    console.log('💾 Current localStorage:', localStorage.getItem('expenseSplitter'));
+    container.appendChild(row);
+  });
 }
 
-// Balance Calculation Functions
-function calculateAndDisplayBalances() {
-    console.log('🧮 Calculating balances');
-    
-    // Initialize member balances
-    const balances = {};
-    members.forEach(member => {
-        balances[member.name] = 0;
-    });
-    
-    // Calculate balances from expenses
-    expenses.forEach(expense => {
-        const { paidBy, amount, splitData } = expense;
-        
-        // Person who paid gets credited
-        balances[paidBy] += amount;
-        
-        // All involved members get debited their individual share
-        Object.entries(splitData).forEach(([memberName, memberAmount]) => {
-            balances[memberName] -= memberAmount;
-        });
-    });
-    
-    displayConsolidatedSettlement(balances);
-    updateExpenseChart();
+// ======= SETTLEMENT FLOW DIAGRAM (segment 2) =======
+function renderSettlementFlow(balances) {
+  const settlements = calcOptimalSettlements(balances);
+  const visual = $('settlements-visual');
+  const settledMsg = $('all-settled-msg');
+  const badge = $('settle-status-badge');
+
+  visual.innerHTML = '';
+
+  if (!settlements.length) {
+    settledMsg.style.display = 'flex';
+    badge.style.display = 'inline-block';
+    return;
+  }
+
+  settledMsg.style.display = 'none';
+  badge.style.display = 'none';
+
+  const maxAmt = Math.max(...settlements.map(s => s.amount), 0.01);
+
+  settlements.forEach(s => {
+    const pct = Math.max(8, (s.amount / maxAmt) * 100);
+    const flow = document.createElement('div'); flow.className = 'flow-row';
+    flow.innerHTML = `
+      <span class="flow-from">${s.from}</span>
+      <div class="flow-track">
+        <div class="flow-line" style="width:${pct}%">
+          <span class="flow-amt">${formatCurrency(s.amount, currentTrip?.currency)}</span>
+        </div>
+      </div>
+      <span class="flow-to">${s.to}</span>`;
+    visual.appendChild(flow);
+  });
 }
 
-function displayConsolidatedSettlement(balances) {
-    console.log('💸 Displaying consolidated settlement');
-    
-    // Calculate settlements
-    const settlements = calculateOptimalSettlements(balances);
-    
-    // Display settlements list
-    const settlementsList = document.getElementById('settlements-list');
-    if (!settlementsList) {
-        console.error('Settlements list element not found');
-        return;
+// ======= CHARTS (paid + incurred, side by side) =======
+function updateCharts() {
+  if (!expenses.length) return;
+  renderMiniChart('chart-paid', 'Paid', getPaidData(), ['#10b981','#34d399','#6ee7b7','#a7f3d0'], chartPaid, c => chartPaid = c);
+  renderMiniChart('chart-incurred', 'Incurred', getIncurredData(), ['#a855f7','#c084fc','#d8b4fe','#e9d5ff'], chartIncurred, c => chartIncurred = c);
+}
+
+function renderMiniChart(canvasId, label, data, palette, existingChart, setChart) {
+  const canvas = $(canvasId);
+  if (!canvas) return;
+  if (existingChart) existingChart.destroy();
+  const labels = Object.keys(data);
+  const vals = Object.values(data);
+  if (!labels.length) return;
+  setChart(new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets: [{ label, data: vals, backgroundColor: palette.slice(0,labels.length).map(c => c + '80'), borderColor: palette.slice(0,labels.length), borderWidth: 1.5, borderRadius: 4, borderSkipped: false }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => formatCurrency(ctx.parsed.x, currentTrip?.currency) } } },
+      scales: {
+        x: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => formatCurrency(v, currentTrip?.currency) } },
+        y: { grid: { display: false }, ticks: { color: '#f0f6fc', font: { size: 11, weight: 'bold' } } }
+      }
     }
-    
-    settlementsList.innerHTML = '';
-    
-    if (settlements.length === 0) {
-        settlementsList.innerHTML = '<p style="text-align: center; color: #28a745; font-weight: bold; padding: 20px;">🎉 All settled up!</p>';
-    } else {
-        settlements.forEach(settlement => {
-            const settlementItem = document.createElement('div');
-            settlementItem.className = 'settlement-item';
-            
-            settlementItem.innerHTML = `
-                <div class="settlement-text">
-                    <strong>${settlement.from}</strong> owes <strong>${settlement.to}</strong>
-                    <span class="settlement-amount">${formatCurrency(settlement.amount, currentTrip.currency)}</span>
-                </div>
-            `;
-            
-            settlementsList.appendChild(settlementItem);
-        });
-    }
-    
-    // Balance summary removed for cleaner UI
-    // displayBalanceSummary(balances);
-    
-    const settlementOverview = document.getElementById('settlement-overview');
-    if (settlementOverview) {
-        settlementOverview.style.display = 'block';
-    }
+  }));
 }
 
-function displayBalanceSummary(balances) {
-    const balanceSummary = document.getElementById('balance-summary');
-    if (!balanceSummary) return;
-    
-    let summaryHTML = '<h4>💰 Balance Summary</h4>';
-    
-    Object.entries(balances).forEach(([member, balance]) => {
-        const balanceClass = balance > 0.01 ? 'positive' : balance < -0.01 ? 'negative' : 'zero';
-        const balanceText = balance > 0.01 ? 'gets back' : balance < -0.01 ? 'owes' : 'settled';
-        
-        summaryHTML += `
-            <div class="balance-item">
-                <span class="balance-name">${member}</span>
-                <span class="balance-amount ${balanceClass}">
-                    ${balanceClass === 'zero' ? 'Settled' : formatCurrency(Math.abs(balance), currentTrip.currency)}
-                </span>
-            </div>
-        `;
-    });
-    
-    balanceSummary.innerHTML = summaryHTML;
+function getPaidData() {
+  const d = {};
+  members.forEach(m => d[m.name] = 0);
+  expenses.forEach(e => d[e.paidBy] = (d[e.paidBy] || 0) + e.amount);
+  return d;
 }
 
-function calculateOptimalSettlements(balances) {
-    // Separate creditors and debtors
-    const creditors = [];
-    const debtors = [];
-    
-    Object.entries(balances).forEach(([member, balance]) => {
-        if (balance > 0.01) { // Small threshold for floating point precision
-            creditors.push({ name: member, amount: balance });
-        } else if (balance < -0.01) {
-            debtors.push({ name: member, amount: Math.abs(balance) });
-        }
-    });
-    
-    // Sort by amount for better optimization
-    creditors.sort((a, b) => b.amount - a.amount);
-    debtors.sort((a, b) => b.amount - a.amount);
-    
-    const settlements = [];
-    
-    // Calculate minimal settlements
-    while (creditors.length > 0 && debtors.length > 0) {
-        const creditor = creditors[0];
-        const debtor = debtors[0];
-        
-        const settleAmount = Math.min(creditor.amount, debtor.amount);
-        
-        settlements.push({
-            from: debtor.name,
-            to: creditor.name,
-            amount: settleAmount
-        });
-        
-        creditor.amount -= settleAmount;
-        debtor.amount -= settleAmount;
-        
-        if (creditor.amount < 0.01) creditors.shift();
-        if (debtor.amount < 0.01) debtors.shift();
-    }
-    
-    return settlements;
+function getIncurredData() {
+  const d = {};
+  members.forEach(m => d[m.name] = 0);
+  expenses.forEach(e => Object.entries(e.splitData).forEach(([n, a]) => d[n] = (d[n] || 0) + a));
+  return d;
 }
 
-// Chart Functions
-let expenseChart = null;
-let currentChartType = 'paid'; // 'paid' or 'incurred'
-
-function updateExpenseChart() {
-    console.log('📊 Updating expense chart, current type:', currentChartType);
-    const canvas = document.getElementById('expense-chart');
-    if (!canvas) {
-        console.error('❌ Canvas element not found');
-        return;
-    }
-    
-    const ctx = canvas.getContext('2d');
-    
-    // Destroy existing chart
-    if (expenseChart) {
-        expenseChart.destroy();
-    }
-    
-    if (expenses.length === 0) {
-        // Show empty state
-        const chartSection = document.getElementById('chart-section');
-        if (chartSection) {
-            chartSection.style.display = 'none';
-        }
-        return;
-    }
-    
-    // Setup chart controls if not already done
-    setupChartControls();
-    
-    // Calculate data based on current chart type
-    const chartData = currentChartType === 'paid' ? getExpensesPaidData() : getExpensesIncurredData();
-    
-    const labels = Object.keys(chartData);
-    const data = Object.values(chartData);
-    const colors = [
-        '#667eea', '#764ba2', '#f093fb', '#f5576c', 
-        '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'
-    ];
-    
-    expenseChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: currentChartType === 'paid' ? 'Expenses Paid' : 'Expenses Incurred',
-                data: data,
-                backgroundColor: colors.slice(0, labels.length).map(color => color + '80'), // Add transparency
-                borderColor: colors.slice(0, labels.length),
-                borderWidth: 2,
-                borderRadius: 8,
-                borderSkipped: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: 'y', // Horizontal bars
-            plugins: {
-                legend: {
-                    display: false, // Hide legend for cleaner look
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const value = formatCurrency(context.parsed.x, currentTrip.currency);
-                            return `${value}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: '#8b949e',
-                        callback: function(value) {
-                            return formatCurrency(value, currentTrip.currency);
-                        }
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#f0f6fc',
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                }
-            },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            }
-        }
-    });
-    
-    updateChartSummary(chartData);
-    
-    const chartSection = document.getElementById('chart-section');
-    if (chartSection) {
-        chartSection.style.display = 'block';
-    }
-}
-
-function getExpensesPaidData() {
-    const memberTotals = {};
-    members.forEach(member => {
-        memberTotals[member.name] = 0;
-    });
-    
-    expenses.forEach(expense => {
-        memberTotals[expense.paidBy] += expense.amount;
-    });
-    
-    return memberTotals;
-}
-
-function getExpensesIncurredData() {
-    const memberTotals = {};
-    members.forEach(member => {
-        memberTotals[member.name] = 0;
-    });
-    
-    expenses.forEach(expense => {
-        Object.entries(expense.splitData).forEach(([memberName, memberAmount]) => {
-            memberTotals[memberName] += memberAmount;
-        });
-    });
-    
-    return memberTotals;
-}
-
-function setupChartControls() {
-    console.log('🔧 Setting up chart controls');
-    const paidBtn = document.getElementById('chart-paid-btn');
-    const incurredBtn = document.getElementById('chart-incurred-btn');
-    
-    if (!paidBtn || !incurredBtn) {
-        console.error('❌ Chart control buttons not found:', { paidBtn: !!paidBtn, incurredBtn: !!incurredBtn });
-        return;
-    }
-    
-    // Remove existing listeners
-    paidBtn.removeEventListener('click', switchToPaidChart);
-    incurredBtn.removeEventListener('click', switchToIncurredChart);
-    
-    // Add event listeners
-    paidBtn.addEventListener('click', switchToPaidChart);
-    incurredBtn.addEventListener('click', switchToIncurredChart);
-}
-
-function switchToPaidChart() {
-    currentChartType = 'paid';
-    updateChartButtons();
-    updateExpenseChart();
-}
-
-function switchToIncurredChart() {
-    currentChartType = 'incurred';
-    updateChartButtons();
-    updateExpenseChart();
-}
-
-function updateChartButtons() {
-    const paidBtn = document.getElementById('chart-paid-btn');
-    const incurredBtn = document.getElementById('chart-incurred-btn');
-    
-    if (!paidBtn || !incurredBtn) return;
-    
-    paidBtn.classList.toggle('active', currentChartType === 'paid');
-    incurredBtn.classList.toggle('active', currentChartType === 'incurred');
-}
-
-function updateChartSummary(chartData) {
-    const summaryDiv = document.getElementById('chart-summary');
-    if (!summaryDiv) return;
-    
-    const total = Object.values(chartData).reduce((sum, amount) => sum + amount, 0);
-    const chartTypeLabel = currentChartType === 'paid' ? 'paid for expenses' : 'incurred in expenses';
-    
-    summaryDiv.innerHTML = `
-        Showing how much each person ${chartTypeLabel}. 
-        Total: ${formatCurrency(total, currentTrip.currency)}
-    `;
-}
-
-function displayExpenses() {
-    console.log('📋 Displaying expenses');
-    updateExpenseChart();
-}
-
-// Enhanced showMessage function
-function showMessage(text, type = 'success') {
-    // Remove existing messages
-    const existingMessage = document.querySelector('.message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
-    
-    const message = document.createElement('div');
-    message.className = `message ${type}`;
-    message.textContent = text;
-    
-    const container = document.querySelector('.container');
-    container.insertBefore(message, container.firstChild);
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (message.parentNode) {
-            message.remove();
-        }
-    }, 5000);
-    
-    console.log(`📢 Message: ${text} (${type})`);
-}
-
-// Export/Import Functionality
+// ======= EXPORT/IMPORT =======
 function exportData() {
-    console.log('📤 Exporting data');
-    
-    const exportData = {
-        currentTrip,
-        members,
-        expenses,
-        exportedAt: new Date().toISOString(),
-        version: '1.0'
-    };
-    
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = `expense-splitter-${currentTrip?.name || 'data'}-${new Date().toISOString().split('T')[0]}.json`;
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    showMessage('Data exported successfully!', 'success');
+  const data = { currentTrip, members, expenses, exportedAt: new Date().toISOString(), version: '1.0' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `expense-splitter-${(currentTrip?.name || 'data').replace(/\s+/g,'-')}-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  showMessage('Data exported!', 'success');
 }
 
 function importData(event) {
-    console.log('📥 Importing data');
-    
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedData = JSON.parse(e.target.result);
-            
-            // Validate data structure
-            if (!importedData.currentTrip && !importedData.members && !importedData.expenses) {
-                throw new Error('Invalid data format');
-            }
-            
-            // Confirm import
-            if (confirm('This will replace all current data. Are you sure?')) {
-                currentTrip = importedData.currentTrip || null;
-                members = importedData.members || [];
-                expenses = importedData.expenses || [];
-                
-                saveData();
-                updateDisplay();
-                
-                if (expenses.length > 0) {
-                    calculateAndDisplayBalances();
-                }
-                
-                showMessage('Data imported successfully!', 'success');
-            }
-        } catch (error) {
-            console.error('Import error:', error);
-            showMessage('Error importing data. Please check the file format.', 'error');
-        }
-    };
-    
-    reader.readAsText(file);
-    // Reset file input
-    event.target.value = '';
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.currentTrip && !data.members && !data.expenses) throw new Error('Invalid');
+      if (!confirm('Replace all current data?')) return;
+      currentTrip = data.currentTrip || null;
+      members = data.members || [];
+      expenses = data.expenses || [];
+      saveData(); updateDisplay(); calcSettlements();
+      showMessage('Data imported!', 'success');
+    } catch (err) { showMessage('Import failed. Check file.', 'error') }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
+
+// ======= DISPLAY =======
+function updateDisplay() {
+  if (currentTrip) showTripView();
+  else showWelcomeView();
+}
+
+function showWelcomeView() {
+  $('welcome-screen').style.display = 'flex';
+  $('dashboard').style.display = 'none';
+  $('header-trip-info').style.display = 'none';
+  $('header-stats').style.display = 'none';
+}
+
+function showTripView() {
+  $('welcome-screen').style.display = 'none';
+  $('dashboard').style.display = 'block';
+  $('header-trip-info').style.display = 'flex';
+  $('header-stats').style.display = 'flex';
+
+  $('header-trip-name').textContent = currentTrip.name;
+  let dt = '';
+  if (currentTrip.startDate && currentTrip.endDate) dt = `${formatDate(currentTrip.startDate)} - ${formatDate(currentTrip.endDate)}`;
+  else if (currentTrip.startDate) dt = `From ${formatDate(currentTrip.startDate)}`;
+  else if (currentTrip.endDate) dt = `Until ${formatDate(currentTrip.endDate)}`;
+  else dt = 'No dates';
+  $('header-trip-dates').textContent = dt;
+  $('header-currency-badge').textContent = currentTrip.currency;
+
+  const total = expenses.reduce((s, e) => s + e.amount, 0);
+  $('chip-total').textContent = formatCurrency(total, currentTrip.currency);
+  $('chip-members').textContent = members.length + ' member' + (members.length !== 1 ? 's' : '');
+  $('chip-expenses').textContent = expenses.length + ' expense' + (expenses.length !== 1 ? 's' : '');
+
+  renderMembers();
+  $('expense-sort').value = currentExpenseSort;
+  if (expenses.length) renderExpenses();
+  else $('expenses-list').innerHTML = '';
+
+  calcSettlements();
+}
+
+// ======= INIT =======
+function init() {
+  closeModals();
+  loadData();
+  updateDisplay();
+  if (expenses.length) calcSettlements();
+
+  $('new-trip-btn').onclick = () => openTripModal();
+  $('create-first-trip-btn').onclick = () => openTripModal();
+  $('edit-trip-btn').onclick = () => openTripModal(true);
+  $('export-data-btn').onclick = exportData;
+  $('import-data-btn').onclick = () => $('import-file-input').click();
+  $('import-file-input').onchange = importData;
+  $('add-member-btn').onclick = openMemberModal;
+  $('add-expense-btn').onclick = openExpenseModal;
+  $('trip-form').onsubmit = handleTripSubmit;
+  $('member-form').onsubmit = handleMemberSubmit;
+  $('expense-form').onsubmit = handleExpenseSubmit;
+  $('cancel-trip').onclick = closeModals;
+  $('cancel-member').onclick = closeModals;
+  $('cancel-expense').onclick = closeModals;
+  qsa('.modal-close').forEach(b => b.onclick = closeModals);
+  qsa('.modal-backdrop').forEach(b => b.onclick = closeModals);
+
+  $('expense-amount').oninput = function() {
+    const type = qs('input[name="split-type"]:checked')?.value;
+    if (type === 'shares') updateSharesTotal();
+    else if (type === 'custom') updateCustomTotal();
+  };
+
+  $('expense-sort').onchange = function() { currentExpenseSort = this.value; if (expenses.length) renderExpenses(); saveData() };
+
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals() });
+}
+
+document.addEventListener('DOMContentLoaded', init);

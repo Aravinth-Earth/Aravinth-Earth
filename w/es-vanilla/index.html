@@ -25,11 +25,14 @@
                 <span class="stat-chip" id="chip-total">₹0.00</span>
                 <span class="stat-chip" id="chip-members">0 members</span>
                 <span class="stat-chip" id="chip-expenses">0 expenses</span>
+                <span class="stat-chip ts-chip" id="chip-created" style="display:none"></span>
+                <span class="stat-chip ts-chip" id="chip-updated" style="display:none"></span>
             </div>
             <div class="header-right">
                 <button id="new-trip-btn" class="btn btn-primary">+ New Trip</button>
                 <button id="export-data-btn" class="btn btn-export">📤 Export</button>
                 <button id="import-data-btn" class="btn btn-import">📥 Import</button>
+                <button id="clear-data-btn" class="btn btn-ghost" title="Clear all cached data">🗑️ Clear</button>
             </div>
         </header>
 
@@ -239,6 +242,24 @@
     </div>
 
     <input type="file" id="import-file-input" accept=".json" style="display:none">
+
+    <div id="cache-modal" class="modal" style="display:none">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>💾 Cached Data Found</h3>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:var(--fs-sm);color:var(--text-sec);margin-bottom:8px">This browser has saved trip data from a previous session.</p>
+                <div id="cache-info" class="cache-info"></div>
+            </div>
+            <div class="modal-footer" style="flex-wrap:wrap">
+                <button id="cache-load-btn" class="btn btn-primary">Load Saved Data</button>
+                <button id="cache-fresh-btn" class="btn btn-secondary">Start Fresh</button>
+                <button id="cache-import-btn" class="btn btn-ghost">Import Own File</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

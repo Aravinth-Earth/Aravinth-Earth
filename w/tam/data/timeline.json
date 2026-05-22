@@ -1,0 +1,3490 @@
+{
+  "start_year": 1952,
+  "start_month": 4,
+  "now_year": 2026,
+  "now_month": 5,
+  "party_colors": {
+    "INC": "#00BFFF",
+    "DMK": "#E32636",
+    "AIADMK": "#008000",
+    "TVK": "#FFD700",
+    "IND": "#888888",
+    "ADMK": "#006400",
+    "TRANSITION": "#555555",
+    "IUML": "#006B3F",
+    "VCK": "#FF6600"
+  },
+  "events": [
+    {
+      "id": "rajagopalachari-start",
+      "date": "1952-04-10",
+      "label": "Rajagopalachari becomes CM (Madras State)",
+      "government_id": "congress-1952",
+      "status": "cm_only",
+      "party": "INC",
+      "party_color": "#00BFFF",
+      "notes": "First CM of Madras State, Indian National Congress",
+      "ministers": [
+        {
+          "name": "C. Rajagopalachari",
+          "constituency": "MLC",
+          "party": "INC",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "rajagopalachari-end",
+      "date": "1954-04-13",
+      "label": "Rajagopalachari resigns",
+      "government_id": "congress-1952",
+      "status": "cm_only",
+      "party": "INC",
+      "party_color": "#00BFFF",
+      "notes": "Resigned after internal Congress conflict",
+      "ministers": []
+    },
+    {
+      "id": "kamaraj-start",
+      "date": "1954-04-13",
+      "label": "K. Kamaraj becomes CM",
+      "government_id": "congress-1954",
+      "status": "cm_only",
+      "party": "INC",
+      "party_color": "#00BFFF",
+      "notes": "Kamaraj — longest-serving Congress CM (9 yrs)",
+      "ministers": [
+        {
+          "name": "K. Kamaraj",
+          "constituency": "Gudiyatham",
+          "geojson_name": "Gudiyattam (SC)",
+          "party": "INC",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "kamaraj-end",
+      "date": "1963-10-02",
+      "label": "Kamaraj resigns under Kamaraj Plan",
+      "government_id": "congress-1954",
+      "status": "cm_only",
+      "party": "INC",
+      "party_color": "#00BFFF",
+      "notes": "Resigned to strengthen Congress party organization",
+      "ministers": []
+    },
+    {
+      "id": "bhaktavatsalam-start",
+      "date": "1963-10-02",
+      "label": "M. Bhaktavatsalam becomes CM",
+      "government_id": "congress-1963",
+      "status": "cm_only",
+      "party": "INC",
+      "party_color": "#00BFFF",
+      "notes": "Last Congress CM before Dravidian era",
+      "ministers": [
+        {
+          "name": "M. Bhaktavatsalam",
+          "constituency": "Sriperumbudur",
+          "geojson_name": "Sriperumbudur (SC)",
+          "party": "INC",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "annadurai-start",
+      "date": "1967-03-06",
+      "label": "C. N. Annadurai becomes CM — DMK era begins",
+      "government_id": "dmk-1967",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "First non-Congress CM, DMK's first government",
+      "ministers": [
+        {
+          "name": "C. N. Annadurai",
+          "constituency": "MLC",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "annadurai-full-cabinet",
+      "date": "1967-03-06",
+      "label": "Annadurai cabinet — DMK's first government",
+      "government_id": "dmk-1967",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "First non-Congress government in Tamil Nadu",
+      "ministers": [
+        {
+          "name": "C. N. Annadurai",
+          "constituency": "MLC",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "V. R. Nedunchezhiyan",
+          "constituency": "Triplicane",
+          "geojson_name": "Thiyagarayanagar",
+          "portfolio": "Education & Health",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "S. P. Adithanar",
+          "constituency": "Srivaikuntam",
+          "geojson_name": "Srivaikuntam",
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "S. J. Sadiq Pasha",
+          "constituency": "Udumalaipettai",
+          "geojson_name": "Udumalaipettai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "K. A. Mathialagan",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Kannappan",
+          "constituency": "Kinathukadavu",
+          "geojson_name": "Kinathukadavu",
+          "portfolio": "Transport",
+          "party": "DMK"
+        },
+        {
+          "name": "Sathyavani Muthu",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "portfolio": "Agriculture & Harijan Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Madhavan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Revenue",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "annadurai-renamed",
+      "date": "1969-01-14",
+      "label": "Madras State renamed Tamil Nadu",
+      "government_id": "dmk-1967",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "State officially renamed to Tamil Nadu",
+      "ministers": [
+        {
+          "name": "C. N. Annadurai",
+          "constituency": "MLC",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "annadurai-end",
+      "date": "1969-02-03",
+      "label": "Annadurai dies in office",
+      "government_id": "dmk-1967",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "First TN CM to die in office",
+      "ministers": []
+    },
+    {
+      "id": "karunanidhi-1-start",
+      "date": "1969-02-10",
+      "label": "M. Karunanidhi becomes CM (1st term)",
+      "government_id": "dmk-1969",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Karunanidhi's first term — served 5 non-consecutive terms total",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-1-full-cabinet",
+      "date": "1969-02-10",
+      "label": "Karunanidhi 1st cabinet — 10 ministers",
+      "government_id": "dmk-1969",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "After Annadurai's death, Karunanidhi's first term",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "V. R. Nedunchezhiyan",
+          "constituency": "Triplicane",
+          "geojson_name": "Thiyagarayanagar",
+          "portfolio": "Education & Health",
+          "party": "DMK"
+        },
+        {
+          "name": "Sathyavani Muthu",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "portfolio": "Agriculture & Harijan Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "N. V. Natarajan",
+          "constituency": "MLC",
+          "portfolio": "BC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "P. U. Shanmugam",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Commercial Taxes",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Madhavan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "S. J. Sadiq Pasha",
+          "constituency": "Udumalaipettai",
+          "geojson_name": "Udumalaipettai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "S. P. Adithanar",
+          "constituency": "Srivaikuntam",
+          "geojson_name": "Srivaikuntam",
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "K. V. Subbiah",
+          "constituency": "MLC",
+          "portfolio": "Religious Endowments",
+          "party": "DMK"
+        },
+        {
+          "name": "O. P. Raman",
+          "constituency": "MLC",
+          "portfolio": "Electricity",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-1-end",
+      "date": "1976-01-31",
+      "label": "President's Rule imposed",
+      "government_id": "dmk-1969",
+      "status": "transition",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "Emergency-era President's Rule, DMK govt dismissed",
+      "ministers": []
+    },
+    {
+      "id": "presidents-rule-1976",
+      "date": "1976-01-31",
+      "label": "President's Rule (1976-1977)",
+      "government_id": "president-1976",
+      "status": "governor_rule",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "President's Rule during Indian Emergency",
+      "ministers": []
+    },
+    {
+      "id": "mgr-1-start",
+      "date": "1977-06-30",
+      "label": "MGR becomes CM (1st term) — AIADMK era",
+      "government_id": "aiadmk-1977",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "M. G. Ramachandran — first actor-CM of TN",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "mgr-1-full-cabinet",
+      "date": "1977-06-30",
+      "label": "MGR 1st cabinet — AIADMK era begins",
+      "government_id": "aiadmk-1977",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "MGR becomes CM, first actor-CM of Tamil Nadu",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "C. Ponnaiyan",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Aranganayagam",
+          "constituency": "Coimbatore",
+          "portfolio": "Education",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Soundarapandian",
+          "constituency": "Krishnarayapuram(SC)",
+          "geojson_name": "Krishnarayapuram(SC)",
+          "portfolio": "Agriculture",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Kalimuthu",
+          "constituency": "Thiruparankundram",
+          "geojson_name": "Thiruparankundram",
+          "portfolio": "Local Admin",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Pakkur",
+          "constituency": "Uthiramerur",
+          "geojson_name": "Uthiramerur",
+          "portfolio": "Public Works",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "presidents-rule-1980",
+      "date": "1980-02-17",
+      "label": "President's Rule (1980)",
+      "government_id": "president-1980",
+      "status": "governor_rule",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "Brief President's Rule between MGR terms",
+      "ministers": []
+    },
+    {
+      "id": "mgr-2-start",
+      "date": "1980-06-09",
+      "label": "MGR returns as CM (2nd term)",
+      "government_id": "aiadmk-1980",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "MGR's second term — won from Madurai West",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Madurai West",
+          "geojson_name": "Madurai West",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "mgr-2-full-cabinet",
+      "date": "1980-06-09",
+      "label": "MGR 2nd cabinet — re-elected",
+      "government_id": "aiadmk-1980",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "MGR returns after brief President's Rule",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Madurai West",
+          "geojson_name": "Madurai West",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "C. Ponnaiyan",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Kalimuthu",
+          "constituency": "Thiruparankundram",
+          "geojson_name": "Thiruparankundram",
+          "portfolio": "Local Admin",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. A. Krishnaswamy",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Education",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "mgr-3-start",
+      "date": "1985-02-10",
+      "label": "MGR begins 3rd term",
+      "government_id": "aiadmk-1985",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "MGR's third consecutive term — won from Andipatti",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Andipatti",
+          "geojson_name": "Andipatti",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "mgr-3-full-cabinet",
+      "date": "1985-02-10",
+      "label": "MGR 3rd cabinet — final term",
+      "government_id": "aiadmk-1985",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "MGR's third consecutive term",
+      "ministers": [
+        {
+          "name": "M. G. Ramachandran",
+          "constituency": "Andipatti",
+          "geojson_name": "Andipatti",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "V. R. Nedunchezhiyan",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Ponnaiyan",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Kalimuthu",
+          "constituency": "Madurai East",
+          "geojson_name": "Madurai East",
+          "portfolio": "Agriculture",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. A. Krishnaswamy",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Education",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "mgr-end",
+      "date": "1987-12-24",
+      "label": "MGR dies in office",
+      "government_id": "aiadmk-1985",
+      "status": "transition",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "MGR died after prolonged illness",
+      "ministers": []
+    },
+    {
+      "id": "janaki-start",
+      "date": "1988-01-07",
+      "label": "Janaki Ramachandran — first woman CM",
+      "government_id": "aiadmk-1988",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "V. N. Janaki Ramachandran, MGR's wife. Shortest term (23 days)",
+      "ministers": [
+        {
+          "name": "V. N. Janaki Ramachandran",
+          "constituency": "MLC",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "presidents-rule-1988",
+      "date": "1988-01-30",
+      "label": "President's Rule (1988-1989)",
+      "government_id": "president-1988",
+      "status": "governor_rule",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "President's Rule after Janaki's brief term",
+      "ministers": []
+    },
+    {
+      "id": "karunanidhi-2-start",
+      "date": "1989-01-27",
+      "label": "Karunanidhi returns as CM (2nd term)",
+      "government_id": "dmk-1989",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Karunanidhi's second term — won from Harbour constituency",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-2-full-cabinet",
+      "date": "1989-01-27",
+      "label": "Karunanidhi 2nd cabinet — DMK returns",
+      "government_id": "dmk-1989",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "DMK returns after President's Rule",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "K. Anbazhagan",
+          "constituency": "Anna Nagar",
+          "geojson_name": "Anna Nagar",
+          "portfolio": "Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Durai Murugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ponmudy",
+          "constituency": "Villupuram",
+          "geojson_name": "Viluppuram",
+          "portfolio": "Public Health",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Lalgudi",
+          "geojson_name": "Lalgudi",
+          "portfolio": "Information & Labour",
+          "party": "DMK"
+        },
+        {
+          "name": "Ko. Si. Mani",
+          "constituency": "MLC",
+          "portfolio": "Rural Dev & Local Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "Veerapandi S. Arumugam",
+          "constituency": "Salem",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Sundaram",
+          "constituency": "Ponneri (SC)",
+          "geojson_name": "Ponneri (SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-2-end",
+      "date": "1991-01-30",
+      "label": "President's Rule (1991)",
+      "government_id": "dmk-1989",
+      "status": "transition",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "DMK govt dismissed, President's Rule ahead of elections",
+      "ministers": []
+    },
+    {
+      "id": "presidents-rule-1991",
+      "date": "1991-01-30",
+      "label": "President's Rule (1991)",
+      "government_id": "president-1991",
+      "status": "governor_rule",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "President's Rule",
+      "ministers": []
+    },
+    {
+      "id": "jayalalithaa-1-start",
+      "date": "1991-06-24",
+      "label": "Jayalalithaa becomes CM (1st term)",
+      "government_id": "aiadmk-1991",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "J. Jayalalithaa — first elected woman CM of TN",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Bargur",
+          "geojson_name": "Bargur",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-1-full-cabinet",
+      "date": "1991-06-24",
+      "label": "Jayalalithaa 1st cabinet — 26 ministers",
+      "government_id": "aiadmk-1991",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "AIADMK's landslide win, Jayalalithaa's first term",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Bargur",
+          "geojson_name": "Bargur",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "K. A. Sengottaiyan",
+          "constituency": "Gobichettipalayam",
+          "geojson_name": "Gobichettipalayam",
+          "portfolio": "Transport & Forests",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Regupathy",
+          "constituency": "Thirumayam",
+          "geojson_name": "Thirumayam",
+          "portfolio": "Housing & Urban Dev",
+          "party": "AIADMK"
+        },
+        {
+          "name": "D. Jayakumar",
+          "constituency": "Royapuram",
+          "geojson_name": "Royapuram",
+          "portfolio": "Fisheries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "M. Chinnasamy",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Muthusamy",
+          "constituency": "Bhavani",
+          "geojson_name": "Bhavani",
+          "portfolio": "Health",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. D. Somasundaram",
+          "constituency": "Thanjavur",
+          "geojson_name": "Thanjavur",
+          "portfolio": "Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. Lawrence",
+          "constituency": "Padmanabhapuram",
+          "geojson_name": "Padmanabhapuram",
+          "portfolio": "BC Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. P. Pattabiraman",
+          "constituency": "Kancheepuram",
+          "geojson_name": "Kancheepuram",
+          "portfolio": "Co-operation",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-3-start",
+      "date": "1996-05-13",
+      "label": "Karunanidhi returns as CM (3rd term)",
+      "government_id": "dmk-1996",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Karunanidhi's third term — won from Chepauk",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Chepauk",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-3-full-cabinet",
+      "date": "1996-05-13",
+      "label": "Karunanidhi 3rd cabinet — DMK returns",
+      "government_id": "dmk-1996",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "DMK's sweeping victory after Jayalalithaa's first term",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Chepauk",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "K. Anbazhagan",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Arcot N. Veerasamy",
+          "constituency": "Anna Nagar",
+          "geojson_name": "Anna Nagar",
+          "portfolio": "Health & Electricity",
+          "party": "DMK"
+        },
+        {
+          "name": "Ko. Si. Mani",
+          "constituency": "Kumbakonam",
+          "geojson_name": "Kumbakonam",
+          "portfolio": "Rural Dev & Local Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "Veerapandi S. Arumugam",
+          "constituency": "Veerapandi",
+          "geojson_name": "Veerapandi",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "Duraimurugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ponmudy",
+          "constituency": "Villupuram",
+          "geojson_name": "Viluppuram",
+          "portfolio": "Transport & Labour",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Lalgudi",
+          "geojson_name": "Lalgudi",
+          "portfolio": "Food & Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "BC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Suresh Rajan",
+          "constituency": "Kanniyakumari",
+          "geojson_name": "Kanniyakumari",
+          "portfolio": "Information & Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "N. K. K. Periasamy",
+          "constituency": "Erode",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Handlooms",
+          "party": "DMK"
+        },
+        {
+          "name": "Pongalur N. Palanisamy",
+          "constituency": "Singanallur",
+          "geojson_name": "Singanallur",
+          "portfolio": "Sports & Youth",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Pitchandi",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Housing",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-2-start",
+      "date": "2001-05-14",
+      "label": "Jayalalithaa returns as CM (2nd term)",
+      "government_id": "aiadmk-2001",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "Short term — disqualified from office after 130 days",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "MLC",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "ops-1-start",
+      "date": "2001-09-21",
+      "label": "O. Panneerselvam becomes CM (acting)",
+      "government_id": "aiadmk-2001-ops",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "O. Paneerselvam — first stint as acting CM",
+      "ministers": [
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Periyakulam",
+          "geojson_name": "Periyakulam",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-3-start",
+      "date": "2002-03-02",
+      "label": "Jayalalithaa returns as CM (3rd term)",
+      "government_id": "aiadmk-2002",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "Returned after appellate court overturned conviction",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Andipatti",
+          "geojson_name": "Andipatti",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-3-full-cabinet",
+      "date": "2002-03-02",
+      "label": "Jayalalithaa 3rd cabinet — 26 ministers",
+      "government_id": "aiadmk-2002",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "Return to power after OPS acting term",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Andipatti",
+          "geojson_name": "Andipatti",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Bodinayakanur",
+          "geojson_name": "Bodinayakanur",
+          "portfolio": "Public Works & Revenue",
+          "party": "AIADMK"
+        },
+        {
+          "name": "D. Jayakumar",
+          "constituency": "Royapuram",
+          "geojson_name": "Royapuram",
+          "portfolio": "Law & IT",
+          "party": "AIADMK"
+        },
+        {
+          "name": "B. Valarmathi",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Rural Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "R. Vaithilingam",
+          "constituency": "Orathanadu",
+          "geojson_name": "Orathanadu",
+          "portfolio": "Forests & Environment",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Anitha R. Radhakrishnan",
+          "constituency": "Tiruchendur",
+          "geojson_name": "Tiruchendur",
+          "portfolio": "Housing & Urban Dev",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. V. Shanmugam",
+          "constituency": "Viluppuram",
+          "geojson_name": "Viluppuram",
+          "portfolio": "Education & Commercial Taxes",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Ramachandran",
+          "constituency": "Arani",
+          "geojson_name": "Arani",
+          "portfolio": "Milk & Dairy",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. P. Anbalagan",
+          "constituency": "Palacode",
+          "geojson_name": "Palacodu",
+          "portfolio": "Information & Local Admin",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-4-start",
+      "date": "2006-05-13",
+      "label": "Karunanidhi returns as CM (4th term)",
+      "government_id": "dmk-2006",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Karunanidhi's fourth term — won from Chepauk",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Chepauk",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "karunanidhi-5-full-cabinet",
+      "date": "2006-05-13",
+      "label": "Karunanidhi 5th cabinet — DMK returns",
+      "government_id": "dmk-2006",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "DMK-led coalition, Stalin as Deputy CM (from 2009)",
+      "ministers": [
+        {
+          "name": "M. Karunanidhi",
+          "constituency": "Chepauk",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Deputy CM (from 2009)",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Anbazhagan",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "Finance",
+          "party": "DMK"
+        },
+        {
+          "name": "Arcot N. Veeraswami",
+          "constituency": "Anna Nagar",
+          "geojson_name": "Anna Nagar",
+          "portfolio": "Electricity",
+          "party": "DMK"
+        },
+        {
+          "name": "Ko. Si. Mani",
+          "constituency": "Kumbakonam",
+          "geojson_name": "Kumbakonam",
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "Veerapandi S. Arumugam",
+          "constituency": "Salem",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "Duraimurugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Public Works & Law",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ponmudy",
+          "constituency": "Sirkazhi",
+          "geojson_name": "Sirkazhi (SC)",
+          "portfolio": "Higher Education",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Tiruchirappalli West",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 141,
+          "portfolio": "Transport",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "Health",
+          "party": "DMK"
+        },
+        {
+          "name": "Pongalur N. Palanisamy",
+          "constituency": "Coimbatore",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Revenue & Housing",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Suresh Rajan",
+          "constituency": "Kanniyakumari",
+          "geojson_name": "Kanniyakumari",
+          "portfolio": "Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "E. V. Velu",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Food & Civil Supplies",
+          "party": "DMK"
+        },
+        {
+          "name": "Parithi Ellamvazhuthi",
+          "constituency": "Egmore",
+          "geojson_name": "Egmore (SC)",
+          "portfolio": "Information",
+          "party": "DMK"
+        },
+        {
+          "name": "K. K. S. S. R. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "BC Welfare & Handlooms",
+          "party": "DMK"
+        },
+        {
+          "name": "T. M. Anbarasan",
+          "constituency": "Alandur",
+          "geojson_name": "Alandur",
+          "portfolio": "Labour",
+          "party": "DMK"
+        },
+        {
+          "name": "K. R. Periakaruppan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "HR&CE",
+          "party": "DMK"
+        },
+        {
+          "name": "Thangam Thenarasu",
+          "constituency": "Tiruchuli",
+          "geojson_name": "Tiruchuli",
+          "portfolio": "School Education",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Geetha Jeevan",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Social Welfare",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-4-start",
+      "date": "2011-05-16",
+      "label": "Jayalalithaa returns as CM (4th term)",
+      "government_id": "aiadmk-2011",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "Jayalalithaa's fourth term — won from Srirangam",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Srirangam",
+          "geojson_name": "Srirangam",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-4-full-cabinet",
+      "date": "2011-05-16",
+      "label": "Jayalalithaa 4th cabinet — 33 ministers",
+      "government_id": "aiadmk-2011",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "AIADMK won 203/234 seats, Jayalalithaa's historic return",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Srirangam",
+          "geojson_name": "Srirangam",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Bodinayakanur",
+          "geojson_name": "Bodinayakanur",
+          "portfolio": "Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Edappadi Palaniswami",
+          "constituency": "Edappadi",
+          "geojson_name": "Edappadi",
+          "portfolio": "Highways & Minor Ports",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Sellur K. Raju",
+          "constituency": "Madurai West",
+          "geojson_name": "Madurai West",
+          "portfolio": "Co-operation",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Natham R. Viswanathan",
+          "constituency": "Natham",
+          "geojson_name": "Natham",
+          "portfolio": "Electricity & Excise",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. P. Munusamy",
+          "constituency": "Krishnagiri",
+          "geojson_name": "Krishnagiri",
+          "portfolio": "Municipal Admin & Rural Dev",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. A. Jayapal",
+          "constituency": "Nagapattinam",
+          "geojson_name": "Nagapattinam",
+          "portfolio": "Fisheries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Palaniappan",
+          "constituency": "Pappireddipatti",
+          "geojson_name": "Pappireddippatti",
+          "portfolio": "Higher Education",
+          "party": "AIADMK"
+        },
+        {
+          "name": "B. Valarmathi",
+          "constituency": "Thousand Lights",
+          "geojson_name": "Thousand Lights",
+          "portfolio": "Social Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Thangamani",
+          "constituency": "Kumarapalayam",
+          "geojson_name": "Kumarapalayam",
+          "portfolio": "Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "N. D. Venkatachalam",
+          "constituency": "Perundurai",
+          "geojson_name": "Perundurai",
+          "portfolio": "Revenue",
+          "party": "AIADMK"
+        },
+        {
+          "name": "R. Kamaraj",
+          "constituency": "Nannilam",
+          "geojson_name": "Nannilam",
+          "portfolio": "Food & Civil Supplies",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Sundararaj",
+          "constituency": "Paramakudi",
+          "geojson_name": "Paramakudi (SC)",
+          "portfolio": "Handlooms & Textiles",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Gokula Indira",
+          "constituency": "Anna Nagar",
+          "geojson_name": "Anna Nagar",
+          "portfolio": "Tourism",
+          "party": "AIADMK"
+        },
+        {
+          "name": "R. Vaithilingam",
+          "constituency": "Orathanadu",
+          "geojson_name": "Orathanadu",
+          "portfolio": "Housing & Urban Dev",
+          "party": "AIADMK"
+        },
+        {
+          "name": "V. S. Vijay",
+          "constituency": "Vellore",
+          "geojson_name": "Vellore",
+          "portfolio": "Health",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. T. Rajenthra Bhalaji",
+          "constituency": "Sivakasi",
+          "geojson_name": "Sivakasi",
+          "portfolio": "Information & Special Prog",
+          "party": "AIADMK"
+        },
+        {
+          "name": "V. Moorthy",
+          "constituency": "Madavaram",
+          "geojson_name": "Madavaram",
+          "portfolio": "Milk & Dairy",
+          "party": "AIADMK"
+        },
+        {
+          "name": "B. V. Ramanaa",
+          "constituency": "Thiruvallur",
+          "geojson_name": "Thiruvallur",
+          "portfolio": "Commercial Taxes",
+          "party": "AIADMK"
+        },
+        {
+          "name": "M. C. Sampath",
+          "constituency": "Cuddalore",
+          "geojson_name": "Cuddalore",
+          "portfolio": "Environment",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Mohan",
+          "constituency": "Sankarapuram",
+          "geojson_name": "Sankarapuram",
+          "portfolio": "Rural Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "N. R. Sivapathi",
+          "constituency": "Musiri",
+          "geojson_name": "Musiri",
+          "portfolio": "School Education & Law",
+          "party": "AIADMK"
+        },
+        {
+          "name": "V. Senthil Balaji",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Transport",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Mukkur N. Subramanian",
+          "constituency": "Cheyyar",
+          "geojson_name": "Cheyyar",
+          "portfolio": "Information Technology",
+          "party": "AIADMK"
+        },
+        {
+          "name": "N. Subramanian",
+          "constituency": "Gandharvakottai",
+          "geojson_name": "Gandharvakottai(SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "A. Mohammed John",
+          "constituency": "Ranipet",
+          "geojson_name": "Ranipet",
+          "portfolio": "BC & Minorities Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "T. K. M. Chinnayya",
+          "constituency": "Tambaram",
+          "geojson_name": "Tambaram",
+          "portfolio": "Animal Husbandry",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Damodaran",
+          "constituency": "Kinathukadavu",
+          "geojson_name": "Kinathukadavu",
+          "portfolio": "Agriculture",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. T. Pachaimal",
+          "constituency": "Kanyakumari",
+          "geojson_name": "Kanniyakumari",
+          "portfolio": "Forests",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. V. Ramalingam",
+          "constituency": "Erode West",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Public Works",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. T. Chellapandian",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Labour",
+          "party": "AIADMK"
+        },
+        {
+          "name": "M. S. M. Anandan",
+          "constituency": "Tiruppur North",
+          "geojson_name": "Tiruppur (North)",
+          "portfolio": "HR&CE",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Chendur Pandian",
+          "constituency": "Kadayanallur",
+          "geojson_name": "Kadayanallur",
+          "portfolio": "Khadi & Village Industries",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "ops-2-start",
+      "date": "2014-09-28",
+      "label": "OPS becomes CM (acting, 2nd term)",
+      "government_id": "aiadmk-2014-ops",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "OPS acting CM while Jayalalithaa was convicted",
+      "ministers": [
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Bodinayakanur",
+          "geojson_name": "Bodinayakanur",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-5-start",
+      "date": "2015-05-23",
+      "label": "Jayalalithaa returns as CM (5th term)",
+      "government_id": "aiadmk-2015",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "Acquitted, returned from RK Nagar constituency",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Dr. Radhakrishnan Nagar",
+          "geojson_name": "Dr.Radhakrishnan Naga",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-6-start",
+      "date": "2016-05-23",
+      "label": "Jayalalithaa begins 6th term",
+      "government_id": "aiadmk-2016",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "AIADMK won re-election, Jayalalithaa's final term",
+      "ministers": [
+        {
+          "name": "J. Jayalalithaa",
+          "constituency": "Dr. Radhakrishnan Nagar",
+          "geojson_name": "Dr.Radhakrishnan Naga",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "jayalalithaa-end",
+      "date": "2016-12-05",
+      "label": "Jayalalithaa dies in office",
+      "government_id": "aiadmk-2016",
+      "status": "transition",
+      "party": "TRANSITION",
+      "party_color": "#555555",
+      "notes": "Jayalalithaa died after hospitalization",
+      "ministers": []
+    },
+    {
+      "id": "ops-3-start",
+      "date": "2016-12-06",
+      "label": "OPS becomes CM (3rd term, interim)",
+      "government_id": "aiadmk-2016-ops",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "OPS interim CM after Jayalalithaa's death",
+      "ministers": [
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Bodinayakanur",
+          "geojson_name": "Bodinayakanur",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "epst-start",
+      "date": "2017-02-16",
+      "label": "Edappadi K. Palaniswami becomes CM",
+      "government_id": "aiadmk-2017",
+      "status": "cm_only",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "EPS became CM after AIADMK split and merger",
+      "ministers": [
+        {
+          "name": "Edappadi K. Palaniswami",
+          "constituency": "Edappadi",
+          "geojson_name": "Edappadi",
+          "party": "AIADMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "epst-full-cabinet",
+      "date": "2017-02-16",
+      "label": "EPS full cabinet — 30 ministers",
+      "government_id": "aiadmk-2017",
+      "status": "full_cabinet",
+      "party": "AIADMK",
+      "party_color": "#008000",
+      "notes": "EPS cabinet with OPS as Deputy CM",
+      "ministers": [
+        {
+          "name": "Edappadi K. Palaniswami",
+          "constituency": "Edappadi",
+          "geojson_name": "Edappadi",
+          "portfolio": "Chief Minister",
+          "party": "AIADMK",
+          "is_cm": true
+        },
+        {
+          "name": "O. Panneerselvam",
+          "constituency": "Bodinayakanur",
+          "geojson_name": "Bodinayakanur",
+          "portfolio": "Deputy CM, Finance",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Sreenivaasan",
+          "constituency": "Dindigul",
+          "geojson_name": "Dindigul",
+          "portfolio": "Forests",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. A. Sengottaiyan",
+          "constituency": "Gobichettipalayam",
+          "geojson_name": "Gobichettipalayam",
+          "portfolio": "School Education",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. Raju",
+          "constituency": "Madurai West",
+          "geojson_name": "Madurai West",
+          "portfolio": "Co-operation",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Thangamani",
+          "constituency": "Kumarapalayam",
+          "geojson_name": "Kumarapalayam",
+          "portfolio": "Electricity & Excise",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. P. Velumani",
+          "constituency": "Thondamuthur",
+          "geojson_name": "Thondamuthur",
+          "portfolio": "Local Admin & Rural Dev",
+          "party": "AIADMK"
+        },
+        {
+          "name": "D. Jayakumar",
+          "constituency": "Royapuram",
+          "geojson_name": "Royapuram",
+          "portfolio": "Fisheries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Ve. Shanmugam",
+          "constituency": "Viluppuram",
+          "geojson_name": "Viluppuram",
+          "portfolio": "Law",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. P. Anbalagan",
+          "constituency": "Palacode",
+          "geojson_name": "Palacodu",
+          "portfolio": "Higher Education & Agri",
+          "party": "AIADMK"
+        },
+        {
+          "name": "V. Saroja",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Social Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "M. C. Sampath",
+          "constituency": "Cuddalore",
+          "geojson_name": "Cuddalore",
+          "portfolio": "Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. C. Karuppannan",
+          "constituency": "Bhavani",
+          "geojson_name": "Bhavani",
+          "portfolio": "Environment",
+          "party": "AIADMK"
+        },
+        {
+          "name": "R. Kamaraj",
+          "constituency": "Nannilam",
+          "geojson_name": "Nannilam",
+          "portfolio": "Food & Civil Supplies",
+          "party": "AIADMK"
+        },
+        {
+          "name": "O. S. Manian",
+          "constituency": "Vedaranyam",
+          "geojson_name": "Vedaranyam",
+          "portfolio": "Handlooms & Textiles",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. Radhakrishnan",
+          "constituency": "Udumalaipettai",
+          "geojson_name": "Udumalaipettai",
+          "portfolio": "Animal Husbandry",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Vijayabaskar",
+          "constituency": "Viralimalai",
+          "geojson_name": "Viralimalai",
+          "portfolio": "Health & Family Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "C. Raju",
+          "constituency": "Kovilpatti",
+          "geojson_name": "Kovilpatti",
+          "portfolio": "Information & Publicity",
+          "party": "AIADMK"
+        },
+        {
+          "name": "R. B. Udhaya Kumar",
+          "constituency": "Thirumangalam",
+          "geojson_name": "Thirumangalam",
+          "portfolio": "Revenue & IT",
+          "party": "AIADMK"
+        },
+        {
+          "name": "N. Natarajan",
+          "constituency": "Tiruchirappalli East",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 140,
+          "portfolio": "Tourism",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. C. Veeramani",
+          "constituency": "Jolarpet",
+          "geojson_name": "Jolarpet",
+          "portfolio": "Commercial Taxes",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. T. Rajenthra Bhalaji",
+          "constituency": "Sivakasi",
+          "geojson_name": "Sivakasi",
+          "portfolio": "Milk & Dairy",
+          "party": "AIADMK"
+        },
+        {
+          "name": "P. Benjamin",
+          "constituency": "Maduravoyal",
+          "geojson_name": "Maduravoyal",
+          "portfolio": "MSME",
+          "party": "AIADMK"
+        },
+        {
+          "name": "M. R. Vijayabhaskar",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Transport",
+          "party": "AIADMK"
+        },
+        {
+          "name": "Nilofer Kafeel",
+          "constituency": "Vaniyambadi",
+          "geojson_name": "Vaniyambadi",
+          "portfolio": "Labour & Employment",
+          "party": "AIADMK"
+        },
+        {
+          "name": "V. M. Rajalakshmi",
+          "constituency": "Sankarankovil",
+          "geojson_name": "Sankarankovil(SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "AIADMK"
+        },
+        {
+          "name": "K. Pandiarajan",
+          "constituency": "Avadi",
+          "geojson_name": "Avadi",
+          "portfolio": "Tamil Development & Archaeo",
+          "party": "AIADMK"
+        },
+        {
+          "name": "G. Baskaran",
+          "constituency": "Sivaganga",
+          "geojson_name": "Sivaganga",
+          "portfolio": "Khadi & Village Industries",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Ramachandran",
+          "constituency": "Arani",
+          "geojson_name": "Arani",
+          "portfolio": "HR&CE",
+          "party": "AIADMK"
+        },
+        {
+          "name": "S. Valarmathi",
+          "constituency": "Srirangam",
+          "geojson_name": "Srirangam",
+          "portfolio": "BC & Minorities Welfare",
+          "party": "AIADMK"
+        }
+      ]
+    },
+    {
+      "id": "stalin-start",
+      "date": "2021-05-07",
+      "label": "Stalin sworn in as CM",
+      "government_id": "dmk-2021",
+      "status": "cm_only",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Only CM sworn in, cabinet to follow",
+      "ministers": [
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Kolathur",
+          "geojson_name": "Kolathur",
+          "party": "DMK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "stalin-full-cabinet",
+      "date": "2021-05-07",
+      "label": "Stalin ministry — full cabinet",
+      "government_id": "dmk-2021",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "34 ministers, DMK-led SPA government",
+      "ministers": [
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Kolathur",
+          "geojson_name": "Kolathur",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "Durai Murugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Irrigation & Law",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Tiruchirappalli West",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 141,
+          "portfolio": "Municipal Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Rural Development",
+          "party": "DMK"
+        },
+        {
+          "name": "E. V. Velu",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "K. K. S. S. R. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "Revenue",
+          "party": "DMK"
+        },
+        {
+          "name": "Thangam Thennarasu",
+          "constituency": "Tiruchuli",
+          "geojson_name": "Tiruchuli",
+          "portfolio": "Finance",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Regupathy",
+          "constituency": "Tirumayam",
+          "geojson_name": "Thirumayam",
+          "portfolio": "Law",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Muthusamy",
+          "constituency": "Erode West",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Housing",
+          "party": "DMK"
+        },
+        {
+          "name": "K. R. Periyakaruppan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "T. M. Anbarasan",
+          "constituency": "Alandur",
+          "geojson_name": "Alandur",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. P. Saminathan",
+          "constituency": "Kangayam",
+          "geojson_name": "Kangayam",
+          "portfolio": "Tamil Culture & Info",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Geetha Jeevan",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Social Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anitha R. Radhakrishnan",
+          "constituency": "Tiruchendur",
+          "geojson_name": "Tiruchendur",
+          "portfolio": "Fisheries",
+          "party": "DMK"
+        },
+        {
+          "name": "Raja Kannappan",
+          "constituency": "Mudukulathur",
+          "geojson_name": "Mudhukulathur",
+          "portfolio": "Transport",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Sakkarapani",
+          "constituency": "Oddanchatram",
+          "geojson_name": "Oddanchatram",
+          "portfolio": "Food & Civil Supplies",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Gandhi",
+          "constituency": "Ranipet",
+          "geojson_name": "Ranipet",
+          "portfolio": "Handlooms & Textiles",
+          "party": "DMK"
+        },
+        {
+          "name": "Ma. Subramanian",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Health",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Moorthy",
+          "constituency": "Madurai East",
+          "geojson_name": "Madurai East",
+          "portfolio": "Commercial Taxes",
+          "party": "DMK"
+        },
+        {
+          "name": "S. S. Sivasankar",
+          "constituency": "Kunnam",
+          "geojson_name": "Kunnam",
+          "portfolio": "BC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "P. K. Sekar Babu",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "HR&CE",
+          "party": "DMK"
+        },
+        {
+          "name": "Palanivel Thiagarajan",
+          "constituency": "Madurai Central",
+          "geojson_name": "Madurai Central",
+          "portfolio": "Finance & IT",
+          "party": "DMK"
+        },
+        {
+          "name": "Anbil Mahesh Poyyamozhi",
+          "constituency": "Thiruverumbur",
+          "geojson_name": "Thiruverumbur",
+          "portfolio": "School Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Siva V. Meyyanathan",
+          "constituency": "Alangudi",
+          "geojson_name": "Alangudi",
+          "portfolio": "Environment",
+          "party": "DMK"
+        },
+        {
+          "name": "C. V. Ganesan",
+          "constituency": "Tittakudi",
+          "geojson_name": "Tittakudi (SC)",
+          "portfolio": "Labour Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "T.R.B.Rajaa",
+          "constituency": "Mannargudi",
+          "geojson_name": "Mannargudi",
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Mathiventhan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "V. Senthil Balaji",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Electricity",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ramachandran",
+          "constituency": "Sattur",
+          "geojson_name": "Sattur",
+          "portfolio": "Forests",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ponmudy",
+          "constituency": "Sirkazhi",
+          "geojson_name": "Sirkazhi (SC)",
+          "portfolio": "Higher Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Mano Thangaraj",
+          "constituency": "Padmanabhapuram",
+          "geojson_name": "Padmanabhapuram",
+          "portfolio": "Information Technology",
+          "party": "DMK"
+        },
+        {
+          "name": "S. M. Nasar",
+          "constituency": "Avadi",
+          "geojson_name": "Avadi",
+          "portfolio": "Milk & Dairy",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Kayalvizhi",
+          "constituency": "Dharapuram",
+          "geojson_name": "Dharapuram (SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "stalin-udhay-inducted",
+      "date": "2022-12-14",
+      "label": "Udhayanidhi inducted as minister",
+      "government_id": "dmk-2021",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Udhayanidhi Stalin sworn in, portfolio reshuffle",
+      "ministers": [
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Kolathur",
+          "geojson_name": "Kolathur",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "Udhayanidhi Stalin",
+          "constituency": "Chepauk-Thiruvallikeni",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "portfolio": "Youth Welfare & Sports",
+          "party": "DMK"
+        },
+        {
+          "name": "Durai Murugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Irrigation & Law",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Tiruchirappalli West",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 141,
+          "portfolio": "Municipal Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Rural Development",
+          "party": "DMK"
+        },
+        {
+          "name": "E. V. Velu",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "K. K. S. S. R. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "Revenue",
+          "party": "DMK"
+        },
+        {
+          "name": "Thangam Thennarasu",
+          "constituency": "Tiruchuli",
+          "geojson_name": "Tiruchuli",
+          "portfolio": "Finance",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Regupathy",
+          "constituency": "Tirumayam",
+          "geojson_name": "Thirumayam",
+          "portfolio": "Law",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Muthusamy",
+          "constituency": "Erode West",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Housing",
+          "party": "DMK"
+        },
+        {
+          "name": "K. R. Periyakaruppan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "T. M. Anbarasan",
+          "constituency": "Alandur",
+          "geojson_name": "Alandur",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. P. Saminathan",
+          "constituency": "Kangayam",
+          "geojson_name": "Kangayam",
+          "portfolio": "Tamil Culture & Info",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Geetha Jeevan",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Social Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anitha R. Radhakrishnan",
+          "constituency": "Tiruchendur",
+          "geojson_name": "Tiruchendur",
+          "portfolio": "Fisheries",
+          "party": "DMK"
+        },
+        {
+          "name": "Raja Kannappan",
+          "constituency": "Mudukulathur",
+          "geojson_name": "Mudhukulathur",
+          "portfolio": "BC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Sakkarapani",
+          "constituency": "Oddanchatram",
+          "geojson_name": "Oddanchatram",
+          "portfolio": "Food & Civil Supplies",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Gandhi",
+          "constituency": "Ranipet",
+          "geojson_name": "Ranipet",
+          "portfolio": "Handlooms & Textiles",
+          "party": "DMK"
+        },
+        {
+          "name": "Ma. Subramanian",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Health",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Moorthy",
+          "constituency": "Madurai East",
+          "geojson_name": "Madurai East",
+          "portfolio": "Commercial Taxes",
+          "party": "DMK"
+        },
+        {
+          "name": "S. S. Sivasankar",
+          "constituency": "Kunnam",
+          "geojson_name": "Kunnam",
+          "portfolio": "Transport",
+          "party": "DMK"
+        },
+        {
+          "name": "P. K. Sekar Babu",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "HR&CE",
+          "party": "DMK"
+        },
+        {
+          "name": "Palanivel Thiagarajan",
+          "constituency": "Madurai Central",
+          "geojson_name": "Madurai Central",
+          "portfolio": "Finance",
+          "party": "DMK"
+        },
+        {
+          "name": "Anbil Mahesh Poyyamozhi",
+          "constituency": "Thiruverumbur",
+          "geojson_name": "Thiruverumbur",
+          "portfolio": "School Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Siva V. Meyyanathan",
+          "constituency": "Alangudi",
+          "geojson_name": "Alangudi",
+          "portfolio": "Environment",
+          "party": "DMK"
+        },
+        {
+          "name": "C. V. Ganesan",
+          "constituency": "Tittakudi",
+          "geojson_name": "Tittakudi (SC)",
+          "portfolio": "Labour Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "T.R.B.Rajaa",
+          "constituency": "Mannargudi",
+          "geojson_name": "Mannargudi",
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Mathiventhan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "V. Senthil Balaji",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Electricity",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ramachandran",
+          "constituency": "Sattur",
+          "geojson_name": "Sattur",
+          "portfolio": "Forests",
+          "party": "DMK"
+        },
+        {
+          "name": "K. Ponmudy",
+          "constituency": "Sirkazhi",
+          "geojson_name": "Sirkazhi (SC)",
+          "portfolio": "Higher Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Mano Thangaraj",
+          "constituency": "Padmanabhapuram",
+          "geojson_name": "Padmanabhapuram",
+          "portfolio": "Information Technology",
+          "party": "DMK"
+        },
+        {
+          "name": "S. M. Nasar",
+          "constituency": "Avadi",
+          "geojson_name": "Avadi",
+          "portfolio": "Milk & Dairy",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Kayalvizhi",
+          "constituency": "Dharapuram",
+          "geojson_name": "Dharapuram (SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "stalin-major-reshuffle-2024",
+      "date": "2024-09-28",
+      "label": "Major reshuffle — Udhayanidhi Deputy CM",
+      "government_id": "dmk-2021",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "Udhayanidhi elevated to Deputy CM",
+      "ministers": [
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Kolathur",
+          "geojson_name": "Kolathur",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "Udhayanidhi Stalin",
+          "constituency": "Chepauk-Thiruvallikeni",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "portfolio": "Deputy CM",
+          "party": "DMK"
+        },
+        {
+          "name": "Durai Murugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Irrigation & Law",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Tiruchirappalli West",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 141,
+          "portfolio": "Municipal Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Rural Development",
+          "party": "DMK"
+        },
+        {
+          "name": "E. V. Velu",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "K. K. S. S. R. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "Revenue",
+          "party": "DMK"
+        },
+        {
+          "name": "Thangam Thennarasu",
+          "constituency": "Tiruchuli",
+          "geojson_name": "Tiruchuli",
+          "portfolio": "Finance & Environment",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Regupathy",
+          "constituency": "Tirumayam",
+          "geojson_name": "Thirumayam",
+          "portfolio": "Mines",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Muthusamy",
+          "constituency": "Erode West",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Housing & Prohibition",
+          "party": "DMK"
+        },
+        {
+          "name": "K. R. Periyakaruppan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "T. M. Anbarasan",
+          "constituency": "Alandur",
+          "geojson_name": "Alandur",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. P. Saminathan",
+          "constituency": "Kangayam",
+          "geojson_name": "Kangayam",
+          "portfolio": "Tamil Culture & Info",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Geetha Jeevan",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Social Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anitha R. Radhakrishnan",
+          "constituency": "Tiruchendur",
+          "geojson_name": "Tiruchendur",
+          "portfolio": "Fisheries",
+          "party": "DMK"
+        },
+        {
+          "name": "Raja Kannappan",
+          "constituency": "Mudukulathur",
+          "geojson_name": "Mudhukulathur",
+          "portfolio": "Milk & Dairy",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Rajendran",
+          "constituency": "Salem North",
+          "geojson_name": "Salem (North)",
+          "portfolio": "Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Sakkarapani",
+          "constituency": "Oddanchatram",
+          "geojson_name": "Oddanchatram",
+          "portfolio": "Food & Civil Supplies",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Gandhi",
+          "constituency": "Ranipet",
+          "geojson_name": "Ranipet",
+          "portfolio": "Handlooms & Textiles",
+          "party": "DMK"
+        },
+        {
+          "name": "Ma. Subramanian",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Health",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Moorthy",
+          "constituency": "Madurai East",
+          "geojson_name": "Madurai East",
+          "portfolio": "Commercial Taxes",
+          "party": "DMK"
+        },
+        {
+          "name": "S. S. Sivasankar",
+          "constituency": "Kunnam",
+          "geojson_name": "Kunnam",
+          "portfolio": "Transport",
+          "party": "DMK"
+        },
+        {
+          "name": "P. K. Sekar Babu",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "HR&CE",
+          "party": "DMK"
+        },
+        {
+          "name": "Govi. Chezhian",
+          "constituency": "Thiruvidamarudur",
+          "geojson_name": "Thiruvidaimarudur",
+          "portfolio": "Higher Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Palanivel Thiagarajan",
+          "constituency": "Madurai Central",
+          "geojson_name": "Madurai Central",
+          "portfolio": "IT & Digital Services",
+          "party": "DMK"
+        },
+        {
+          "name": "S. M. Nasar",
+          "constituency": "Avadi",
+          "geojson_name": "Avadi",
+          "portfolio": "Minorities Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anbil Mahesh Poyyamozhi",
+          "constituency": "Thiruverumbur",
+          "geojson_name": "Thiruverumbur",
+          "portfolio": "School Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Siva V. Meyyanathan",
+          "constituency": "Alangudi",
+          "geojson_name": "Alangudi",
+          "portfolio": "BC/MBC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "C. V. Ganesan",
+          "constituency": "Tittakudi",
+          "geojson_name": "Tittakudi (SC)",
+          "portfolio": "Labour Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Mano Thangaraj",
+          "constituency": "Padmanabhapuram",
+          "geojson_name": "Padmanabhapuram",
+          "portfolio": "Milk & Dairy",
+          "party": "DMK"
+        },
+        {
+          "name": "T.R.B.Rajaa",
+          "constituency": "Mannargudi",
+          "geojson_name": "Mannargudi",
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Mathiventhan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Kayalvizhi",
+          "constituency": "Dharapuram",
+          "geojson_name": "Dharapuram (SC)",
+          "portfolio": "HR Management",
+          "party": "DMK"
+        },
+        {
+          "name": "V. Senthil Balaji",
+          "constituency": "Karur",
+          "geojson_name": "Karur",
+          "portfolio": "Electricity",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "stalin-final",
+      "date": "2026-05-09",
+      "label": "Stalin ministry ends",
+      "government_id": "dmk-2021",
+      "status": "full_cabinet",
+      "party": "DMK",
+      "party_color": "#E32636",
+      "notes": "DMK government ends after full term",
+      "ministers": [
+        {
+          "name": "M. K. Stalin",
+          "constituency": "Kolathur",
+          "geojson_name": "Kolathur",
+          "portfolio": "Chief Minister",
+          "party": "DMK",
+          "is_cm": true
+        },
+        {
+          "name": "Udhayanidhi Stalin",
+          "constituency": "Chepauk-Thiruvallikeni",
+          "geojson_name": "Chepauk-Thiruvalliken",
+          "portfolio": "Deputy CM",
+          "party": "DMK"
+        },
+        {
+          "name": "Durai Murugan",
+          "constituency": "Katpadi",
+          "geojson_name": "Katpadi",
+          "portfolio": "Irrigation & Law",
+          "party": "DMK"
+        },
+        {
+          "name": "K. N. Nehru",
+          "constituency": "Tiruchirappalli West",
+          "geojson_name": "Tiruchirappalli",
+          "ac_no": 141,
+          "portfolio": "Municipal Admin",
+          "party": "DMK"
+        },
+        {
+          "name": "I. Periyasamy",
+          "constituency": "Athoor",
+          "geojson_name": "Athoor",
+          "portfolio": "Rural Development",
+          "party": "DMK"
+        },
+        {
+          "name": "E. V. Velu",
+          "constituency": "Tiruvannamalai",
+          "geojson_name": "Tiruvannamalai",
+          "portfolio": "Public Works",
+          "party": "DMK"
+        },
+        {
+          "name": "M. R. K. Panneerselvam",
+          "constituency": "Kurinjipadi",
+          "geojson_name": "Kurinjipadi",
+          "portfolio": "Agriculture",
+          "party": "DMK"
+        },
+        {
+          "name": "K. K. S. S. R. Ramachandran",
+          "constituency": "Aruppukottai",
+          "geojson_name": "Aruppukkottai",
+          "portfolio": "Revenue",
+          "party": "DMK"
+        },
+        {
+          "name": "Thangam Thennarasu",
+          "constituency": "Tiruchuli",
+          "geojson_name": "Tiruchuli",
+          "portfolio": "Finance & Environment",
+          "party": "DMK"
+        },
+        {
+          "name": "S. Muthusamy",
+          "constituency": "Erode West",
+          "geojson_name": "Erode (West)",
+          "portfolio": "Housing & Prohibition",
+          "party": "DMK"
+        },
+        {
+          "name": "K. R. Periyakaruppan",
+          "constituency": "Tiruppattur",
+          "geojson_name": "Tiruppattur",
+          "ac_no": 185,
+          "portfolio": "Co-operation",
+          "party": "DMK"
+        },
+        {
+          "name": "T. M. Anbarasan",
+          "constituency": "Alandur",
+          "geojson_name": "Alandur",
+          "portfolio": "Rural Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. P. Saminathan",
+          "constituency": "Kangayam",
+          "geojson_name": "Kangayam",
+          "portfolio": "Tamil Culture & Info",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Geetha Jeevan",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Social Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anitha R. Radhakrishnan",
+          "constituency": "Tiruchendur",
+          "geojson_name": "Tiruchendur",
+          "portfolio": "Fisheries",
+          "party": "DMK"
+        },
+        {
+          "name": "Raja Kannappan",
+          "constituency": "Mudukulathur",
+          "geojson_name": "Mudhukulathur",
+          "portfolio": "Forests",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Rajendran",
+          "constituency": "Salem North",
+          "geojson_name": "Salem (North)",
+          "portfolio": "Tourism",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Sakkarapani",
+          "constituency": "Oddanchatram",
+          "geojson_name": "Oddanchatram",
+          "portfolio": "Food & Civil Supplies",
+          "party": "DMK"
+        },
+        {
+          "name": "R. Gandhi",
+          "constituency": "Ranipet",
+          "geojson_name": "Ranipet",
+          "portfolio": "Handlooms & Textiles",
+          "party": "DMK"
+        },
+        {
+          "name": "Ma. Subramanian",
+          "constituency": "Saidapet",
+          "geojson_name": "Saidapet",
+          "portfolio": "Health",
+          "party": "DMK"
+        },
+        {
+          "name": "P. Moorthy",
+          "constituency": "Madurai East",
+          "geojson_name": "Madurai East",
+          "portfolio": "Commercial Taxes",
+          "party": "DMK"
+        },
+        {
+          "name": "S. S. Sivasankar",
+          "constituency": "Kunnam",
+          "geojson_name": "Kunnam",
+          "portfolio": "Transport & Electricity",
+          "party": "DMK"
+        },
+        {
+          "name": "P. K. Sekar Babu",
+          "constituency": "Harbour",
+          "geojson_name": "Harbour",
+          "portfolio": "HR&CE",
+          "party": "DMK"
+        },
+        {
+          "name": "Govi. Chezhian",
+          "constituency": "Thiruvidamarudur",
+          "geojson_name": "Thiruvidaimarudur",
+          "portfolio": "Higher Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Palanivel Thiagarajan",
+          "constituency": "Madurai Central",
+          "geojson_name": "Madurai Central",
+          "portfolio": "IT & Digital Services",
+          "party": "DMK"
+        },
+        {
+          "name": "S. M. Nasar",
+          "constituency": "Avadi",
+          "geojson_name": "Avadi",
+          "portfolio": "Minorities Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Anbil Mahesh Poyyamozhi",
+          "constituency": "Thiruverumbur",
+          "geojson_name": "Thiruverumbur",
+          "portfolio": "School Education",
+          "party": "DMK"
+        },
+        {
+          "name": "Siva V. Meyyanathan",
+          "constituency": "Alangudi",
+          "geojson_name": "Alangudi",
+          "portfolio": "BC/MBC Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "C. V. Ganesan",
+          "constituency": "Tittakudi",
+          "geojson_name": "Tittakudi (SC)",
+          "portfolio": "Labour Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "Mano Thangaraj",
+          "constituency": "Padmanabhapuram",
+          "geojson_name": "Padmanabhapuram",
+          "portfolio": "Milk & Dairy",
+          "party": "DMK"
+        },
+        {
+          "name": "T.R.B.Rajaa",
+          "constituency": "Mannargudi",
+          "geojson_name": "Mannargudi",
+          "portfolio": "Industries",
+          "party": "DMK"
+        },
+        {
+          "name": "M. Mathiventhan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Adi Dravidar Welfare",
+          "party": "DMK"
+        },
+        {
+          "name": "N. Kayalvizhi",
+          "constituency": "Dharapuram",
+          "geojson_name": "Dharapuram (SC)",
+          "portfolio": "HR Management",
+          "party": "DMK"
+        }
+      ]
+    },
+    {
+      "id": "vijay-cm-only",
+      "date": "2026-05-10",
+      "label": "Vijay sworn in as CM — TVK era begins",
+      "government_id": "tvk-2026",
+      "status": "cm_only",
+      "party": "TVK",
+      "party_color": "#FFD700",
+      "notes": "First non-Dravidian CM since 1967",
+      "ministers": [
+        {
+          "name": "C. Joseph Vijay",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "party": "TVK",
+          "is_cm": true,
+          "portfolio": "Chief Minister"
+        }
+      ]
+    },
+    {
+      "id": "vijay-first-cabinet",
+      "date": "2026-05-10",
+      "label": "Vijay first cabinet sworn in",
+      "government_id": "tvk-2026",
+      "status": "partial_cabinet",
+      "party": "TVK",
+      "party_color": "#FFD700",
+      "notes": "CM + 9 ministers",
+      "ministers": [
+        {
+          "name": "C. Joseph Vijay",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "portfolio": "Chief Minister",
+          "party": "TVK",
+          "is_cm": true
+        },
+        {
+          "name": "N. Anand",
+          "constituency": "Thiyagarayanagar",
+          "geojson_name": "Thiyagarayanagar",
+          "portfolio": "Rural Dev & Water",
+          "party": "TVK"
+        },
+        {
+          "name": "Aadhav Arjuna",
+          "constituency": "Villivakkam",
+          "geojson_name": "Villivakkam",
+          "portfolio": "Public Works & Sports",
+          "party": "TVK"
+        },
+        {
+          "name": "K. G. Arunraj",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Health",
+          "party": "TVK"
+        },
+        {
+          "name": "K. A. Sengottaiyan",
+          "constituency": "Gobichettipalayam",
+          "geojson_name": "Gobichettipalayam",
+          "portfolio": "Finance",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Venkataramanan",
+          "constituency": "Mylapore",
+          "geojson_name": "Mylapore",
+          "portfolio": "Food & Civil Supplies",
+          "party": "TVK"
+        },
+        {
+          "name": "C. T. R. Nirmal Kumar",
+          "constituency": "Thiruparankundram",
+          "geojson_name": "Thiruparankundram",
+          "portfolio": "Energy & Law",
+          "party": "TVK"
+        },
+        {
+          "name": "Rajmohan Arumugam",
+          "constituency": "Egmore",
+          "geojson_name": "Egmore (SC)",
+          "portfolio": "School Education & Info",
+          "party": "TVK"
+        },
+        {
+          "name": "T. K. Prabhu",
+          "constituency": "Karaikudi",
+          "geojson_name": "Karaikudi",
+          "portfolio": "Natural Resources",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Keerthana",
+          "constituency": "Sivakasi",
+          "geojson_name": "Sivakasi",
+          "portfolio": "Industries",
+          "party": "TVK"
+        }
+      ]
+    },
+    {
+      "id": "vijay-full-cabinet",
+      "date": "2026-05-21",
+      "label": "Vijay full cabinet — TVK+INC coalition",
+      "government_id": "tvk-2026",
+      "status": "full_cabinet",
+      "party": "TVK",
+      "party_color": "#FFD700",
+      "notes": "33 ministers including 2 from INC",
+      "ministers": [
+        {
+          "name": "C. Joseph Vijay",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "portfolio": "Chief Minister",
+          "party": "TVK",
+          "is_cm": true
+        },
+        {
+          "name": "N. Anand",
+          "constituency": "Thiyagarayanagar",
+          "geojson_name": "Thiyagarayanagar",
+          "portfolio": "Rural Dev & Water",
+          "party": "TVK"
+        },
+        {
+          "name": "Aadhav Arjuna",
+          "constituency": "Villivakkam",
+          "geojson_name": "Villivakkam",
+          "portfolio": "Public Works & Sports",
+          "party": "TVK"
+        },
+        {
+          "name": "K. G. Arunraj",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Health",
+          "party": "TVK"
+        },
+        {
+          "name": "K. A. Sengottaiyan",
+          "constituency": "Gobichettipalayam",
+          "geojson_name": "Gobichettipalayam",
+          "portfolio": "Finance",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Venkataramanan",
+          "constituency": "Mylapore",
+          "geojson_name": "Mylapore",
+          "portfolio": "Food & Civil Supplies",
+          "party": "TVK"
+        },
+        {
+          "name": "C. T. R. Nirmal Kumar",
+          "constituency": "Thiruparankundram",
+          "geojson_name": "Thiruparankundram",
+          "portfolio": "Energy & Law",
+          "party": "TVK"
+        },
+        {
+          "name": "Rajmohan Arumugam",
+          "constituency": "Egmore",
+          "geojson_name": "Egmore (SC)",
+          "portfolio": "School Education & Info",
+          "party": "TVK"
+        },
+        {
+          "name": "T. K. Prabhu",
+          "constituency": "Karaikudi",
+          "geojson_name": "Karaikudi",
+          "portfolio": "Natural Resources",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Keerthana",
+          "constituency": "Sivakasi",
+          "geojson_name": "Sivakasi",
+          "portfolio": "Industries",
+          "party": "TVK"
+        },
+        {
+          "name": "Srinath",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Kamali. S.",
+          "constituency": "Avanashi",
+          "geojson_name": "Avanashi (SC)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "C. Vijayalakshmi",
+          "constituency": "Kumarapalayam",
+          "geojson_name": "Kumarapalayam",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "R. V. Ranjithkumar",
+          "constituency": "Kancheepuram",
+          "geojson_name": "Kancheepuram",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Vinoth",
+          "constituency": "Kumbakonam",
+          "geojson_name": "Kumbakonam",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Rajeev",
+          "constituency": "Tiruvadanai",
+          "geojson_name": "Tiruvadanai",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "B. Rajkumar",
+          "constituency": "Cuddalore",
+          "geojson_name": "Cuddalore",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "V. Gandhiraj",
+          "constituency": "Arakkonam",
+          "geojson_name": "Arakkonam (SC)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Mathanraja",
+          "constituency": "Ottapidaram",
+          "geojson_name": "Ottapidaram(SC)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Jegadeshwari. K.",
+          "constituency": "Rajapalayam",
+          "geojson_name": "Rajapalayam",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "M. Vijay Balaji",
+          "constituency": "Erode East",
+          "geojson_name": "Erode (East)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Logesh Tamilselvan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Vijay Tamilan Parthiban. A",
+          "constituency": "Salem South",
+          "geojson_name": "Salem (South)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Ramesh",
+          "constituency": "Srirangam",
+          "geojson_name": "Srirangam",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "R. Kumar",
+          "constituency": "Velachery",
+          "geojson_name": "Velachery",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "Thennarasu. K.",
+          "constituency": "Sriperumbudur",
+          "geojson_name": "Sriperumbudur (SC)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "V. Sampathkumar",
+          "constituency": "Coimbatore North",
+          "geojson_name": "Coimbatore(North)",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "J. Mohamed Farvas",
+          "constituency": "Arantangi",
+          "geojson_name": "Aranthangi",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "D. Sarathkumar",
+          "constituency": "Tambaram",
+          "geojson_name": "Tambaram",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "N. Marie Wilson",
+          "constituency": "R.K. Nagar",
+          "geojson_name": "Dr.Radhakrishnan Naga",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "K. Vignesh",
+          "constituency": "Kinathukadavu",
+          "geojson_name": "Kinathukadavu",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Rajeshkumar",
+          "constituency": "Killiyoor",
+          "geojson_name": "Killiyoor",
+          "portfolio": "Cabinet Minister",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Viswanathan",
+          "constituency": "Melur",
+          "geojson_name": "Melur",
+          "portfolio": "Cabinet Minister",
+          "party": "INC"
+        }
+      ]
+    },
+    {
+      "id": "vijay-expansion-may-22",
+      "date": "2026-05-22",
+      "label": "Vijay cabinet expanded — IUML & VCK join government",
+      "government_id": "tvk-2026",
+      "status": "full_cabinet",
+      "party": "TVK",
+      "party_color": "#FFD700",
+      "notes": "IUML and VCK extend outside support, inducted into cabinet. 35 ministers total.",
+      "ministers": [
+        {
+          "name": "C. Joseph Vijay",
+          "constituency": "Perambur",
+          "geojson_name": "Perambur",
+          "portfolio": "Chief Minister",
+          "party": "TVK",
+          "is_cm": true
+        },
+        {
+          "name": "N. Anand",
+          "constituency": "Thiyagarayanagar",
+          "geojson_name": "Thiyagarayanagar",
+          "portfolio": "Rural Dev & Water",
+          "party": "TVK"
+        },
+        {
+          "name": "Aadhav Arjuna",
+          "constituency": "Villivakkam",
+          "geojson_name": "Villivakkam",
+          "portfolio": "Public Works & Sports",
+          "party": "TVK"
+        },
+        {
+          "name": "K. G. Arunraj",
+          "constituency": "Tiruchengode",
+          "geojson_name": "Tiruchengodu",
+          "portfolio": "Health",
+          "party": "TVK"
+        },
+        {
+          "name": "K. A. Sengottaiyan",
+          "constituency": "Gobichettipalayam",
+          "geojson_name": "Gobichettipalayam",
+          "portfolio": "Revenue",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Venkataramanan",
+          "constituency": "Mylapore",
+          "geojson_name": "Mylapore",
+          "portfolio": "Food & Civil Supplies",
+          "party": "TVK"
+        },
+        {
+          "name": "C. T. R. Nirmal Kumar",
+          "constituency": "Thiruparankundram",
+          "geojson_name": "Thiruparankundram",
+          "portfolio": "Energy & Law",
+          "party": "TVK"
+        },
+        {
+          "name": "Rajmohan Arumugam",
+          "constituency": "Egmore",
+          "geojson_name": "Egmore (SC)",
+          "portfolio": "School Education & Info",
+          "party": "TVK"
+        },
+        {
+          "name": "T. K. Prabhu",
+          "constituency": "Karaikudi",
+          "geojson_name": "Karaikudi",
+          "portfolio": "Natural Resources",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Keerthana",
+          "constituency": "Sivakasi",
+          "geojson_name": "Sivakasi",
+          "portfolio": "Industries",
+          "party": "TVK"
+        },
+        {
+          "name": "Srinath",
+          "constituency": "Thoothukkudi",
+          "geojson_name": "Thoothukkudi",
+          "portfolio": "Fisheries",
+          "party": "TVK"
+        },
+        {
+          "name": "Kamali. S.",
+          "constituency": "Avanashi",
+          "geojson_name": "Avanashi (SC)",
+          "portfolio": "Animal Husbandry",
+          "party": "TVK"
+        },
+        {
+          "name": "C. Vijayalakshmi",
+          "constituency": "Kumarapalayam",
+          "geojson_name": "Kumarapalayam",
+          "portfolio": "Milk & Dairy",
+          "party": "TVK"
+        },
+        {
+          "name": "R. V. Ranjithkumar",
+          "constituency": "Kancheepuram",
+          "geojson_name": "Kancheepuram",
+          "portfolio": "Forests",
+          "party": "TVK"
+        },
+        {
+          "name": "Vinoth",
+          "constituency": "Kumbakonam",
+          "geojson_name": "Kumbakonam",
+          "portfolio": "Agriculture",
+          "party": "TVK"
+        },
+        {
+          "name": "Rajeev",
+          "constituency": "Tiruvadanai",
+          "geojson_name": "Tiruvadanai",
+          "portfolio": "Environment & Climate",
+          "party": "TVK"
+        },
+        {
+          "name": "B. Rajkumar",
+          "constituency": "Cuddalore",
+          "geojson_name": "Cuddalore",
+          "portfolio": "Housing & Urban Dev",
+          "party": "TVK"
+        },
+        {
+          "name": "V. Gandhiraj",
+          "constituency": "Arakkonam",
+          "geojson_name": "Arakkonam (SC)",
+          "portfolio": "Co-operation",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Mathanraja",
+          "constituency": "Ottapidaram",
+          "geojson_name": "Ottapidaram(SC)",
+          "portfolio": "MSME",
+          "party": "TVK"
+        },
+        {
+          "name": "Jegadeshwari. K.",
+          "constituency": "Rajapalayam",
+          "geojson_name": "Rajapalayam",
+          "portfolio": "Social Welfare & Women",
+          "party": "TVK"
+        },
+        {
+          "name": "M. Vijay Balaji",
+          "constituency": "Erode East",
+          "geojson_name": "Erode (East)",
+          "portfolio": "Handlooms & Textiles",
+          "party": "TVK"
+        },
+        {
+          "name": "Logesh Tamilselvan",
+          "constituency": "Rasipuram",
+          "geojson_name": "Rasipuram (SC)",
+          "portfolio": "Commercial Taxes",
+          "party": "TVK"
+        },
+        {
+          "name": "Vijay Tamilan Parthiban. A",
+          "constituency": "Salem South",
+          "geojson_name": "Salem (South)",
+          "portfolio": "Transport",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Ramesh",
+          "constituency": "Srirangam",
+          "geojson_name": "Srirangam",
+          "portfolio": "HR & CE",
+          "party": "TVK"
+        },
+        {
+          "name": "R. Kumar",
+          "constituency": "Velachery",
+          "geojson_name": "Velachery",
+          "portfolio": "IT & Digital Services",
+          "party": "TVK"
+        },
+        {
+          "name": "Thennarasu. K.",
+          "constituency": "Sriperumbudur",
+          "geojson_name": "Sriperumbudur (SC)",
+          "portfolio": "NR Tamils Welfare",
+          "party": "TVK"
+        },
+        {
+          "name": "V. Sampathkumar",
+          "constituency": "Coimbatore North",
+          "geojson_name": "Coimbatore(North)",
+          "portfolio": "BC Welfare",
+          "party": "TVK"
+        },
+        {
+          "name": "J. Mohamed Farvas",
+          "constituency": "Arantangi",
+          "geojson_name": "Aranthangi",
+          "portfolio": "Labour & Skill Dev",
+          "party": "TVK"
+        },
+        {
+          "name": "D. Sarathkumar",
+          "constituency": "Tambaram",
+          "geojson_name": "Tambaram",
+          "portfolio": "HR Management",
+          "party": "TVK"
+        },
+        {
+          "name": "N. Marie Wilson",
+          "constituency": "R.K. Nagar",
+          "geojson_name": "Dr.Radhakrishnan Naga",
+          "portfolio": "Finance & Planning",
+          "party": "TVK"
+        },
+        {
+          "name": "K. Vignesh",
+          "constituency": "Kinathukadavu",
+          "geojson_name": "Kinathukadavu",
+          "portfolio": "Prohibition & Excise",
+          "party": "TVK"
+        },
+        {
+          "name": "S. Rajeshkumar",
+          "constituency": "Killiyoor",
+          "geojson_name": "Killiyoor",
+          "portfolio": "Tourism",
+          "party": "TVK"
+        },
+        {
+          "name": "P. Viswanathan",
+          "constituency": "Melur",
+          "geojson_name": "Melur",
+          "portfolio": "Higher Education",
+          "party": "INC"
+        },
+        {
+          "name": "A. M. Shahjahan",
+          "constituency": "Papanasam",
+          "geojson_name": "Papanasam",
+          "portfolio": "Minorities Welfare",
+          "party": "IUML"
+        },
+        {
+          "name": "Vanni Arasu",
+          "constituency": "Tindivanam",
+          "geojson_name": "Tindivanam (SC)",
+          "portfolio": "Social Justice",
+          "party": "VCK"
+        }
+      ]
+    }
+  ]
+}

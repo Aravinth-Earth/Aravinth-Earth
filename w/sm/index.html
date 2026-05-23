@@ -527,9 +527,6 @@
 
         tiles.forEach(function(t) {
           t.addEventListener('click', handleTileClick);
-          t.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-          }, { passive: false });
         });
 
         startBtn.addEventListener('click', startGame);

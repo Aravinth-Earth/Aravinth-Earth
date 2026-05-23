@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Simon — Memory Sequence</title>
+  <meta name="description" content="Classic memory sequence game. Watch the pattern, repeat it. Offline, no tracking.">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/about-privacy.css">
+  <style>
+    :root {
+      --green-base: #00a74a;
+      --green-glow: rgba(0, 167, 74, 0.7);
+      --red-base: #9f0f17;
+      --red-glow: rgba(159, 15, 23, 0.7);
+      --yellow-base: #cca300;
+      --yellow-glow: rgba(204, 163, 0, 0.7);
+      --blue-base: #0033a0;
+      --blue-glow: rgba(0, 51, 160, 0.7);
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1.5rem 1rem 5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
+    }
+
+    .game-container {
+      width: min(420px, 88vw);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .game-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.1rem;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      aspect-ratio: 1;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .tile {
+      position: relative;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: filter 0.1s, transform 0.1s, box-shadow 0.15s;
+      touch-action: manipulation;
+      filter: brightness(0.65) saturate(0.8);
+      box-shadow: inset 0 -4px 8px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .tile:active {
+      transform: scale(0.95);
+    }
+
+    .tile-0 { background: var(--green-base); }
+    .tile-1 { background: var(--red-base); }
+    .tile-2 { background: var(--yellow-base); }
+    .tile-3 { background: var(--blue-base); }
+
+    .tile.active {
+      filter: brightness(1.3) saturate(1.1);
+      transform: scale(1.03);
+      box-shadow: 0 0 30px rgba(255,255,255,0.3);
+    }
+
+    .tile-0.active { box-shadow: 0 0 40px var(--green-glow), 0 0 80px var(--green-glow); }
+    .tile-1.active { box-shadow: 0 0 40px var(--red-glow), 0 0 80px var(--red-glow); }
+    .tile-2.active { box-shadow: 0 0 40px var(--yellow-glow), 0 0 80px var(--yellow-glow); }
+    .tile-3.active { box-shadow: 0 0 40px var(--blue-glow), 0 0 80px var(--blue-glow); }
+
+    .tile.wrong {
+      filter: brightness(0.4) saturate(0.5);
+      box-shadow: 0 0 50px rgba(255,0,0,0.5);
+    }
+
+    .start-btn {
+      background: var(--gradient-blue);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: var(--button-shadow);
+      transition: opacity 0.2s, transform 0.15s;
+      min-width: 160px;
+    }
+
+    .start-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .start-btn:active {
+      transform: scale(0.97);
+    }
+
+    .start-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .game-over-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .game-over-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .game-over-card {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      max-width: 320px;
+      width: 85%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: cardIn 0.3s ease-out;
+    }
+
+    @keyframes cardIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .game-over-card h2 {
+      font-size: 1.4rem;
+      margin: 0 0 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .game-over-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-over-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .game-over-stat .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+
+    .game-over-stat .value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .game-over-stat .value.best {
+      color: #ffd700;
+    }
+
+    .restart-btn {
+      background: var(--gradient-blue);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: var(--button-shadow);
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+
+    .restart-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .restart-btn:active {
+      transform: scale(0.97);
+    }
+
+    .footer-links {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 400px) {
+      body { padding: 1rem 0.75rem 4rem; }
+      .game-container { width: 92vw; gap: 1rem; }
+      .board { gap: 8px; padding: 8px; border-radius: 18px; }
+      .tile { border-radius: 14px; }
+      .game-title { font-size: 1.25rem; }
+      .game-over-card { padding: 2rem 1.5rem; }
+    }
+
+    @media (min-width: 900px) {
+      .game-container { width: 450px; }
+      .board { gap: 14px; padding: 14px; }
+    }
+
+    @media (min-width: 1600px) {
+      html { font-size: 18px; }
+      .game-container { width: 500px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-header">
+      <h1 class="game-title">Simon</h1>
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">Round</span>
+          <span class="stat-value" id="round-display">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Best</span>
+          <span class="stat-value" id="best-display">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Steps</span>
+          <span class="stat-value" id="steps-display">0 / 0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="board" id="board">
+      <div class="tile tile-0" data-index="0"></div>
+      <div class="tile tile-1" data-index="1"></div>
+      <div class="tile tile-2" data-index="2"></div>
+      <div class="tile tile-3" data-index="3"></div>
+    </div>
+
+    <button class="start-btn" id="start-btn">Start</button>
+
+    <div class="footer-links">
+      <a href="../../index.html">Home</a>
+      <a href="javascript:void(0)" onclick="window.openAboutModal()">About & Privacy</a>
+    </div>
+  </div>
+
+  <div class="game-over-overlay" id="game-over-overlay">
+    <div class="game-over-card">
+      <h2>Game Over</h2>
+      <div class="game-over-stats">
+        <div class="game-over-stat">
+          <span class="label">Round</span>
+          <span class="value" id="final-round">0</span>
+        </div>
+        <div class="game-over-stat">
+          <span class="label">Best</span>
+          <span class="value best" id="final-best">0</span>
+        </div>
+      </div>
+      <button class="restart-btn" id="restart-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const tiles = document.querySelectorAll('.tile');
+      const board = document.getElementById('board');
+      const startBtn = document.getElementById('start-btn');
+      const roundDisplay = document.getElementById('round-display');
+      const bestDisplay = document.getElementById('best-display');
+      const stepsDisplay = document.getElementById('steps-display');
+      const overlay = document.getElementById('game-over-overlay');
+      const finalRound = document.getElementById('final-round');
+      const finalBest = document.getElementById('final-best');
+      const restartBtn = document.getElementById('restart-btn');
+
+      let sequence = [];
+      let playerStep = 0;
+      let round = 0;
+      let isShowing = false;
+      let isPlayerTurn = false;
+      let isGameOver = false;
+      let isLocked = false;
+      let highScore = 0;
+      let timeoutIds = [];
+
+      function loadHighScore() {
+        try {
+          const saved = localStorage.getItem('simon-high');
+          highScore = saved ? parseInt(saved, 10) : 0;
+          if (isNaN(highScore)) highScore = 0;
+        } catch(e) {
+          highScore = 0;
+        }
+        bestDisplay.textContent = highScore;
+      }
+
+      function saveHighScore() {
+        try {
+          localStorage.setItem('simon-high', String(highScore));
+        } catch(e) {}
+      }
+
+      function updateStepsDisplay() {
+        if (isShowing) {
+          stepsDisplay.textContent = '\u2026 / ' + sequence.length;
+        } else if (isPlayerTurn) {
+          stepsDisplay.textContent = playerStep + ' / ' + sequence.length;
+        } else if (isGameOver || (round === 0 && !isPlayerTurn)) {
+          stepsDisplay.textContent = '0 / 0';
+        } else {
+          stepsDisplay.textContent = '0 / ' + sequence.length;
+        }
+      }
+
+      function clearTimeouts() {
+        timeoutIds.forEach(id => clearTimeout(id));
+        timeoutIds = [];
+      }
+
+      function flashTile(index) {
+        tiles[index].classList.add('active');
+        const id = setTimeout(function() {
+          tiles[index].classList.remove('active');
+        }, 300);
+        timeoutIds.push(id);
+      }
+
+      function showSequence() {
+        isShowing = true;
+        isPlayerTurn = false;
+        startBtn.disabled = true;
+        startBtn.textContent = 'Round ' + round;
+        updateStepsDisplay();
+
+        var i = 0;
+        var speed = Math.max(200, 800 - round * 30);
+
+        function showNext() {
+          if (i >= sequence.length) {
+            isShowing = false;
+            isPlayerTurn = true;
+            updateStepsDisplay();
+            return;
+          }
+          flashTile(sequence[i]);
+          i++;
+          var id = setTimeout(showNext, 300 + speed);
+          timeoutIds.push(id);
+        }
+
+        var id = setTimeout(showNext, 500);
+        timeoutIds.push(id);
+      }
+
+      function addStep() {
+        sequence.push(Math.floor(Math.random() * 4));
+        round++;
+        roundDisplay.textContent = round;
+        startBtn.textContent = 'Round ' + round;
+        playerStep = 0;
+        updateStepsDisplay();
+        showSequence();
+      }
+
+      function handleTileClick(e) {
+        if (isShowing || !isPlayerTurn || isGameOver || isLocked) return;
+
+        var tile = e.currentTarget;
+        var index = parseInt(tile.dataset.index, 10);
+
+        flashTile(index);
+
+        if (index === sequence[playerStep]) {
+          playerStep++;
+          updateStepsDisplay();
+          if (playerStep >= sequence.length) {
+            playerStep = 0;
+            isPlayerTurn = false;
+            var id = setTimeout(addStep, 600);
+            timeoutIds.push(id);
+          }
+        } else {
+          endGame();
+        }
+      }
+
+      function endGame() {
+        isGameOver = true;
+        isPlayerTurn = false;
+        isLocked = true;
+        startBtn.disabled = true;
+        updateStepsDisplay();
+
+        var finalRoundNum = round - 1;
+        if (finalRoundNum < 0) finalRoundNum = 0;
+
+        if (finalRoundNum > highScore) {
+          highScore = finalRoundNum;
+          bestDisplay.textContent = highScore;
+          saveHighScore();
+        }
+
+        finalRound.textContent = finalRoundNum;
+        finalBest.textContent = highScore;
+
+        tiles.forEach(function(t) { t.classList.add('wrong'); });
+
+        var id = setTimeout(function() {
+          tiles.forEach(function(t) { t.classList.remove('wrong'); });
+          overlay.classList.add('show');
+          isLocked = false;
+        }, 500);
+        timeoutIds.push(id);
+      }
+
+      function startGame() {
+        clearTimeouts();
+        overlay.classList.remove('show');
+
+        sequence = [];
+        playerStep = 0;
+        round = 0;
+        isGameOver = false;
+        isLocked = false;
+
+        roundDisplay.textContent = '0';
+        stepsDisplay.textContent = '0 / 0';
+        startBtn.textContent = '...';
+        startBtn.disabled = true;
+
+        addStep();
+      }
+
+      function init() {
+        loadHighScore();
+
+        tiles.forEach(function(t) {
+          t.addEventListener('click', handleTileClick);
+          t.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+          }, { passive: false });
+        });
+
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+      }
+
+      init();
+    })();
+  </script>
+  <script src="../../js/about-privacy.js" defer></script>
+</body>
+</html>

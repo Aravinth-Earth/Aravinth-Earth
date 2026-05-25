@@ -1,202 +1,388 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <!-- Only affect dynamic content -->
-        <meta http-equiv="Cache-Control" content="no-cache">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="0">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="theme-color" content="#0d1117">
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#0d1117" />
         <title>Aravinth's Site</title>
 
         <!-- Simplified PWA support -->
-        <link rel="manifest" href="/manifest.json">
-        <link rel="icon" type="image/png" href="/favicon.png">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="Aravinth">
-        <link rel="apple-touch-icon" href="/favicon.png">
-        <meta name="description" content="Personal site featuring various web tools and projects by Aravinth">
-        
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="Aravinth" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <meta
+            name="description"
+            content="I'm Aravinth — a builder creating tools, games, and privacy-first software. Explore my projects spanning Android, web, CLI, and E2EE."
+        />
+
         <!-- Social Media Tags -->
-        <meta property="og:title" content="Aravinth's Site">
-        <meta property="og:description" content="Personal site featuring various web tools and projects">
-        <meta property="og:image" content="/icons/og-image.png">
-        <meta property="og:type" content="website">
-        
+        <meta property="og:title" content="Aravinth — Builder" />
+        <meta
+            property="og:description"
+            content="A decade of building tools, games, and privacy-first software. Android, web, CLI, E2EE."
+        />
+        <meta property="og:image" content="/icons/og-image.png" />
+        <meta property="og:type" content="website" />
+
         <!-- Stylesheet with media queries -->
-        <link rel="stylesheet" href="css/refresh-button.css">
-        <link rel="stylesheet" href="css/style.css">
-        
+        <link rel="stylesheet" href="css/refresh-button.css" />
+        <link rel="stylesheet" href="css/style.css" />
+
         <!-- About/Privacy Modal Styles -->
-        <link rel="stylesheet" href="css/about-privacy.css">
-        
+        <link rel="stylesheet" href="css/about-privacy.css" />
+
         <!-- Optional: Uncomment below to auto-populate build info (requires running generate-build-info script) -->
         <!-- <script src="js/build-info.js" defer></script> -->
-
     </head>
     <body>
         <!-- Schema.org metadata -->
         <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Aravinth",
-            "url": "https://www.332321.xyz/",
-            "sameAs": [],
-            "jobTitle": "Developer",
-            "worksFor": {
-                "@type": "Organization",
-                "name": "Self-Employed"
+            {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                "name": "Aravinth",
+                "url": "https://www.332321.xyz/",
+                "sameAs": [
+                    "https://github.com/Aravinth-Earth",
+                    "https://linkedin.com/in/aravinth-shanmugam",
+                    "https://x.com/aravinth_earth",
+                    "https://www.332321.xyz/"
+                ],
+                "jobTitle": "Builder",
+                "worksFor": {
+                    "@type": "Organization",
+                    "name": "Self-Employed"
+                }
             }
-        }
         </script>
 
         <div class="container">
             <header role="banner">
-                <h1 class="site-title">Hi, I'm Aravinth! 👋</h1>
+                <h1 class="site-title">Hi, I'm Aravinth 👋</h1>
                 <div class="header-description">
                     <p class="sub-description">
-                        SDET crafting fun tools & games while exploring life
+                        Builder crafting tools, games &amp; experiments in
+                        privacy-first software
                     </p>
+                    <p class="bio-line">
+                        Building small tools and experiments — web apps, CLI
+                        utilities, and privacy-first software. Learning by
+                        making things.
+                    </p>
+                    <div class="skill-badges">
+                        <span class="badge">QA/SDET</span>
+                        <span class="badge">Python</span>
+                        <span class="badge">TypeScript</span>
+                        <span class="badge">Kotlin</span>
+                        <span class="badge">Android</span>
+                        <span class="badge">E2EE</span>
+                        <span class="badge">Privacy-First</span>
+                        <span class="badge">FOSS</span>
+                    </div>
                 </div>
             </header>
 
             <main role="main">
                 <section class="works" aria-labelledby="works-heading">
-                    <h2 id="works-heading">✨ My Works</h2>
-                    
+                    <h2 id="works-heading">What I've Built</h2>
+                    <p class="works-note">A selection of projects — more on
+                        <a href="https://github.com/Aravinth-Earth">GitHub</a>.</p>
+
+                    <h3 class="category-heading">Play &amp; Learn</h3>
                     <ul class="works-grid">
                         <li>
-                            <a href="w/cs/index.html" class="work-card" aria-label="Calm Sweep - calm attention game">
+                            <a
+                                href="w/cs/index.html"
+                                class="work-card"
+                                aria-label="Calm Sweep - calm attention game"
+                            >
                                 <span class="work-icon">✨</span>
                                 <span class="work-title">Sweep</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/sp/index.html" class="work-card" aria-label="Task Planner">
-                                <span class="work-icon">📝</span>
-                                <span class="work-title">Task Planner</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/rtp/index.html" class="work-card" aria-label="Reverse - Reverse event planning tool">
-                                <span class="work-icon">🔄</span>
-                                <span class="work-title">Reverse Plan</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/ssa/analysis.html" class="work-card" aria-label="Stocks - Stock sentiment analyzer">
-                                <span class="work-icon">📈</span>
-                                <span class="work-title">Stocks</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/lc/clock.html" class="work-card" aria-label="Clock - Digital clock">
-                                <span class="work-icon">⏰</span>
-                                <span class="work-title">Clock</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/c/calc.html" class="work-card" aria-label="Calc - Simple calculator">
-                                <span class="work-icon">🧮</span>
-                                <span class="work-title">Calc</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/cdt/count-down.html" class="work-card" aria-label="Timer - Countdown timer">
-                                <span class="work-icon">⏳</span>
-                                <span class="work-title">Timer</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/mg/index.html" class="work-card" aria-label="Math - Fun math practice">
+                            <a
+                                href="w/mg/index.html"
+                                class="work-card"
+                                aria-label="Math - Fun math practice"
+                            >
                                 <span class="work-icon">🔢</span>
                                 <span class="work-title">Math</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/ra/Life_On_Earth.html" class="work-card" aria-label="Life - Interactive art">
+                            <a
+                                href="w/ra/Life_On_Earth.html"
+                                class="work-card"
+                                aria-label="Life - Interactive art"
+                            >
                                 <span class="work-icon">🌍</span>
                                 <span class="work-title">Life</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/ytn/news.html" class="work-card" aria-label="News - Tamil news streams">
-                                <span class="work-icon">📺</span>
-                                <span class="work-title">News</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/pg/pwd.html" class="work-card" aria-label="Password - Secure password generator">
-                                <span class="work-icon">🔒</span>
-                                <span class="work-title">Password</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/qr/generator.html" class="work-card" aria-label="QR Code - Generate QR codes offline">
-                                <span class="work-icon">📱</span>
-                                <span class="work-title">QR Code</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/es-vanilla/index.html" class="work-card" aria-label="Expense Splitter - Manage group expenses">
-                                <span class="work-icon">💰</span>
-                                <span class="work-title">Expense Splitter</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/sps/index.html" class="work-card" aria-label="Stock Portfolio Split - Allocation visualizer">
-                                <span class="work-icon">📊</span>
-                                <span class="work-title">Portfolio Split</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/rn/random-number.html" class="work-card" aria-label="Random Number Generator">
+                            <a
+                                href="w/rn/random-number.html"
+                                class="work-card"
+                                aria-label="Random Number Generator"
+                            >
                                 <span class="work-icon">🎲</span>
-                                <span class="work-title">Random Number</span>
+                                <span class="work-title">Random</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/dm/index.html" class="work-card" aria-label="Decision Helper - Don't get stuck on small things">
+                            <a
+                                href="w/dm/index.html"
+                                class="work-card"
+                                aria-label="Decision Helper - Don't get stuck on small things"
+                            >
                                 <span class="work-icon">🧭</span>
                                 <span class="work-title">Decision</span>
                             </a>
                         </li>
                         <li>
-                            <a href="w/tam/index.html" class="work-card" aria-label="TN Assembly Map - Interactive timeline map of Tamil Nadu governments">
-                                <span class="work-icon">🏛️</span>
-                                <span class="work-title">TN Assembly Map</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="w/sm/index.html" class="work-card" aria-label="Simon - Memory sequence game">
+                            <a
+                                href="w/sm/index.html"
+                                class="work-card"
+                                aria-label="Simon - Memory sequence game"
+                            >
                                 <span class="work-icon">🔴</span>
                                 <span class="work-title">Simon</span>
                             </a>
                         </li>
+                        <li>
+                            <a
+                                href="https://github.com/Aravinth-Earth/mouse-scroll-by-hand-gesture"
+                                class="work-card"
+                                aria-label="Mouse scroll by hand gesture"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="work-icon">✋</span>
+                                <span class="work-title">Gesture Scroll</span>
+                                <span class="card-tag card-tag-repo">Repo</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h3 class="category-heading">Everyday Tools</h3>
+                    <ul class="works-grid">
+                        <li>
+                            <a
+                                href="w/sp/index.html"
+                                class="work-card"
+                                aria-label="Task Planner"
+                            >
+                                <span class="work-icon">📝</span>
+                                <span class="work-title">Task Planner</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/rtp/index.html"
+                                class="work-card"
+                                aria-label="Reverse - Reverse event planning tool"
+                            >
+                                <span class="work-icon">🔄</span>
+                                <span class="work-title">Reverse Plan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://poc-todo-app-olive.vercel.app"
+                                class="work-card"
+                                aria-label="Todo App - E2EE task management"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="work-icon">📋</span>
+                                <span class="work-title">Todo App</span>
+                                <span class="card-tag card-tag-live">Live</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/Aravinth-Earth/gh-project-offline"
+                                class="work-card"
+                                aria-label="gh-project-offline - CLI tool for GitHub Projects"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="work-icon">📦</span>
+                                <span class="work-title">gh-project-offline</span>
+                                <span class="card-tag card-tag-repo">Repo</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/es-vanilla/index.html"
+                                class="work-card"
+                                aria-label="Expense Splitter - Manage group expenses"
+                            >
+                                <span class="work-icon">💰</span>
+                                <span class="work-title">Splitter</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/cdt/count-down.html"
+                                class="work-card"
+                                aria-label="Timer - Countdown timer"
+                            >
+                                <span class="work-icon">⏳</span>
+                                <span class="work-title">Timer</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/lc/clock.html"
+                                class="work-card"
+                                aria-label="Clock - Digital clock"
+                            >
+                                <span class="work-icon">⏰</span>
+                                <span class="work-title">Clock</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/c/calc.html"
+                                class="work-card"
+                                aria-label="Calc - Simple calculator"
+                            >
+                                <span class="work-icon">🧮</span>
+                                <span class="work-title">Calc</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/Aravinth-Earth/Scoop-Random-App-Explorer"
+                                class="work-card"
+                                aria-label="Scoop Random App Explorer"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="work-icon">🎲</span>
+                                <span class="work-title">Scoop Explorer</span>
+                                <span class="card-tag card-tag-repo">Repo</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h3 class="category-heading">Privacy &amp; Security</h3>
+                    <ul class="works-grid">
+                        <li>
+                            <a
+                                href="w/pg/pwd.html"
+                                class="work-card"
+                                aria-label="Password - Secure password generator"
+                            >
+                                <span class="work-icon">🔒</span>
+                                <span class="work-title">Password</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/qr/generator.html"
+                                class="work-card"
+                                aria-label="QR Code - Generate QR codes offline"
+                            >
+                                <span class="work-icon">📱</span>
+                                <span class="work-title">QR Code</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/sps/index.html"
+                                class="work-card"
+                                aria-label="Stock Portfolio Split - Allocation visualizer"
+                            >
+                                <span class="work-icon">📊</span>
+                                <span class="work-title">Portfolio</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/Aravinth-Earth/image-generation-in-local-cpu"
+                                class="work-card"
+                                aria-label="Local CPU image generation"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span class="work-icon">🎨</span>
+                                <span class="work-title">Image Gen (Local)</span>
+                                <span class="card-tag card-tag-repo">Repo</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h3 class="category-heading">Media &amp; Info</h3>
+                    <ul class="works-grid">
+                        <li>
+                            <a
+                                href="w/ytn/news.html"
+                                class="work-card"
+                                aria-label="News - Tamil news streams"
+                            >
+                                <span class="work-icon">📺</span>
+                                <span class="work-title">News</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="w/tam/index.html"
+                                class="work-card"
+                                aria-label="TN Assembly Map - Interactive timeline map of Tamil Nadu governments"
+                            >
+                                <span class="work-icon">🏛️</span>
+                                <span class="work-title">TN Assembly Map</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
-                <section class="contact" aria-label="Contact Information">
-                    <a href="mailto:aravinth@332321.xyz" class="contact-link">
-                        <span>💌</span>
-                        <span>Let's Connect</span>
-                    </a>
+                <section class="connect" aria-label="Connect">
+                    <a
+                        href="https://github.com/Aravinth-Earth"
+                        class="connect-link"
+                        >GitHub</a
+                    >
+                    <a
+                        href="https://linkedin.com/in/aravinth-shanmugam"
+                        class="connect-link"
+                        >LinkedIn</a
+                    >
+                    <a href="mailto:aravinth@332321.xyz" class="connect-link"
+                        >Email</a
+                    >
+                    <a href="https://x.com/aravinth_earth" class="connect-link"
+                        >X</a
+                    >
                 </section>
             </main>
 
             <footer class="unified-footer" role="contentinfo">
                 <div class="footer-content">
                     <div class="visitor-section">
-                        <img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" 
-                             alt="Visitor count badge"
-                             loading="lazy"
-                             width="auto"
-                             height="20">
+                        <img
+                            src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117"
+                            alt="Visitor count badge"
+                            loading="lazy"
+                            width="auto"
+                            height="20"
+                        />
                     </div>
                     <div class="footer-about-section">
-                        <a href="javascript:void(0)" class="footer-about-link" onclick="window.openAboutModal()">
+                        <a
+                            href="javascript:void(0)"
+                            class="footer-about-link"
+                            onclick="window.openAboutModal()"
+                        >
                             About & Privacy
                         </a>
                     </div>
@@ -204,17 +390,27 @@
             </footer>
         </div>
 
-        <button class="refresh-btn" title="Refresh options" aria-label="Refresh page content">↻</button>
+        <button
+            class="refresh-btn"
+            title="Refresh options"
+            aria-label="Refresh page content"
+        >
+            ↻
+        </button>
         <script src="js/refresh-handler.js" defer></script>
         <script src="js/about-privacy.js" defer></script>
         <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered');
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("/sw.js")
+                    .then((registration) => {
+                        console.log("ServiceWorker registered");
                     })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed:', error);
+                    .catch((error) => {
+                        console.log(
+                            "ServiceWorker registration failed:",
+                            error,
+                        );
                     });
             }
         </script>

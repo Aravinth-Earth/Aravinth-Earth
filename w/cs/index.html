@@ -69,17 +69,17 @@
                 height: 100dvh;
                 display: grid;
                 place-items: center;
-                padding: 18px 18px 62px;
+                padding: 0;
+                background: #0b1220;
             }
 
             .shell {
-                width: min(100%, 860px);
-                height: 100%;
-                max-height: 100%;
+                width: min(100%, 400px);
+                height: 100dvh;
                 background: var(--panel);
                 backdrop-filter: blur(16px);
                 border: 1px solid var(--border);
-                border-radius: 28px;
+                border-radius: 24px;
                 box-shadow: var(--shadow);
                 overflow: hidden;
                 display: flex;
@@ -244,6 +244,36 @@
 
             .swatch {
                 display: none;
+            }
+
+            .remaining-chip {
+                font-size: 0.82rem;
+                color: var(--accent);
+                background: var(--accent-soft);
+                border-color: rgba(94, 234, 212, 0.3);
+            }
+
+            .mode-row {
+                display: grid;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .mode-buttons {
+                display: flex;
+                gap: 8px;
+            }
+
+            .mode-btn {
+                min-height: 30px;
+                padding: 0 10px;
+                font-size: 0.78rem;
+            }
+
+            .mode-btn.active {
+                color: var(--text);
+                border-color: rgba(251, 191, 36, 0.42);
+                background: rgba(251, 191, 36, 0.12);
             }
 
             .stats-grid {
@@ -753,225 +783,171 @@
                 }
             }
 
-            @media (min-width: 700px) {
-                .hero-grid {
-                    grid-template-columns: 1.1fr 0.9fr;
-                }
-
-                .game-board {
-                    grid-template-columns: repeat(6, minmax(0, 1fr));
-                }
+            /* force mobile layout always */
+            .app {
+                padding: 0;
+            }
+            .topbar,
+            .content {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+            .content {
+                padding-bottom: 14px;
+            }
+            .screen {
+                inset: 10px 14px 14px;
+            }
+            .hud-top {
+                grid-template-columns: 1fr;
+            }
+            .actions {
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .home-actions .btn-primary {
+                width: 100%;
+            }
+            .home-actions .btn-compact {
+                width: auto;
+            }
+            .target-card {
+                min-height: 0;
+                padding-right: 86px;
+            }
+            .progress-card {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                min-width: 60px;
+                padding: 6px;
+                gap: 2px;
+                z-index: 2;
+            }
+            .ring {
+                width: 40px;
+                height: 40px;
+            }
+            .ring span {
+                font-size: 0.76rem;
+            }
+            .btn-label {
+                display: none;
+            }
+            .btn {
+                min-width: 38px;
+                padding: 0 12px;
+            }
+            .btn-icon {
+                width: 1.4em;
+                margin-right: 0;
+                font-size: 1.1em;
+            }
+            .btn-compact {
+                min-height: 32px;
+                padding: 0 7px;
+            }
+            #resetStatsBtn {
+                display: none;
             }
 
-            @media (max-width: 560px) {
-                .app {
-                    padding: 0;
-                }
-                .shell {
-                    width: 100%;
-                    height: 100dvh;
-                    border-radius: 0;
-                    border-left: 0;
-                    border-right: 0;
-                }
-                .topbar,
-                .content {
-                    padding-left: 14px;
-                    padding-right: 14px;
-                }
-                .content {
-                    padding-bottom: 14px;
-                }
-                .screen {
-                    inset: 10px 14px 14px;
-                }
-                .hud-top {
-                    grid-template-columns: 1fr;
-                }
-                .actions {
-                    flex-direction: row;
-                    align-items: center;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                }
-                .home-actions .btn-primary {
-                    width: 100%;
-                }
-                .home-actions .btn-compact {
-                    width: auto;
-                }
-                .results-grid,
-                .stats-grid {
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                }
-                .game-wrap.active {
-                    grid-template-rows: auto minmax(0, 1fr) auto;
-                }
-                .target-card {
-                    min-height: 0;
-                    padding-right: 86px;
-                }
-                .progress-card {
-                    position: absolute;
-                    top: 14px;
-                    right: 14px;
-                    min-width: 60px;
-                    padding: 6px;
-                    gap: 2px;
-                    z-index: 2;
-                }
-                .ring {
-                    width: 40px;
-                    height: 40px;
-                }
-                .ring span {
-                    font-size: 0.76rem;
-                }
-                .game-board {
-                    grid-template-columns: repeat(4, minmax(0, 1fr));
-                    gap: 2px;
-                    align-content: start;
-                    overflow: hidden;
-                }
-                .scorebar {
-                    grid-template-columns: repeat(2, minmax(0, 1fr));
-                    gap: 8px;
-                }
-                .score-pill {
-                    padding: 10px;
-                }
-                .score-pill .v {
-                    font-size: 1rem;
-                }
-                .tile {
-                    border-radius: 12px;
-                    padding: 2px;
-                    min-height: 0;
-                    aspect-ratio: 1 / 1;
-                }
-                .btn-label {
-                    display: none;
-                }
-                .btn {
-                    min-width: 38px;
-                    padding: 0 12px;
-                }
-                .btn-icon {
-                    width: 1.4em;
-                    margin-right: 0;
-                    font-size: 1.1em;
-                }
-                .btn-compact {
-                    min-height: 32px;
-                    padding: 0 7px;
-                }
-                #resetStatsBtn {
-                    display: none;
-                }
-                .mini-btn {
-                    min-height: 28px;
-                    padding: 0 7px;
-                    width: auto;
-                }
+            .hero-grid {
+                gap: 10px;
             }
-
-            @media (max-width: 390px), (max-height: 700px) {
-                .hero-grid {
-                    gap: 10px;
-                }
-                .topbar {
-                    padding-top: 14px;
-                    padding-bottom: 6px;
-                }
-                h1 {
-                    font-size: 1.5rem;
-                }
-                .home .panel {
-                    padding: 12px;
-                }
-                .home .chips {
-                    gap: 6px;
-                }
-                .home .chip {
-                    min-height: 28px;
-                    padding: 0 9px;
-                    font-size: 0.8rem;
-                }
-                .home .footer-note {
-                    display: none;
-                }
-                .home .hero-grid > div:last-child {
-                    display: none;
-                }
-                .target-card {
-                    min-height: 0;
-                    padding: 10px;
-                    gap: 6px;
-                }
-                .target-card h2,
-                .target-card .subtle {
-                    display: none;
-                }
-                #targetSwatch {
-                    display: none;
-                }
-                .target-card h2 {
-                    font-size: 0.8rem;
-                }
-                .target-line {
-                    gap: 5px;
-                    font-size: 0.9rem;
-                    flex-wrap: nowrap;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-                .scorebar {
-                    grid-template-columns: repeat(3, minmax(0, 1fr));
-                }
-                .results-grid,
-                .stats-grid {
-                    grid-template-columns: 1fr;
-                }
-                .results-grid .stat {
-                    padding: 10px;
-                }
-                .stats-grid .stat {
-                    padding: 10px;
-                }
-                .results-screen .subtle {
-                    font-size: 0.9rem;
-                }
-                .results-screen .actions {
-                    gap: 8px;
-                }
-                .score-pill {
-                    padding: 7px;
-                }
-                .score-pill .k {
-                    font-size: 0.68rem;
-                }
-                .score-pill .v {
-                    font-size: 0.88rem;
-                }
-                .game-board {
-                    grid-template-columns: repeat(3, minmax(0, 1fr));
-                    gap: 4px;
-                }
-                .tile {
-                    border-radius: 12px;
-                    min-height: 0;
-                    aspect-ratio: 1 / 1;
-                }
-                .btn {
-                    min-height: 42px;
-                    font-size: 0.92rem;
-                }
-                .mini-btn {
-                    min-height: 34px;
-                    padding: 0 10px;
-                    font-size: 0.8rem;
-                }
+            .topbar {
+                padding-top: 14px;
+                padding-bottom: 6px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .home .panel {
+                padding: 12px;
+            }
+            .home .chips {
+                gap: 6px;
+            }
+            .home .chip {
+                min-height: 28px;
+                padding: 0 9px;
+                font-size: 0.8rem;
+            }
+            .home .footer-note {
+                display: none;
+            }
+            .home .hero-grid > div:last-child {
+                display: none;
+            }
+            .target-card {
+                min-height: 0;
+                padding: 10px;
+                gap: 6px;
+            }
+            .target-card h2,
+            .target-card .subtle {
+                display: none;
+            }
+            #targetSwatch {
+                display: none;
+            }
+            .target-card h2 {
+                font-size: 0.8rem;
+            }
+            .target-line {
+                gap: 5px;
+                font-size: 0.9rem;
+                flex-wrap: nowrap;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .scorebar {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .results-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .results-grid .stat {
+                padding: 10px;
+            }
+            .stats-grid .stat {
+                padding: 10px;
+            }
+            .results-screen .subtle {
+                font-size: 0.9rem;
+            }
+            .results-screen .actions {
+                gap: 8px;
+            }
+            .score-pill {
+                padding: 7px;
+            }
+            .score-pill .k {
+                font-size: 0.68rem;
+            }
+            .score-pill .v {
+                font-size: 0.88rem;
+            }
+            .game-board {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 4px;
+            }
+            .tile {
+                border-radius: 12px;
+                min-height: 0;
+                aspect-ratio: 1 / 1;
+            }
+            .btn {
+                min-height: 42px;
+                font-size: 0.92rem;
+            }
+            .mini-btn {
+                min-height: 34px;
+                padding: 0 10px;
+                font-size: 0.8rem;
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -1059,6 +1035,13 @@
                                         <button class="chip lang-btn" data-language="ta" type="button">தமிழ்</button>
                                     </div>
                                 </div>
+                                <div class="mode-row">
+                                    <span class="stat-label">Mode</span>
+                                    <div class="mode-buttons" id="modeButtons">
+                                        <button class="chip mode-btn active" data-mode="color" type="button">Color+Shape</button>
+                                        <button class="chip mode-btn" data-mode="shape" type="button">Shape only</button>
+                                    </div>
+                                </div>
                             </div>
                             <div
                                 class="panel"
@@ -1112,10 +1095,18 @@
                                             >Find all items</span
                                         >
                                     </div>
-                                    <p class="subtle" style="margin: 0">
-                                        Tap all matching tiles. Leave
-                                        non-targets alone.
-                                    </p>
+                                    <div style="display:flex;align-items:center;gap:8px;margin-top:2px">
+                                        <p class="subtle" style="margin:0;flex:1">
+                                            Tap all matching tiles. Leave
+                                            non-targets alone.
+                                        </p>
+                                        <span
+                                            id="remainingChip"
+                                            class="chip remaining-chip"
+                                            style="flex-shrink:0"
+                                            >0 left</span
+                                        >
+                                    </div>
                                     <div class="hud-tools">
                                         <button
                                             id="liveStatsBtn"
@@ -1302,6 +1293,7 @@
                     level: "Lv",
                     tapAll: "Tap all",
                     cleared: "Round cleared",
+                    left: "left",
                     roundsLeft: "rounds",
                     completed: "Completed",
                     timeExpired: "Time expired",
@@ -1336,6 +1328,7 @@
                     level: "நிலை",
                     tapAll: "அனைத்து",
                     cleared: "சுற்று முடிந்தது",
+                    left: "மீதம்",
                     roundsLeft: "சுற்றுகள்",
                     completed: "முடிந்தது",
                     timeExpired: "நேரம் முடிந்தது",
@@ -1345,32 +1338,50 @@
             const DESKTOP_ITEMS = 36;
 
             const COLORS = [
-                { name: "teal", hex: "#5eead4" },
-                { name: "sky", hex: "#7dd3fc" },
-                { name: "violet", hex: "#c4b5fd" },
-                { name: "amber", hex: "#fcd34d" },
-                { name: "rose", hex: "#fda4af" },
-                { name: "lime", hex: "#bef264" },
-                { name: "orange", hex: "#fdba74" },
-                { name: "indigo", hex: "#a5b4fc" },
+                { name: "red", nameTa: "சிவப்பு", hex: "#ef4444" },
+                { name: "orange", nameTa: "ஆரஞ்சு", hex: "#f97316" },
+                { name: "yellow", nameTa: "மஞ்சள்", hex: "#fde047" },
+                { name: "green", nameTa: "பச்சை", hex: "#22c55e" },
+                { name: "blue", nameTa: "நீலம்", hex: "#3b82f6" },
+                { name: "purple", nameTa: "ஊதா", hex: "#a855f7" },
+                { name: "pink", nameTa: "இளஞ்சிவப்பு", hex: "#ec4899" },
             ];
 
             const SHAPES = [
                 {
                     name: "circle",
+                    nameTa: "வட்டம்",
                     svg: '<circle cx="50" cy="50" r="27" fill="currentColor" />',
                 },
                 {
                     name: "triangle",
+                    nameTa: "முக்கோணம்",
                     svg: '<polygon points="50,18 82,78 18,78" fill="currentColor" />',
                 },
                 {
                     name: "diamond",
+                    nameTa: "சாய்சதுரம்",
                     svg: '<polygon points="50,14 84,50 50,86 16,50" fill="currentColor" />',
                 },
                 {
                     name: "square",
+                    nameTa: "சதுரம்",
                     svg: '<rect x="22" y="22" width="56" height="56" rx="10" fill="currentColor" />',
+                },
+                {
+                    name: "star",
+                    nameTa: "நட்சத்திரம்",
+                    svg: '<polygon points="50,8 62,36 92,38 68,56 76,86 50,68 24,86 32,56 8,38 38,36" fill="currentColor" />',
+                },
+                {
+                    name: "hexagon",
+                    nameTa: "அறுகோணம்",
+                    svg: '<polygon points="50,12 86,30 86,70 50,88 14,70 14,30" fill="currentColor" />',
+                },
+                {
+                    name: "cross",
+                    nameTa: "சிலுவை",
+                    svg: '<path d="M60 18 L60 40 L82 40 L82 60 L60 60 L60 82 L40 82 L40 60 L18 60 L18 40 L40 40 L40 18 Z" fill="currentColor" />',
                 },
             ];
 
@@ -1391,6 +1402,7 @@
                 hitsValue: document.getElementById("hitsValue"),
                 wrongValue: document.getElementById("wrongValue"),
                 remainingValue: document.getElementById("remainingValue"),
+                remainingChip: document.getElementById("remainingChip"),
                 liveStatsPanel: document.getElementById("liveStatsPanel"),
                 closeLiveStatsBtn: document.getElementById("closeLiveStatsBtn"),
                 pauseBtn: document.getElementById("pauseBtn"),
@@ -1410,6 +1422,7 @@
                 statsBackBtn: document.getElementById("statsBackBtn"),
                 difficultyButtons: document.getElementById("difficultyButtons"),
                 languageButtons: document.getElementById("languageButtons"),
+                modeButtons: document.getElementById("modeButtons"),
             };
 
             const state = {
@@ -1430,10 +1443,23 @@
                 bonusSeconds: 0,
                 roundDuration: ROUND_SECONDS,
                 difficulty: "easy",
+                mode: "color",
                 language: inferLanguage(),
                 items: [],
                 target: null,
             };
+
+            function shapeName(shape) {
+                return state.language === "ta" ? shape.nameTa : shape.name;
+            }
+
+            function colorName(color) {
+                return state.language === "ta" ? color.nameTa : color.name;
+            }
+
+            function isShapeMode() {
+                return state.mode === "shape";
+            }
 
             function createShapeSVG(shape, colorHex) {
                 return `
@@ -1473,6 +1499,7 @@
                 } catch (_) {}
                 return {
                     difficulty: "easy",
+                    mode: "color",
                     language: inferLanguage(),
                 };
             }
@@ -1482,9 +1509,22 @@
                     PREFS_KEY,
                     JSON.stringify({
                         difficulty: state.difficulty,
+                        mode: state.mode,
                         language: state.language,
                     }),
                 );
+            }
+
+            function syncModeButtons() {
+                const buttons = els.modeButtons?.querySelectorAll(
+                    "[data-mode]",
+                );
+                buttons?.forEach((btn) => {
+                    btn.classList.toggle(
+                        "active",
+                        btn.dataset.mode === state.mode,
+                    );
+                });
             }
 
             function syncLanguageButtons() {
@@ -1538,6 +1578,7 @@
                 setText("#homeBtn .btn-label", t.home);
                 syncDifficultyButtons();
                 syncLanguageButtons();
+                syncModeButtons();
                 renderLifetimeStats();
                 if (state.target) {
                     renderTarget();
@@ -1640,7 +1681,7 @@
         <div class="stat">
           <div class="stat-label">${t.session ?? "Session"} ${stats.sessions.length - index}</div>
           <div class="stat-value">${session.score} <span class="muted" style="font-size:0.78rem;font-weight:600;">${Math.round(session.accuracy * 100)}%</span></div>
-          <div class="muted" style="font-size:0.78rem; margin-top:6px;">${session.difficulty} · ${session.roundsCleared} rounds · ${new Date(session.playedAt).toLocaleDateString()}</div>
+           <div class="muted" style="font-size:0.78rem; margin-top:6px;">${session.difficulty} · ${session.mode || "color"} · ${session.roundsCleared} rounds · ${new Date(session.playedAt).toLocaleDateString()}</div>
         </div>
       `,
                     )
@@ -1661,8 +1702,8 @@
             }
 
             function chooseTarget() {
-                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
                 const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                const color = COLORS[Math.floor(Math.random() * COLORS.length)];
                 return { color, shape };
             }
 
@@ -1691,33 +1732,63 @@
                 const targetCount = randomInt(minTargets, maxTargets);
                 state.targetCount = targetCount;
 
-                for (let i = 0; i < targetCount; i++) {
-                    items.push({
-                        id: cryptoRandomId(),
-                        color: state.target.color,
-                        shape: state.target.shape,
-                        isTarget: true,
-                        done: false,
-                    });
-                }
+                if (isShapeMode()) {
+                    for (let i = 0; i < targetCount; i++) {
+                        items.push({
+                            id: cryptoRandomId(),
+                            color: state.target.color,
+                            shape: state.target.shape,
+                            isTarget: true,
+                            done: false,
+                        });
+                    }
 
-                while (items.length < total) {
-                    const color =
-                        COLORS[Math.floor(Math.random() * COLORS.length)];
-                    const shape =
-                        SHAPES[Math.floor(Math.random() * SHAPES.length)];
-                    const isTarget =
-                        color.name === state.target.color.name &&
-                        shape.name === state.target.shape.name;
-                    if (isTarget) continue;
+                    while (items.length < total) {
+                        const shape = SHAPES[
+                            Math.floor(Math.random() * SHAPES.length)
+                        ];
+                        if (shape.name === state.target.shape.name) continue;
 
-                    items.push({
-                        id: cryptoRandomId(),
-                        color,
-                        shape,
-                        isTarget: false,
-                        done: false,
-                    });
+                        const color = COLORS[
+                            Math.floor(Math.random() * COLORS.length)
+                        ];
+                        items.push({
+                            id: cryptoRandomId(),
+                            color,
+                            shape,
+                            isTarget: false,
+                            done: false,
+                        });
+                    }
+                } else {
+                    for (let i = 0; i < targetCount; i++) {
+                        items.push({
+                            id: cryptoRandomId(),
+                            color: state.target.color,
+                            shape: state.target.shape,
+                            isTarget: true,
+                            done: false,
+                        });
+                    }
+
+                    while (items.length < total) {
+                        const color =
+                            COLORS[Math.floor(Math.random() * COLORS.length)];
+                        const shape =
+                            SHAPES[Math.floor(Math.random() * SHAPES.length)];
+                        const isTarget =
+                            color.name === state.target.color.name &&
+                            shape.name === state.target.shape.name;
+                        if (isTarget) continue;
+
+                        items.push({
+                            id: cryptoRandomId(),
+                            color,
+                            shape,
+                            isTarget: false,
+                            done: false,
+                        });
+                    }
                 }
 
                 shuffle(items);
@@ -1726,10 +1797,15 @@
 
             function renderTarget() {
                 const { color, shape } = state.target;
-                setSwatch(els.targetSwatch, color.hex);
-                renderMiniShape(els.targetShape, shape, color.hex);
                 const t = getLang();
-                els.targetText.textContent = `${t.tapAll} ${color.name} ${shape.name}s`;
+                if (isShapeMode()) {
+                    renderMiniShape(els.targetShape, shape, "#e8eef8");
+                    els.targetText.textContent = `${t.tapAll} ${shapeName(shape)}s`;
+                } else {
+                    setSwatch(els.targetSwatch, color.hex);
+                    renderMiniShape(els.targetShape, shape, color.hex);
+                    els.targetText.textContent = `${t.tapAll} ${colorName(color)} ${shapeName(shape)}s`;
+                }
                 els.levelChip.textContent = formatLevelChip(state.sessionRound);
             }
 
@@ -1749,6 +1825,7 @@
                 els.board.innerHTML = "";
                 const { cols } = getBoardDimensions(state.sessionRound);
                 els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                const tileColor = isShapeMode() ? "#e8eef8" : null;
                 state.items.forEach((item) => {
                     const button = document.createElement("button");
                     button.type = "button";
@@ -1756,12 +1833,14 @@
                     button.setAttribute("role", "gridcell");
                     button.setAttribute(
                         "aria-label",
-                        `${item.color.name} ${item.shape.name}`,
+                        isShapeMode()
+                            ? `${shapeName(item.shape)}`
+                            : `${colorName(item.color)} ${shapeName(item.shape)}`,
                     );
                     button.dataset.id = item.id;
                     button.innerHTML = createShapeSVG(
                         item.shape,
-                        item.color.hex,
+                        tileColor || item.color.hex,
                     );
                     button.addEventListener("click", () =>
                         handleTileClick(item.id, button),
@@ -1823,6 +1902,7 @@
                 els.hitsValue.textContent = state.hits;
                 els.wrongValue.textContent = state.wrong;
                 els.remainingValue.textContent = remaining;
+                els.remainingChip.textContent = `${remaining} ${getLang().left}`;
                 els.timeText.textContent = Math.ceil(state.timeLeft);
                 els.ring.style.setProperty(
                     "--p",
@@ -1949,6 +2029,7 @@
                     remaining,
                     roundsCleared: state.roundsCleared,
                     roundReached: state.sessionRound,
+                    mode: state.mode,
                 };
 
                 saveStats(session);
@@ -2172,6 +2253,17 @@
                     });
                 });
 
+            els.modeButtons
+                ?.querySelectorAll("[data-mode]")
+                .forEach((button) => {
+                    button.addEventListener("click", () => {
+                        state.mode = button.dataset.mode;
+                        savePrefs();
+                        syncModeButtons();
+                        if (state.target) renderTarget();
+                    });
+                });
+
             window.addEventListener("resize", () => {
                 if (state.running) {
                     // Keep current round stable; do not rebuild board mid-play.
@@ -2188,10 +2280,12 @@
             state.difficulty = prefs.difficulty === "medium" || prefs.difficulty === "hard"
                 ? prefs.difficulty
                 : "easy";
+            state.mode = prefs.mode === "shape" ? "shape" : "color";
             state.language = prefs.language === "ta" ? "ta" : inferLanguage();
             applyLanguage();
             syncDifficultyButtons();
             syncLanguageButtons();
+            syncModeButtons();
             renderLifetimeStats();
             state.target = chooseTarget();
             renderTarget();

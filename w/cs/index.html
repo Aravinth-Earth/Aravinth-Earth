@@ -360,44 +360,65 @@
                 flex: 1;
                 min-width: 0;
                 display: flex;
-                align-items: center;
-                gap: 6px;
+                flex-direction: column;
+                justify-content: center;
                 background: rgba(255, 255, 255, 0.03);
                 border-radius: var(--radius-md);
                 padding: 5px 8px;
                 border: 1px solid var(--border);
+                gap: 3px;
             }
 
-            .target-line {
+            .target-visual {
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 8px;
+            }
+
+            .target-shape-box {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                background: rgba(255, 255, 255, 0.06);
+                transition: background 0.2s;
+            }
+
+            .shape-big {
+                width: 26px;
+                height: 26px;
+                display: grid;
+                place-items: center;
+            }
+            .shape-big svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            .target-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
                 min-width: 0;
                 flex: 1;
-                font-size: 0.88rem;
+            }
+
+            .target-text {
+                font-size: 0.82rem;
                 font-weight: 700;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                line-height: 1.2;
             }
 
-            .swatch {
-                display: inline-block;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                flex-shrink: 0;
-            }
-            .shape-preview {
-                width: 22px;
-                height: 22px;
-                flex-shrink: 0;
-                display: grid;
-                place-items: center;
-            }
-            .shape-preview svg {
-                width: 100%;
-                height: 100%;
+            .target-remaining {
+                font-size: 0.72rem;
+                font-weight: 600;
+                color: var(--accent);
+                line-height: 1.2;
             }
 
             .game-timer {
@@ -1032,10 +1053,14 @@
                     <section id="gameWrap" hidden class="screen game-wrap">
                         <div class="game-hud">
                             <div class="game-target">
-                                <div class="target-line">
-                                    <span id="targetSwatch" class="swatch" aria-hidden="true"></span>
-                                    <span id="targetShape" class="shape-preview" aria-hidden="true"></span>
-                                    <span id="targetText">Find all items</span>
+                                <div class="target-visual">
+                                    <div class="target-shape-box" id="targetShapeBox">
+                                        <span id="targetShape" class="shape-big"></span>
+                                    </div>
+                                    <div class="target-meta">
+                                        <span id="targetText" class="target-text">Find all items</span>
+                                        <span id="targetRemaining" class="target-remaining">0 left</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="game-timer">
@@ -1272,9 +1297,10 @@
                 results: document.getElementById("results"),
                 stats: document.getElementById("stats"),
                 board: document.getElementById("board"),
-                targetSwatch: document.getElementById("targetSwatch"),
-                targetShape: document.getElementById("targetShape"),
                 targetText: document.getElementById("targetText"),
+                targetRemaining: document.getElementById("targetRemaining"),
+                targetShape: document.getElementById("targetShape"),
+                targetShapeBox: document.getElementById("targetShapeBox"),
                 ringProgress: document.getElementById("ringProgress"),
                 timeText: document.getElementById("timeText"),
                 roundValue: document.getElementById("roundValue"),
@@ -1682,10 +1708,11 @@
                 const { color, shape } = state.target;
                 const t = getLang();
                 if (isShapeMode()) {
+                    els.targetShapeBox.style.background = "rgba(255, 255, 255, 0.06)";
                     renderMiniShape(els.targetShape, shape, "#e8eef8");
                     els.targetText.textContent = `${t.tapAll} ${shapeName(shape)}s`;
                 } else {
-                    setSwatch(els.targetSwatch, color.hex);
+                    els.targetShapeBox.style.background = color.hex + "22";
                     renderMiniShape(els.targetShape, shape, color.hex);
                     els.targetText.textContent = `${t.tapAll} ${colorName(color)} ${shapeName(shape)}s`;
                 }
@@ -1782,6 +1809,7 @@
                 els.hitsValue.textContent = state.hits;
                 els.wrongValue.textContent = state.wrong;
                 els.remainingValue.textContent = remaining;
+                els.targetRemaining.textContent = `${remaining} ${getLang().left}`;
                 els.timeText.textContent = Math.ceil(state.timeLeft);
                 const p = Math.max(0, state.timeLeft / state.roundDuration);
                 els.ringProgress.style.strokeDasharray = CIRC;

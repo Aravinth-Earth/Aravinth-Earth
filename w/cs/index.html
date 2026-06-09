@@ -597,6 +597,7 @@
                 cursor: pointer;
                 user-select: none;
                 -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
                 transition:
                     transform var(--transition),
                     opacity var(--transition),
@@ -639,7 +640,7 @@
                 width: 99%;
                 height: 99%;
                 display: block;
-                filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.06));
+                opacity: 0.92;
             }
 
             .footer-note {
@@ -1446,6 +1447,8 @@
                 mode: "color",
                 language: inferLanguage(),
                 items: [],
+                itemMap: new Map(),
+                targetsRemaining: 0,
                 target: null,
             };
 
@@ -1793,6 +1796,8 @@
 
                 shuffle(items);
                 state.items = items;
+                state.itemMap = new Map(items.map((i) => [i.id, i]));
+                state.targetsRemaining = targetCount;
             }
 
             function renderTarget() {
@@ -1842,9 +1847,6 @@
                         item.shape,
                         tileColor || item.color.hex,
                     );
-                    button.addEventListener("click", () =>
-                        handleTileClick(item.id, button),
-                    );
                     els.board.appendChild(button);
                 });
                 updateHUD();
@@ -1853,12 +1855,13 @@
             function handleTileClick(id, tileEl) {
                 if (!state.running || state.ended || state.paused) return;
 
-                const item = state.items.find((entry) => entry.id === id);
+                const item = state.itemMap.get(id);
                 if (!item || item.done) return;
 
                 if (item.isTarget) {
                     item.done = true;
                     state.hits += 1;
+                    state.targetsRemaining -= 1;
                     state.score += 10;
                     tileEl.classList.add("correct", "done");
                     setTimeout(() => tileEl.classList.remove("correct"), 280);
@@ -1877,26 +1880,24 @@
                         state.roundDuration - wrongPenalty,
                     );
                     tileEl.classList.remove("wrong");
-                    void tileEl.offsetWidth;
-                    tileEl.classList.add("wrong");
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            tileEl.classList.add("wrong");
+                        });
+                    });
                     setTimeout(() => tileEl.classList.remove("wrong"), 260);
                     playTone(220, 0.04, "triangle");
                 }
 
                 updateHUD();
 
-                if (
-                    state.items.filter((entry) => entry.isTarget && !entry.done)
-                        .length === 0
-                ) {
+                if (state.targetsRemaining === 0) {
                     completeRound();
                 }
             }
 
             function updateHUD() {
-                const remaining = state.items.filter(
-                    (entry) => entry.isTarget && !entry.done,
-                ).length;
+                const remaining = state.targetsRemaining;
                 els.roundValue.textContent = state.sessionRound;
                 els.scoreValue.textContent = state.score;
                 els.hitsValue.textContent = state.hits;
@@ -1953,7 +1954,7 @@
 
             function clearTimer() {
                 if (state.timerId) {
-                    clearTimeout(state.timerId);
+                    cancelAnimationFrame(state.timerId);
                     state.timerId = null;
                 }
             }
@@ -1966,7 +1967,6 @@
             }
 
             function tick() {
-                updateHUD();
                 if (!state.running || state.ended || state.paused) return;
 
                 const elapsed = (performance.now() - state.startedAt) / 1000;
@@ -1978,7 +1978,7 @@
                     return;
                 }
 
-                state.timerId = setTimeout(tick, 100);
+                state.timerId = requestAnimationFrame(tick);
             }
 
             function completeRound() {
@@ -1994,7 +1994,6 @@
                 state.score += Math.round(state.timeLeft * 2);
                 updateHUD();
 
-                els.targetText.textContent = `Round ${state.sessionRound} cleared. Next one is loading...`;
                 els.targetText.textContent = getLang().cleared;
                 playTone(960, 0.07, "sine");
 
@@ -2014,9 +2013,7 @@
                 els.pauseOverlay.hidden = true;
                 els.pauseOverlay.classList.remove("active");
 
-                const remaining = state.items.filter(
-                    (entry) => entry.isTarget && !entry.done,
-                ).length;
+                const remaining = state.targetsRemaining;
                 const accuracy =
                     state.hits + state.wrong === 0
                         ? 0
@@ -2203,6 +2200,11 @@
                 applyLanguage();
             }
 
+            els.board.addEventListener("click", (e) => {
+                const tile = e.target.closest(".tile");
+                if (!tile) return;
+                handleTileClick(tile.dataset.id, tile);
+            });
             els.startBtn.addEventListener("click", startSession);
             els.viewStatsBtn.addEventListener("click", () => showScreen("stats"));
             els.liveStatsBtn.addEventListener("click", toggleLiveStats);

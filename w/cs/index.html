@@ -598,12 +598,11 @@
                 user-select: none;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
+                will-change: transform, opacity;
+                contain: layout style paint;
                 transition:
                     transform var(--transition),
-                    opacity var(--transition),
-                    background var(--transition),
-                    border-color var(--transition),
-                    box-shadow var(--transition);
+                    opacity var(--transition);
             }
 
             .tile:hover {
@@ -1449,6 +1448,8 @@
                 items: [],
                 itemMap: new Map(),
                 targetsRemaining: 0,
+                _lastP: 1,
+                _lastHudUpdate: 0,
                 target: null,
             };
 
@@ -1831,6 +1832,7 @@
                 const { cols } = getBoardDimensions(state.sessionRound);
                 els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
                 const tileColor = isShapeMode() ? "#e8eef8" : null;
+                const frag = document.createDocumentFragment();
                 state.items.forEach((item) => {
                     const button = document.createElement("button");
                     button.type = "button";
@@ -1847,8 +1849,9 @@
                         item.shape,
                         tileColor || item.color.hex,
                     );
-                    els.board.appendChild(button);
+                    frag.appendChild(button);
                 });
+                els.board.appendChild(frag);
                 updateHUD();
             }
 
@@ -1909,6 +1912,8 @@
                     "--p",
                     Math.max(0, state.timeLeft / state.roundDuration),
                 );
+                state._lastP = Math.max(0, state.timeLeft / state.roundDuration);
+                state._lastHudUpdate = performance.now();
             }
 
             function startSession() {
@@ -1971,7 +1976,15 @@
 
                 const elapsed = (performance.now() - state.startedAt) / 1000;
                 state.timeLeft = Math.max(0, state.roundDuration - elapsed);
-                updateHUD();
+
+                const targetP = Math.max(0, state.timeLeft / state.roundDuration);
+                const now = performance.now();
+                if (Math.abs(targetP - state._lastP) > 0.015 || now - state._lastHudUpdate > 250) {
+                    state._lastP = targetP;
+                    state._lastHudUpdate = now;
+                    els.timeText.textContent = Math.ceil(state.timeLeft);
+                    els.ring.style.setProperty("--p", targetP);
+                }
 
                 if (state.timeLeft <= 0) {
                     finishSession();

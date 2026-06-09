@@ -244,13 +244,6 @@
                 display: none;
             }
 
-            .remaining-chip {
-                font-size: 0.82rem;
-                color: var(--accent);
-                background: var(--accent-soft);
-                border-color: rgba(94, 234, 212, 0.3);
-            }
-
             .mode-row {
                 display: grid;
                 gap: 8px;
@@ -373,14 +366,6 @@
                 border: 1px solid var(--border);
             }
 
-            .level-chip {
-                flex-shrink: 0;
-                min-height: 24px;
-                padding: 0 8px;
-                font-size: 0.72rem;
-                letter-spacing: 0.02em;
-            }
-
             .target-line {
                 display: flex;
                 align-items: center;
@@ -411,16 +396,6 @@
             .shape-preview svg {
                 width: 100%;
                 height: 100%;
-            }
-
-            .remaining-chip {
-                flex-shrink: 0;
-                font-size: 0.7rem;
-                padding: 0 6px;
-                min-height: 20px;
-                color: var(--accent);
-                background: var(--accent-soft);
-                border-color: rgba(94, 234, 212, 0.3);
             }
 
             .game-timer {
@@ -524,11 +499,11 @@
             }
 
             .mini-btn {
-                min-height: 32px;
-                padding: 0 8px;
-                font-size: 0.75rem;
+                min-height: 26px;
+                padding: 0 6px;
+                font-size: 0.7rem;
                 font-weight: 650;
-                gap: 3px;
+                gap: 2px;
             }
 
             .live-stats {
@@ -904,9 +879,9 @@
                 font-size: 0.92rem;
             }
             .mini-btn {
-                min-height: 34px;
-                padding: 0 10px;
-                font-size: 0.8rem;
+                min-height: 24px;
+                padding: 0 6px;
+                font-size: 0.68rem;
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -1037,13 +1012,11 @@
                     <section id="gameWrap" hidden class="screen game-wrap">
                         <div class="game-hud">
                             <div class="game-target">
-                                <div class="chip level-chip" id="levelChip">Lv 1 · 3x3</div>
                                 <div class="target-line">
                                     <span id="targetSwatch" class="swatch" aria-hidden="true"></span>
                                     <span id="targetShape" class="shape-preview" aria-hidden="true"></span>
                                     <span id="targetText">Find all items</span>
                                 </div>
-                                <span id="remainingChip" class="chip remaining-chip">0 left</span>
                             </div>
                             <div class="game-timer">
                                 <div class="ring" id="ring">
@@ -1282,8 +1255,6 @@
                 targetSwatch: document.getElementById("targetSwatch"),
                 targetShape: document.getElementById("targetShape"),
                 targetText: document.getElementById("targetText"),
-                levelChip: document.getElementById("levelChip"),
-                ring: document.getElementById("ring"),
                 ringProgress: document.getElementById("ringProgress"),
                 timeText: document.getElementById("timeText"),
                 roundValue: document.getElementById("roundValue"),
@@ -1291,7 +1262,6 @@
                 hitsValue: document.getElementById("hitsValue"),
                 wrongValue: document.getElementById("wrongValue"),
                 remainingValue: document.getElementById("remainingValue"),
-                remainingChip: document.getElementById("remainingChip"),
                 liveStatsPanel: document.getElementById("liveStatsPanel"),
                 closeLiveStatsBtn: document.getElementById("closeLiveStatsBtn"),
                 pauseBtn: document.getElementById("pauseBtn"),
@@ -1699,7 +1669,6 @@
                     renderMiniShape(els.targetShape, shape, color.hex);
                     els.targetText.textContent = `${t.tapAll} ${colorName(color)} ${shapeName(shape)}s`;
                 }
-                els.levelChip.textContent = formatLevelChip(state.sessionRound);
             }
 
             function syncDifficultyButtons() {
@@ -1788,12 +1757,11 @@
 
             function updateHUD() {
                 const remaining = state.targetsRemaining;
-                els.roundValue.textContent = state.sessionRound;
+                els.roundValue.textContent = formatLevelChip(state.sessionRound);
                 els.scoreValue.textContent = state.score;
                 els.hitsValue.textContent = state.hits;
                 els.wrongValue.textContent = state.wrong;
                 els.remainingValue.textContent = remaining;
-                els.remainingChip.textContent = `${remaining} ${getLang().left}`;
                 els.timeText.textContent = Math.ceil(state.timeLeft);
                 const p = Math.max(0, state.timeLeft / state.roundDuration);
                 els.ringProgress.style.strokeDasharray = CIRC;

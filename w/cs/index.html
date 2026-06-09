@@ -277,7 +277,7 @@
 
             .stats-grid {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(44px, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 12px;
             }
 
@@ -350,7 +350,7 @@
             }
 
             .game-wrap.active {
-                grid-template-rows: auto minmax(44px, 1fr) auto;
+                grid-template-rows: auto minmax(0, 1fr) auto;
                 min-height: 0;
             }
 
@@ -361,7 +361,7 @@
 
             .hud-top {
                 display: grid;
-                grid-template-columns: minmax(44px, 1fr) auto;
+                grid-template-columns: minmax(0, 1fr) auto;
                 gap: 12px;
                 align-items: stretch;
             }
@@ -531,7 +531,7 @@
 
             .scorebar {
                 display: grid;
-                grid-template-columns: repeat(5, minmax(44px, 1fr));
+                grid-template-columns: repeat(5, minmax(0, 1fr));
                 gap: 10px;
             }
 

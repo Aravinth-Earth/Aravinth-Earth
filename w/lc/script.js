@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const adjustFontSize = (e) => {
-        fontSize = e.target.value;
+        const fontSize = e.target.value;
         fontSizeValue.textContent = `${fontSize}px`;
         clock.style.fontSize = `${fontSize}px`;
         localStorage.setItem('fontSize', fontSize);
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     settingsButton.addEventListener('click', () => {
-        settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+        settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
     });
 
     toggleFormatButton.addEventListener('click', toggleFormat);
@@ -109,24 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fontSizeValue.textContent = `${savedFontSize}px`;
         clock.style.fontSize = `${savedFontSize}px`;
     } else {
-        fontSizeSlider.value = 80;
-        fontSizeValue.textContent = '100px';
-        clock.style.fontSize = '100px';
+        fontSizeSlider.value = '80';
+        fontSizeValue.textContent = '80px';
+        clock.style.fontSize = '80px';
     }
 
     updateClock();
     setInterval(updateClock, 1000);
-
-    // Intersection Observer Example
-    const target = document.querySelector('#target-element');
-    if (target) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    console.log('Element is in view!');
-                }
-            });
-        }, { threshold: 0.5 });
-        observer.observe(target);
-    }
 });

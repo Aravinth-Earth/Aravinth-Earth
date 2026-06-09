@@ -7,31 +7,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const fontSizeSlider = document.getElementById('font-size');
     const fontSizeValue = document.getElementById('font-size-value');
     const toggleFullscreenButton = document.getElementById('toggle-fullscreen');
-    const container = document.querySelector('.container');
     const footer = document.querySelector('footer');
 
     let is24HourFormat = true;
     let colorMode = 'pitch-dark';
     let dynamicColorInterval;
+    let prevPanelDisplay = '';
 
     const updateClock = () => {
         const now = new Date();
         const hours = is24HourFormat ? now.getHours() : now.getHours() % 12 || 12;
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
-        const ampm = !is24HourFormat && now.getHours() >= 12 ? ' PM' : ' AM';
+        const ampm = !is24HourFormat ? now.getHours() >= 12 ? ' PM' : ' AM' : '';
 
-        clock.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}${!is24HourFormat ? ampm : ''}`;
+        clock.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}${ampm}`;
     };
 
     const toggleFormat = () => {
         is24HourFormat = !is24HourFormat;
         toggleFormatButton.textContent = is24HourFormat ? 'Switch to 12-Hour Format' : 'Switch to 24-Hour Format';
+        localStorage.setItem('is24HourFormat', is24HourFormat);
         updateClock();
     };
 
     const changeColorMode = (e) => {
         colorMode = e.target.value;
+        localStorage.setItem('colorMode', colorMode);
         document.body.className = colorMode;
         if (colorMode === 'dynamic-color') {
             startDynamicColorChange();
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const adjustFontSize = (e) => {
-        fontSize = e.target.value;
+        const fontSize = e.target.value;
         fontSizeValue.textContent = `${fontSize}px`;
         clock.style.fontSize = `${fontSize}px`;
         localStorage.setItem('fontSize', fontSize);
@@ -67,35 +69,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toggleFullscreen = () => {
         if (!document.fullscreenElement) {
+            prevPanelDisplay = settingsPanel.style.display;
+            settingsPanel.style.display = 'none';
             document.documentElement.requestFullscreen().then(() => {
                 document.body.classList.add('fullscreen');
-                footer.style.display = 'none'; // Hide footer in fullscreen mode
+                footer.style.display = 'none';
             }).catch((err) => {
+                settingsPanel.style.display = prevPanelDisplay;
                 console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
             });
         } else {
             document.exitFullscreen().then(() => {
                 document.body.classList.remove('fullscreen');
-                footer.style.display = ''; // Show footer in normal mode
+                footer.style.display = '';
+                if (prevPanelDisplay === 'block') {
+                    settingsPanel.style.display = 'block';
+                }
             }).catch((err) => {
                 console.error(`Error attempting to disable full-screen mode: ${err.message} (${err.name})`);
             });
         }
     };
 
-    // Add fullscreenchange event listener
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
+            prevPanelDisplay = settingsPanel.style.display;
+            settingsPanel.style.display = 'none';
             document.body.classList.add('fullscreen');
-            footer.style.display = 'none'; // Hide footer in fullscreen mode
+            footer.style.display = 'none';
         } else {
             document.body.classList.remove('fullscreen');
-            footer.style.display = ''; // Show footer in normal mode
+            footer.style.display = '';
+            if (prevPanelDisplay === 'block') {
+                settingsPanel.style.display = 'block';
+            }
         }
     });
 
     settingsButton.addEventListener('click', () => {
-        settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
+        settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
     });
 
     toggleFormatButton.addEventListener('click', toggleFormat);
@@ -109,24 +121,27 @@ document.addEventListener('DOMContentLoaded', () => {
         fontSizeValue.textContent = `${savedFontSize}px`;
         clock.style.fontSize = `${savedFontSize}px`;
     } else {
-        fontSizeSlider.value = 80;
-        fontSizeValue.textContent = '100px';
-        clock.style.fontSize = '100px';
+        fontSizeSlider.value = '80';
+        fontSizeValue.textContent = '80px';
+        clock.style.fontSize = '80px';
+    }
+
+    const savedFormat = localStorage.getItem('is24HourFormat');
+    if (savedFormat !== null) {
+        is24HourFormat = savedFormat === 'true';
+        toggleFormatButton.textContent = is24HourFormat ? 'Switch to 12-Hour Format' : 'Switch to 24-Hour Format';
+    }
+
+    const savedColorMode = localStorage.getItem('colorMode');
+    if (savedColorMode && savedColorMode !== colorMode) {
+        colorModeSelect.value = savedColorMode;
+        colorMode = savedColorMode;
+        document.body.className = colorMode;
+        if (colorMode === 'dynamic-color') {
+            startDynamicColorChange();
+        }
     }
 
     updateClock();
     setInterval(updateClock, 1000);
-
-    // Intersection Observer Example
-    const target = document.querySelector('#target-element');
-    if (target) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    console.log('Element is in view!');
-                }
-            });
-        }, { threshold: 0.5 });
-        observer.observe(target);
-    }
 });

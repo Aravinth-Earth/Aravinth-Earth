@@ -277,7 +277,7 @@
 
             .stats-grid {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2, minmax(44px, 1fr));
                 gap: 12px;
             }
 
@@ -350,7 +350,7 @@
             }
 
             .game-wrap.active {
-                grid-template-rows: auto minmax(0, 1fr) auto;
+                grid-template-rows: auto minmax(44px, 1fr) auto;
                 min-height: 0;
             }
 
@@ -361,7 +361,7 @@
 
             .hud-top {
                 display: grid;
-                grid-template-columns: minmax(0, 1fr) auto;
+                grid-template-columns: minmax(44px, 1fr) auto;
                 gap: 12px;
                 align-items: stretch;
             }
@@ -531,7 +531,7 @@
 
             .scorebar {
                 display: grid;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-columns: repeat(5, minmax(44px, 1fr));
                 gap: 10px;
             }
 
@@ -555,11 +555,15 @@
 
             .game-board {
                 display: grid;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
+                grid-template-columns: repeat(5, minmax(44px, 1fr));
                 gap: 1px;
                 align-items: stretch;
                 flex: 1;
                 min-height: 0;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-x: contain;
                 position: relative;
             }
 
@@ -594,6 +598,7 @@
 
             .tile {
                 position: relative;
+                min-width: 44px;
                 min-height: var(--tile-size);
                 aspect-ratio: 1 / 1;
                 border-radius: 16px;
@@ -703,7 +708,7 @@
 
             .results-grid {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2, minmax(44px, 1fr));
                 gap: 12px;
             }
 
@@ -917,7 +922,7 @@
                 text-overflow: ellipsis;
             }
             .scorebar {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(3, minmax(44px, 1fr));
             }
             .results-grid,
             .stats-grid {
@@ -945,12 +950,13 @@
                 font-size: 0.88rem;
             }
             .game-board {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(3, minmax(44px, 1fr));
                 gap: 4px;
             }
             .tile {
                 border-radius: 12px;
-                min-height: 0;
+                min-width: 44px;
+                min-height: 44px;
                 aspect-ratio: 1 / 1;
             }
             .btn {
@@ -1850,7 +1856,7 @@
             function renderBoard() {
                 els.board.innerHTML = "";
                 const { cols } = getBoardDimensions(state.sessionRound);
-                els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(44px, 1fr))`;
                 const tileColor = isShapeMode() ? "#e8eef8" : null;
                 const frag = document.createDocumentFragment();
                 state.items.forEach((item) => {
@@ -2307,7 +2313,7 @@
                 if (state.target) {
                     renderTarget();
                     const { cols } = getBoardDimensions(state.sessionRound);
-                    els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                    els.board.style.gridTemplateColumns = `repeat(${cols}, minmax(44px, 1fr))`;
                 }
             });
 

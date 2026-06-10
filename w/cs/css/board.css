@@ -1,0 +1,77 @@
+            .game-board {
+                display: grid;
+                gap: 2px;
+                padding: 8px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: var(--radius-lg);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                width: 100%;
+                max-width: 100%;
+                max-height: 100%;
+                aspect-ratio: 1 / 1;
+                position: relative;
+                align-self: center;
+            }
+
+            .game-actions {
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+                flex-shrink: 0;
+                padding: 4px 6px 8px;
+            }
+
+            .action-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--text);
+                font-size: 1.05rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.15s, transform 0.1s;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+            .action-btn:active {
+                transform: scale(0.88);
+            }
+            .action-btn[aria-pressed="true"] {
+                background: rgba(94, 234, 212, 0.15);
+                border-color: rgba(94, 234, 212, 0.3);
+            }
+
+            .pause-overlay {
+                position: absolute;
+                inset: 0;
+                display: none;
+                place-items: center;
+                background: rgba(8, 16, 29, 0.94);
+                backdrop-filter: blur(8px);
+                border-radius: inherit;
+                z-index: 3;
+                text-align: center;
+                padding: 18px;
+            }
+
+            .pause-overlay.active {
+                display: grid;
+            }
+
+            .pause-card {
+                display: grid;
+                gap: 8px;
+                justify-items: center;
+                max-width: 240px;
+            }
+
+            .pause-card h3 {
+                margin: 0;
+                font-size: 1.05rem;
+            }
+

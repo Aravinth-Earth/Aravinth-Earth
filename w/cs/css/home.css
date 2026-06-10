@@ -1,0 +1,115 @@
+            .swatch,
+            .shape-preview {
+                width: 24px;
+                height: 24px;
+                display: inline-grid;
+                place-items: center;
+                flex: 0 0 auto;
+            }
+
+            .swatch {
+                display: none;
+            }
+
+            .mode-row {
+                display: grid;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .mode-buttons {
+                display: flex;
+                gap: 8px;
+            }
+
+            .mode-btn {
+                min-height: 30px;
+                padding: 0 10px;
+                font-size: 0.78rem;
+            }
+
+            .mode-btn.active {
+                color: var(--text);
+                border-color: rgba(251, 191, 36, 0.42);
+                background: rgba(251, 191, 36, 0.12);
+            }
+
+            .difficulty-btn.active {
+                color: var(--text);
+                border-color: rgba(94, 234, 212, 0.42);
+                background: rgba(94, 234, 212, 0.12);
+            }
+
+            .lang-btn.active {
+                color: var(--text);
+                border-color: rgba(125, 211, 252, 0.42);
+                background: rgba(125, 211, 252, 0.12);
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .stat {
+                background: rgba(255, 255, 255, 0.035);
+                border: 1px solid var(--border);
+                border-radius: var(--radius-lg);
+                padding: 12px;
+            }
+
+            .stat-label {
+                color: var(--muted);
+                font-size: 0.82rem;
+                margin-bottom: 6px;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                min-height: 48px;
+                padding: 0 18px;
+                font-size: 0.98rem;
+                font-weight: 650;
+            }
+
+            .btn-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.25em;
+                margin-right: 8px;
+                font-size: 1em;
+            }
+
+            .btn-label {
+                display: inline;
+            }
+
+            .btn-compact {
+                min-width: 0;
+                padding: 0 12px;
+                min-height: 42px;
+                width: auto;
+            }
+
+            .btn-primary {
+                background: linear-gradient(
+                    180deg,
+                    rgba(94, 234, 212, 0.22),
+                    rgba(94, 234, 212, 0.12)
+                );
+                border-color: rgba(94, 234, 212, 0.32);
+            }
+

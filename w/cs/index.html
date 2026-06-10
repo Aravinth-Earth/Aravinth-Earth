@@ -267,6 +267,18 @@
                 background: rgba(251, 191, 36, 0.12);
             }
 
+            .difficulty-btn.active {
+                color: var(--text);
+                border-color: rgba(94, 234, 212, 0.42);
+                background: rgba(94, 234, 212, 0.12);
+            }
+
+            .lang-btn.active {
+                color: var(--text);
+                border-color: rgba(125, 211, 252, 0.42);
+                background: rgba(125, 211, 252, 0.12);
+            }
+
             .stats-grid {
                 display: grid;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -349,30 +361,18 @@
                 min-height: 0;
             }
 
-            .game-hud {
-                display: flex;
-                align-items: stretch;
-                gap: 6px;
-                flex-shrink: 0;
-            }
-
-            .game-target {
-                flex: 1;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                background: rgba(255, 255, 255, 0.03);
-                border-radius: var(--radius-md);
-                padding: 8px 10px;
-                border: 1px solid var(--border);
-                gap: 4px;
-            }
-
-            .target-visual {
+            .game-top {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                justify-content: space-between;
+                flex-shrink: 0;
+                padding: 4px 6px;
+            }
+
+            .game-target-shape {
+                display: flex;
+                align-items: center;
+                gap: 8px;
             }
 
             .target-shape-box {
@@ -397,28 +397,13 @@
                 height: 100%;
             }
 
-            .target-meta {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                min-width: 0;
-                flex: 1;
-            }
-
-            .target-text {
-                font-size: 0.95rem;
-                font-weight: 700;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-height: 1.2;
-            }
-
-            .target-remaining {
-                font-size: 0.82rem;
-                font-weight: 600;
+            .target-count {
+                font-size: 1.6rem;
+                font-weight: 800;
                 color: var(--accent);
-                line-height: 1.2;
+                line-height: 1;
+                min-width: 28px;
+                text-align: center;
             }
 
             .game-timer {
@@ -460,35 +445,31 @@
                 z-index: 1;
             }
 
-            .game-stats {
+            .stats-bar {
+                position: absolute;
+                bottom: 56px;
+                left: 50%;
+                transform: translateX(-50%);
                 display: flex;
-                gap: 3px;
-                flex-shrink: 0;
+                gap: 10px;
+                padding: 6px 14px;
+                border-radius: var(--radius-md);
+                background: rgba(8, 16, 29, 0.94);
+                border: 1px solid var(--border);
+                font-size: 0.78rem;
+                z-index: 5;
+                white-space: nowrap;
+                pointer-events: none;
             }
-
-            .stat-item {
-                flex: 1;
-                text-align: center;
-                background: rgba(255, 255, 255, 0.025);
-                border-radius: 6px;
-                padding: 3px 1px;
-                min-width: 0;
+            .stats-bar[hidden] {
+                display: none !important;
             }
-
-            .stat-k {
-                font-size: 0.6rem;
+            .stats-bar span {
                 color: var(--muted);
-                display: block;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                line-height: 1.2;
             }
-
-            .stat-v {
-                font-size: 0.88rem;
+            .stats-bar span b {
+                color: var(--text);
                 font-weight: 700;
-                display: block;
-                line-height: 1.3;
             }
 
             .board-wrapper {
@@ -518,70 +499,35 @@
 
             .game-actions {
                 display: flex;
-                gap: 6px;
+                gap: 8px;
+                justify-content: center;
                 flex-shrink: 0;
-                padding: 2px 0;
+                padding: 4px 6px 8px;
             }
 
-            .mini-btn {
-                min-height: 44px;
-                padding: 0 14px;
-                font-size: 0.78rem;
-                font-weight: 650;
-                gap: 4px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                height: auto;
-                border-radius: 999px;
-                border: 1px solid var(--border);
+            .action-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.1);
                 background: rgba(255, 255, 255, 0.04);
                 color: var(--text);
+                font-size: 1.05rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 cursor: pointer;
                 transition: background 0.15s, transform 0.1s;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
             }
-            .mini-btn:active {
-                transform: scale(0.96);
+            .action-btn:active {
+                transform: scale(0.88);
             }
-            .mini-btn.btn-pause {
-                flex: 1;
-                background: rgba(94, 234, 212, 0.12);
+            .action-btn[aria-pressed="true"] {
+                background: rgba(94, 234, 212, 0.15);
                 border-color: rgba(94, 234, 212, 0.3);
-                font-weight: 700;
-            }
-            .mini-btn.btn-icon-only {
-                width: 44px;
-                min-width: 44px;
-                padding: 0;
-            }
-
-            .live-stats {
-                position: absolute;
-                inset: 6px;
-                z-index: 5;
-                display: grid;
-                gap: 4px;
-                padding: 6px;
-                border-radius: var(--radius-lg);
-                border: 1px solid var(--border);
-                background: rgba(8, 16, 29, 0.96);
-                box-shadow: var(--shadow);
-                backdrop-filter: blur(12px);
-                grid-template-rows: auto 1fr;
-            }
-
-            .live-stats[hidden] {
-                display: none !important;
-            }
-
-            .overlay-head {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .overlay-head h3 {
-                margin: 0;
-                font-size: 0.9rem;
             }
 
             .pause-overlay {
@@ -846,17 +792,14 @@
                 z-index: 2;
             }
             .ring {
-                width: 48px;
-                height: 48px;
+                width: 42px;
+                height: 42px;
             }
             .ring span {
                 font-size: 0.76rem;
             }
             .btn-label {
                 display: none;
-            }
-            .mini-btn .btn-label {
-                display: inline;
             }
             .btn {
                 min-width: 38px;
@@ -866,16 +809,6 @@
                 width: 1.4em;
                 margin-right: 0;
                 font-size: 1.1em;
-            }
-            .mini-btn .btn-icon {
-                width: 1em;
-                margin-right: 2px;
-                font-size: 0.85rem;
-            }
-            .btn-icon-only .btn-icon {
-                width: 1.2em;
-                margin-right: 0;
-                font-size: 1rem;
             }
             .btn-compact {
                 min-height: 32px;
@@ -939,14 +872,6 @@
             .btn {
                 min-height: 42px;
                 font-size: 0.92rem;
-            }
-            .mini-btn {
-                min-height: 42px;
-                padding: 0 12px;
-                font-size: 0.75rem;
-            }
-            .btn-icon-only .btn-icon {
-                font-size: 1.2rem;
             }
 
             @media (prefers-reduced-motion: reduce) {
@@ -1025,6 +950,7 @@
                                         <button class="chip difficulty-btn active" data-difficulty="easy" type="button">Easy</button>
                                         <button class="chip difficulty-btn" data-difficulty="medium" type="button">Medium</button>
                                         <button class="chip difficulty-btn" data-difficulty="hard" type="button">Hard</button>
+                                        <button class="chip difficulty-btn" data-difficulty="extraHard" type="button">Extra hard</button>
                                     </div>
                                 </div>
                                 <div class="lang-row">
@@ -1075,17 +1001,12 @@
                     </section>
 
                     <section id="gameWrap" hidden class="screen game-wrap">
-                        <div class="game-hud">
-                            <div class="game-target">
-                                <div class="target-visual">
-                                    <div class="target-shape-box" id="targetShapeBox">
-                                        <span id="targetShape" class="shape-big"></span>
-                                    </div>
-                                    <div class="target-meta">
-                                        <span id="targetText" class="target-text">Find all items</span>
-                                        <span id="targetRemaining" class="target-remaining">0 left</span>
-                                    </div>
+                        <div class="game-top">
+                            <div class="game-target-shape">
+                                <div class="target-shape-box" id="targetShapeBox">
+                                    <span id="targetShape" class="shape-big"></span>
                                 </div>
+                                <span id="targetRemaining" class="target-count">0</span>
                             </div>
                             <div class="game-timer">
                                 <div class="ring" id="ring">
@@ -1098,31 +1019,23 @@
                             </div>
                         </div>
 
-                        <div class="game-stats">
-                            <div class="stat-item"><span class="stat-k">Round</span><span class="stat-v" id="roundValue">1</span></div>
-                            <div class="stat-item"><span class="stat-k">Score</span><span class="stat-v" id="scoreValue">0</span></div>
-                            <div class="stat-item"><span class="stat-k">Hits</span><span class="stat-v" id="hitsValue">0</span></div>
-                            <div class="stat-item"><span class="stat-k">Wrong</span><span class="stat-v" id="wrongValue">0</span></div>
-                            <div class="stat-item"><span class="stat-k">Left</span><span class="stat-v" id="remainingValue">0</span></div>
-                        </div>
-
                         <div class="board-wrapper">
                             <div id="board" class="game-board" role="grid" aria-label="Game board"></div>
                         </div>
 
                         <div class="game-actions">
-                            <button id="liveStatsBtn" class="btn mini-btn" type="button"><span class="btn-icon" aria-hidden="true">▦</span><span class="btn-label">Live</span></button>
-                            <button id="restartBtn" class="btn mini-btn btn-icon-only" type="button" aria-label="Restart"><span class="btn-icon" aria-hidden="true">↺</span></button>
-                            <button id="pauseBtn" class="btn mini-btn btn-pause" type="button" aria-pressed="false"><span class="btn-icon" aria-hidden="true">⏸</span><span class="btn-label">Pause</span></button>
-                            <button id="backBtn" class="btn mini-btn btn-icon-only" type="button" aria-label="Home"><span class="btn-icon" aria-hidden="true">⌂</span></button>
+                            <button id="statsToggleBtn" class="action-btn" type="button" aria-label="Stats">📊</button>
+                            <button id="restartBtn" class="action-btn" type="button" aria-label="Restart">↺</button>
+                            <button id="pauseBtn" class="action-btn" type="button" aria-pressed="false">⏸</button>
+                            <button id="backBtn" class="action-btn" type="button" aria-label="Home">⌂</button>
                         </div>
 
-                        <div id="liveStatsPanel" class="live-stats" hidden>
-                            <div class="overlay-head">
-                                <h3>Live stats</h3>
-                                <button id="closeLiveStatsBtn" class="icon-btn" type="button" aria-label="Close live stats">✕</button>
-                            </div>
-                            <div class="scorebar"></div>
+                        <div id="statsBar" class="stats-bar" hidden>
+                            <span><b>R</b> <span id="roundValue">1</span></span>
+                            <span><b>S</b> <span id="scoreValue">0</span></span>
+                            <span><b>H</b> <span id="hitsValue">0</span></span>
+                            <span><b>W</b> <span id="wrongValue">0</span></span>
+                            <span><b>L</b> <span id="remainingValue">0</span></span>
                         </div>
 
                         <div id="pauseOverlay" class="pause-overlay" hidden>
@@ -1188,9 +1101,10 @@
             const RING_RADIUS = 42;
             const CIRC = 2 * Math.PI * RING_RADIUS;
             const DIFFICULTIES = {
-                easy: { label: "Easy", baseTime: 60, carryEvery: 5 },
-                medium: { label: "Medium", baseTime: 45, carryEvery: 6 },
-                hard: { label: "Hard", baseTime: 30, carryEvery: 8 },
+                easy: { label: "Easy", baseTime: 11 },
+                medium: { label: "Medium", baseTime: 9 },
+                hard: { label: "Hard", baseTime: 7 },
+                extraHard: { label: "Extra hard", baseTime: 5 },
             };
             const LANGUAGES = {
                 en: {
@@ -1321,7 +1235,6 @@
                 results: document.getElementById("results"),
                 stats: document.getElementById("stats"),
                 board: document.getElementById("board"),
-                targetText: document.getElementById("targetText"),
                 targetRemaining: document.getElementById("targetRemaining"),
                 targetShape: document.getElementById("targetShape"),
                 targetShapeBox: document.getElementById("targetShapeBox"),
@@ -1332,8 +1245,8 @@
                 hitsValue: document.getElementById("hitsValue"),
                 wrongValue: document.getElementById("wrongValue"),
                 remainingValue: document.getElementById("remainingValue"),
-                liveStatsPanel: document.getElementById("liveStatsPanel"),
-                closeLiveStatsBtn: document.getElementById("closeLiveStatsBtn"),
+                statsBar: document.getElementById("statsBar"),
+                statsToggleBtn: document.getElementById("statsToggleBtn"),
                 pauseBtn: document.getElementById("pauseBtn"),
                 pauseOverlay: document.getElementById("pauseOverlay"),
                 resumeBtn: document.getElementById("resumeBtn"),
@@ -1342,7 +1255,6 @@
                 soundBtn: document.getElementById("soundBtn"),
                 startBtn: document.getElementById("startBtn"),
                 viewStatsBtn: document.getElementById("viewStatsBtn"),
-                liveStatsBtn: document.getElementById("liveStatsBtn"),
                 restartBtn: document.getElementById("restartBtn"),
                 backBtn: document.getElementById("backBtn"),
                 homeBtn: document.getElementById("homeBtn"),
@@ -1493,15 +1405,6 @@
                 setText("#statsTitle", t.progress);
                 setText("#stats .eyebrow", t.localStats);
                 setText("#statsBackBtn .btn-label", t.backHome);
-                setText("#gameWrap .target-card .subtle", t.tapAll);
-                document.querySelector("#gameWrap .target-line")?.setAttribute(
-                    "aria-label",
-                    t.currentTarget,
-                );
-                setText("#gameWrap .progress-card small", t.secondsLeft);
-                setText("#liveStatsBtn .btn-label", t.liveStats);
-                setText("#pauseBtn .btn-label", state.paused ? t.resume : t.pause);
-                setText("#liveStatsPanel .overlay-head h3", t.liveStats);
                 setText("#pauseOverlay .pause-card h3", t.paused);
                 setText("#pauseOverlay .pause-card .subtle", t.pausedBody);
                 setText("#resultsTitle", t.summary);
@@ -1730,15 +1633,12 @@
 
             function renderTarget() {
                 const { color, shape } = state.target;
-                const t = getLang();
                 if (isShapeMode()) {
                     els.targetShapeBox.style.background = "rgba(255, 255, 255, 0.06)";
                     renderMiniShape(els.targetShape, shape, "#e8eef8");
-                    els.targetText.textContent = `${t.tapAll} ${shapeName(shape)}s`;
                 } else {
                     els.targetShapeBox.style.background = color.hex + "22";
                     renderMiniShape(els.targetShape, shape, color.hex);
-                    els.targetText.textContent = `${t.tapAll} ${colorName(color)} ${shapeName(shape)}s`;
                 }
             }
 
@@ -1799,16 +1699,8 @@
                 } else {
                     state.wrong += 1;
                     state.score = Math.max(0, state.score - 3);
-                    const wrongPenalty = {
-                        easy: 1,
-                        medium: 2,
-                        hard: 3,
-                    }[state.difficulty] || 1;
-                    state.timeLeft = Math.max(0, state.timeLeft - wrongPenalty);
-                    state.roundDuration = Math.max(
-                        state.timeLeft,
-                        state.roundDuration - wrongPenalty,
-                    );
+                    state.timeLeft = Math.max(0, state.timeLeft - 1);
+                    state.startedAt -= 1000;
                     tileEl.classList.remove("wrong");
                     requestAnimationFrame(() => {
                         requestAnimationFrame(() => {
@@ -1864,18 +1756,14 @@
                 state.ended = false;
                 state.paused = false;
                 const difficulty = getDifficultyConfig();
-                const decay = Math.pow(2, Math.max(0, state.sessionRound - 1));
-                state.roundDuration = Math.max(
-                    8,
-                    (difficulty.baseTime + state.bonusSeconds) / decay,
-                );
+                state.roundDuration = difficulty.baseTime + state.bonusSeconds;
+                state.bonusSeconds = 0;
                 state.timeLeft = state.roundDuration;
                 state.startedAt = performance.now();
-                els.liveStatsPanel.hidden = true;
+                els.statsBar.hidden = true;
                 els.pauseOverlay.hidden = true;
                 els.pauseOverlay.classList.remove("active");
                 els.pauseBtn.setAttribute("aria-pressed", "false");
-                els.pauseBtn.querySelector(".btn-label").textContent = getLang().pause;
                 buildItems();
                 renderTarget();
                 renderBoard();
@@ -1927,14 +1815,10 @@
                 clearTimer();
                 clearAdvance();
 
-                const difficulty = getDifficultyConfig();
-                const carryBonus = Math.floor(state.timeLeft / difficulty.carryEvery);
-                if (carryBonus > 0) state.bonusSeconds += carryBonus;
+                state.bonusSeconds = Math.max(0, Math.floor(state.timeLeft));
                 state.roundsCleared += 1;
                 state.score += Math.round(state.timeLeft * 2);
                 updateHUD();
-
-                els.targetText.textContent = getLang().cleared;
                 playTone(960, 0.07, "sine");
 
                 state.advanceId = setTimeout(() => {
@@ -2041,30 +1925,17 @@
                             : els.stats;
                 next.hidden = false;
                 next.classList.add("active");
+                els.soundBtn.hidden = screen === "game" || screen === "results";
             }
 
-            function toggleLiveStats() {
-                if (els.liveStatsPanel.hidden) {
-                    els.liveStatsPanel.hidden = false;
-                    setPaused(true);
-                } else {
-                    els.liveStatsPanel.hidden = true;
-                    setPaused(false);
-                }
-            }
-
-            function closeLiveStats() {
-                els.liveStatsPanel.hidden = true;
-                setPaused(false);
+            function toggleStatsBar() {
+                els.statsBar.hidden = !els.statsBar.hidden;
             }
 
             function setPaused(paused) {
                 if (!state.running || state.ended) return;
                 state.paused = paused;
                 els.pauseBtn.setAttribute("aria-pressed", String(paused));
-                els.pauseBtn.querySelector(".btn-label").textContent = paused
-                    ? getLang().resume
-                    : getLang().pause;
                 if (paused) {
                     clearTimer();
                     els.pauseOverlay.hidden = false;
@@ -2147,8 +2018,7 @@
             });
             els.startBtn.addEventListener("click", startSession);
             els.viewStatsBtn.addEventListener("click", () => showScreen("stats"));
-            els.liveStatsBtn.addEventListener("click", toggleLiveStats);
-            els.closeLiveStatsBtn.addEventListener("click", closeLiveStats);
+            els.statsToggleBtn.addEventListener("click", toggleStatsBar);
             els.pauseBtn.addEventListener("click", () => setPaused(!state.paused));
             els.resumeBtn.addEventListener("click", () => setPaused(false));
             els.restartBtn.addEventListener("click", startSession);
@@ -2160,7 +2030,7 @@
                 state.ended = true;
                 state.paused = false;
                 state.bonusSeconds = 0;
-                els.liveStatsPanel.hidden = true;
+                els.statsBar.hidden = true;
                 els.pauseOverlay.hidden = true;
                 showScreen("home");
             });
@@ -2171,7 +2041,7 @@
                 state.ended = true;
                 state.paused = false;
                 state.bonusSeconds = 0;
-                els.liveStatsPanel.hidden = true;
+                els.statsBar.hidden = true;
                 els.pauseOverlay.hidden = true;
                 showScreen("home");
             });
@@ -2219,7 +2089,7 @@
             });
 
             const prefs = loadPrefs();
-            state.difficulty = prefs.difficulty === "medium" || prefs.difficulty === "hard"
+            state.difficulty = prefs.difficulty === "medium" || prefs.difficulty === "hard" || prefs.difficulty === "extraHard"
                 ? prefs.difficulty
                 : "easy";
             state.mode = prefs.mode === "shape" ? "shape" : "color";

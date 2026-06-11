@@ -66,12 +66,11 @@ class ArtGenerator {
 const artGenerator = new ArtGenerator();
 window.artGenerator = artGenerator;
 
-// Start animation after loading overlay hides (animation was hidden otherwise)
 window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('loading').classList.add('hidden');
         artGenerator.start();
-    }, 1500);
+    }, 2500);
 });
 
 // Add click handler to start audio

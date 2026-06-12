@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
+<head><meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tamil Nadu Assembly — Government Timeline</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"></noscript>
+<link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" as="script">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js" as="script">
 <link rel="stylesheet" href="styles.css" />
+<link rel="prefetch" href="/index.html">
 </head>
 <body>
 <div id="map"></div>
 <div id="event-label-bar"></div>
 <div id="status-badge"></div>
-
 <div id="legend">
-  <div style="font-size:11px;font-weight:600;color:#c9d1d9;margin-bottom:4px;">Tamil Nadu Government Timeline</div>
-  <hr style="border:none;border-top:1px solid rgba(255,255,255,0.06);margin:0 0 4px 0;">
-  <b>Legend</b>
-  <div class="legend-row"><span class="legend-swatch" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);"></span> Constituency</div>
-  <div class="legend-row"><span class="legend-swatch" style="background:rgba(255,255,255,0.05);border:1px dashed rgba(250,240,200,0.25);"></span> District</div>
-  <div id="legend-governor-row" class="legend-row" style="display:none;"><span class="legend-swatch" style="background:#555;border:1px solid #888;"></span> Governor's Rule</div>
-  <div id="legend-cm-row" class="legend-row" style="display:none;"><span style="color:#ffd700;">&#9733;</span><span style="color:rgba(255,255,255,0.5);">Chief Minister</span></div>
-  <div id="legend-parties" style="margin-top:3px;border-top:1px solid rgba(255,255,255,0.06);padding-top:3px;"></div>
-  <div id="govt-info"></div>
+<div style="font-size:11px;font-weight:600;color:#c9d1d9;margin-bottom:4px;">Tamil Nadu Government Timeline</div>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,0.06);margin:0 0 4px 0;">
+<b>Legend</b>
+<div class="legend-row"><span class="legend-swatch" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);"></span> Constituency</div>
+<div class="legend-row"><span class="legend-swatch" style="background:rgba(255,255,255,0.05);border:1px dashed rgba(250,240,200,0.25);"></span> District</div>
+<div id="legend-governor-row" class="legend-row" style="display:none;"><span class="legend-swatch" style="background:#555;border:1px solid #888;"></span> Governor's Rule</div>
+<div id="legend-cm-row" class="legend-row" style="display:none;"><span style="color:#ffd700;">&#9733;</span><span style="color:rgba(255,255,255,0.5);">Chief Minister</span></div>
+<div id="legend-parties" style="margin-top:3px;border-top:1px solid rgba(255,255,255,0.06);padding-top:3px;"></div>
+<div id="govt-info"></div>
 </div>
-
 <div id="sidebar">
-  <button id="play-btn" title="Play timeline">&#9654;</button>
-  <div id="vline-wrap">
-    <div id="vline-track">
-      <div class="vm-marker" style="top:0%;"></div><div class="vm-marker" style="top:3%;"></div><div class="vm-marker" style="top:3%;"></div><div class="vm-marker" style="top:16%;"></div><div class="vm-marker" style="top:16%;"></div><div class="vm-marker" style="top:20%;"></div><div class="vm-marker" style="top:20%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:32%;"></div><div class="vm-marker" style="top:32%;"></div><div class="vm-marker" style="top:34%;"></div><div class="vm-marker" style="top:34%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:44%;"></div><div class="vm-marker" style="top:44%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:50%;"></div><div class="vm-marker" style="top:50%;"></div><div class="vm-marker" style="top:52%;"></div><div class="vm-marker" style="top:52%;"></div><div class="vm-marker" style="top:53%;"></div><div class="vm-marker" style="top:53%;"></div><div class="vm-marker" style="top:60%;"></div><div class="vm-marker" style="top:60%;"></div><div class="vm-marker" style="top:66%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:73%;"></div><div class="vm-marker" style="top:73%;"></div><div class="vm-marker" style="top:80%;"></div><div class="vm-marker" style="top:80%;"></div><div class="vm-marker" style="top:84%;"></div><div class="vm-marker" style="top:85%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:88%;"></div><div class="vm-marker" style="top:88%;"></div><div class="vm-marker" style="top:93%;"></div><div class="vm-marker" style="top:93%;"></div><div class="vm-marker" style="top:95%;"></div><div class="vm-marker" style="top:98%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div>
-      <div id="vline-thumb"></div>
-    </div>
-  </div>
-  <div id="vdate-label"></div>
+<button id="play-btn" title="Play timeline">&#9654;</button>
+<div id="vline-wrap">
+<div id="vline-track">
+<div class="vm-marker" style="top:0%;"></div><div class="vm-marker" style="top:3%;"></div><div class="vm-marker" style="top:3%;"></div><div class="vm-marker" style="top:16%;"></div><div class="vm-marker" style="top:16%;"></div><div class="vm-marker" style="top:20%;"></div><div class="vm-marker" style="top:20%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:23%;"></div><div class="vm-marker" style="top:32%;"></div><div class="vm-marker" style="top:32%;"></div><div class="vm-marker" style="top:34%;"></div><div class="vm-marker" style="top:34%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:38%;"></div><div class="vm-marker" style="top:44%;"></div><div class="vm-marker" style="top:44%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:48%;"></div><div class="vm-marker" style="top:50%;"></div><div class="vm-marker" style="top:50%;"></div><div class="vm-marker" style="top:52%;"></div><div class="vm-marker" style="top:52%;"></div><div class="vm-marker" style="top:53%;"></div><div class="vm-marker" style="top:53%;"></div><div class="vm-marker" style="top:60%;"></div><div class="vm-marker" style="top:60%;"></div><div class="vm-marker" style="top:66%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:67%;"></div><div class="vm-marker" style="top:73%;"></div><div class="vm-marker" style="top:73%;"></div><div class="vm-marker" style="top:80%;"></div><div class="vm-marker" style="top:80%;"></div><div class="vm-marker" style="top:84%;"></div><div class="vm-marker" style="top:85%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:87%;"></div><div class="vm-marker" style="top:88%;"></div><div class="vm-marker" style="top:88%;"></div><div class="vm-marker" style="top:93%;"></div><div class="vm-marker" style="top:93%;"></div><div class="vm-marker" style="top:95%;"></div><div class="vm-marker" style="top:98%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div><div class="vm-marker" style="top:100%;"></div>
+<div id="vline-thumb"></div>
 </div>
-
+</div>
+<div id="vdate-label"></div>
+</div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 <script src="app.js"></script>

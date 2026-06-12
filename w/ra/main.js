@@ -63,16 +63,15 @@ class ArtGenerator {
     }
 }
 
-// Show loading message
+const artGenerator = new ArtGenerator();
+window.artGenerator = artGenerator;
+
 window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('loading').classList.add('hidden');
-    }, 1500);
+        artGenerator.start();
+    }, 2500);
 });
-
-const artGenerator = new ArtGenerator();
-window.artGenerator = artGenerator;
-artGenerator.start();
 
 // Add click handler to start audio
 document.addEventListener('click', () => {

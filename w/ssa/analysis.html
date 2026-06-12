@@ -182,15 +182,7 @@
 </div>
 </footer>
 </div>
-<script>
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (!this.href.includes('mailto:')) {
-                        this.classList.add('loading');
-                    }
-                });
-            });
-        </script>
+<script>document.querySelectorAll('a').forEach(link => { link.addEventListener('click', function(e) { if (!this.href.includes('mailto:')) { this.classList.add('loading'); } }); });</script>
 <script src="../../js/about-privacy.js" defer></script>
 </body>
 <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">

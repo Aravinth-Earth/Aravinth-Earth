@@ -16,6 +16,7 @@ package-lock.json
 
 # AutoResearch experiment logs
 results.tsv
+experiments_log.tsv
 
 # Maestro UI test artifacts
 log/

@@ -118,7 +118,7 @@ describe('UI Elements & Interactive Components', () => {
           let url;
           try { url = new URL(link.href); } catch { return false; }
           if (!['http:', 'https:'].includes(url.protocol)) return false;
-          return url.hostname.includes('creativecommons') || url.hostname.includes('cc.org') || url.pathname.includes('/by/');
+          return url.hostname === 'creativecommons.org' || url.hostname.endsWith('.creativecommons.org') || url.hostname === 'cc.org' || url.hostname.endsWith('.cc.org') || url.pathname.includes('/by/');
         });
         expect(hasCC).to.be.true;
       });

@@ -144,9 +144,8 @@ class TimelineUI {
       const endTime = event.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
       const duration = `${Math.floor(event.duration / 60).toString().padStart(2, '0')}:${(event.duration % 60).toString().padStart(2, '0')}`;
 
-      eventBlock.innerHTML = `
-        <span>[ ${startTime} > ${duration} > ${endTime} ] => ${event.name}</span>
-      `;
+      const span = eventBlock.appendChild(document.createElement('span'));
+      span.textContent = `[ ${startTime} > ${duration} > ${endTime} ] => ${event.name}`;
       eventsColumn.appendChild(eventBlock);
     });
 
@@ -157,9 +156,8 @@ class TimelineUI {
 
     const targetEndBlock = document.createElement('div');
     targetEndBlock.className = 'timeline-target-end-block';
-    targetEndBlock.innerHTML = `
-      <span>${eventName ? `${eventName} - ` : ''}Target End Time: ${targetEndTimeString}</span>
-    `;
+    const endSpan = targetEndBlock.appendChild(document.createElement('span'));
+    endSpan.textContent = `${eventName ? `${eventName} - ` : ''}Target End Time: ${targetEndTimeString}`;
     eventsColumn.appendChild(targetEndBlock);
   }
 
@@ -225,13 +223,40 @@ class EventManager {
   static createEventElement(name = '', duration = '') {
     const eventDiv = document.createElement('div');
     eventDiv.className = 'event';
-    eventDiv.innerHTML = `
-      <input type="text" name="eventName" placeholder="Event Name" value="${name}" required>
-      <input type="number" name="eventDuration" placeholder="Duration (minutes)" value="${duration}" min="1" required>
-      <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
-      <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
-      <button type="button" class="remove-event" aria-label="Remove Event">✖️</button>
-    `;
+
+    const nameInput = eventDiv.appendChild(document.createElement('input'));
+    nameInput.type = 'text';
+    nameInput.name = 'eventName';
+    nameInput.placeholder = 'Event Name';
+    nameInput.value = name;
+    nameInput.required = true;
+
+    const durInput = eventDiv.appendChild(document.createElement('input'));
+    durInput.type = 'number';
+    durInput.name = 'eventDuration';
+    durInput.placeholder = 'Duration (minutes)';
+    durInput.value = duration;
+    durInput.min = '1';
+    durInput.required = true;
+
+    const upBtn = eventDiv.appendChild(document.createElement('button'));
+    upBtn.type = 'button';
+    upBtn.className = 'move-up';
+    upBtn.setAttribute('aria-label', 'Move Up');
+    upBtn.textContent = '⬆️';
+
+    const downBtn = eventDiv.appendChild(document.createElement('button'));
+    downBtn.type = 'button';
+    downBtn.className = 'move-down';
+    downBtn.setAttribute('aria-label', 'Move Down');
+    downBtn.textContent = '⬇️';
+
+    const rmBtn = eventDiv.appendChild(document.createElement('button'));
+    rmBtn.type = 'button';
+    rmBtn.className = 'remove-event';
+    rmBtn.setAttribute('aria-label', 'Remove Event');
+    rmBtn.textContent = '✖️';
+
     return eventDiv;
   }
 

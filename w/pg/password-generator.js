@@ -28,6 +28,12 @@ const PATTERNS = {
 };
 
 // Core functions
+function secureRandomInt(max) {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] % max;
+}
+
 function generatePassword() {
     const isWordMode = document.querySelector('.mode-button[data-mode="words"].active');
     const password = isWordMode ? generateWordPassword() : generateCharacterPassword();
@@ -85,13 +91,13 @@ function generateCharacterPassword() {
     }
 
     // Generate password
-    let password = Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    let password = Array.from({ length }, () => chars[secureRandomInt(chars.length)]).join('');
 
     // Ensure at least one character from each required set
     requirements.forEach(req => {
         if (req.needed && !new RegExp(`[${req.chars}]`).test(password)) {
-            const pos = Math.floor(Math.random() * length);
-            const char = req.chars[Math.floor(Math.random() * req.chars.length)];
+            const pos = secureRandomInt(length);
+            const char = req.chars[secureRandomInt(req.chars.length)];
             password = password.substring(0, pos) + char + password.substring(pos + 1);
         }
     });
@@ -117,7 +123,8 @@ function generateWordPassword() {
     let password = words.join(config.separator);
     
     if (config.appendNumber) {
-        password += Math.random().toString().slice(2, 2 + config.numberLength);
+        const nums = '0123456789';
+        password += Array.from({ length: config.numberLength }, () => nums[secureRandomInt(10)]).join('');
     }
 
     return applyCasing(password, config.caseType);
@@ -232,13 +239,16 @@ function displayPassword(password) {
 
     // Color-code the password
     const display = document.getElementById('password');
-    display.innerHTML = password.split('').map(char => {
+    display.textContent = '';
+    for (const char of password) {
+        const span = display.appendChild(document.createElement('span'));
         let type = 'symbol';
         if (/[A-Z]/.test(char)) type = 'upper';
         else if (/[a-z]/.test(char)) type = 'lower';
         else if (/[0-9]/.test(char)) type = 'number';
-        return `<span class="char-${type}">${char}</span>`;
-    }).join('');
+        span.className = `char-${type}`;
+        span.textContent = char;
+    }
 
     // Update strength indicators
     updateStrength(password);

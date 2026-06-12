@@ -213,7 +213,7 @@
     </footer>
 
     <script src="password-generator.js"></script>
-    <script>// Added event listeners for form controls document.addEventListener('DOMContentLoaded', () => { // Initialize theme and generate first password document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); generatePassword(); // Add listeners for input changes document.querySelectorAll('input[type="checkbox"], input[type="radio"], input[type="range"], input[type="number"]') .forEach(input => { input.addEventListener('change', generatePassword); }); // Add listeners for custom inputs document.getElementById('includeSymbols')?.addEventListener('input', generatePassword); document.getElementById('excludeSymbols')?.addEventListener('input', generatePassword); document.getElementById('customSeparator')?.addEventListener('input', generatePassword); document.getElementById('customCharSet')?.addEventListener('input', generatePassword); });</script>
+    <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark');generatePassword();document.querySelectorAll('input[type="checkbox"],input[type="radio"],input[type="range"],input[type="number"]').forEach(i=>i.addEventListener('change',generatePassword));['includeSymbols','excludeSymbols','customSeparator','customCharSet'].forEach(id=>document.getElementById(id)?.addEventListener('input',generatePassword))});</script>
     <script src="../../js/about-privacy.js" defer></script>
 </body>
 <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">

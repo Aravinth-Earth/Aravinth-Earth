@@ -88,12 +88,22 @@ function promptCache() {
   const info = $('cache-info');
   const tripName = meta.currentTrip?.name || 'Untitled Trip';
   const created = meta.currentTrip?.createdAt || meta.firstCachedAt;
-  info.innerHTML = `
-    <div class="cache-info-row"><span class="label">Trip</span><span class="value">${tripName}</span></div>
-    <div class="cache-info-row"><span class="label">Members</span><span class="value">${(meta.members || []).length}</span></div>
-    <div class="cache-info-row"><span class="label">Expenses</span><span class="value">${(meta.expenses || []).length}</span></div>
-    <div class="cache-info-row"><span class="label">Trip created</span><span class="value">${formatDateTime(meta.currentTrip?.createdAt)}</span></div>
-    <div class="cache-info-row"><span class="label">Last updated</span><span class="value">${formatDateTime(meta.lastUpdated)}</span></div>`;
+  info.textContent = '';
+  const rows = [
+    ['Trip', tripName],
+    ['Members', (meta.members || []).length],
+    ['Expenses', (meta.expenses || []).length],
+    ['Trip created', formatDateTime(meta.currentTrip?.createdAt)],
+    ['Last updated', formatDateTime(meta.lastUpdated)]
+  ];
+  rows.forEach(([label, value]) => {
+    const row = info.appendChild(document.createElement('div'));
+    row.className = 'cache-info-row';
+    const l = row.appendChild(document.createElement('span'));
+    l.className = 'label'; l.textContent = label;
+    const v = row.appendChild(document.createElement('span'));
+    v.className = 'value'; v.textContent = value;
+  });
   modal.style.display = 'flex';
 
   $('cache-load-btn').onclick = () => {
@@ -237,15 +247,29 @@ function renderMembers() {
   list.innerHTML = '';
   members.forEach(m => {
     const card = document.createElement('div'); card.className = 'member-card';
-    card.innerHTML = `
-      <div class="member-avatar" style="background:${getAvatarColor(m.name)}">${getInitials(m.name)}</div>
-      <div class="member-info">
-        <div class="member-name">${m.name}</div>
-      </div>
-      <div class="member-actions">
-        <button class="btn btn-secondary btn-sm" onclick="editMember(${m.id})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteMember(${m.id})">🗑️</button>
-      </div>`;
+
+    const avatar = card.appendChild(document.createElement('div'));
+    avatar.className = 'member-avatar';
+    avatar.style.background = getAvatarColor(m.name);
+    avatar.textContent = getInitials(m.name);
+
+    const info = card.appendChild(document.createElement('div'));
+    info.className = 'member-info';
+    const nameDiv = info.appendChild(document.createElement('div'));
+    nameDiv.className = 'member-name';
+    nameDiv.textContent = m.name;
+
+    const actions = card.appendChild(document.createElement('div'));
+    actions.className = 'member-actions';
+    const editBtn = actions.appendChild(document.createElement('button'));
+    editBtn.className = 'btn btn-secondary btn-sm';
+    editBtn.textContent = '✏️';
+    editBtn.addEventListener('click', () => editMember(m.id));
+    const delBtn = actions.appendChild(document.createElement('button'));
+    delBtn.className = 'btn btn-danger btn-sm';
+    delBtn.textContent = '🗑️';
+    delBtn.addEventListener('click', () => deleteMember(m.id));
+
     list.appendChild(card);
   });
 }
@@ -280,7 +304,9 @@ function populateSelectMembers() {
   const c = $('select-member-checkboxes'); c.innerHTML = '';
   members.forEach(m => {
     const l = document.createElement('label');
-    l.innerHTML = `<input type="checkbox" name="selected-members" value="${m.name}" checked><span>${m.name}</span>`;
+    const cb = l.appendChild(document.createElement('input'));
+    cb.type = 'checkbox'; cb.name = 'selected-members'; cb.value = m.name; cb.checked = true;
+    l.appendChild(document.createElement('span')).textContent = m.name;
     c.appendChild(l);
   });
 }
@@ -289,7 +315,10 @@ function populatePercentages() {
   const c = $('percentage-inputs'); c.innerHTML = '';
   members.forEach(m => {
     const d = document.createElement('div'); d.className = 'split-input-item';
-    d.innerHTML = `<label>${m.name}</label><input type="number" name="percentage-${m.name}" placeholder="0" min="0" max="100" step="0.1">`;
+    const lab = d.appendChild(document.createElement('label'));
+    lab.textContent = m.name;
+    const inp = d.appendChild(document.createElement('input'));
+    inp.type = 'number'; inp.name = `percentage-${m.name}`; inp.placeholder = '0'; inp.min = '0'; inp.max = '100'; inp.step = '0.1';
     c.appendChild(d);
   });
   qsa('#percentage-inputs input').forEach(i => i.addEventListener('input', updatePercentageTotal));
@@ -308,7 +337,10 @@ function populateShares() {
   const c = $('shares-inputs'); c.innerHTML = '';
   members.forEach(m => {
     const d = document.createElement('div'); d.className = 'split-input-item';
-    d.innerHTML = `<label>${m.name}</label><input type="number" name="shares-${m.name}" placeholder="0" min="0" step="1">`;
+    const lab = d.appendChild(document.createElement('label'));
+    lab.textContent = m.name;
+    const inp = d.appendChild(document.createElement('input'));
+    inp.type = 'number'; inp.name = `shares-${m.name}`; inp.placeholder = '0'; inp.min = '0'; inp.step = '1';
     c.appendChild(d);
   });
   qsa('#shares-inputs input').forEach(i => i.addEventListener('input', updateSharesTotal));
@@ -324,15 +356,19 @@ function updateSharesTotal() {
   const bd = $('shares-breakdown');
   if (total > 0 && expenseAmount > 0) {
     bd.style.display = 'block';
-    let html = '<h4>Breakdown:</h4>';
+    bd.textContent = '';
     inputs.forEach(i => {
       const s = parseInt(i.value) || 0;
       if (s > 0) {
         const n = i.name.replace('shares-','');
-        html += `<div class="share-breakdown-item"><span>${n} (${s})</span><span>${(s/total*100).toFixed(1)}% = ${formatCurrency(expenseAmount*s/total, currentTrip?.currency)}</span></div>`;
+        const item = bd.appendChild(document.createElement('div'));
+        item.className = 'share-breakdown-item';
+        const nm = item.appendChild(document.createElement('span'));
+        nm.textContent = `${n} (${s})`;
+        const amt = item.appendChild(document.createElement('span'));
+        amt.textContent = `${(s/total*100).toFixed(1)}% = ${formatCurrency(expenseAmount*s/total, currentTrip?.currency)}`;
       }
     });
-    bd.innerHTML = html;
   } else { bd.style.display = 'none' }
 }
 
@@ -340,7 +376,10 @@ function populateCustom() {
   const c = $('custom-inputs'); c.innerHTML = '';
   members.forEach(m => {
     const d = document.createElement('div'); d.className = 'split-input-item';
-    d.innerHTML = `<label>${m.name}</label><input type="number" name="custom-${m.name}" placeholder="0.00" min="0" step="0.01">`;
+    const lab = d.appendChild(document.createElement('label'));
+    lab.textContent = m.name;
+    const inp = d.appendChild(document.createElement('input'));
+    inp.type = 'number'; inp.name = `custom-${m.name}`; inp.placeholder = '0.00'; inp.min = '0'; inp.step = '0.01';
     c.appendChild(d);
   });
   qsa('#custom-inputs input').forEach(i => i.addEventListener('input', updateCustomTotal));
@@ -427,16 +466,32 @@ function renderExpenses() {
   const sorted = getSortedExpenses();
   sorted.forEach(exp => {
     const row = document.createElement('div'); row.className = 'expense-row';
-    row.innerHTML = `
-      <div class="expense-main">
-        <div class="expense-desc">${exp.description}</div>
-        <div class="expense-meta"><span class="payer">${exp.paidBy}</span> • ${formatDate(exp.date)}</div>
-      </div>
-      <div class="expense-amount-col">${formatCurrency(exp.amount, currentTrip?.currency)}</div>
-      <div class="expense-actions-col">
-        <button class="btn btn-secondary btn-sm" onclick="editExpense(${exp.id})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteExpense(${exp.id})">🗑️</button>
-      </div>`;
+
+    const main = row.appendChild(document.createElement('div'));
+    main.className = 'expense-main';
+    const desc = main.appendChild(document.createElement('div'));
+    desc.className = 'expense-desc'; desc.textContent = exp.description;
+    const meta = main.appendChild(document.createElement('div'));
+    meta.className = 'expense-meta';
+    const payer = meta.appendChild(document.createElement('span'));
+    payer.className = 'payer'; payer.textContent = exp.paidBy;
+    meta.appendChild(document.createTextNode(` • ${formatDate(exp.date)}`));
+
+    const amtCol = row.appendChild(document.createElement('div'));
+    amtCol.className = 'expense-amount-col';
+    amtCol.textContent = formatCurrency(exp.amount, currentTrip?.currency);
+
+    const actCol = row.appendChild(document.createElement('div'));
+    actCol.className = 'expense-actions-col';
+    const editBtn = actCol.appendChild(document.createElement('button'));
+    editBtn.className = 'btn btn-secondary btn-sm';
+    editBtn.textContent = '✏️';
+    editBtn.addEventListener('click', () => editExpense(exp.id));
+    const delBtn = actCol.appendChild(document.createElement('button'));
+    delBtn.className = 'btn btn-danger btn-sm';
+    delBtn.textContent = '🗑️';
+    delBtn.addEventListener('click', () => deleteExpense(exp.id));
+
     list.appendChild(row);
   });
 }

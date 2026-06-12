@@ -357,6 +357,8 @@ function updateSharesTotal() {
   if (total > 0 && expenseAmount > 0) {
     bd.style.display = 'block';
     bd.textContent = '';
+    const h = bd.appendChild(document.createElement('h4'));
+    h.textContent = 'Breakdown:';
     inputs.forEach(i => {
       const s = parseInt(i.value) || 0;
       if (s > 0) {
@@ -574,32 +576,41 @@ function renderBalanceBars(balances) {
     const pct = Math.max(3, (absBal / maxAbs) * 100);
     const row = document.createElement('div'); row.className = 'bidir-row';
     if (bal > 0.01) {
-      row.innerHTML = `
-        <span class="bidir-label">${name}</span>
-        <div class="bidir-track-wrap">
-          <div class="bidir-track"></div>
-          <div class="bidir-divider"></div>
-          <div class="bidir-track"><div class="bidir-bar positive" style="width:${pct}%"></div></div>
-        </div>
-        <span class="bidir-amt positive">+${formatCurrency(bal, currentTrip?.currency)}</span>`;
+      const label = row.appendChild(document.createElement('span'));
+      label.className = 'bidir-label'; label.textContent = name;
+      const wrap = row.appendChild(document.createElement('div'));
+      wrap.className = 'bidir-track-wrap';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-track';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-divider';
+      const t2 = wrap.appendChild(document.createElement('div'));
+      t2.className = 'bidir-track';
+      const bar = t2.appendChild(document.createElement('div'));
+      bar.className = 'bidir-bar positive'; bar.style.width = `${pct}%`;
+      const amt = row.appendChild(document.createElement('span'));
+      amt.className = 'bidir-amt positive'; amt.textContent = `+${formatCurrency(bal, currentTrip?.currency)}`;
     } else if (bal < -0.01) {
-      row.innerHTML = `
-        <span class="bidir-label">${name}</span>
-        <div class="bidir-track-wrap">
-          <div class="bidir-track"><div class="bidir-bar negative" style="width:${pct}%"></div></div>
-          <div class="bidir-divider"></div>
-          <div class="bidir-track"></div>
-        </div>
-        <span class="bidir-amt negative">${formatCurrency(absBal, currentTrip?.currency)}</span>`;
+      const label = row.appendChild(document.createElement('span'));
+      label.className = 'bidir-label'; label.textContent = name;
+      const wrap = row.appendChild(document.createElement('div'));
+      wrap.className = 'bidir-track-wrap';
+      const t1 = wrap.appendChild(document.createElement('div'));
+      t1.className = 'bidir-track';
+      const bar = t1.appendChild(document.createElement('div'));
+      bar.className = 'bidir-bar negative'; bar.style.width = `${pct}%`;
+      wrap.appendChild(document.createElement('div')).className = 'bidir-divider';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-track';
+      const amt = row.appendChild(document.createElement('span'));
+      amt.className = 'bidir-amt negative'; amt.textContent = formatCurrency(absBal, currentTrip?.currency);
     } else {
-      row.innerHTML = `
-        <span class="bidir-label">${name}</span>
-        <div class="bidir-track-wrap">
-          <div class="bidir-track"></div>
-          <div class="bidir-divider"></div>
-          <div class="bidir-track"></div>
-        </div>
-        <span class="bidir-amt zero">Settled</span>`;
+      const label = row.appendChild(document.createElement('span'));
+      label.className = 'bidir-label'; label.textContent = name;
+      const wrap = row.appendChild(document.createElement('div'));
+      wrap.className = 'bidir-track-wrap';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-track';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-divider';
+      wrap.appendChild(document.createElement('div')).className = 'bidir-track';
+      const amt = row.appendChild(document.createElement('span'));
+      amt.className = 'bidir-amt zero'; amt.textContent = 'Settled';
     }
     container.appendChild(row);
   });
@@ -628,14 +639,16 @@ function renderSettlementFlow(balances) {
   settlements.forEach(s => {
     const pct = Math.max(8, (s.amount / maxAmt) * 100);
     const flow = document.createElement('div'); flow.className = 'flow-row';
-    flow.innerHTML = `
-      <span class="flow-from">${s.from}</span>
-      <div class="flow-track">
-        <div class="flow-line" style="width:${pct}%">
-          <span class="flow-amt">${formatCurrency(s.amount, currentTrip?.currency)}</span>
-        </div>
-      </div>
-      <span class="flow-to">${s.to}</span>`;
+    const fromSpan = flow.appendChild(document.createElement('span'));
+    fromSpan.className = 'flow-from'; fromSpan.textContent = s.from;
+    const track = flow.appendChild(document.createElement('div'));
+    track.className = 'flow-track';
+    const line = track.appendChild(document.createElement('div'));
+    line.className = 'flow-line'; line.style.width = `${pct}%`;
+    const amt = line.appendChild(document.createElement('span'));
+    amt.className = 'flow-amt'; amt.textContent = formatCurrency(s.amount, currentTrip?.currency);
+    const toSpan = flow.appendChild(document.createElement('span'));
+    toSpan.className = 'flow-to'; toSpan.textContent = s.to;
     visual.appendChild(flow);
   });
 }

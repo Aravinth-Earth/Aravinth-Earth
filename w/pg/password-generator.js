@@ -137,7 +137,7 @@ function generateWordWithPattern(length, pattern) {
     switch(pattern) {
         case 'complex':
             // CCVC or CVCC patterns
-            patternTemplate = Math.random() < 0.5 ? 'ccvc' : 'cvcc';
+            patternTemplate = secureRandomInt(2) === 0 ? 'ccvc' : 'cvcc';
             break;
         case 'random':
             // Random mix of consonants and vowels, but avoid consecutive vowels
@@ -162,9 +162,9 @@ function generateWordWithPattern(length, pattern) {
         if (isConsonant && word && PATTERNS.consonants.includes(word[word.length - 1])) {
             // Filter out the last used consonant
             const filtered = chars.replace(word[word.length - 1], '');
-            word += filtered[Math.floor(Math.random() * filtered.length)];
+            word += filtered[secureRandomInt(filtered.length)];
         } else {
-            word += chars[Math.floor(Math.random() * chars.length)];
+            word += chars[secureRandomInt(chars.length)];
         }
     }
 
@@ -189,10 +189,10 @@ function generateRandomWord(length) {
         } else if (needsVowel) {
             chars = PATTERNS.vowels;
         } else {
-            chars = Math.random() < 0.65 ? PATTERNS.consonants : PATTERNS.vowels;
+            chars = secureRandomInt(100) < 65 ? PATTERNS.consonants : PATTERNS.vowels;
         }
         
-        const char = chars[Math.floor(Math.random() * chars.length)];
+        const char = chars[secureRandomInt(chars.length)];
         word += char;
         
         lastWasVowel = PATTERNS.vowels.includes(char);

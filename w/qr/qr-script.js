@@ -264,55 +264,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataUrl = canvas.toDataURL('image/png');
             const activeTabId = document.querySelector('.tab-btn.active').getAttribute('data-tab');
             const printWindow = window.open('', '_blank');
-            
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Print QR Code - ${activeTabId}</title>
-                    <style>
-                        body {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            height: 100vh;
-                            margin: 0;
-                            padding: 20px;
-                            box-sizing: border-box;
-                            font-family: sans-serif;
-                        }
-                        img {
-                            max-width: 100%;
-                            max-height: 80vh;
-                        }
-                        h1 {
-                            margin-bottom: 20px;
-                        }
-                        .info {
-                            margin-top: 20px;
-                            text-align: center;
-                            color: #666;
-                            font-size: 14px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>QR Code - ${activeTabId.charAt(0).toUpperCase() + activeTabId.slice(1)}</h1>
-                    <img src="${dataUrl}" alt="QR Code">
-                    <div class="info">Generated on ${new Date().toLocaleString()}</div>
-                    <script>
-                        window.onload = function() {
-                            setTimeout(function() {
-                                window.print();
-                                window.close();
-                            }, 100);
-                        };
-                    </script>
-                </body>
-                </html>
-            `);
-            
-            printWindow.document.close();
+            const doc = printWindow.document;
+            doc.title = `Print QR Code - ${activeTabId}`;
+
+            const style = doc.head.appendChild(doc.createElement('style'));
+            style.textContent = `
+                body{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;padding:20px;box-sizing:border-box;font-family:sans-serif}
+                img{max-width:100%;max-height:80vh}
+                h1{margin-bottom:20px}
+                .info{margin-top:20px;text-align:center;color:#666;font-size:14px}
+            `;
+
+            const h1 = doc.body.appendChild(doc.createElement('h1'));
+            h1.textContent = `QR Code - ${activeTabId.charAt(0).toUpperCase() + activeTabId.slice(1)}`;
+
+            const img = doc.body.appendChild(doc.createElement('img'));
+            img.src = dataUrl;
+            img.alt = 'QR Code';
+
+            const info = doc.body.appendChild(doc.createElement('div'));
+            info.className = 'info';
+            info.textContent = `Generated on ${new Date().toLocaleString()}`;
+
+            const script = doc.body.appendChild(doc.createElement('script'));
+            script.textContent = 'window.onload=function(){setTimeout(function(){window.print();window.close();},100);};';
         }
     });
     

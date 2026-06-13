@@ -114,9 +114,12 @@ describe('UI Elements & Interactive Components', () => {
 
     it('should have CC BY license link', () => {
       cy.get('.audio-tooltip a').then(($links) => {
-        const hasCC = Array.from($links).some(link => 
-          link.href.includes('creativecommons') || link.href.includes('cc.org') || link.href.includes('/by/')
-        );
+        const hasCC = Array.from($links).some(link => {
+          let url;
+          try { url = new URL(link.href); } catch { return false; }
+          if (!['http:', 'https:'].includes(url.protocol)) return false;
+          return url.hostname === 'creativecommons.org' || url.hostname.endsWith('.creativecommons.org') || url.hostname === 'cc.org' || url.hostname.endsWith('.cc.org') || url.pathname.includes('/by/');
+        });
         expect(hasCC).to.be.true;
       });
     });

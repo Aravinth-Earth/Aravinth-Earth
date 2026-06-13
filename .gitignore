@@ -18,6 +18,10 @@ package-lock.json
 results.tsv
 experiments_log.tsv
 
+# Cypress test artifacts
+w/ra/test/e2e/screenshots/
+w/sp/test/e2e/screenshots/
+
 # Maestro UI test artifacts
 log/
 ui-test-m/site-sanity/artifacts*/

@@ -46,7 +46,7 @@ function saveData() {
   localStorage.setItem('expenseSplitter', JSON.stringify({
     currentTrip, members, expenses,
     preferences: { expenseSort: currentExpenseSort },
-    firstCachedAt: getCacheMeta().firstCachedAt || new Date().toISOString(),
+    firstCachedAt: (getCacheMeta()?.firstCachedAt) || new Date().toISOString(),
     lastUpdated: new Date().toISOString()
   }));
 }
@@ -444,8 +444,14 @@ function handleExpenseSubmit(e) {
     default: showMessage('Invalid split type', 'error'); return;
   }
   const expenseData = { id: expenseId, description, amount, paidBy, splitType, involvedMembers, splitData, date: $('expense-date').value || new Date().toISOString().split('T')[0], time: $('expense-time').value || '', createdAt: new Date().toISOString() };
-  if (isEdit) { const idx = expenses.findIndex(e => e.id === expenseId); if (idx > -1) { expenseData.createdAt = expenses[idx].createdAt; expenses[idx] = expenseData } showMessage('Expense updated', 'success') }
-  else { expenses.push(expenseData); showMessage('Expense added', 'success') }
+  if (isEdit) {
+    const idx = expenses.findIndex(e => e.id === expenseId);
+    if (idx > -1) { expenseData.createdAt = expenses[idx].createdAt; expenses[idx] = expenseData }
+    showMessage('Expense updated', 'success');
+  } else {
+    expenses.push(expenseData);
+    showMessage('Expense added', 'success');
+  }
   form.reset(); closeModals(); saveData(); updateDisplay(); calcSettlements();
 }
 
@@ -477,7 +483,17 @@ function renderExpenses() {
     meta.className = 'expense-meta';
     const payer = meta.appendChild(document.createElement('span'));
     payer.className = 'payer'; payer.textContent = exp.paidBy;
-    meta.appendChild(document.createTextNode(` • ${formatDate(exp.date)}`));
+    let metaText = ` • ${formatDate(exp.date)}${exp.time ? ' · '+exp.time : ''}`;
+    const isPersonal = exp.involvedMembers.length === 1 && exp.involvedMembers[0] === exp.paidBy;
+    if (!isPersonal) {
+      const labels = { equal: 'all', 'select-equal': 'sel', percentage: '%', shares: 'shares', custom: 'cust' };
+      metaText += ' · ' + (labels[exp.splitType] || exp.splitType);
+      if (exp.splitType !== 'equal') {
+        const perPerson = exp.involvedMembers.map(m => m + ' ' + formatCurrency(exp.splitData[m], currentTrip?.currency)).join(', ');
+        metaText += ' : ' + perPerson;
+      }
+    }
+    meta.appendChild(document.createTextNode(metaText));
 
     const amtCol = row.appendChild(document.createElement('div'));
     amtCol.className = 'expense-amount-col';
@@ -515,7 +531,7 @@ function editExpense(id) {
   if (radio) { radio.checked = true; updateSplitOptions(exp.splitType) }
   setTimeout(() => {
     switch (exp.splitType) {
-      case 'select-equal': exp.involvedMembers.forEach(n => { const cb = qs(`[name="selected-members"][value="${n}"]`); if (cb) cb.checked = true }); break;
+      case 'select-equal': qsa('[name="selected-members"]').forEach(cb => cb.checked = exp.involvedMembers.includes(cb.value)); break;
       case 'percentage': Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="percentage-${n}"]`); if (i) i.value = (a/exp.amount*100).toFixed(1) }); updatePercentageTotal(); break;
       case 'shares': { const base = Math.min(...Object.values(exp.splitData)); Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="shares-${n}"]`); if (i) i.value = Math.round(a/base) }); updateSharesTotal(); break }
       case 'custom': Object.entries(exp.splitData).forEach(([n,a]) => { const i = qs(`[name="custom-${n}"]`); if (i) i.value = a.toFixed(2) }); updateCustomTotal(); break;

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Share</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0d1117;color:#c9d1d9;padding:2rem 1rem;min-height:100vh}
+.container{max-width:640px;margin:0 auto}
+h1{color:#58a6ff;margin-bottom:0.3rem}
+.sub{color:#8b949e;font-size:0.9rem;margin-bottom:1.5rem}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.25rem;margin-bottom:1rem}
+.card h2{font-size:1rem;color:#f0f6fc;margin-bottom:0.75rem}
+label{display:block;font-size:0.85rem;color:#8b949e;margin-bottom:0.25rem}
+textarea,input[type=password],input[type=text]{width:100%;padding:0.6rem 0.75rem;border:1px solid #30363d;border-radius:6px;background:#0d1117;color:#c9d1d9;font-size:0.9rem;margin-bottom:0.75rem}
+textarea:focus,input:focus{outline:none;border-color:#58a6ff}
+textarea{resize:vertical;font-family:monospace}
+.btn{padding:0.55rem 1.25rem;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;font-weight:500}
+.btn-primary{background:#238636;color:#fff}
+.btn-primary:hover{background:#2ea043}
+.btn-secondary{background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+.btn-secondary:hover{background:#30363d}
+.btn-group{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.result-box{display:none;margin-top:0.75rem;padding:0.75rem;background:#1c2128;border:1px solid #30363d;border-radius:6px;word-break:break-all;font-family:monospace;font-size:0.85rem}
+.result-box.show{display:block}
+.result-box .label{color:#8b949e;font-size:0.8rem;margin-bottom:0.3rem}
+.error-box{display:none;color:#da3633;font-size:0.85rem;margin-top:0.5rem;padding:0.5rem;background:#290a0a;border:1px solid #da3633;border-radius:6px}
+.error-box.show{display:block}
+.param-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem}
+.param-row select{width:100%;padding:0.5rem;border:1px solid #30363d;border-radius:6px;background:#0d1117;color:#c9d1d9;font-size:0.85rem}
+.param-row label{font-size:0.8rem;color:#8b949e}
+.timer{font-size:0.8rem;color:#8b949e;margin-bottom:0.5rem;min-height:1.2em}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Secret Share</h1>
+<p class="sub">Encrypt messages in your browser. Nothing leaves this device. Uses AES-GCM + PBKDF2 via Web Crypto API.</p>
+
+<div class="card" id="encryptCard">
+<h2>Encrypt</h2>
+<div class="param-row">
+<div><label>Iterations</label><select id="iterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label>Hash</label><select id="hash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+</div>
+<textarea id="plaintext" rows="4" placeholder="Enter message to encrypt..."></textarea>
+<input type="password" id="encPwd" placeholder="Password">
+<input type="text" id="encSalt" placeholder="Salt phrase" value="shared-secret">
+<div class="timer" id="encTimer"></div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="doEncrypt()">Encrypt</button>
+<button class="btn btn-secondary" onclick="clearEncrypt()">Clear</button>
+</div>
+<div class="result-box" id="encResult"><div class="label">Encrypted text (share this):</div><div id="encOutput"></div><button class="btn btn-secondary" style="margin-top:0.5rem;width:100%" onclick="copyText('encOutput')">Copy</button></div>
+<div class="error-box" id="encError"></div>
+</div>
+
+<div class="card" id="decryptCard">
+<h2>Decrypt</h2>
+<div class="param-row">
+<div><label>Iterations</label><select id="decIterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label>Hash</label><select id="decHash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+</div>
+<textarea id="ciphertext" rows="4" placeholder="Paste encrypted text here..."></textarea>
+<input type="password" id="decPwd" placeholder="Password">
+<input type="text" id="decSalt" placeholder="Salt phrase" value="shared-secret">
+<div class="timer" id="decTimer"></div>
+<div class="btn-group">
+<button class="btn btn-primary" onclick="doDecrypt()">Decrypt</button>
+<button class="btn btn-secondary" onclick="clearDecrypt()">Clear</button>
+</div>
+<div class="result-box" id="decResult"><div class="label">Decrypted message:</div><div id="decOutput"></div><button class="btn btn-secondary" style="margin-top:0.5rem;width:100%" onclick="copyText('decOutput')">Copy</button></div>
+<div class="error-box" id="decError"></div>
+</div>
+
+</div>
+
+<script>
+function ab2b64(ab){return btoa(String.fromCharCode(...new Uint8Array(ab)))}
+function b642ab(b64){return Uint8Array.from(atob(b64),c=>c.charCodeAt(0)).buffer}
+function enc(t){return new TextEncoder().encode(t)}
+function dec(b){return new TextDecoder().decode(b)}
+
+async function deriveKey(pwd,salt,iter,hash){
+  const baseKey=await crypto.subtle.importKey('raw',enc(pwd),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:enc(salt),iterations:iter,hash:hash},baseKey,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+
+async function doEncrypt(){
+  const pt=document.getElementById('plaintext').value;
+  const pwd=document.getElementById('encPwd').value;
+  const salt=document.getElementById('encSalt').value;
+  const iter=parseInt(document.getElementById('iterations').value);
+  const hash=document.getElementById('hash').value;
+  const timer=document.getElementById('encTimer');
+  const err=document.getElementById('encError');err.classList.remove('show');
+  const res=document.getElementById('encResult');res.classList.remove('show');
+  if(!pt||!pwd||!salt){err.textContent='Fill all fields';err.classList.add('show');return}
+  timer.textContent='Encrypting...';
+  try{
+    const key=await deriveKey(pwd,salt,iter,hash);
+    const iv=crypto.getRandomValues(new Uint8Array(12));
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc(pt));
+    const saltBytes=enc(salt);
+    const out=btoa(String.fromCharCode(...new Uint8Array([...saltBytes,...iv,...new Uint8Array(ct)])));
+    document.getElementById('encOutput').textContent=out;
+    res.classList.add('show');
+    timer.textContent='Encrypted successfully';
+  }catch(e){err.textContent='Error: '+e.message;err.classList.add('show');timer.textContent=''}
+}
+
+async function doDecrypt(){
+  const ct=document.getElementById('ciphertext').value;
+  const pwd=document.getElementById('decPwd').value;
+  const salt=document.getElementById('decSalt').value;
+  const iter=parseInt(document.getElementById('decIterations').value);
+  const hash=document.getElementById('decHash').value;
+  const timer=document.getElementById('decTimer');
+  const err=document.getElementById('decError');err.classList.remove('show');
+  const res=document.getElementById('decResult');res.classList.remove('show');
+  if(!ct||!pwd||!salt){err.textContent='Fill all fields';err.classList.add('show');return}
+  timer.textContent='Decrypting...';
+  try{
+    const raw=Uint8Array.from(atob(ct),c=>c.charCodeAt(0));
+    const saltLen=enc(salt).length;
+    const iv=raw.slice(saltLen,saltLen+12);
+    const data=raw.slice(saltLen+12);
+    const key=await deriveKey(pwd,salt,iter,hash);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,data);
+    document.getElementById('decOutput').textContent=dec(pt);
+    res.classList.add('show');
+    timer.textContent='Decrypted successfully';
+  }catch(e){err.textContent='Error: Wrong password, salt, or corrupted data';err.classList.add('show');timer.textContent=''}
+}
+
+function clearEncrypt(){
+  document.getElementById('plaintext').value='';
+  document.getElementById('encPwd').value='';
+  document.getElementById('encResult').classList.remove('show');
+  document.getElementById('encError').classList.remove('show');
+  document.getElementById('encTimer').textContent='';
+}
+
+function clearDecrypt(){
+  document.getElementById('ciphertext').value='';
+  document.getElementById('decPwd').value='';
+  document.getElementById('decResult').classList.remove('show');
+  document.getElementById('decError').classList.remove('show');
+  document.getElementById('decTimer').textContent='';
+}
+
+async function copyText(id){
+  const t=document.getElementById(id).textContent;
+  try{await navigator.clipboard.writeText(t);alert('Copied!')}catch{alert('Copy failed')}
+}
+</script>
+</body>
+</html>

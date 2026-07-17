@@ -1,0 +1,135 @@
+            .app {
+                padding: 0;
+            }
+            .topbar,
+            .content {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+            .content {
+                padding-bottom: 14px;
+            }
+            .screen {
+                inset: 10px 14px 14px;
+            }
+            .hud-top {
+                grid-template-columns: 1fr;
+            }
+            .actions {
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .home-actions .btn-primary {
+                width: 100%;
+            }
+            .home-actions .btn-compact {
+                width: auto;
+            }
+            .target-card {
+                min-height: 0;
+                padding-right: 86px;
+            }
+            .progress-card {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                min-width: 60px;
+                padding: 6px;
+                gap: 2px;
+                z-index: 2;
+            }
+            .ring {
+                width: 42px;
+                height: 42px;
+            }
+            .ring span {
+                font-size: 0.76rem;
+            }
+            .btn-label {
+                display: none;
+            }
+            .btn {
+                min-width: 38px;
+                padding: 0 12px;
+            }
+            .btn-icon {
+                width: 1.4em;
+                margin-right: 0;
+                font-size: 1.1em;
+            }
+            .btn-compact {
+                min-height: 32px;
+                padding: 0 7px;
+            }
+            #resetStatsBtn {
+                display: none;
+            }
+
+            .hero-grid {
+                gap: 10px;
+            }
+            .topbar {
+                padding-top: 14px;
+                padding-bottom: 6px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .home .panel {
+                padding: 12px;
+            }
+            .home .chips {
+                gap: 6px;
+            }
+            .home .chip {
+                min-height: 28px;
+                padding: 0 9px;
+                font-size: 0.8rem;
+            }
+            .home .footer-note {
+                display: none;
+            }
+            .home .hero-grid > div:last-child {
+                display: none;
+            }
+            .results-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .results-grid .stat {
+                padding: 10px;
+            }
+            .stats-grid .stat {
+                padding: 10px;
+            }
+            .results-screen .subtle {
+                font-size: 0.9rem;
+            }
+            .results-screen .actions {
+                gap: 8px;
+            }
+            .game-board {
+                gap: 4px;
+                padding: 6px;
+                border-radius: 12px;
+            }
+            .tile {
+                border-radius: 6px;
+            }
+            .btn {
+                min-height: 42px;
+                font-size: 0.92rem;
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                *::before,
+                *::after {
+                    animation: none !important;
+                    transition: none !important;
+                    scroll-behavior: auto !important;
+                }
+            }
+        </style>

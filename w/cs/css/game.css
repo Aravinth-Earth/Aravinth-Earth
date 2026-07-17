@@ -1,0 +1,136 @@
+            .game-wrap {
+                min-height: 0;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                padding: 4px;
+                gap: 4px;
+            }
+
+            .game-wrap.active {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .game-top {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-shrink: 0;
+                padding: 4px 6px;
+            }
+
+            .game-target-shape {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .target-shape-box {
+                width: 56px;
+                height: 56px;
+                border-radius: 16px;
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                background: rgba(255, 255, 255, 0.06);
+                transition: background 0.2s;
+            }
+
+            .shape-big {
+                width: 36px;
+                height: 36px;
+                display: grid;
+                place-items: center;
+            }
+            .shape-big svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            .target-count {
+                font-size: 1.6rem;
+                font-weight: 800;
+                color: var(--accent);
+                line-height: 1;
+                min-width: 28px;
+                text-align: center;
+            }
+
+            .game-timer {
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            .ring {
+                --p: 1;
+                width: 52px;
+                height: 52px;
+                position: relative;
+                display: grid;
+                place-items: center;
+            }
+            .ring svg {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg);
+            }
+            .ring-bg {
+                fill: none;
+                stroke: rgba(255, 255, 255, 0.08);
+                stroke-width: 8;
+            }
+            .ring-progress {
+                fill: none;
+                stroke: var(--accent);
+                stroke-width: 8;
+                stroke-linecap: round;
+                transition: stroke-dashoffset 0.15s ease;
+            }
+            .ring span {
+                font-size: 0.8rem;
+                font-weight: 700;
+                z-index: 1;
+            }
+
+            .stats-bar {
+                position: absolute;
+                bottom: 56px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 10px;
+                padding: 6px 14px;
+                border-radius: var(--radius-md);
+                background: rgba(8, 16, 29, 0.94);
+                border: 1px solid var(--border);
+                font-size: 0.78rem;
+                z-index: 5;
+                white-space: nowrap;
+                pointer-events: none;
+            }
+            .stats-bar[hidden] {
+                display: none !important;
+            }
+            .stats-bar span {
+                color: var(--muted);
+            }
+            .stats-bar span b {
+                color: var(--text);
+                font-weight: 700;
+            }
+
+            .board-wrapper {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                padding: 2px 0;
+            }
+

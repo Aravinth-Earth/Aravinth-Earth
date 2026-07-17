@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Selection Elements</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.9rem; cursor: pointer; }
+        input[type=checkbox], input[type=radio] { width: 1rem; height: 1rem; accent-color: #58a6ff; cursor: pointer; }
+        select { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.9rem; }
+        select[multiple] { height: 120px; }
+        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; }
+        button:hover { background: #30363d; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        #selectedResult { margin-top: 0.75rem; padding: 0.5rem 0.75rem; border: 1px dashed #30363d; border-radius: 6px; font-size: 0.85rem; color: #8b949e; }
+        .inline-group { display: flex; flex-wrap: wrap; gap: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Selection Elements</h1>
+
+        <div class="field-group">
+            <h2>Checkboxes (single & group)</h2>
+            <p class="note">Select one or more options</p>
+            <label><input type="checkbox" name="subscribe" value="newsletter"> Subscribe to newsletter</label>
+            <label><input type="checkbox" name="interest" value="tech" checked> Technology</label>
+            <label><input type="checkbox" name="interest" value="science"> Science</label>
+            <label><input type="checkbox" name="interest" value="art"> Art & Design</label>
+            <label><input type="checkbox" name="interest" value="music"> Music</label>
+            <button onclick="showCheckboxSelection()">Show Selected</button>
+            <div id="selectedResult">None selected</div>
+        </div>
+
+        <div class="field-group">
+            <h2>Radio buttons</h2>
+            <p class="note">Select one option only</p>
+            <label><input type="radio" name="experience" value="beginner"> Beginner</label>
+            <label><input type="radio" name="experience" value="intermediate" checked> Intermediate</label>
+            <label><input type="radio" name="experience" value="advanced"> Advanced</label>
+            <label><input type="radio" name="experience" value="expert"> Expert</label>
+        </div>
+
+        <div class="field-group">
+            <h2>Single select dropdown</h2>
+            <select name="country" id="countrySelect">
+                <option value="">-- Select a country --</option>
+                <option value="in">India</option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="de">Germany</option>
+                <option value="jp">Japan</option>
+                <option value="sg">Singapore</option>
+                <option value="au">Australia</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <h2>Multi-select listbox</h2>
+            <p class="note">Ctrl/Cmd + click to select multiple</p>
+            <select name="skills" multiple>
+                <option value="selenium">Selenium</option>
+                <option value="cypress">Cypress</option>
+                <option value="playwright">Playwright</option>
+                <option value="appium">Appium</option>
+                <option value="katalon">Katalon</option>
+                <option value="rest-assured">REST Assured</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <h2>Optgroup dropdown</h2>
+            <select name="framework">
+                <option value="">-- Choose framework --</option>
+                <optgroup label="JavaScript">
+                    <option value="cypress">Cypress</option>
+                    <option value="playwright">Playwright</option>
+                    <option value="webdriverio">WebDriverIO</option>
+                </optgroup>
+                <optgroup label="Java">
+                    <option value="selenium">Selenium</option>
+                    <option value="testng">TestNG</option>
+                </optgroup>
+                <optgroup label="Python">
+                    <option value="pytest">Pytest</option>
+                    <option value="robot">Robot Framework</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <h2>Toggle switch (checkbox styled)</h2>
+            <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;">
+                <input type="checkbox" name="toggle" id="toggleSwitch" style="width:auto;">
+                <span id="toggleStatus">Off</span>
+            </label>
+        </div>
+    </div>
+
+    <script>
+        function showCheckboxSelection() {
+            const checked = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.nextSibling.textContent.trim());
+            document.getElementById('selectedResult').textContent = checked.length ? checked.join(', ') : 'None selected';
+        }
+        document.getElementById('toggleSwitch').addEventListener('change', function() {
+            document.getElementById('toggleStatus').textContent = this.checked ? 'On' : 'Off';
+        });
+    </script>
+</body>
+</html>

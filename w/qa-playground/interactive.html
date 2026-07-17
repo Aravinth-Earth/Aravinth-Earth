@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Interactive Elements</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        button:hover { background: #30363d; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.5rem; max-width: 400px; width: 90%; }
+        .modal-box h3 { color: #58a6ff; margin-bottom: 0.75rem; }
+        .modal-box p { color: #8b949e; margin-bottom: 1rem; line-height: 1.5; }
+        .toast { position: fixed; top: 1rem; right: 1rem; background: #238636; color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; display: none; z-index: 999; font-size: 0.9rem; }
+        .toast.error { background: #da3633; }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-box { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #1c2128; color: #c9d1d9; padding: 0.4rem 0.75rem; border-radius: 6px; border: 1px solid #30363d; font-size: 0.8rem; white-space: nowrap; z-index: 100; }
+        .tooltip-container:hover .tooltip-box { display: block; }
+        .hover-dropdown { position: relative; display: inline-block; }
+        .hover-menu { display: none; position: absolute; top: 100%; left: 0; background: #161b22; border: 1px solid #30363d; border-radius: 6px; min-width: 160px; z-index: 100; }
+        .hover-menu a { display: block; padding: 0.5rem 0.75rem; color: #c9d1d9; text-decoration: none; font-size: 0.85rem; }
+        .hover-menu a:hover { background: #1c2128; color: #58a6ff; }
+        .hover-dropdown:hover .hover-menu { display: block; }
+        .accordion-btn { width: 100%; text-align: left; padding: 0.75rem; background: none; border: none; border-top: 1px solid #30363d; color: #c9d1d9; cursor: pointer; font-size: 0.9rem; }
+        .accordion-btn:first-child { border-top: none; }
+        .accordion-btn:hover { background: #1c2128; }
+        .accordion-content { display: none; padding: 0.75rem; color: #8b949e; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Interactive Elements</h1>
+
+        <div class="field-group">
+            <h2>Modal dialog</h2>
+            <button onclick="openModal()">Open Modal</button>
+        </div>
+
+        <div class="field-group">
+            <h2>Browser dialogs</h2>
+            <button onclick="alert('This is an alert box. Click OK to dismiss.')">Alert</button>
+            <button onclick="confirm('Do you confirm this action?') && toast('Confirmed!')">Confirm</button>
+            <button onclick="prompt('Enter your name:','QA Tester') && toast('Hello, ' + arguments[0])">Prompt</button>
+        </div>
+
+        <div class="field-group">
+            <h2>Tooltip (hover)</h2>
+            <p style="margin-bottom:2rem;">
+                Hover over
+                <span class="tooltip-container">
+                    <span style="color:#58a6ff;cursor:pointer;border-bottom:1px dashed #58a6ff;">this text</span>
+                    <span class="tooltip-box">I'm a tooltip! Hover to see me.</span>
+                </span>
+                to see a tooltip.
+            </p>
+        </div>
+
+        <div class="field-group">
+            <h2>Hover dropdown</h2>
+            <div class="hover-dropdown">
+                <button style="margin:0;">Hover over me ▾</button>
+                <div class="hover-menu">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="#">Help</a>
+                    <a href="#">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h2>Toast notifications</h2>
+            <button onclick="toast('Success! Operation completed.')">Success Toast</button>
+            <button class="error-btn" onclick="toast('Error! Something went wrong.', true)">Error Toast</button>
+            <style>.error-btn:hover { background: #da3633; }</style>
+        </div>
+
+        <div class="field-group">
+            <h2>Accordion (click to expand)</h2>
+            <div>
+                <button class="accordion-btn" onclick="toggleAccordion(this)">Section 1 — Introduction</button>
+                <div class="accordion-content">This is the content of section 1. It reveals on click. You can test clicking to expand and collapsing other sections.</div>
+                <button class="accordion-btn" onclick="toggleAccordion(this)">Section 2 — Setup Instructions</button>
+                <div class="accordion-content">Follow these steps to configure the test environment. Make sure dependencies are installed before running tests.</div>
+                <button class="accordion-btn" onclick="toggleAccordion(this)">Section 3 — Troubleshooting</button>
+                <div class="accordion-content">Common issues include timeout errors, element not found exceptions, and stale element references.</div>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h2>Context menu (right-click)</h2>
+            <p id="contextArea" style="padding:1rem; border:1px dashed #30363d; border-radius:6px; text-align:center; color:#8b949e;" oncontextmenu="showContextMenu(event)">Right-click anywhere in this box</p>
+            <div id="contextMenu" style="display:none;position:fixed;background:#161b22;border:1px solid #30363d;border-radius:6px;z-index:1000;">
+                <div style="padding:0.4rem 0.75rem;cursor:pointer;" onclick="toast('Edit clicked');hideContextMenu()">Edit</div>
+                <div style="padding:0.4rem 0.75rem;cursor:pointer;" onclick="toast('Copy clicked');hideContextMenu()">Copy</div>
+                <div style="padding:0.4rem 0.75rem;cursor:pointer;" onclick="toast('Delete clicked');hideContextMenu()">Delete</div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+            <div class="modal-box" onclick="event.stopPropagation()">
+                <h3>Modal Title</h3>
+                <p>This is a modal dialog. It appears as an overlay on top of the page. Click outside the modal or press the close button to dismiss.</p>
+                <p>Forms and buttons inside modals are a common automation challenge.</p>
+                <button onclick="closeModalDirect()">Close Modal</button>
+            </div>
+        </div>
+
+        <div class="toast" id="toastEl"></div>
+    </div>
+
+    <script>
+        let toastTimer;
+
+        function toast(msg, isError) {
+            const el = document.getElementById('toastEl');
+            el.textContent = msg;
+            el.className = 'toast' + (isError ? ' error' : '');
+            el.style.display = 'block';
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        function openModal() { document.getElementById('modalOverlay').classList.add('show'); }
+        function closeModal(e) { if(e.target === e.currentTarget) document.getElementById('modalOverlay').classList.remove('show'); }
+        function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+        let lastAccordionBtn = null;
+        function toggleAccordion(btn) {
+            const content = btn.nextElementSibling;
+            const isOpen = content.style.display === 'block';
+            content.style.display = isOpen ? 'none' : 'block';
+        }
+
+        function showContextMenu(e) {
+            e.preventDefault();
+            const menu = document.getElementById('contextMenu');
+            menu.style.display = 'block';
+            menu.style.left = e.clientX + 'px';
+            menu.style.top = e.clientY + 'px';
+        }
+        function hideContextMenu() { document.getElementById('contextMenu').style.display = 'none'; }
+        document.addEventListener('click', hideContextMenu);
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nested Frame</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #0d1117; color: #8b949e; padding: 0.5rem; margin: 0; font-size: 0.85rem; }
+        h3 { color: #58a6ff; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        p { margin-bottom: 0.5rem; }
+        .frame-indicator { background: #1c2128; border: 1px solid #30363d; border-radius: 4px; padding: 0.25rem 0.5rem; display: inline-block; font-size: 0.75rem; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h3>I am a nested iframe</h3>
+    <div class="frame-indicator">Level 1 — Nested Frame</div>
+    <p>This iframe loads another iframe inside it. To reach the innermost elements, switch through both frames.</p>
+    <iframe src="inputs.html" name="innerIframe" height="200" width="100%" style="border:1px solid #30363d;border-radius:4px;background:#0d1117;" title="Inner iframe"></iframe>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Frames & Windows</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        iframe { width: 100%; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; }
+        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; }
+        button:hover { background: #30363d; }
+        a { color: #58a6ff; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .iframe-demo { border: 2px dashed #30363d; border-radius: 8px; padding: 0.5rem; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Frames &amp; Windows</h1>
+
+        <div class="field-group">
+            <h2>Basic iframe</h2>
+            <p class="note">An iframe loading the inputs page. Switch to this frame to interact with elements inside.</p>
+            <div class="iframe-demo">
+                <iframe src="inputs.html" name="basicIframe" height="250" title="Basic iframe"></iframe>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h2>Nested iframe</h2>
+            <p class="note">An iframe containing another iframe. Practice switching through multiple frame levels.</p>
+            <div class="iframe-demo">
+                <iframe src="nested-frame.html" name="nestedIframe" height="300" title="Nested iframe"></iframe>
+            </div>
+            <p class="note" style="margin-top:0.75rem;">Nested iframe source: <code>nested-frame.html</code> — it loads <code>inputs.html</code> inside itself.</p>
+        </div>
+
+        <div class="field-group">
+            <h2>New window / tab</h2>
+            <p class="note">Click to open a page in a new window. Test window switching and focus handling.</p>
+            <button onclick="window.open('inputs.html', 'qaWindow', 'width=600,height=500')">Open New Window</button>
+        </div>
+
+        <div class="field-group">
+            <h2>Link that opens new tab</h2>
+            <p class="note">A standard <code>target="_blank"</code> link.</p>
+            <a href="index.html" target="_blank" rel="noopener">Open QA Playground in new tab</a>
+        </div>
+
+        <div class="field-group">
+            <h2>Popup (window.open)</h2>
+            <p class="note">Small popup window for testing popup handling.</p>
+            <button onclick="window.open('inputs.html', 'popupWindow', 'width=400,height=400,menubar=no,toolbar=no,location=no')">Open Popup</button>
+        </div>
+    </div>
+</body>
+</html>

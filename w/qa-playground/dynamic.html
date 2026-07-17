@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Dynamic Content</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 700px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        button:hover { background: #30363d; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .spinner { display: none; width: 2rem; height: 2rem; border: 3px solid #30363d; border-top-color: #58a6ff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .spinner.show { display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .progress-bar { width: 100%; height: 0.6rem; background: #21262d; border-radius: 4px; overflow: hidden; margin-top: 0.5rem; }
+        .progress-fill { height: 100%; background: #58a6ff; width: 0%; border-radius: 4px; transition: width 0.3s; }
+        .delayed-box { display: none; padding: 1rem; background: #1c2128; border: 1px solid #30363d; border-radius: 6px; margin-top: 0.75rem; color: #8b949e; }
+        .delayed-box.show { display: block; }
+        .counter { font-size: 2rem; color: #58a6ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Dynamic Content</h1>
+
+        <div class="field-group">
+            <h2>Loading spinner</h2>
+            <p class="note">Click to show a loading spinner for 3 seconds, then reveal content.</p>
+            <button onclick="showSpinner()">Load Data</button>
+            <div class="spinner" id="loadingSpinner"></div>
+            <div id="spinnerResult" style="margin-top:0.5rem;color:#8b949e;font-size:0.85rem;"></div>
+        </div>
+
+        <div class="field-group">
+            <h2>Delayed element (appears after N seconds)</h2>
+            <p class="note">Element appears 2 seconds after clicking.</p>
+            <button onclick="showDelayed()">Show Delayed Element</button>
+            <div id="delayedBox" class="delayed-box">
+                <p>I appeared after 2 seconds! Test your implicit/explicit wait handling.</p>
+                <input type="text" id="delayedInput" placeholder="Type in delayed field..." style="width:100%;margin-top:0.5rem;padding:0.5rem;background:#0d1117;border:1px solid #30363d;border-radius:4px;color:#c9d1d9;">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h2>Stale element (DOM replacement)</h2>
+            <p class="note">Click to replace the element. Old references become stale.</p>
+            <div id="staleContainer">
+                <p id="staleEl" style="padding:0.5rem;background:#1c2128;border-radius:4px;">I will be replaced by a new element. Hold my reference and see what happens.</p>
+            </div>
+            <button onclick="replaceElement()">Replace Element</button>
+        </div>
+
+        <div class="field-group">
+            <h2>Progress bar</h2>
+            <p class="note">Click to simulate a loading progress from 0% to 100%.</p>
+            <button onclick="startProgress()">Start Progress</button>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <p id="progressText" style="text-align:right;font-size:0.85rem;color:#8b949e;margin-top:0.25rem;">0%</p>
+        </div>
+
+        <div class="field-group">
+            <h2>Auto-refresh counter</h2>
+            <p class="note">This counter updates every second. Tests re-finding elements after DOM changes.</p>
+            <div class="counter" id="counter">0</div>
+            <p class="note" style="margin-top:0.5rem;">The counter value resets when the page refreshes.</p>
+        </div>
+
+        <div class="field-group">
+            <h2>Lazy-loaded content</h2>
+            <p class="note">Content loads when you click "Load More". Simulates infinite scroll / load-on-demand patterns.</p>
+            <button onclick="loadMore()">Load More</button>
+            <div id="lazyContainer"></div>
+        </div>
+
+        <div class="field-group">
+            <h2>Conditional element (depends on checkbox)</h2>
+            <p class="note">Toggle the checkbox to show/hide a section.</p>
+            <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.5rem;">
+                <input type="checkbox" id="toggleConditional" style="width:1rem;height:1rem;accent-color:#58a6ff;">
+                Show extra fields
+            </label>
+            <div id="conditionalSection" style="display:none;padding:0.75rem;background:#1c2128;border-radius:6px;">
+                <p style="margin-bottom:0.5rem;color:#8b949e;">These fields appear conditionally when the checkbox is checked.</p>
+                <input type="text" placeholder="Extra info..." style="width:100%;padding:0.5rem;background:#0d1117;border:1px solid #30363d;border-radius:4px;color:#c9d1d9;">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h2>Disabled button that enables after delay</h2>
+            <p class="note">Click "Enable" — the target button becomes clickable after 3 seconds.</p>
+            <button onclick="enableDelayed()">Enable Button After 3s</button>
+            <button id="delayedBtn" disabled style="opacity:0.5;">I Start Disabled</button>
+        </div>
+    </div>
+
+    <script>
+        function showSpinner() {
+            const spinner = document.getElementById('loadingSpinner');
+            const result = document.getElementById('spinnerResult');
+            spinner.classList.add('show');
+            result.textContent = 'Loading...';
+            setTimeout(() => {
+                spinner.classList.remove('show');
+                result.textContent = '✅ Data loaded successfully!';
+            }, 3000);
+        }
+
+        function showDelayed() {
+            const box = document.getElementById('delayedBox');
+            box.classList.remove('show');
+            setTimeout(() => box.classList.add('show'), 2000);
+        }
+
+        function replaceElement() {
+            const container = document.getElementById('staleContainer');
+            container.innerHTML = '<p id="staleEl" style="padding:0.5rem;background:#1c2128;border-radius:4px;color:#58a6ff;">I am the NEW element. The old one is gone.</p>';
+        }
+
+        let progressRunning = false;
+        function startProgress() {
+            if (progressRunning) return;
+            progressRunning = true;
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            fill.style.width = '0%';
+            text.textContent = '0%';
+            let p = 0;
+            const interval = setInterval(() => {
+                p += Math.random() * 8 + 2;
+                if (p >= 100) { p = 100; clearInterval(interval); progressRunning = false; }
+                fill.style.width = p + '%';
+                text.textContent = Math.round(p) + '%';
+            }, 200);
+        }
+
+        let counterVal = 0;
+        setInterval(() => {
+            counterVal++;
+            document.getElementById('counter').textContent = counterVal;
+        }, 1000);
+
+        let lazyIndex = 1;
+        function loadMore() {
+            const container = document.getElementById('lazyContainer');
+            for (let i = 0; i < 3; i++) {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding:0.5rem;background:#1c2128;border:1px solid #30363d;border-radius:4px;margin-top:0.5rem;font-size:0.85rem;';
+                div.textContent = `Item ${lazyIndex++} — Lorem ipsum dolor sit amet.`;
+                container.appendChild(div);
+            }
+        }
+
+        document.getElementById('toggleConditional').addEventListener('change', function() {
+            document.getElementById('conditionalSection').style.display = this.checked ? 'block' : 'none';
+        });
+
+        function enableDelayed() {
+            const btn = document.getElementById('delayedBtn');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.textContent = 'Wait 3s...';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.textContent = 'I Am Now Enabled!';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

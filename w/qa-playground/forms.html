@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Forms & Validation</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        label { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; color: #c9d1d9; }
+        .required::after { content: ' *'; color: #da3633; }
+        input, select, textarea { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.9rem; margin-bottom: 0.75rem; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #58a6ff; }
+        input.error, select.error, textarea.error { border-color: #da3633; }
+        input.valid { border-color: #238636; }
+        button { padding: 0.6rem 1.5rem; border: 1px solid #30363d; border-radius: 6px; background: #238636; color: #fff; cursor: pointer; font-size: 0.9rem; }
+        button:hover { background: #2ea043; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error-msg { color: #da3633; font-size: 0.8rem; margin-top: -0.5rem; margin-bottom: 0.5rem; display: none; }
+        .error-msg.show { display: block; }
+        .success-box { display: none; padding: 1rem; background: #1c2128; border: 1px solid #238636; border-radius: 6px; text-align: center; margin-top: 1rem; }
+        .success-box.show { display: block; }
+        .success-box h3 { color: #238636; margin-bottom: 0.5rem; }
+        .checkbox-group { margin-bottom: 0.75rem; }
+        .checkbox-group label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; margin-bottom: 0.3rem; }
+        .checkbox-group input[type=checkbox] { width: 1rem; height: 1rem; accent-color: #58a6ff; margin: 0; }
+        .radio-group { margin-bottom: 0.75rem; }
+        .radio-group label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; margin-bottom: 0.3rem; }
+        .radio-group input[type=radio] { width: 1rem; height: 1rem; accent-color: #58a6ff; margin: 0; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Forms &amp; Validation</h1>
+
+        <div class="field-group">
+            <h2>Registration Form</h2>
+            <p class="note">All mandatory fields are marked with *. Submit only passes when all validations pass.</p>
+            <form id="registrationForm" onsubmit="return handleSubmit(event)">
+                <label class="required">Full Name</label>
+                <input type="text" id="fullName" placeholder="Enter your full name" onblur="validateField('fullName', val => val.length >= 3)">
+                <div class="error-msg" id="fullNameError">Name must be at least 3 characters</div>
+
+                <label class="required">Email</label>
+                <input type="email" id="email" placeholder="you@example.com" onblur="validateField('email', val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))">
+                <div class="error-msg" id="emailError">Enter a valid email address</div>
+
+                <label class="required">Password</label>
+                <input type="password" id="password" placeholder="Min 8 characters" onblur="validateField('password', val => val.length >= 8)">
+                <div class="error-msg" id="passwordError">Password must be at least 8 characters</div>
+
+                <label class="required">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Re-enter password" onblur="validateConfirm()">
+                <div class="error-msg" id="confirmError">Passwords do not match</div>
+
+                <label class="required">Age</label>
+                <input type="number" id="age" placeholder="18-120" min="18" max="120" onblur="validateField('age', val => {const n=parseInt(val); return n>=18 && n<=120;})">
+                <div class="error-msg" id="ageError">Age must be between 18 and 120</div>
+
+                <label class="required">Country</label>
+                <select id="country" onblur="validateField('country', val => val !== '')">
+                    <option value="">-- Select --</option>
+                    <option value="in">India</option>
+                    <option value="us">United States</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="de">Germany</option>
+                    <option value="jp">Japan</option>
+                </select>
+                <div class="error-msg" id="countryError">Please select a country</div>
+
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="+91 9876543210" onblur="if(this.value) validateField('phone', val => /^\+?\d{7,15}$/.test(val))">
+                <div class="error-msg" id="phoneError">Enter a valid phone number</div>
+
+                <label>Bio (optional)</label>
+                <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+
+                <div class="radio-group">
+                    <label class="required" style="margin-bottom:0.5rem;">Gender</label>
+                    <label><input type="radio" name="gender" value="male"> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+                    <label><input type="radio" name="gender" value="prefer-not" checked> Prefer not to say</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="required" style="margin-bottom:0.5rem;">Skills (select at least one)</label>
+                    <label><input type="checkbox" name="skills" value="selenium"> Selenium</label>
+                    <label><input type="checkbox" name="skills" value="cypress"> Cypress</label>
+                    <label><input type="checkbox" name="skills" value="playwright"> Playwright</label>
+                    <label><input type="checkbox" name="skills" value="appium"> Appium</label>
+                    <label><input type="checkbox" name="skills" value="rest"> API Testing</label>
+                </div>
+                <div class="error-msg" id="skillsError" style="margin-top:-0.5rem;">Select at least one skill</div>
+
+                <label class="required">
+                    <input type="checkbox" id="agreeTerms" style="width:auto;margin:0;display:inline;"> I agree to the terms and conditions
+                </label>
+                <div class="error-msg" id="termsError">You must agree to the terms</div>
+
+                <button type="submit" id="submitBtn">Submit Registration</button>
+            </form>
+
+            <div class="success-box" id="successBox">
+                <h3>✅ Registration Submitted!</h3>
+                <p id="submittedData" style="color:#8b949e;font-size:0.85rem;"></p>
+                <button onclick="resetForm()" style="margin-top:0.75rem;background:#21262d;color:#c9d1d9;">Submit Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateField(id, testFn) {
+            const el = document.getElementById(id);
+            const err = document.getElementById(id + 'Error');
+            const val = el.value.trim();
+            const valid = testFn(val);
+            el.classList.toggle('error', !valid && val.length > 0);
+            el.classList.toggle('valid', valid);
+            err.classList.toggle('show', !valid && val.length > 0);
+            return valid;
+        }
+
+        function validateConfirm() {
+            const pwd = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const el = document.getElementById('confirmPassword');
+            const err = document.getElementById('confirmError');
+            const valid = confirm.length > 0 && pwd === confirm;
+            el.classList.toggle('error', !valid && confirm.length > 0);
+            el.classList.toggle('valid', valid && confirm.length > 0);
+            err.classList.toggle('show', !valid && confirm.length > 0);
+            return valid;
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            const fields = [
+                {id:'fullName', test: v => v.length >= 3},
+                {id:'email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+                {id:'password', test: v => v.length >= 8},
+                {id:'age', test: v => {const n=parseInt(v); return n>=18 && n<=120;}},
+                {id:'country', test: v => v !== ''},
+            ];
+
+            let allValid = true;
+            fields.forEach(f => {
+                if (!validateField(f.id, f.test)) allValid = false;
+            });
+            if (!validateConfirm()) allValid = false;
+
+            const skills = document.querySelectorAll('input[name="skills"]:checked');
+            const skillsErr = document.getElementById('skillsError');
+            if (skills.length === 0) {
+                skillsErr.classList.add('show');
+                allValid = false;
+            } else {
+                skillsErr.classList.remove('show');
+            }
+
+            const terms = document.getElementById('agreeTerms');
+            const termsErr = document.getElementById('termsError');
+            if (!terms.checked) {
+                termsErr.classList.add('show');
+                allValid = false;
+            } else {
+                termsErr.classList.remove('show');
+            }
+
+            const gender = document.querySelector('input[name="gender"]:checked');
+
+            if (!allValid) return false;
+
+            const submitted = document.getElementById('submittedData');
+            submitted.textContent = '';
+            const addLine = (label, val) => {
+                const b = document.createElement('b'); b.textContent = label;
+                submitted.appendChild(b);
+                submitted.appendChild(document.createTextNode(val));
+                submitted.appendChild(document.createElement('br'));
+            };
+            addLine('Name: ', document.getElementById('fullName').value);
+            addLine('Email: ', document.getElementById('email').value);
+            addLine('Country: ', document.getElementById('country').options[document.getElementById('country').selectedIndex].text);
+            addLine('Gender: ', gender ? gender.value : 'Not specified');
+            addLine('Skills: ', Array.from(skills).map(s => s.value).join(', '));
+            document.getElementById('successBox').classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+            return false;
+        }
+
+        function resetForm() {
+            document.getElementById('registrationForm').reset();
+            document.querySelectorAll('.error, .valid').forEach(el => el.classList.remove('error','valid'));
+            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+            document.getElementById('successBox').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+        }
+    </script>
+</body>
+</html>

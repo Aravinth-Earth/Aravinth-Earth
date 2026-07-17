@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Playground — Data Tables</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
+        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
+        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid #21262d; }
+        th { background: #1c2128; color: #58a6ff; cursor: pointer; user-select: none; }
+        th:hover { background: #21262d; }
+        th.sort-asc::after { content: ' ▲'; font-size: 0.7rem; }
+        th.sort-desc::after { content: ' ▼'; font-size: 0.7rem; }
+        td { color: #c9d1d9; }
+        tr:hover td { background: #1c2128; }
+        .pagination { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+        .pagination button { padding: 0.35rem 0.75rem; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.8rem; }
+        .pagination button:hover { background: #30363d; }
+        .pagination button.active { background: #58a6ff; color: #fff; border-color: #58a6ff; }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination span { font-size: 0.85rem; color: #8b949e; }
+        button.action { padding: 0.4rem 1rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; margin-right: 0.5rem; }
+        button.action:hover { background: #30363d; }
+        button.action.delete { border-color: #da3633; color: #da3633; }
+        button.action.delete:hover { background: #290a0a; }
+        input.row-input { padding: 0.3rem 0.5rem; border: 1px solid #30363d; border-radius: 4px; background: #0d1117; color: #c9d1d9; font-size: 0.85rem; width: 100%; }
+        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .filter-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.85rem; margin-bottom: 0.75rem; }
+        .filter-input:focus { outline: none; border-color: #58a6ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">← Back to QA Playground</a>
+        <h1>Data Tables</h1>
+
+        <div class="field-group">
+            <h2>Sortable & filterable table with pagination</h2>
+            <p class="note">Click column headers to sort. Use the filter box to search. Navigate pages with pagination controls.</p>
+            <input type="text" class="filter-input" id="filterInput" placeholder="Filter by name, role, or department..." oninput="renderTable()">
+            <div style="overflow-x:auto;">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortBy('id')" id="th-id">ID</th>
+                            <th onclick="sortBy('name')" id="th-name">Name</th>
+                            <th onclick="sortBy('role')" id="th-role">Role</th>
+                            <th onclick="sortBy('department')" id="th-dept">Department</th>
+                            <th onclick="sortBy('salary')" id="th-salary">Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+
+        <div class="field-group">
+            <h2>Dynamic row add/remove</h2>
+            <p class="note">Add or remove rows dynamically to test table mutation handling.</p>
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
+                <input class="row-input" id="newName" placeholder="Name" style="flex:1;min-width:100px;">
+                <input class="row-input" id="newRole" placeholder="Role" style="flex:1;min-width:100px;">
+                <input class="row-input" id="newDept" placeholder="Department" style="flex:1;min-width:100px;">
+                <button class="action" onclick="addRow()">➕ Add Row</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Role</th><th>Department</th><th>Action</th></tr>
+                </thead>
+                <tbody id="dynamicTableBody">
+                    <tr><td>Alice</td><td>Developer</td><td>Engineering</td><td><button class="action delete" onclick="removeRow(this)">Remove</button></td></tr>
+                    <tr><td>Bob</td><td>Designer</td><td>Design</td><td><button class="action delete" onclick="removeRow(this)">Remove</button></td></tr>
+                    <tr><td>Charlie</td><td>QA</td><td>Testing</td><td><button class="action delete" onclick="removeRow(this)">Remove</button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const allData = Array.from({length:47}, (_,i) => ({
+            id: i+1,
+            name: ['Alice','Bob','Charlie','Diana','Eve','Frank','Grace','Hank','Ivy','Jack','Karen','Leo','Mona','Nick','Olivia','Paul','Quinn','Rita','Sam','Tina','Uma','Vince','Wendy','Xander','Yara','Zack','Amy','Ben','Clara','Dan','Ella','Finn','Gina','Hugo','Iris','Jake','Kara','Liam','Maya','Noah','Olive','Pete','Rose','Sean','Tara','Uri','Vera'][i%47],
+            role: ['Developer','Designer','QA','Manager','DevOps','Analyst','Engineer','Tester','Architect','Lead','Developer','QA','Engineer','Manager','DevOps','Analyst','Developer','Designer','Tester','Lead','Engineer','QA','Manager','Architect','DevOps','Analyst','Developer','Designer','QA','Tester','Engineer','Lead','Manager','DevOps','Analyst','Developer','Designer','QA','Engineer','Tester','Lead','Manager','Architect','DevOps','Analyst','Developer','Designer'][i%47],
+            department: ['Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Testing','Infra','Analytics','Design','Management','Testing','Engineering','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design'][i%47],
+            salary: 40000 + (i * 1234) % 80000
+        }));
+
+        let currentPage = 1;
+        let sortField = null;
+        let sortDir = 'asc';
+        const perPage = 8;
+
+        function getFiltered() {
+            const q = document.getElementById('filterInput').value.toLowerCase();
+            let data = allData.filter(d => !q || d.name.toLowerCase().includes(q) || d.role.toLowerCase().includes(q) || d.department.toLowerCase().includes(q));
+            if (sortField) {
+                data.sort((a,b) => {
+                    let va = a[sortField], vb = b[sortField];
+                    if (typeof va === 'string') va = va.toLowerCase();
+                    if (typeof vb === 'string') vb = vb.toLowerCase();
+                    return va < vb ? -1 : va > vb ? 1 : 0;
+                });
+                if (sortDir === 'desc') data.reverse();
+            }
+            return data;
+        }
+
+        function renderTable() {
+            const data = getFiltered();
+            const totalPages = Math.ceil(data.length / perPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage-1) * perPage;
+            const page = data.slice(start, start + perPage);
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = page.map(r => `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.role}</td><td>${r.department}</td><td>$${r.salary.toLocaleString()}</td></tr>`).join('');
+
+            let pag = `<button onclick="currentPage=1;renderTable()" ${currentPage===1?'disabled':''}>«</button>`;
+            pag += `<button onclick="currentPage=Math.max(1,currentPage-1);renderTable()" ${currentPage===1?'disabled':''}>‹</button>`;
+            for (let i=Math.max(1,currentPage-2); i<=Math.min(totalPages,currentPage+2); i++) {
+                pag += `<button class="${i===currentPage?'active':''}" onclick="currentPage=${i};renderTable()">${i}</button>`;
+            }
+            pag += `<button onclick="currentPage=Math.min(${totalPages},currentPage+1);renderTable()" ${currentPage===totalPages?'disabled':''}>›</button>`;
+            pag += `<button onclick="currentPage=${totalPages};renderTable()" ${currentPage===totalPages?'disabled':''}>»</button>`;
+            pag += `<span>Page ${currentPage} of ${totalPages} (${data.length} entries)</span>`;
+            document.getElementById('pagination').innerHTML = pag;
+
+            ['th-id','th-name','th-role','th-dept','th-salary'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.remove('sort-asc','sort-desc');
+            });
+            const sortMap = {id:'th-id', name:'th-name', role:'th-role', department:'th-dept', salary:'th-salary'};
+            if (sortField && sortMap[sortField]) {
+                document.getElementById(sortMap[sortField]).classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            }
+        }
+
+        function sortBy(field) {
+            if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            else { sortField = field; sortDir = 'asc'; }
+            currentPage = 1;
+            renderTable();
+        }
+
+        function addRow() {
+            const name = document.getElementById('newName').value.trim();
+            const role = document.getElementById('newRole').value.trim();
+            const dept = document.getElementById('newDept').value.trim();
+            if (!name || !role || !dept) return;
+            const tbody = document.getElementById('dynamicTableBody');
+            const tr = document.createElement('tr');
+            const c1 = document.createElement('td'); c1.textContent = name;
+            const c2 = document.createElement('td'); c2.textContent = role;
+            const c3 = document.createElement('td'); c3.textContent = dept;
+            const c4 = document.createElement('td');
+            const btn = document.createElement('button');
+            btn.className = 'action delete';
+            btn.textContent = 'Remove';
+            btn.onclick = () => removeRow(btn);
+            c4.appendChild(btn);
+            tr.append(c1, c2, c3, c4);
+            tbody.appendChild(tr);
+            document.getElementById('newName').value = '';
+            document.getElementById('newRole').value = '';
+            document.getElementById('newDept').value = '';
+        }
+
+        function removeRow(btn) {
+            btn.closest('tr').remove();
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.332321.xyz/.well-known/api-catalog",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/",
+          "type": "text/html"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/cs/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/cs/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/cs/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/dm/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/dm/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/dm/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/es-vanilla/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/es-vanilla/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/es-vanilla/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/mg/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/mg/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/mg/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/qa-playground/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/qa-playground/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/qa-playground/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/sm/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/sm/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/sm/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/ss/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/ss/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/ss/"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.332321.xyz/w/tam/",
+      "item": [
+        {
+          "href": "https://www.332321.xyz/w/tam/"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.332321.xyz/w/tam/"
+        }
+      ]
+    }
+  ]
+}

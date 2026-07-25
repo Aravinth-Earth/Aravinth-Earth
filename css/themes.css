@@ -1,0 +1,360 @@
+/* ===== THEME SWITCHER UI ===== */
+.theme-switcher {
+    position: fixed;
+    bottom: 20px;
+    right: 72px;
+    z-index: 1000;
+}
+
+.theme-gear {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-secondary, #121620);
+    border: 1px solid var(--border, rgba(88,166,255,0.15));
+    color: var(--text-secondary, #8b949e);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.3s;
+    opacity: 0.6;
+    line-height: 1;
+}
+
+.theme-gear:hover {
+    opacity: 1;
+}
+
+.theme-gear[aria-expanded="true"] {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.theme-dropdown {
+    position: absolute;
+    bottom: 52px;
+    right: 0;
+    background: var(--bg-secondary, #121620);
+    border: 1px solid var(--border, rgba(88,166,255,0.15));
+    border-radius: 8px;
+    padding: 6px;
+    min-width: 160px;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.theme-dropdown.open {
+    display: block;
+}
+
+.theme-option {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    color: var(--text-primary, #c9d1d9);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.theme-option:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.theme-active {
+    background: rgba(255,255,255,0.08);
+    font-weight: 600;
+}
+
+.theme-active::before {
+    content: '●';
+    margin-right: 6px;
+    font-size: 0.7em;
+}
+
+.theme-random {
+    border-bottom: 1px solid var(--border, rgba(88,166,255,0.15));
+    margin-bottom: 4px;
+    padding-bottom: 10px;
+    color: var(--text-secondary, #8b949e);
+}
+
+/* ===== THEME PALETTE OVERRIDES ===== */
+/* Each [data-theme="X"] overrides CSS variables + hardcoded colors */
+
+/* --- Current (Blue) --- */
+[data-theme="current"] {
+    --bg-primary: #0a0c10;
+    --bg-secondary: #121620;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --accent: #58a6ff;
+    --border: rgba(88, 166, 255, 0.15);
+}
+
+[data-theme="current"] a:hover { color: #79c0ff; }
+[data-theme="current"] .work-card:hover {
+    border-color: rgba(88, 166, 255, 0.35);
+    background: rgba(22, 27, 34, 0.85);
+}
+[data-theme="current"] .connect-link:hover {
+    border-color: rgba(88, 166, 255, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="current"] .card-tag-live {
+    background: rgba(38, 166, 65, 0.15);
+    color: #7ee787;
+    border: 1px solid rgba(38, 166, 65, 0.25);
+}
+[data-theme="current"] .card-tag-repo {
+    background: rgba(163, 113, 247, 0.15);
+    color: #a371f7;
+    border: 1px solid rgba(163, 113, 247, 0.25);
+}
+
+/* --- Midnight Amber --- */
+[data-theme="amber"] {
+    --bg-primary: #0D1117;
+    --bg-secondary: #161B22;
+    --text-primary: #E6EDF3;
+    --text-secondary: #8B949E;
+    --accent: #F0883E;
+    --border: rgba(240, 136, 62, 0.15);
+}
+
+[data-theme="amber"] a:hover { color: #F0A06E; }
+[data-theme="amber"] .work-card:hover {
+    border-color: rgba(240, 136, 62, 0.35);
+    background: rgba(28, 33, 40, 0.85);
+}
+[data-theme="amber"] .connect-link:hover {
+    border-color: rgba(240, 136, 62, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="amber"] .card-tag-live {
+    background: rgba(63, 185, 80, 0.15);
+    color: #3FB950;
+    border: 1px solid rgba(63, 185, 80, 0.25);
+}
+[data-theme="amber"] .card-tag-repo {
+    background: rgba(240, 136, 62, 0.15);
+    color: #F0883E;
+    border: 1px solid rgba(240, 136, 62, 0.25);
+}
+
+/* --- Deep Teal --- */
+[data-theme="teal"] {
+    --bg-primary: #0B1221;
+    --bg-secondary: #111D2E;
+    --text-primary: #D2E0E8;
+    --text-secondary: #7D8FA0;
+    --accent: #2DD4BF;
+    --border: rgba(45, 212, 191, 0.15);
+}
+
+[data-theme="teal"] a:hover { color: #5EEAD4; }
+[data-theme="teal"] .work-card:hover {
+    border-color: rgba(45, 212, 191, 0.35);
+    background: rgba(17, 29, 46, 0.85);
+}
+[data-theme="teal"] .connect-link:hover {
+    border-color: rgba(45, 212, 191, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="teal"] .card-tag-live {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34D399;
+    border: 1px solid rgba(52, 211, 153, 0.25);
+}
+[data-theme="teal"] .card-tag-repo {
+    background: rgba(129, 140, 248, 0.15);
+    color: #818CF8;
+    border: 1px solid rgba(129, 140, 248, 0.25);
+}
+
+/* --- Soft Charcoal --- */
+[data-theme="charcoal"] {
+    --bg-primary: #111318;
+    --bg-secondary: #1A1D24;
+    --text-primary: #E2E4E9;
+    --text-secondary: #9CA3AF;
+    --accent: #60A5FA;
+    --border: rgba(96, 165, 250, 0.15);
+}
+
+[data-theme="charcoal"] a:hover { color: #93C5FD; }
+[data-theme="charcoal"] .work-card:hover {
+    border-color: rgba(96, 165, 250, 0.35);
+    background: rgba(34, 38, 46, 0.85);
+}
+[data-theme="charcoal"] .connect-link:hover {
+    border-color: rgba(96, 165, 250, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="charcoal"] .card-tag-live {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22C55E;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+[data-theme="charcoal"] .card-tag-repo {
+    background: rgba(249, 115, 22, 0.15);
+    color: #F97316;
+    border: 1px solid rgba(249, 115, 22, 0.25);
+}
+
+/* --- Greenish --- */
+[data-theme="greenish"] {
+    --bg-primary: #0B1A0F;
+    --bg-secondary: #122118;
+    --text-primary: #D4E8D8;
+    --text-secondary: #7A9A82;
+    --accent: #4ADE80;
+    --border: rgba(74, 222, 128, 0.15);
+}
+
+[data-theme="greenish"] a:hover { color: #86EFAC; }
+[data-theme="greenish"] .work-card:hover {
+    border-color: rgba(74, 222, 128, 0.35);
+    background: rgba(18, 33, 24, 0.85);
+}
+[data-theme="greenish"] .connect-link:hover {
+    border-color: rgba(74, 222, 128, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="greenish"] .card-tag-live {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22C55E;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+[data-theme="greenish"] .card-tag-repo {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ADE80;
+    border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+/* --- Colorful --- */
+[data-theme="colorful"] {
+    --bg-primary: #0F0F1A;
+    --bg-secondary: #1A1A2E;
+    --text-primary: #EAEAFF;
+    --text-secondary: #9595B5;
+    --accent: #FF6B9D;
+    --border: rgba(255, 107, 157, 0.15);
+}
+
+[data-theme="colorful"] a:hover { color: #FF9EC6; }
+[data-theme="colorful"] .work-card:hover {
+    border-color: rgba(255, 107, 157, 0.35);
+    background: rgba(26, 26, 46, 0.85);
+}
+[data-theme="colorful"] .connect-link:hover {
+    border-color: rgba(255, 107, 157, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="colorful"] .card-tag-live {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00FF88;
+    border: 1px solid rgba(0, 255, 136, 0.25);
+}
+[data-theme="colorful"] .card-tag-repo {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8B5CF6;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+/* --- Sunset --- */
+[data-theme="sunset"] {
+    --bg-primary: #1A0F1E;
+    --bg-secondary: #261430;
+    --text-primary: #F0E0F5;
+    --text-secondary: #A080B0;
+    --accent: #F472B6;
+    --border: rgba(244, 114, 182, 0.15);
+}
+
+[data-theme="sunset"] a:hover { color: #F9A8D4; }
+[data-theme="sunset"] .work-card:hover {
+    border-color: rgba(244, 114, 182, 0.35);
+    background: rgba(38, 20, 48, 0.85);
+}
+[data-theme="sunset"] .connect-link:hover {
+    border-color: rgba(244, 114, 182, 0.35);
+    color: var(--text-primary);
+}
+[data-theme="sunset"] .card-tag-live {
+    background: rgba(251, 191, 36, 0.15);
+    color: #FBBF24;
+    border: 1px solid rgba(251, 191, 36, 0.25);
+}
+[data-theme="sunset"] .card-tag-repo {
+    background: rgba(251, 146, 60, 0.15);
+    color: #FB923C;
+    border: 1px solid rgba(251, 146, 60, 0.25);
+}
+
+/* --- Nord --- */
+[data-theme="nord"] {
+    --bg-primary: #2E3440;
+    --bg-secondary: #3B4252;
+    --text-primary: #ECEFF4;
+    --text-secondary: #D8DEE9;
+    --accent: #88C0D0;
+    --border: rgba(136, 192, 208, 0.2);
+}
+
+[data-theme="nord"] a:hover { color: #8FBCBB; }
+[data-theme="nord"] .work-card:hover {
+    border-color: rgba(136, 192, 208, 0.4);
+    background: rgba(59, 66, 82, 0.85);
+}
+[data-theme="nord"] .connect-link:hover {
+    border-color: rgba(136, 192, 208, 0.4);
+    color: var(--text-primary);
+}
+[data-theme="nord"] .card-tag-live {
+    background: rgba(163, 190, 140, 0.2);
+    color: #A3BE8C;
+    border: 1px solid rgba(163, 190, 140, 0.3);
+}
+[data-theme="nord"] .card-tag-repo {
+    background: rgba(180, 142, 173, 0.2);
+    color: #B48EAD;
+    border: 1px solid rgba(180, 142, 173, 0.3);
+}
+
+/* --- Cyberpunk --- */
+[data-theme="cyberpunk"] {
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #12121F;
+    --text-primary: #F0F0FF;
+    --text-secondary: #8888AA;
+    --accent: #00FFCC;
+    --border: rgba(0, 255, 204, 0.15);
+}
+
+[data-theme="cyberpunk"] a:hover { color: #66FFD9; }
+[data-theme="cyberpunk"] .work-card:hover {
+    border-color: rgba(0, 255, 204, 0.4);
+    background: rgba(18, 18, 31, 0.85);
+}
+[data-theme="cyberpunk"] .connect-link:hover {
+    border-color: rgba(0, 255, 204, 0.4);
+    color: var(--text-primary);
+}
+[data-theme="cyberpunk"] .card-tag-live {
+    background: rgba(255, 0, 102, 0.15);
+    color: #FF0066;
+    border: 1px solid rgba(255, 0, 102, 0.3);
+}
+[data-theme="cyberpunk"] .card-tag-repo {
+    background: rgba(255, 255, 0, 0.1);
+    color: #FFFF00;
+    border: 1px solid rgba(255, 255, 0, 0.25);
+}

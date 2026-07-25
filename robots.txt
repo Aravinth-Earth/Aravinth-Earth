@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# AI Content Signals
+Content-Signal: ai-train=no, search=yes, ai-input=no
+
 Sitemap: https://www.332321.xyz/sitemap.xml

@@ -43,6 +43,9 @@
         <!-- About/Privacy Modal Styles -->
         <link rel="stylesheet" href="css/about-privacy.css" />
 
+        <!-- Theme Switcher -->
+        <link rel="stylesheet" href="css/themes.css" />
+
         <!-- Optional: Uncomment below to auto-populate build info (requires running generate-build-info script) -->
         <!-- <script src="js/build-info.js" defer></script> -->
     </head>
@@ -424,6 +427,12 @@
             </footer>
         </div>
 
+        <!-- Theme Switcher -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
+
         <button
             class="refresh-btn"
             title="Refresh options"
@@ -433,6 +442,7 @@
         </button>
         <script src="js/refresh-handler.js" defer></script>
         <script src="js/about-privacy.js" defer></script>
+        <script src="js/theme-switcher.js" defer></script>
         <script>
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker

@@ -39,17 +39,11 @@ class ColorGenerator {
 
 class AudioManager {
     constructor() {
-        this.audio = new Audio();
-        // Using the forest ambient sound
-        this.audio.src = './523381__klankbeeld__edge-summer-forest-roond-nl-200619_0186.mp3';
-        this.audio.loop = true;
-        this.audio.volume = 0.6; // Set volume to 60%
+        this.audio = null;
         
-        // Fade in the audio over 3 seconds
-        this.fadeIn();
-        
-        // Handle page visibility changes
+        // Handle page visibility changes — only after audio has started
         document.addEventListener('visibilitychange', () => {
+            if (!this.audio) return;
             if (document.hidden) {
                 this.fadeOut();
             } else {
@@ -59,6 +53,22 @@ class AudioManager {
     }
 
     async fadeIn() {
+        // Skip if already fully faded in
+        if (this.audio?.volume >= 0.6) return;
+
+        // Create audio lazily on first interaction — no preloading
+        if (!this.audio) {
+            this.audio = new Audio();
+            this.audio.loop = true;
+            this.audio.volume = 0;
+
+            // Prefer Opus, fall back to MP3
+            const canOpus = this.audio.canPlayType('audio/ogg; codecs=opus');
+            this.audio.src = canOpus
+                ? './edge-summer-forest.opus'
+                : './523381__klankbeeld__edge-summer-forest-roond-nl-200619_0186.mp3';
+        }
+        
         this.audio.volume = 0;
         await this.audio.play().catch(() => {
             console.log('Audio autoplay blocked. User interaction required.');
@@ -74,6 +84,7 @@ class AudioManager {
     }
 
     fadeOut() {
+        if (!this.audio) return;
         const fadeInterval = setInterval(() => {
             if (this.audio.volume > 0.02) {
                 this.audio.volume -= 0.02;

@@ -61,12 +61,7 @@ class AudioManager {
             this.audio = new Audio();
             this.audio.loop = true;
             this.audio.volume = 0;
-
-            // Prefer Opus, fall back to MP3
-            const canOpus = this.audio.canPlayType('audio/ogg; codecs=opus');
-            this.audio.src = canOpus
-                ? './edge-summer-forest.opus'
-                : './523381__klankbeeld__edge-summer-forest-roond-nl-200619_0186.mp3';
+            this.audio.src = './edge-summer-forest.opus';
         }
         
         this.audio.volume = 0;

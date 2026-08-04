@@ -1,4 +1,4 @@
-const CACHE_NAME = 'site-cache-v2.3'; // Increment version
+const CACHE_NAME = 'site-cache-v2.4'; // Increment version
 
 // Files to cache on install
 const PRECACHE_URLS = [
@@ -14,8 +14,14 @@ const PRECACHE_URLS = [
   '/w/qr/generator.html',
   '/w/qr/qr-styles.css',
   '/w/qr/qr-script.js',
-  '/w/qr/2025_03_18_qrcode.mini.js', // Local fallback file
-  'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js' // CDN version
+  '/w/qr/2025_03_18_qrcode.mini.js',
+  'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js',
+
+  // Calendar (Today's Date)
+  '/w/cal/index.html',
+  '/w/cal/css/style.css',
+  '/w/cal/js/calendars.js',
+  '/w/cal/js/astronomy.js'
 ];
 
 // Install event - precache key resources

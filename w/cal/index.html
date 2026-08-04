@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Date — English &amp; Tamil | இன்றைய தேதி</title>
+    <meta name="theme-color" content="#0c0c1d">
+    <link rel="manifest" href="../../manifest.json">
+
+    <meta property="og:title" content="Today's Date — English & Tamil | இன்றைய தேதி" />
+    <meta property="og:description" content="See today's live date in English (Gregorian) and Tamil calendars side by side. Astronomically accurate." />
+    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Today's Date — English & Tamil" />
+    <meta name="twitter:description" content="Live date display in English and Tamil calendars." />
+    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="description" content="See today's live date in English (Gregorian) and Tamil calendars side by side. Astronomically accurate." />
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Theme toggle -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <span class="theme-icon">☀️</span>
+        </button>
+
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title-en">Today's Date</h1>
+            <h1 class="title-ta">இன்றைய தேதி</h1>
+        </header>
+
+        <!-- Clock + day progress -->
+        <div class="clock-section">
+            <div class="clock-row">
+                <div id="clock" class="clock"></div>
+                <span id="clock-tz" class="clock-tz"></span>
+            </div>
+            <div class="day-progress">
+                <span class="day-progress-label">Day</span>
+                <div class="day-progress-bar">
+                    <div id="day-progress-fill" class="day-progress-fill" style="width: 0%"></div>
+                </div>
+                <span id="day-progress-pct" class="day-progress-pct"></span>
+            </div>
+        </div>
+
+        <!-- Calendar cards -->
+        <div class="cards">
+            <!-- English (Gregorian) -->
+            <div class="card card-english">
+                <div class="card-header">
+                    <div class="card-label">
+                        <span class="card-lang">English</span>
+                    </div>
+                    <span class="card-system">Gregorian</span>
+                </div>
+                <div class="card-date" id="date-en"></div>
+                <div class="card-details">
+                    <div class="card-detail">
+                        <span class="card-detail-label">Day</span>
+                        <span id="day-en" class="card-detail-value"></span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="card-detail-label">Month</span>
+                        <span id="month-en" class="card-detail-value"></span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="card-detail-label">Year</span>
+                        <span id="year-en" class="card-detail-value"></span>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div class="progress-row">
+                        <div class="progress-label">
+                            <span class="progress-text">Month</span>
+                            <span id="progress-pct-m-en" class="progress-pct"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill-m-en" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-label">
+                            <span class="progress-text">Year</span>
+                            <span id="progress-pct-y-en" class="progress-pct"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill-y-en" class="progress-fill progress-fill-year" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tamil -->
+            <div class="card card-tamil">
+                <div class="card-header">
+                    <div class="card-label">
+                        <span class="card-lang">தமிழ்</span>
+                    </div>
+                    <span class="card-system">Tamil Calendar</span>
+                </div>
+                <div class="card-date" id="date-ta"></div>
+                <div class="card-details">
+                    <div class="card-detail">
+                        <span class="card-detail-label">Day</span>
+                        <span id="day-ta" class="card-detail-value"></span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="card-detail-label">Month</span>
+                        <span id="month-ta" class="card-detail-value"></span>
+                    </div>
+                    <div class="card-detail">
+                        <span class="card-detail-label">Year</span>
+                        <span id="year-ta" class="card-detail-value"></span>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div class="progress-row">
+                        <div class="progress-label">
+                            <span class="progress-text">Month</span>
+                            <span id="progress-pct-m-ta" class="progress-pct"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill-m-ta" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-label">
+                            <span class="progress-text">Year</span>
+                            <span id="progress-pct-y-ta" class="progress-pct"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill-y-ta" class="progress-fill progress-fill-year" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-note">Tamil dates via astronomical engine (Lahiri ayanamsa)</p>
+            <p class="footer-note-ta">வானியல் இயந்திரம் மூலம் கணக்கிடப்படுகிறது</p>
+            <p class="footer-back"><a href="../../index.html">← Back to Home</a></p>
+        </footer>
+    </div>
+
+    <!-- astronomy-engine CommonJS shim -->
+    <script>var exports = {}; var module = { exports: exports };</script>
+    <script src="js/astronomy.js"></script>
+    <script>window.Astro = module.exports;</script>
+    <!-- app -->
+    <script src="js/calendars.js"></script>
+</body>
+</html>

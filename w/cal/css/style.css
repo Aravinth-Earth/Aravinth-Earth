@@ -1,0 +1,462 @@
+/* === Reset & Base === */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Dark theme */
+    --bg-primary: #0c0c1d;
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --text-primary: #e8e8f0;
+    --text-secondary: #b0b0c8;
+    --text-dim: #707088;
+    --accent-en: #e88aaf;
+    --accent-ta: #7cc4e8;
+    --accent-green: #5cc88a;
+    --border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.4);
+    --progress-bg: rgba(255, 255, 255, 0.06);
+}
+
+body.light {
+    --bg-primary: #f5f3f8;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --text-primary: #1c1c2e;
+    --text-secondary: #4a4a62;
+    --text-dim: #808098;
+    --accent-en: #c04070;
+    --accent-ta: #1a7aaa;
+    --accent-green: #1a8a5a;
+    --border: rgba(0, 0, 0, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.08);
+    --progress-bg: rgba(0, 0, 0, 0.06);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* === Container === */
+.container {
+    width: min(90vw, 480px);
+    margin: 0 auto;
+    padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 1.5rem);
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Theme Toggle === */
+.theme-toggle {
+    position: absolute;
+    top: clamp(1rem, 3vw, 1.5rem);
+    right: clamp(0.75rem, 3vw, 1.5rem);
+    width: clamp(36px, 8vw, 44px);
+    height: clamp(36px, 8vw, 44px);
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.08);
+    border-color: var(--accent-ta);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* === Header === */
+.header {
+    text-align: center;
+    margin-bottom: clamp(0.75rem, 3vw, 1.5rem);
+    padding-top: 0.5rem;
+}
+
+.title-en {
+    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.15rem;
+}
+
+.title-ta {
+    font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* === Clock === */
+.clock-section {
+    text-align: center;
+    margin-bottom: clamp(1rem, 4vw, 2rem);
+}
+
+.clock-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.4rem, 2vw, 0.85rem);
+}
+
+.clock {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    font-weight: 200;
+    color: var(--text-primary);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+}
+
+.clock-tz {
+    font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    background: var(--progress-bg);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    align-self: flex-end;
+    margin-bottom: 0.4rem;
+}
+
+/* === Day Progress === */
+.day-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    justify-content: center;
+}
+
+.day-progress-label {
+    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-width: 2rem;
+    text-align: right;
+}
+
+.day-progress-bar {
+    width: clamp(80px, 25vw, 160px);
+    height: 3px;
+    border-radius: 3px;
+    background: var(--progress-bg);
+    overflow: hidden;
+}
+
+.day-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-green);
+    transition: width 1s linear;
+}
+
+.day-progress-pct {
+    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+    font-weight: 600;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    min-width: 2rem;
+}
+
+/* === Cards === */
+.cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.6rem, 2vw, 1rem);
+    flex: 1;
+    align-items: start;
+}
+
+.card {
+    border-radius: clamp(12px, 3vw, 18px);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--glass-border);
+    background: var(--bg-card);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md), 0 0 0 1px var(--glass-border);
+}
+
+/* === Card Label === */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: clamp(0.5rem, 2vw, 0.85rem);
+}
+
+.card-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.card-lang {
+    font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.card-english .card-lang {
+    background: var(--accent-en);
+    color: #fff;
+}
+
+.card-tamil .card-lang {
+    background: var(--accent-ta);
+    color: #fff;
+}
+
+.card-system {
+    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* === Card Date === */
+.card-date {
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: clamp(0.4rem, 2vw, 0.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.card-english .card-date {
+    color: var(--accent-en);
+}
+
+.card-tamil .card-date {
+    color: var(--accent-ta);
+}
+
+/* === Card Details === */
+.card-details {
+    display: flex;
+    gap: clamp(0.75rem, 3vw, 1.4rem);
+    flex-wrap: wrap;
+}
+
+.card-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.card-detail-label {
+    font-size: clamp(0.45rem, 1.3vw, 0.6rem);
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.card-detail-value {
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* === Progress Bars === */
+.progress-section {
+    margin-top: clamp(0.5rem, 2vw, 0.8rem);
+    padding-top: clamp(0.5rem, 2vw, 0.7rem);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 1.5vw, 0.55rem);
+}
+
+.progress-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-text {
+    font-size: clamp(0.45rem, 1.3vw, 0.6rem);
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.progress-pct {
+    font-size: clamp(0.45rem, 1.3vw, 0.6rem);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.progress-bar {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--progress-bg);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+.card-english .progress-fill {
+    background: var(--accent-en);
+}
+
+.card-tamil .progress-fill {
+    background: var(--accent-ta);
+}
+
+.progress-fill-year {
+    opacity: 0.45;
+}
+
+/* === Footer === */
+.footer {
+    text-align: center;
+    padding-top: clamp(0.75rem, 3vw, 1.25rem);
+    margin-top: auto;
+}
+
+.footer-note,
+.footer-note-ta {
+    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+
+.footer-note-ta {
+    font-style: italic;
+}
+
+.footer-back {
+    margin-top: 0.5rem;
+}
+
+.footer-back a {
+    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+    color: var(--accent-ta);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.footer-back a:hover {
+    opacity: 1;
+}
+
+/* === TABLET (481px – 768px) === */
+@media (min-width: 481px) {
+    .container {
+        width: min(85vw, 560px);
+    }
+}
+
+/* === DESKTOP (769px+) === */
+@media (min-width: 769px) {
+    .container {
+        width: min(80vw, 720px);
+    }
+
+    /* Side-by-side cards on wide screens */
+    .cards {
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(0.75rem, 2vw, 1.25rem);
+        align-items: start;
+    }
+
+    /* Slightly larger clock on desktop */
+    .clock {
+        font-size: clamp(3.5rem, 6vw, 5.5rem);
+    }
+}
+
+/* === LARGE DESKTOP (1200px+) === */
+@media (min-width: 1200px) {
+    .container {
+        width: min(75vw, 860px);
+    }
+
+    .card-date {
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+    }
+}
+
+/* === Animations === */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+
+.header {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.clock-section {
+    animation: fadeIn 0.8s ease 0.2s forwards;
+    opacity: 0;
+}
+
+/* === Selection === */
+::selection {
+    background: var(--accent-ta);
+    color: #fff;
+}

@@ -42,10 +42,12 @@
                 <h3>🔒 Privacy</h3>
                 <div class="about-privacy-policy">
                     <ul class="privacy-list">
-                        <li>✅ No analytics</li>
-                        <li>✅ No tracking</li>
-                        <li>✅ Data stays local (your device only)</li>
-                        <li>✅ No server requests (except icons/fonts)</li>
+                        <li>✅ No cookies</li>
+                        <li>✅ No ads, no ad networks</li>
+                        <li>✅ No data sold or shared with third parties</li>
+                        <li>✅ Calm Sweep game uses PostHog for gameplay analytics (how moves, completions — no personal data)</li>
+                        <li>✅ GoatCounter for anonymous page views (no cookies, no personal data)</li>
+                        <li>✅ All app data stays on your device</li>
                     </ul>
                 </div>
             </section>

@@ -3,6 +3,16 @@ let currentTrip = null, members = [], expenses = [];
 let currentExpenseSort = 'date-desc', currentMemberSort = 'name-asc';
 let chartPaid = null, chartIncurred = null;
 
+// ======= VIEWER & MODE (view/manage layers) =======
+// me: device-level identity ('splitter.me' in localStorage)
+//     null = never asked, '' = user chose "Just looking", else member name
+// viewer: whose personal view is shown (member name or null = trip overview)
+// mode: 'view' (default, read-only) | 'manage' (all controls visible)
+const ME_KEY = 'splitter.me';
+let me = localStorage.getItem(ME_KEY);
+let viewer = null;
+let mode = 'view';
+
 const $ = id => document.getElementById(id);
 const qs = (sel, ctx) => (ctx || document).querySelector(sel);
 const qsa = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
@@ -111,6 +121,7 @@ function promptCache() {
     modal.style.display = 'none';
     updateDisplay();
     if (expenses.length) calcSettlements();
+    resolveViewer();
   };
 
   $('cache-fresh-btn').onclick = () => {
@@ -194,7 +205,7 @@ function handleTripSubmit(e) {
   }
   if (form.dataset.mode === 'edit') { currentTrip = { ...currentTrip, ...tripData }; showMessage('Trip updated', 'success') }
   else { currentTrip = tripData; members = []; expenses = []; showMessage('Trip created!', 'success') }
-  saveData(); updateDisplay(); closeModals();
+  saveData(); updateDisplay(); closeModals(); resolveViewer();
 }
 
 // ======= MEMBERS =======
@@ -212,6 +223,8 @@ function handleMemberSubmit(e) {
     if (!m) return;
     const old = m.name;
     m.name = name;
+    if (me === old) { me = name; localStorage.setItem(ME_KEY, me); }
+    if (viewer === old) viewer = name;
     expenses.forEach(e => {
       if (e.paidBy === old) e.paidBy = m.name;
       const idx = e.involvedMembers.indexOf(old);
@@ -221,7 +234,7 @@ function handleMemberSubmit(e) {
     saveData(); updateDisplay(); calcSettlements(); closeModals(); showMessage(`${name} updated`, 'success');
   } else {
     members.push({ id: Date.now(), name, balance: 0, addedAt: new Date().toISOString() });
-    saveData(); updateDisplay(); closeModals(); showMessage(`${name} added`, 'success');
+    saveData(); updateDisplay(); closeModals(); showMessage(`${name} added`, 'success'); resolveViewer();
   }
 }
 
@@ -231,6 +244,8 @@ function deleteMember(id) {
   if (expenses.some(e => e.paidBy === m.name || e.involvedMembers.includes(m.name))) {
     showMessage('Member is in expenses. Delete those first.', 'error'); return;
   }
+  if (me === m.name) { me = ''; localStorage.removeItem(ME_KEY); }
+  if (viewer === m.name) viewer = null;
   members = members.filter(x => x.id !== id);
   saveData(); updateDisplay();
 }
@@ -486,9 +501,12 @@ function renderExpenses() {
     let metaText = ` • ${formatDate(exp.date)}${exp.time ? ' · '+exp.time : ''}`;
     const isPersonal = exp.involvedMembers.length === 1 && exp.involvedMembers[0] === exp.paidBy;
     if (!isPersonal) {
-      const labels = { equal: 'all', 'select-equal': 'sel', percentage: '%', shares: 'shares', custom: 'cust' };
-      metaText += ' · ' + (labels[exp.splitType] || exp.splitType);
-      if (exp.splitType !== 'equal') {
+      if (exp.splitType === 'equal') {
+        const each = exp.amount / exp.involvedMembers.length;
+        metaText += ' · Split equally · ' + formatCurrency(each, currentTrip?.currency) + ' each';
+      } else {
+        const names = { 'select-equal': 'Split equally (selected)', percentage: 'Split by %', shares: 'Split by shares', custom: 'Custom split' };
+        metaText += ' · ' + (names[exp.splitType] || exp.splitType);
         const perPerson = exp.involvedMembers.map(m => m + ' ' + formatCurrency(exp.splitData[m], currentTrip?.currency)).join(', ');
         metaText += ' : ' + perPerson;
       }
@@ -546,6 +564,85 @@ function deleteExpense(id) {
   saveData(); updateDisplay(); calcSettlements();
 }
 
+// ======= VIEWER & MODE ENGINE =======
+function setMode(m) {
+  mode = m === 'manage' ? 'manage' : 'view';
+  document.body.classList.toggle('mode-view', mode === 'view');
+  document.body.classList.toggle('mode-manage', mode === 'manage');
+  const pill = $('mode-pill');
+  if (pill) pill.textContent = mode === 'view' ? '✏️ Manage' : '👁 View';
+  if (mode === 'manage') closeMoreMenu();
+  else closeModals();
+  const meBtn = $('viewer-me-btn');
+  if (meBtn) meBtn.style.display = (mode === 'manage' && members.length) ? 'inline-flex' : 'none';
+}
+function toggleMode() { setMode(mode === 'view' ? 'manage' : 'view'); }
+function closeMoreMenu() { const m = $('more-menu'); if (m) m.style.display = 'none'; }
+
+function setMe(name) {
+  me = name || '';
+  localStorage.setItem(ME_KEY, me);
+  if (name && members.some(m => m.name === name)) viewer = name;
+  renderViewerSection();
+}
+function setViewer(name) {
+  viewer = name || null;
+  renderViewerSection();
+  const balances = calcBalances();
+  renderBalanceBars(balances);
+  renderSettlementFlow(balances);
+}
+function resolveViewer(force) {
+  const rerender = () => { if (expenses.length) renderBalanceBars(calcBalances()); };
+  if (!members.length) { viewer = null; renderViewerSection(); return; }
+  if (me && members.some(m => m.name === me)) { viewer = me; renderViewerSection(); rerender(); return; }
+  if (force || me === null) { showViewerModal(); return; }   // never asked → onboard
+  viewer = null;                                             // skipped or not a member → overview
+  renderViewerSection(); rerender();
+}
+function showViewerModal() {
+  const list = $('viewer-member-list');
+  if (!list) return;
+  list.innerHTML = '';
+  members.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'vrow';
+    const av = row.appendChild(document.createElement('span'));
+    av.className = 'vchip-av'; av.style.background = getAvatarColor(m.name); av.textContent = getInitials(m.name);
+    const nm = row.appendChild(document.createElement('span'));
+    nm.className = 'vname'; nm.textContent = m.name + (me === m.name ? ' ★' : '');
+    const viewBtn = row.appendChild(document.createElement('button'));
+    viewBtn.className = 'vact'; viewBtn.textContent = '👁 View as';
+    viewBtn.addEventListener('click', () => { setViewer(m.name); closeModals(); });
+    const meBtn = row.appendChild(document.createElement('button'));
+    meBtn.className = 'vact me'; meBtn.textContent = '★ This is me';
+    meBtn.addEventListener('click', () => { setMe(m.name); closeModals(); });
+    list.appendChild(row);
+  });
+  $('viewer-modal').style.display = 'flex';
+}
+function renderViewerSection() {
+  const sec = $('viewer-section');
+  if (!sec) return;
+  if (!members.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  const chips = $('viewer-chips');
+  chips.innerHTML = '';
+  members.forEach(m => {
+    const c = document.createElement('button');
+    c.className = 'vchip' + (viewer === m.name ? ' active' : '') + (me === m.name ? ' isme' : '');
+    c.title = viewer === m.name ? `Viewing as ${m.name}` : `View as ${m.name}`;
+    c.innerHTML = `<span class="vchip-av" style="background:${getAvatarColor(m.name)}">${getInitials(m.name)}</span><span class="vchip-name">${m.name}</span>${me === m.name ? '<span class="vchip-me" title="This is me">★</span>' : ''}`;
+    c.addEventListener('click', () => setViewer(m.name));
+    chips.appendChild(c);
+  });
+  const meBtn = $('viewer-me-btn');
+  if (meBtn) meBtn.style.display = (mode === 'manage' && members.length) ? 'inline-flex' : 'none';
+  // Overview hint only (the personal answer lives in the Balances hero now)
+  const hint = $('viewer-hint-line');
+  if (hint) hint.style.display = viewer ? 'none' : 'block';
+}
+
 // ======= BALANCE CALCULATIONS =======
 function calcBalances() {
   const b = {};
@@ -587,10 +684,26 @@ function renderBalanceBars(balances) {
   const entries = Object.entries(balances);
   if (!entries.length) return;
   const maxAbs = Math.max(...entries.map(([,v]) => Math.abs(v)), 0.01);
+
+  // Viewer's row becomes the answer-first hero card (no duplicated number anywhere)
+  const showHero = viewer && entries.some(([n]) => n === viewer);
+  if (showHero) {
+    const b = balances[viewer];
+    const hero = document.createElement('div');
+    const who = viewer === me ? 'You' : viewer;
+    const cls = b > 0.01 ? 'pos' : b < -0.01 ? 'neg' : 'zero';
+    if (b > 0.01) hero.textContent = `${who} get${viewer === me ? '' : 's'} back ${formatCurrency(b, currentTrip?.currency)}`;
+    else if (b < -0.01) hero.textContent = `${who} owe${viewer === me ? '' : 's'} ${formatCurrency(-b, currentTrip?.currency)}`;
+    else hero.textContent = `${who} ${viewer === me ? 'are' : 'is'} settled ✓`;
+    hero.className = 'viewer-summary ' + cls;
+    container.appendChild(hero);
+  }
+
   entries.forEach(([name, bal]) => {
+    if (showHero && name === viewer) return; // already shown as hero
     const absBal = Math.abs(bal);
     const pct = Math.max(3, (absBal / maxAbs) * 100);
-    const row = document.createElement('div'); row.className = 'bidir-row';
+    const row = document.createElement('div'); row.className = 'bidir-row' + (name === viewer ? ' viewer-row' : '');
     if (bal > 0.01) {
       const label = row.appendChild(document.createElement('span'));
       label.className = 'bidir-label'; label.textContent = name;
@@ -633,6 +746,40 @@ function renderBalanceBars(balances) {
 }
 
 // ======= SETTLEMENT FLOW DIAGRAM (segment 2) =======
+// Trace which expenses produced a settlement (debtor D → creditor C):
+// each expense paid by C where D has a share contributes D's share,
+// until the settlement amount is explained.
+function expenseTrace(from, to, amt) {
+  const parts = [];
+  let remaining = Math.round(amt * 100) / 100;
+  // pass 1: expenses the creditor paid that the debtor shares
+  expenses.forEach(e => {
+    if (remaining <= 0.01) return;
+    const share = Math.round((e.splitData[from] || 0) * 100) / 100;
+    if (e.paidBy === to && share > 0.01) {
+      const take = Math.min(share, remaining);
+      parts.push([e.description, take]);
+      remaining = Math.round((remaining - take) * 100) / 100;
+    }
+  });
+  // pass 2: remainder = debtor's shares of expenses paid by others,
+  // which settle through the creditor (netting chain)
+  if (remaining > 0.01) {
+    expenses.forEach(e => {
+      if (remaining <= 0.01) return;
+      const share = Math.round((e.splitData[from] || 0) * 100) / 100;
+      if (e.paidBy !== to && share > 0.01) {
+        const take = Math.min(share, remaining);
+        parts.push([`${e.description} (${e.paidBy} paid — nets via ${to})`, take]);
+        remaining = Math.round((remaining - take) * 100) / 100;
+      }
+    });
+  }
+  if (remaining > 0.01 && parts.length) parts.push(['(balance netting)', remaining]);
+  if (!parts.length) parts.push(['(overall balance netting)', amt]);
+  return parts;
+}
+
 function renderSettlementFlow(balances) {
   const settlements = calcOptimalSettlements(balances);
   const visual = $('settlements-visual');
@@ -654,7 +801,13 @@ function renderSettlementFlow(balances) {
 
   settlements.forEach(s => {
     const pct = Math.max(8, (s.amount / maxAmt) * 100);
-    const flow = document.createElement('div'); flow.className = 'flow-row';
+    const det = document.createElement('details');
+    det.className = 'settle-details';
+    const summary = det.appendChild(document.createElement('summary'));
+    summary.className = 'settle-summary';
+
+    const flow = summary.appendChild(document.createElement('div'));
+    flow.className = 'flow-row';
     const fromSpan = flow.appendChild(document.createElement('span'));
     fromSpan.className = 'flow-from'; fromSpan.textContent = s.from;
     const track = flow.appendChild(document.createElement('div'));
@@ -665,7 +818,21 @@ function renderSettlementFlow(balances) {
     amt.className = 'flow-amt'; amt.textContent = formatCurrency(s.amount, currentTrip?.currency);
     const toSpan = flow.appendChild(document.createElement('span'));
     toSpan.className = 'flow-to'; toSpan.textContent = s.to;
-    visual.appendChild(flow);
+    const hint = summary.appendChild(document.createElement('span'));
+    hint.className = 'settle-hint'; hint.textContent = 'why?';
+
+    const parts = expenseTrace(s.from, s.to, s.amount);
+    const partsDiv = det.appendChild(document.createElement('div'));
+    partsDiv.className = 'settle-parts';
+    parts.forEach(([desc, a]) => {
+      const row = partsDiv.appendChild(document.createElement('div'));
+      row.className = 'settle-part';
+      const d = row.appendChild(document.createElement('span'));
+      d.textContent = desc; d.title = desc;   // full text on hover when ellipsized
+      const v = row.appendChild(document.createElement('span'));
+      v.textContent = formatCurrency(a, currentTrip?.currency);
+    });
+    visual.appendChild(det);
   });
 }
 
@@ -740,7 +907,7 @@ function importData(event) {
       currentTrip = data.currentTrip || null;
       members = data.members || [];
       expenses = data.expenses || [];
-      saveData(); updateDisplay(); calcSettlements();
+      saveData(); updateDisplay(); calcSettlements(); resolveViewer();
       showMessage('Data imported!', 'success');
     } catch (err) { showMessage('Import failed. Check file.', 'error') }
   };
@@ -783,21 +950,15 @@ function showTripView() {
   $('chip-members').textContent = members.length + ' member' + (members.length !== 1 ? 's' : '');
   $('chip-expenses').textContent = expenses.length + ' expense' + (expenses.length !== 1 ? 's' : '');
 
-  const meta = getCacheMeta();
-  const createdChip = $('chip-created');
-  const updatedChip = $('chip-updated');
-  if (meta) {
-    createdChip.textContent = '📅 ' + formatDateTime(currentTrip.createdAt);
-    updatedChip.textContent = '🔄 ' + formatDateTime(meta.lastUpdated);
-    createdChip.style.display = 'inline-block';
-    updatedChip.style.display = 'inline-block';
-  } else {
-    createdChip.style.display = 'none';
-    updatedChip.style.display = 'none';
-  }
+  // Decluttered header: created/updated timestamps live in the cache prompt & export, not the header
+  $('chip-created').style.display = 'none';
+  $('chip-updated').style.display = 'none';
 
   renderMembers();
+  renderViewerSection();
   $('expense-sort').value = currentExpenseSort;
+  const emptyHint = $('expenses-empty');
+  if (emptyHint) emptyHint.style.display = expenses.length ? 'none' : 'block';
   if (expenses.length) renderExpenses();
   else $('expenses-list').innerHTML = '';
 
@@ -834,11 +995,26 @@ function init() {
 
   $('expense-sort').onchange = function() { currentExpenseSort = this.value; if (expenses.length) renderExpenses(); saveData() };
 
+  // view/manage layer controls
+  setMode('view');
+  $('mode-pill').onclick = toggleMode;
+  $('more-menu-btn').onclick = e => { e.stopPropagation(); const m = $('more-menu'); m.style.display = m.style.display === 'none' ? 'flex' : 'none'; };
+  $('mm-new-trip').onclick = () => { closeMoreMenu(); openTripModal(); };
+  $('mm-export').onclick = () => { closeMoreMenu(); exportData(); };
+  $('mm-import').onclick = () => { closeMoreMenu(); $('import-file-input').click(); };
+  $('mm-clear').onclick = () => { closeMoreMenu(); clearCache(); };
+  document.addEventListener('click', e => {
+    const m = $('more-menu');
+    if (m && m.style.display !== 'none' && !e.target.closest('#more-menu-btn') && !e.target.closest('#more-menu')) m.style.display = 'none';
+  });
+  $('viewer-just-looking').onclick = () => { setMe(''); closeModals(); };
+  $('viewer-me-btn').onclick = () => showViewerModal();
+
   window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals() });
 
   // Show cache prompt if data exists, otherwise normal load
   if (getCacheMeta()) promptCache();
-  else { loadData(); updateDisplay(); if (expenses.length) calcSettlements() }
+  else { loadData(); updateDisplay(); if (expenses.length) calcSettlements(); resolveViewer(); }
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -28,7 +28,7 @@
                     <span id="header-trip-name" class="header-trip-name"></span>
                     <span id="header-trip-dates" class="header-trip-dates"></span>
                     <span id="header-currency-badge" class="currency-badge"></span>
-                    <button id="edit-trip-btn" class="btn btn-ghost btn-sm" title="Edit trip">✏️</button>
+                    <button id="edit-trip-btn" class="btn btn-ghost btn-sm manage-only" title="Edit trip">✏️</button>
                 </div>
             </div>
             <div class="header-center" id="header-stats" style="display:none">
@@ -39,10 +39,17 @@
                 <span class="stat-chip ts-chip" id="chip-updated" style="display:none"></span>
             </div>
             <div class="header-right">
-                <button id="new-trip-btn" class="btn btn-primary">+ New Trip</button>
-                <button id="export-data-btn" class="btn btn-export">📤 Export</button>
-                <button id="import-data-btn" class="btn btn-import">📥 Import</button>
-                <button id="clear-data-btn" class="btn btn-ghost" title="Clear all cached data">🗑️ Clear</button>
+                <button id="more-menu-btn" class="btn btn-ghost view-only" title="Menu">⋯</button>
+                <div id="more-menu" class="more-menu" style="display:none">
+                    <button class="more-item" id="mm-new-trip">+ New Trip</button>
+                    <button class="more-item" id="mm-export">📤 Export</button>
+                    <button class="more-item" id="mm-import">📥 Import</button>
+                    <button class="more-item danger" id="mm-clear">🗑️ Clear</button>
+                </div>
+                <button id="new-trip-btn" class="btn btn-primary manage-only">+ New Trip</button>
+                <button id="export-data-btn" class="btn btn-export manage-only">📤 Export</button>
+                <button id="import-data-btn" class="btn btn-import manage-only">📥 Import</button>
+                <button id="clear-data-btn" class="btn btn-ghost manage-only" title="Clear all cached data">🗑️ Clear</button>
             </div>
         </header>
 
@@ -51,6 +58,11 @@
                 <h2>💰 Welcome to Expense Splitter</h2>
                 <p>Split expenses fairly among your group. No signup, no tracking, all local.</p>
                 <button id="create-first-trip-btn" class="btn btn-primary btn-large">Create Your First Trip</button>
+                <div class="welcome-steps">
+                    <div class="wstep"><span class="wn">1</span><span><b>Who paid?</b> — the person who gave cash, e.g. "Aravinth paid ₹2,000 for dinner"</span></div>
+                    <div class="wstep"><span class="wn">2</span><span><b>Split how?</b> — equally, by %, by shares, or custom amounts</span></div>
+                    <div class="wstep"><span class="wn">3</span><span><b>Done.</b> — balances update live; at the end, who-pays-whom shows the fewest transfers to settle up</span></div>
+                </div>
             </div>
         </div>
 
@@ -67,36 +79,50 @@
 
                 <!-- Column 2: All Visuals -->
                 <section class="panel panel-col2">
+                    <div class="panel-section" id="viewer-section" style="display:none">
+                        <div class="panel-header">
+                            <h3>👁 Viewing as</h3>
+                            <button id="viewer-me-btn" class="btn btn-ghost btn-sm manage-only" style="display:none" title="Who am I in this trip?">★ me</button>
+                        </div>
+                        <div id="viewer-chips" class="viewer-chips"></div>
+                        <div id="viewer-hint-line" class="viewer-hint-line" style="display:none">Trip overview — tap a person to see their view</div>
+                    </div>
                     <div class="panel-section">
                         <div class="panel-header">
                             <h3>⚖️ Balances</h3>
                         </div>
                         <div id="balance-bars" class="balance-bars"></div>
+                        <div class="bal-legend"><span class="dot g"></span>gets back<span class="dot r"></span>owes</div>
                     </div>
                     <div class="panel-section">
                         <div class="panel-header">
                             <h3>🔄 Settlements</h3>
                             <span id="settle-status-badge" class="badge badge-success" style="display:none">✓ Settled</span>
                         </div>
+                        <div class="panel-sub">Fewest transfers to settle everyone — tap a row to see the math</div>
                         <div id="settlements-visual" class="settlements-visual"></div>
                         <div id="all-settled-msg" class="all-settled" style="display:none">
                             <span>✓ All settled up</span>
                         </div>
                     </div>
-                    <div class="panel-section">
-                        <div class="panel-header">
-                            <h3>💰 Paid</h3>
+                    <div class="charts-row">
+                        <div class="panel-section">
+                            <div class="panel-header">
+                                <h3>💰 Paid</h3>
+                            </div>
+                            <div class="panel-sub">Who gave cash out of pocket</div>
+                            <div class="chart-single">
+                                <canvas id="chart-paid"></canvas>
+                            </div>
                         </div>
-                        <div class="chart-single">
-                            <canvas id="chart-paid"></canvas>
-                        </div>
-                    </div>
-                    <div class="panel-section">
-                        <div class="panel-header">
-                            <h3>💰 Incurred</h3>
-                        </div>
-                        <div class="chart-single">
-                            <canvas id="chart-incurred"></canvas>
+                        <div class="panel-section">
+                            <div class="panel-header">
+                                <h3>💰 Incurred</h3>
+                            </div>
+                            <div class="panel-sub">Whose fair share of the total</div>
+                            <div class="chart-single">
+                                <canvas id="chart-incurred"></canvas>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -117,6 +143,7 @@
                             <option value="paidby-desc">Payer Z-A</option>
                         </select>
                     </div>
+                    <div id="expenses-empty" class="expenses-empty" style="display:none">No expenses yet — add the first one to start tracking</div>
                     <div id="expenses-list" class="expenses-list"></div>
                 </section>
             </div>
@@ -252,6 +279,25 @@
     </div>
 
     <input type="file" id="import-file-input" accept=".json" style="display:none">
+
+    <div id="viewer-modal" class="modal" style="display:none">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Who are you in this trip?</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="viewer-hint">Pick yourself so the app can show <b>your</b> personal view (what you get back / owe). You can switch anytime from the "Viewing as" panel.</p>
+                <div id="viewer-member-list" class="viewer-member-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="viewer-just-looking" class="btn btn-ghost">Just looking</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="mode-pill" class="mode-pill" title="Toggle view/manage">✏️ Manage</button>
 
     <div id="cache-modal" class="modal" style="display:none">
         <div class="modal-backdrop"></div>

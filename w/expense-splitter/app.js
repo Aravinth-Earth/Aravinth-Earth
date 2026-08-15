@@ -632,7 +632,17 @@ function renderViewerSection() {
     const c = document.createElement('button');
     c.className = 'vchip' + (viewer === m.name ? ' active' : '') + (me === m.name ? ' isme' : '');
     c.title = viewer === m.name ? `Viewing as ${m.name}` : `View as ${m.name}`;
-    c.innerHTML = `<span class="vchip-av" style="background:${getAvatarColor(m.name)}">${getInitials(m.name)}</span><span class="vchip-name">${m.name}</span>${me === m.name ? '<span class="vchip-me" title="This is me">★</span>' : ''}`;
+    // build chip via DOM APIs — member names are user input, never innerHTML
+    const av = document.createElement('span');
+    av.className = 'vchip-av'; av.style.background = getAvatarColor(m.name); av.textContent = getInitials(m.name);
+    const nm = document.createElement('span');
+    nm.className = 'vchip-name'; nm.textContent = m.name;
+    c.appendChild(av); c.appendChild(nm);
+    if (me === m.name) {
+      const star = document.createElement('span');
+      star.className = 'vchip-me'; star.title = 'This is me'; star.textContent = '★';
+      c.appendChild(star);
+    }
     c.addEventListener('click', () => setViewer(m.name));
     chips.appendChild(c);
   });

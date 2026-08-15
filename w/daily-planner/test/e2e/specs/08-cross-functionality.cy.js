@@ -8,7 +8,7 @@
 describe('Cross-Functionality Integration Tests', () => {
   beforeEach(() => {
     cy.clearPlannerDB();
-    cy.visit('/w/sp/');
+    cy.visit('/w/daily-planner/');
     cy.waitForAutoSave();
   });
 

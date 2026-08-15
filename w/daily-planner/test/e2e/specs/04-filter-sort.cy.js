@@ -8,7 +8,7 @@
 describe('Filter & Sort', () => {
   beforeEach(() => {
     cy.clearPlannerDB();
-    cy.visit('/w/sp/');
+    cy.visit('/w/daily-planner/');
     cy.waitForAutoSave();
   });
 

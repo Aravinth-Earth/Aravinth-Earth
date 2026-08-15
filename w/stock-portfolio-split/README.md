@@ -66,7 +66,7 @@ Follows the same minimalist, functional design as other projects:
 
 ## Live Demo
 
-Visit: `https://www.332321.xyz/w/sps/`
+Visit: `https://www.332321.xyz/w/stock-portfolio-split/`
 
 ## License
 

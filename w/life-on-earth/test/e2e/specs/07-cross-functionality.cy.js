@@ -287,7 +287,7 @@ describe('Cross-Functionality Integration Tests', () => {
 
   context('End-to-End User Journey', () => {
     it('should complete full user experience flow', () => {
-      cy.url().should('include', '/w/ra/Life_On_Earth');
+      cy.url().should('include', '/w/life-on-earth/Life_On_Earth');
 
       cy.get('#loading h1').should('contain', 'வாழ்வின் நடனம்');
 

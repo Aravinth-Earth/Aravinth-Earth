@@ -3,7 +3,7 @@ import sys, time, json
 from playwright.sync_api import sync_playwright
 
 CDP = "http://localhost:9227"
-URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8092/w/cs/index.html"
+URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8092/w/calm-sweep/index.html"
 TARGET = int(sys.argv[2]) if len(sys.argv) > 2 else 40
 
 def get_board_dims(level):

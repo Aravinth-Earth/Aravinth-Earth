@@ -5,7 +5,7 @@
 /// <reference types="cypress" />
 
 Cypress.Commands.add('visitRa', () => {
-  cy.visit('/w/ra/Life_On_Earth.html');
+  cy.visit('/w/life-on-earth/Life_On_Earth.html');
 });
 
 Cypress.Commands.add('waitForLoading', () => {

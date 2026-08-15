@@ -3,7 +3,7 @@ Launches Playwright's own headless Chromium (no CDP needed)."""
 import sys, time, random, math
 from playwright.sync_api import sync_playwright
 
-URL = "http://127.0.0.1:8103/w/cs/index.html"
+URL = "http://127.0.0.1:8103/w/calm-sweep/index.html"
 PASS, FAIL = 0, 0
 
 def check(label, ok, detail=""):

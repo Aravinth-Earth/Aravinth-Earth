@@ -19,8 +19,8 @@ results.tsv
 experiments_log.tsv
 
 # Cypress test artifacts
-w/ra/test/e2e/screenshots/
-w/sp/test/e2e/screenshots/
+w/life-on-earth/test/e2e/screenshots/
+w/daily-planner/test/e2e/screenshots/
 
 # Maestro UI test artifacts
 log/

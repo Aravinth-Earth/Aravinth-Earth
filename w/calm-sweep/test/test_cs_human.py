@@ -3,7 +3,7 @@ Tests how time accumulation plays out in realistic play."""
 import sys, time, random
 from playwright.sync_api import sync_playwright
 
-URL = "http://127.0.0.1:8102/w/cs/index.html"
+URL = "http://127.0.0.1:8102/w/calm-sweep/index.html"
 
 def human_play(page, mode, wrong_chance=0.2, min_delay=0.3, max_delay=1.2):
     """Simulate human play: random delays between taps, occasional wrong taps."""

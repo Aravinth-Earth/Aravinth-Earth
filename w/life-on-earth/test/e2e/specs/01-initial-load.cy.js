@@ -12,7 +12,7 @@ describe('Initial Load & Basic Rendering', () => {
 
   context('Page Load', () => {
     it('should load the page successfully', () => {
-      cy.url().should('include', '/w/ra/Life_On_Earth');
+      cy.url().should('include', '/w/life-on-earth/Life_On_Earth');
     });
 
     it('should have correct document title', () => {

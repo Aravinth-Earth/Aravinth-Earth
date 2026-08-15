@@ -8,7 +8,7 @@
 describe('Utilities & Edge Cases', () => {
   beforeEach(() => {
     cy.clearPlannerDB();
-    cy.visit('/w/sp/');
+    cy.visit('/w/daily-planner/');
     cy.waitForAutoSave();
   });
 
@@ -54,7 +54,7 @@ describe('Utilities & Edge Cases', () => {
   context('Responsive Design', () => {
     it('should render correctly on desktop viewport', () => {
       cy.viewport(1280, 720);
-      cy.visit('/w/sp/');
+      cy.visit('/w/daily-planner/');
       cy.waitForAutoSave();
       
       cy.get('.container').should('be.visible');
@@ -63,7 +63,7 @@ describe('Utilities & Edge Cases', () => {
 
     it('should render correctly on mobile viewport', () => {
       cy.viewport(375, 667);
-      cy.visit('/w/sp/');
+      cy.visit('/w/daily-planner/');
       cy.waitForAutoSave();
       
       cy.get('.container').should('be.visible');

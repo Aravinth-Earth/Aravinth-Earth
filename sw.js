@@ -11,17 +11,17 @@ const PRECACHE_URLS = [
   '/manifest.json',
   
   // QR generator files
-  '/w/qr/generator.html',
-  '/w/qr/qr-styles.css',
-  '/w/qr/qr-script.js',
-  '/w/qr/2025_03_18_qrcode.mini.js',
+  '/w/qr-generator/generator.html',
+  '/w/qr-generator/qr-styles.css',
+  '/w/qr-generator/qr-script.js',
+  '/w/qr-generator/2025_03_18_qrcode.mini.js',
   'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js',
 
   // Calendar (Today's Date)
-  '/w/cal/index.html',
-  '/w/cal/css/style.css',
-  '/w/cal/js/calendars.js',
-  '/w/cal/js/astronomy.js'
+  '/w/today-date/index.html',
+  '/w/today-date/css/style.css',
+  '/w/today-date/js/calendars.js',
+  '/w/today-date/js/astronomy.js'
 ];
 
 // Install event - precache key resources
@@ -60,7 +60,7 @@ self.addEventListener('fetch', event => {
                             console.error('Fetch failed:', error);
                             
                             // Try to return the local fallback file instead of the CDN resource
-                            return caches.match('/w/qr/2025_03_18_qrcode.mini.js')
+                            return caches.match('/w/qr-generator/2025_03_18_qrcode.mini.js')
                                 .then(fallbackResponse => {
                                     if (fallbackResponse) {
                                         return fallbackResponse;

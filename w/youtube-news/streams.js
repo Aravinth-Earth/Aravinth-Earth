@@ -1,11 +1,14 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-08-21T06:51:22+0530",
+  "generated_at": "2026-08-21T14:11:23+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
         "fQzB_coAtPU",
+        "obmcDpvy9XI",
+        "vj6MBWuvsrU",
+        "zbzEmvD-SbQ",
         "E4ndYFfdlb8"
       ]
     },
@@ -14,22 +17,31 @@ window.YTN_STREAMS = {
       "handle": "@PolimerNews",
       "streams": [
         "epobARq_2Fg",
-        "Grkq4BdxjRQ"
+        "PIXxyP91Pjw",
+        "Grkq4BdxjRQ",
+        "DOYV5cy9auQ",
+        "uF63BbrlQE4"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
+        "qniSqvGH1fQ",
+        "W-gUX194258",
         "KgoJ-1tfQWE",
-        "W1ke21lxLX8",
-        "gynWNinqmjw"
+        "Zwh0Ibvxxbk",
+        "3aeVxSMCSJA"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "Xr-2TjeWWv4",
+        "3tLYsTkfqOk",
+        "Pu5LonOGn_g",
+        "Babe3VBA4A8",
         "-8_V7EbnRiw"
       ]
     },
@@ -37,8 +49,11 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
+        "n8cJzwPmV3U",
+        "kNtZUmp9B-Q",
+        "dfOnab-L7CE",
         "AFt-zDhnPk4",
-        "_Lg0IUxUMi0"
+        "LoI7mjoqnWk"
       ]
     },
     {
@@ -46,6 +61,9 @@ window.YTN_STREAMS = {
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
         "8mSN-qqMRTU",
+        "lYEhgNj64Vc",
+        "7rNfRAHndlA",
+        "GSh737OyfAE",
         "hw7Fjh6mncQ"
       ]
     },
@@ -53,7 +71,7 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "77CwUOiZ3YA",
+        "s6jpl1Cgxv8",
         "9M02G5c6x6w"
       ]
     },
@@ -68,7 +86,8 @@ window.YTN_STREAMS = {
       "name": "News J",
       "handle": "@NewsJ",
       "streams": [
-        "x1M7MOQ01AE"
+        "x1M7MOQ01AE",
+        "KKdBACfktvI"
       ]
     }
   ]

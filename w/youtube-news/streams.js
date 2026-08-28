@@ -1,21 +1,23 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-08-28T06:16:28+0530",
+  "generated_at": "2026-08-29T01:27:01+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "2sUmmN5YFw8",
-        "6htFhRKvZ60",
-        "E4ndYFfdlb8"
+        "GoFvPHF0j-g",
+        "sb-BhGoBhtA",
+        "-jJMnhXMcI8",
+        "I50-DmbM_G4",
+        "8H1x_6gPdkw"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "lmmvaQanC9c",
-        "o2jWKa2IJUs"
+        "o2jWKa2IJUs",
+        "L97MYhFpN7Q"
       ]
     },
     {
@@ -23,6 +25,8 @@ window.YTN_STREAMS = {
       "handle": "@NewsTamil24X7TV",
       "streams": [
         "auimzG1zERc",
+        "avJfunbM3NM",
+        "dHHCLZQUvwI",
         "gynWNinqmjw"
       ]
     },
@@ -30,6 +34,7 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "cV_nDrM1FeE",
         "-8_V7EbnRiw"
       ]
     },
@@ -37,7 +42,9 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "PgMKCylaPe0",
+        "O49owDU7EXM",
+        "MF0UXnUrIDg",
+        "QHMh3wztIRs",
         "_Lg0IUxUMi0"
       ]
     },
@@ -59,7 +66,7 @@ window.YTN_STREAMS = {
       "name": "Kalaignar TV News",
       "handle": "@KalaignarTVNews",
       "streams": [
-        "iGeW7LXk_Vw"
+        "osG82D5amK8"
       ]
     },
     {

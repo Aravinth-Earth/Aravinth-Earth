@@ -1,32 +1,35 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-08-29T01:27:01+0530",
+  "generated_at": "2026-08-29T11:35:13+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "GoFvPHF0j-g",
-        "sb-BhGoBhtA",
-        "-jJMnhXMcI8",
-        "I50-DmbM_G4",
-        "8H1x_6gPdkw"
+        "iy1sQOwYoYk",
+        "Ek9byST9XyE",
+        "55SvaI_zKL8",
+        "E4ndYFfdlb8"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
+        "eRCRihHADHA",
         "o2jWKa2IJUs",
-        "L97MYhFpN7Q"
+        "fWkZDgA8LOY",
+        "e1CgsEQQOic",
+        "Ga8ve14IN8I"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "auimzG1zERc",
-        "avJfunbM3NM",
-        "dHHCLZQUvwI",
+        "GOvtH0-9ZKg",
+        "8xVXFEf78hw",
+        "06BAMDubogY",
+        "Z8h9afbubTQ",
         "gynWNinqmjw"
       ]
     },
@@ -34,7 +37,10 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "cV_nDrM1FeE",
+        "jWyc6nhNdmU",
+        "vFQ_brvCOmo",
+        "Qt9U9-TS63g",
+        "TRuht_g8Wek",
         "-8_V7EbnRiw"
       ]
     },
@@ -42,9 +48,10 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "O49owDU7EXM",
-        "MF0UXnUrIDg",
-        "QHMh3wztIRs",
+        "6wq5t38iykc",
+        "W0j47b53ZWw",
+        "SjIr8xvAPRQ",
+        "dcYOAGcFL9k",
         "_Lg0IUxUMi0"
       ]
     },
@@ -52,6 +59,7 @@ window.YTN_STREAMS = {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
+        "jbjNDkUAszI",
         "hw7Fjh6mncQ"
       ]
     },
@@ -59,6 +67,7 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
+        "Ifp0lljrB3M",
         "9M02G5c6x6w"
       ]
     },

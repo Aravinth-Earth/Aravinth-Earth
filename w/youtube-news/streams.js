@@ -1,11 +1,11 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-08-30T19:07:55+0530",
+  "generated_at": "2026-08-31T00:35:54+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "TWt9ZeVqB5E",
+        "hLkgQaTIrFo",
         "CPdrfb14R3k",
         "VeaJekPVDhs",
         "E4ndYFfdlb8"
@@ -15,39 +15,30 @@ window.YTN_STREAMS = {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "hNHky6uGJc4",
-        "o2jWKa2IJUs",
-        "QiFCYTQfNWE"
+        "o2jWKa2IJUs"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "crAucvPE4Z4",
+        "10ZImZk6iMo",
         "GansRjpxeNs",
-        "gynWNinqmjw",
-        "wDW0y61p9ZI"
+        "crAucvPE4Z4",
+        "gynWNinqmjw"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "mqiFCmF6i4Q",
-        "wSCuwUL5M4o",
-        "d7afoIJcgj0",
-        "nhUgeYFyh20",
-        "9OlHanqDmpw"
+        "-8_V7EbnRiw"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "YkjBvE_sWpA",
-        "UjOY9_6CYdE",
-        "VR1ESmCwjcA",
         "iixwoVxoJHk",
         "_Lg0IUxUMi0"
       ]
@@ -56,10 +47,6 @@ window.YTN_STREAMS = {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "4pUwzK_vBts",
-        "Dxf5J7EHjvA",
-        "xpadR8eHdPA",
-        "iAhjeudfsxk",
         "hw7Fjh6mncQ"
       ]
     },
@@ -67,8 +54,6 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "TPL5C46-ugY",
-        "sIafjkRiEbg",
         "9M02G5c6x6w"
       ]
     },

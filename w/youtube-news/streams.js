@@ -1,25 +1,25 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-12T17:30:26+0530",
+  "generated_at": "2026-09-12T23:41:04+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "J4sQoOARi90",
+        "uApOUVRJwmo",
+        "g-is4j7RCU0",
+        "cxOecct0L_M",
         "EDoX40Bhi08",
-        "49iLAStGexk",
-        "EzvGH8zX40g",
-        "ZLXMQXz1kg0"
+        "EzvGH8zX40g"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "Nd-AJMx4QJQ",
-        "XmMFQQg8VBE",
-        "Y2pCqDr7ypI",
-        "JQIQAQBiXVo",
+        "EsbQfCcPGfA",
+        "4rs6dy2uQ-4",
+        "XEzYEjo39Vc",
+        "qRmrqnvC8zU",
         "E7DA_ChChGY"
       ]
     },
@@ -27,42 +27,35 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "EycRl_dCCi0",
         "CjADpistQAE",
-        "_oHFMRA-A1s",
         "YAQJN0EDgIk",
-        "gynWNinqmjw"
+        "p8AN8IsrH9A",
+        "_oHFMRA-A1s",
+        "_igOoQhBsyE"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "K6G4GqMWI78",
-        "1kDpykCGzwo",
-        "MizldhzHrDg",
-        "-8_V7EbnRiw",
-        "zUIjpgTeXvU"
+        "-8_V7EbnRiw"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "J5CRHYQDNQA",
+        "ItOMD8n4ETs",
+        "RMb9sGe7i0U",
+        "nsY7S_2mamI",
         "vNms7emOB5E",
-        "Z5lmSt5KvCs",
-        "opAktGSeBtk",
-        "_Lg0IUxUMi0"
+        "n5onHhh7jrQ"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "s-VkDM7_mf4",
-        "3uqDihFF888",
-        "oY4OnYw7ctI",
         "hw7Fjh6mncQ"
       ]
     },
@@ -70,7 +63,6 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "LJa6KDcHnQg",
         "9M02G5c6x6w"
       ]
     },

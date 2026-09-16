@@ -1,68 +1,66 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-16T09:19:16+0530",
+  "generated_at": "2026-09-16T18:43:06+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
+        "kh85NXL6jto",
         "LBak5_n5tAY",
-        "bs86hInp2Yo",
-        "k_3ZqVPhZUk",
-        "26IIa2WT0Ws",
-        "X7f9N5_k3y8"
+        "u8X4oF31-nQ",
+        "5tP1YW_axBI",
+        "k_3ZqVPhZUk"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "4L1dJ2pPlLU",
-        "ubPtxOSsWV8",
-        "7B8Ft1RjI24",
-        "IoE2iowFnls",
-        "c9zKtf0OHJA"
+        "ID8z_pFnH4Q",
+        "TtFIQ-GBqtA",
+        "yvDNg9DWbE8",
+        "lpdffRkIjdg",
+        "ZEPkYE4RluY"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "JlP83QuxFYM",
         "dE7SCz2vD5w",
-        "a0Qw8dAo8IQ",
-        "gynWNinqmjw"
+        "EB-Vv-_mAW8",
+        "oMsUnlDxxiw",
+        "dd40-ySWAjo",
+        "1OQKnFDHGHM"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "-8_V7EbnRiw",
-        "2KC_0UrFZ98",
+        "AlhhnBotZxQ",
         "Z2O_TBIMHVA",
-        "QlPiI6HVRHg",
-        "F7Eb_PJfduI"
+        "2KC_0UrFZ98",
+        "-8_V7EbnRiw"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "isAEbrbEWGY",
-        "6Npe5amVhyo",
-        "6SIcJVkNCkU",
-        "tAw49ixyGqE",
-        "IRvlQbvV5EA"
+        "nVWasR8yGFE",
+        "KaPEz2huRT0",
+        "BgdSiH3EiwM",
+        "7jJwsFk09cE",
+        "oJo0T9hYXXo"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "EDh6faxL2Eo",
-        "lVFuua9xWJQ",
-        "4o43XZt2M7M",
-        "3LpradJHiss",
+        "8rJbMYXfEZ8",
+        "7FpIbcyx6K0",
         "hw7Fjh6mncQ"
       ]
     },
@@ -70,8 +68,8 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "igKbM1kcQHY",
-        "zQcVgpjqkyw",
+        "LR26whpRNss",
+        "DPJbRTQP1vE",
         "9M02G5c6x6w"
       ]
     },

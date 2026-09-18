@@ -1,5 +1,5 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-18T09:12:21+0530",
+  "generated_at": "2026-09-18T18:16:24+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
@@ -7,6 +7,7 @@ window.YTN_STREAMS = {
       "streams": [
         "Gg7OwC-gykw",
         "roUEi_s8LFg",
+        "2pi99KOAAK8",
         "E4ndYFfdlb8"
       ]
     },
@@ -14,9 +15,11 @@ window.YTN_STREAMS = {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "vZyiIFh7Mu0",
+        "MWrkW3mH90U",
+        "raUfaMTkN6E",
+        "W8I7X7lnvrI",
         "7B8Ft1RjI24",
-        "STr4Z_X89Vw"
+        "V7lHGgLUWVM"
       ]
     },
     {
@@ -24,8 +27,8 @@ window.YTN_STREAMS = {
       "handle": "@NewsTamil24X7TV",
       "streams": [
         "-wLjEDmBRFM",
-        "J0d78rCeJl8",
-        "8vGEj4mMsV4",
+        "GUGF02q4z-c",
+        "KOn2g6hmAj0",
         "gynWNinqmjw"
       ]
     },
@@ -33,8 +36,9 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "pQNl8IfyGos",
         "-8_V7EbnRiw",
-        "SS5upehTapw",
+        "TsMyuSFHo4I",
         "u05QUtlojXA"
       ]
     },
@@ -42,29 +46,29 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "I4NyYt4NasE",
-        "4kJy36mWixY",
-        "KNxK0gVsN4E",
-        "_Lg0IUxUMi0",
-        "J32ohUeIHPY"
+        "IQOe4eSpt4U",
+        "GOK63--FIEg",
+        "knC3ApNex7s",
+        "IjiG-WrGz_w",
+        "Hdt9KzjaKhA"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "UDPlxYExjEk",
-        "13VGUqw9IAg",
-        "ksqNOSZMe74",
-        "hw7Fjh6mncQ"
+        "zPgzQkymAh8",
+        "9GZaSt1pV3c",
+        "F62sgYUdNaU",
+        "aS6QBpPJ5rU",
+        "wHm8hFBUeL4"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "SHUOd17FHGE",
-        "VzrvgHywAlE",
+        "998uSzOOntE",
         "9M02G5c6x6w"
       ]
     },
@@ -72,7 +76,7 @@ window.YTN_STREAMS = {
       "name": "Kalaignar TV News",
       "handle": "@KalaignarTVNews",
       "streams": [
-        "BxvHfLGEcD0"
+        "J6-lIJtYZ7s"
       ]
     },
     {

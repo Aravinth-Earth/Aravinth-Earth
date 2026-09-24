@@ -1,21 +1,21 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-24T01:01:22+0530",
+  "generated_at": "2026-09-24T09:08:56+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "yp0xjPXPvuY",
-        "X0nHumuFijc",
-        "HnzcZ6hjdRc",
-        "YhRMxad-Vr4",
-        "E4ndYFfdlb8"
+        "DvLZvpakwfw",
+        "E4ndYFfdlb8",
+        "cPaAEO3ZbPA",
+        "HnzcZ6hjdRc"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
+        "oVqStCotfpM",
         "VYdzwWAbGJY"
       ]
     },
@@ -23,10 +23,7 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "btuzm6CwaRg",
-        "uTpsPX2X5Jo",
-        "cv68nuP4wak",
-        "GiQq7z9pnEg",
+        "H4IEfRXN0iI",
         "gynWNinqmjw"
       ]
     },
@@ -34,6 +31,8 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "L9lBjv2nkDA",
+        "_l3bPLgSNJc",
         "-8_V7EbnRiw"
       ]
     },
@@ -41,15 +40,20 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "GjjRcnCjIrg",
-        "WkwdCxXaRdU",
-        "_Lg0IUxUMi0"
+        "l8GFselg4cQ",
+        "dGNr1in5jnQ",
+        "5RnBfOQumLk",
+        "M_aRcnRZELs",
+        "QrqjmBHrjjI"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
+        "sLOK4kcmXaE",
+        "PcPEJK4vlXQ",
+        "Y7UbPx22Ws8",
         "hw7Fjh6mncQ"
       ]
     },
@@ -57,6 +61,7 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
+        "ix2BxxV3tE4",
         "9M02G5c6x6w"
       ]
     },
@@ -64,7 +69,7 @@ window.YTN_STREAMS = {
       "name": "Kalaignar TV News",
       "handle": "@KalaignarTVNews",
       "streams": [
-        "Ymp2k6NEqNw"
+        "dsNRFQGPnc0"
       ]
     },
     {

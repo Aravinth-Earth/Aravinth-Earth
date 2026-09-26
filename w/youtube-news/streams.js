@@ -1,20 +1,23 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-26T09:30:09+0530",
+  "generated_at": "2026-09-26T18:13:57+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
         "fxWE7FToTtU",
-        "1LYgfXv9N2s",
-        "E4ndYFfdlb8"
+        "7ZPO1YJebEE",
+        "gaxkBFcNEt0",
+        "mBdbTCOtv1w",
+        "1LYgfXv9N2s"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "j3Kqfno9t54",
+        "J6UNWrbycRI",
+        "ImREMu2rYLU",
         "VYdzwWAbGJY",
         "tnbjuynM44Y"
       ]
@@ -23,7 +26,8 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "EhRDLtwe31c",
+        "fahcezhCgoE",
+        "wLc0HLneERY",
         "lo3En75y3-Y",
         "gynWNinqmjw"
       ]
@@ -32,25 +36,30 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "PpJqIdbBE0A",
+        "K-PT_vM8SeI",
+        "23NbKCOjH0c",
+        "oM37u0LFaFI",
         "Nej1twdQApI",
-        "-8_V7EbnRiw"
+        "NPsaDyw1PnU"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "AmGyWJFjppA",
-        "ZvG8-4HZmEU",
-        "_Lg0IUxUMi0"
+        "5g7aFPWo44k",
+        "Kn1AONZtIi4",
+        "_Lg0IUxUMi0",
+        "V80OSLzCYY8"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "YcrqOum2syE",
+        "x1Gs4JdhaeM",
+        "EBuPhWYKkGg",
+        "XN_-TqOC8SE",
         "hw7Fjh6mncQ"
       ]
     },
@@ -58,7 +67,8 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "QeluC4skOMQ",
+        "r5je6qOclIU",
+        "9uAB6hBV9GU",
         "9M02G5c6x6w"
       ]
     },
@@ -73,6 +83,7 @@ window.YTN_STREAMS = {
       "name": "News J",
       "handle": "@NewsJ",
       "streams": [
+        "8tSd79RNdu4",
         "x1M7MOQ01AE"
       ]
     }

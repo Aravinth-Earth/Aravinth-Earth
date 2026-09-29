@@ -1,5 +1,5 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-09-29T23:00:02+0530",
+  "generated_at": "2026-09-29T23:09:47+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
@@ -15,7 +15,6 @@ window.YTN_STREAMS = {
       "handle": "@PolimerNews",
       "streams": [
         "oLe5K35gWIg",
-        "ov7FlZs_VBQ",
         "VYdzwWAbGJY",
         "yfkJ3NXIvz0",
         "9a0mlY5k56I"

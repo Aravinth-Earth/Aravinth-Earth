@@ -21,6 +21,15 @@
                 font-weight: bold;
                 margin-bottom: 20px;
             }
+            .stream-id-notice {
+                margin: 0 10px 20px;
+                padding: 10px 12px;
+                border: 1px solid #6b4d00;
+                border-radius: 4px;
+                background-color: #2a1f00;
+                color: #f0c040;
+                font-size: 14px;
+            }
             .live-streams {
                 display: flex;
                 flex-wrap: wrap;
@@ -92,6 +101,14 @@
             .multi-view-actions {
                 display: flex;
                 gap: 10px;
+            }
+            .custom-stream-error {
+                color: #ff8f8f;
+                font-size: 13px;
+                flex-basis: 100%;
+            }
+            .custom-stream-error[hidden] {
+                display: none;
             }
             button {
                 background-color: #bb86fc;
@@ -177,8 +194,9 @@
     <div class="multi-view-toolbar" id="multi-view-toolbar">
         <span id="multi-view-count">0 streams selected</span>
         <div class="multi-view-custom">
-            <input id="custom-stream-input" type="text" placeholder="YouTube stream ID or URL">
+            <input id="custom-stream-input" type="text" placeholder="YouTube video ID (11 chars) or URL">
             <button class="secondary-btn" onclick="addCustomStream()">Add Custom</button>
+            <span id="custom-stream-error" class="custom-stream-error" role="alert" hidden></span>
         </div>
         <div class="multi-view-actions">
             <button class="secondary-btn" onclick="clearMultiViewSelection()">Clear</button>
@@ -200,11 +218,25 @@
     </div>
             <script src="streams.js"></script>
         <script>
+            // Single source of truth for stream-id validation, shared by both render paths below.
+            // Embeds are always `https://www.youtube-nocookie.com/embed/<id>`, so only a
+            // well-formed YouTube video ID is ever interpolated into that URL.
+            window.ytnNormalizeStreamId = (value) => {
+                const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
+                if (typeof value !== 'string') {
+                    return '';
+                }
+                const candidate = value.trim();
+                return VIDEO_ID_PATTERN.test(candidate) ? candidate : '';
+            };
+        </script>
+        <script>
             // Render live channels from window.YTN_STREAMS (published by the pipeline).
             // No fallback data: empty/missing data renders an empty state only.
             (function () {
                 const container = document.getElementById('channel-sections');
                 const data = window.YTN_STREAMS || null;
+                const skippedStreamIds = [];
 
                 const makeStreamCard = (streamId) => {
                     const div = document.createElement('div');
@@ -218,7 +250,7 @@
                     checkbox.setAttribute('aria-label', 'Select stream for multi fullscreen');
 
                     const iframe = document.createElement('iframe');
-                    iframe.setAttribute('data-src', 'https://www.youtube-nocookie.com/embed/' + streamId);
+                    iframe.setAttribute('data-src', 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(streamId));
                     iframe.setAttribute('frameborder', '0');
                     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
                     iframe.setAttribute('allowfullscreen', '');
@@ -236,9 +268,24 @@
                     name.className = 'channel-name';
                     name.textContent = channel.name + ' (' + channel.handle + ')';  // textContent — XSS-safe
 
+                    const rawStreamIds = Array.isArray(channel.streams) ? channel.streams : [];
+                    const validStreamIds = [];
+                    rawStreamIds.forEach((rawId) => {
+                        const streamId = window.ytnNormalizeStreamId(rawId);
+                        if (streamId) {
+                            validStreamIds.push(streamId);
+                        } else {
+                            skippedStreamIds.push({ channel: channel.name, value: rawId });
+                        }
+                    });
+
+                    if (!validStreamIds.length) {
+                        return null;  // nothing valid for this channel: render no section at all
+                    }
+
                     const streams = document.createElement('div');
                     streams.className = 'live-streams';
-                    (channel.streams || []).forEach((id) => streams.appendChild(makeStreamCard(id)));
+                    validStreamIds.forEach((id) => streams.appendChild(makeStreamCard(id)));
 
                     section.appendChild(name);
                     section.appendChild(streams);
@@ -255,7 +302,21 @@
                     return;
                 }
 
-                data.channels.forEach((channel) => container.appendChild(makeChannelSection(channel)));
+                data.channels.forEach((channel) => {
+                    const section = makeChannelSection(channel);
+                    if (section) {
+                        container.appendChild(section);
+                    }
+                });
+
+                if (skippedStreamIds.length) {
+                    // Never drop data silently: log the exact ids and show a visible notice.
+                    console.warn('[yt-news] skipped ' + skippedStreamIds.length + ' invalid stream id(s) from the live data feed:', skippedStreamIds);
+                    const notice = document.createElement('div');
+                    notice.className = 'stream-id-notice';
+                    notice.textContent = skippedStreamIds.length + ' stream id(s) in the live data feed were not valid YouTube video IDs and were skipped. Details are in the browser console.';
+                    container.appendChild(notice);
+                }
 
                 const updated = document.createElement('div');
                 updated.style.textAlign = 'center';
@@ -278,7 +339,13 @@
                     if (!Array.isArray(storedStreamIds)) {
                         return [];
                     }
-                    return storedStreamIds.filter(streamId => typeof streamId === 'string' && streamId.trim());
+                    const validStreamIds = storedStreamIds.map(window.ytnNormalizeStreamId).filter(Boolean);
+                    const droppedStreamIds = storedStreamIds.filter(streamId => !window.ytnNormalizeStreamId(streamId));
+                    if (droppedStreamIds.length) {
+                        // Never drop stored data silently: report which ids were rejected.
+                        console.warn('[yt-news] dropped ' + droppedStreamIds.length + ' stored custom stream id(s) with an invalid format:', droppedStreamIds);
+                    }
+                    return validStreamIds;
                 } catch (error) {
                     return [];
                 }
@@ -292,6 +359,20 @@
             };
             const selectedStreams = new Map();
             const customStreamIds = loadStoredCustomStreamIds();
+            const customStreamError = document.getElementById('custom-stream-error');
+            const customStreamInput = document.getElementById('custom-stream-input');
+
+            const showCustomStreamError = (message) => {
+                customStreamError.textContent = message;
+                customStreamError.hidden = false;
+            };
+
+            const clearCustomStreamError = () => {
+                customStreamError.textContent = '';
+                customStreamError.hidden = true;
+            };
+
+            customStreamInput.addEventListener('input', clearCustomStreamError);
             let multiSelectMode = false;
             
             const loadIframe = (iframe) => {
@@ -433,7 +514,7 @@
                     checkbox.setAttribute('aria-label', `Select custom stream ${streamId}`);
 
                     const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${streamId}`;
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}`;
                     iframe.title = `Custom stream ${streamId}`;
                     iframe.setAttribute('frameborder', '0');
                     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
@@ -457,12 +538,16 @@
             };
 
             window.addCustomStream = () => {
-                const input = document.getElementById('custom-stream-input');
-                const streamId = parseYouTubeStreamId(input.value);
+                const input = customStreamInput;
+                const streamId = window.ytnNormalizeStreamId(parseYouTubeStreamId(input.value));
 
                 if (!streamId) {
+                    // Keep the typed text so it can be corrected - never clear or skip silently.
+                    showCustomStreamError('Not a valid YouTube video ID. Use an 11-character ID (A-Z, a-z, 0-9, "-", "_") or a full YouTube URL.');
                     return;
                 }
+
+                clearCustomStreamError();
 
                 if (!selectedStreams.has(streamId) && selectedStreams.size >= 16) {
                     alert('Select up to 16 streams for multi fullscreen.');
@@ -493,7 +578,7 @@
                     tile.className = 'multi-view-tile';
 
                     const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube-nocookie.com/embed/${streamId}?autoplay=1&mute=1`;
+                    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(streamId)}?autoplay=1&mute=1`;
                     iframe.title = channelName;
                     iframe.setAttribute('frameborder', '0');
                     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');

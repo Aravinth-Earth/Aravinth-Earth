@@ -1,0 +1,248 @@
+/* Teach Me — learn something new from free AI chat out there.
+   Four no-login AI chats. Per-app styles: no dependency on root style.css. */
+
+:root {
+  --bg: #06070a;
+  --panel: #0e1116;
+  --panel-hover: #131820;
+  --glow: rgba(76, 154, 255, 0.10);
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --accent: #4c9aff;
+
+  --text: #e8edf4;
+  --text-bright: #ffffff;
+  --muted: #9aa5b4;
+
+  --radius: 16px;
+  --radius-sm: 13px;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ease: 160ms ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  background-image: radial-gradient(46rem 26rem at 50% -10rem, var(--glow), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1.4rem 1.1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+}
+
+/* ---------- Header ---------- */
+
+header {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-bright);
+}
+
+/* ---------- Headline ---------- */
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headline {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-bright);
+  max-width: 20ch;
+}
+
+.hl { color: var(--accent); white-space: nowrap; }
+
+.tagline {
+  margin: -1rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+/* ---------- The four chats ---------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.9rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color var(--ease), background var(--ease), transform var(--ease);
+}
+
+.tile:hover {
+  border-color: var(--line-strong);
+  background: var(--panel-hover);
+}
+
+.tile:active { transform: translateY(1px); }
+
+.tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ico {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+}
+
+.ico svg { width: 1.4rem; height: 1.4rem; display: block; }
+
+.i-lumo  { background: rgba(109, 74, 255, 0.16); color: #9679ff; }
+.i-duck  { background: rgba(222, 88, 51, 0.16); color: #e8734f; }
+/* the duck glyph carries more built-in padding in its viewBox than the other three marks */
+.i-duck svg { width: 1.5rem; height: 1.5rem; }
+.i-gpt   { background: rgba(16, 163, 127, 0.16); color: #2bb894; }
+/* thin line-drawn knot reads lighter than the others at the same box size */
+.i-gpt svg { width: 1.55rem; height: 1.55rem; }
+.i-pplx  { background: rgba(32, 128, 141, 0.18); color: #4cb6c6; }
+
+.tx { min-width: 0; }
+
+.nm {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-bright);
+}
+
+.ds {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ---------- What each button does ---------- */
+
+.info {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+
+.micro {
+  margin: 0 0 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.info ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.info li {
+  position: relative;
+  padding-left: 1rem;
+  font-size: 0.88rem;
+  color: #cfd6e0;
+}
+
+.info li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.footer-note {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.footer-fine {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- Wider screens ---------- */
+
+@media (min-width: 640px) {
+  .page {
+    padding: 2.2rem 1.5rem 3.5rem;
+    gap: 2.6rem;
+  }
+  .headline { font-size: 2.35rem; max-width: 24ch; }
+  .tagline  { margin-top: -1.2rem; }
+  .info     { padding: 1.1rem 1.25rem; }
+}
+
+/* Four across only once the page has reached its max width, so every tile keeps
+   room for its one-line description (below that the 2-up grid is wider, not tighter). */
+@media (min-width: 780px) {
+  .tiles { grid-template-columns: repeat(4, 1fr); gap: 0.7rem; }
+  .tile  { padding: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile { transition: none; }
+}

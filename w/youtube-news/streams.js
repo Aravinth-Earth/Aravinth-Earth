@@ -1,11 +1,12 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-08T10:31:12+0530",
+  "generated_at": "2026-10-08T20:47:47+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "B7ECRDdYchg",
+        "CzpwzZm-Nsk",
+        "SOglLGBLlds",
         "TNCciJ-RX5s",
         "E4ndYFfdlb8"
       ]
@@ -14,7 +15,9 @@ window.YTN_STREAMS = {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "GYNsdh2f-sk",
+        "vvr54J85sJw",
+        "PcJnqlGUs2c",
+        "065sFq914KY",
         "yw6_d_piV3g",
         "JWu9MHaz6y8"
       ]
@@ -23,29 +26,29 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "5Mh4XUmQtic",
+        "9VT434x_MvE",
+        "pL1EmnQIfs8",
+        "BjBzyO_hYGI",
         "68c1K6M0h1A",
-        "VHLz8PfJqQ4"
+        "5u9Kfk_b-z4"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "P7ezcoYHkIg",
         "G04Ltn2mDJ4",
-        "GXX92zTa8Kw",
         "_HU9hdpYGYM",
-        "zFqwyDwoul4"
+        "GXX92zTa8Kw"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "oKKwBEtjtpY",
-        "5jCX1sJphgM",
-        "sz53tcwP5Zk",
+        "6ScO_dnOH68",
+        "VJy3rv5Ktvw",
+        "-QfT9H_TpUo",
         "_Lg0IUxUMi0"
       ]
     },
@@ -53,9 +56,7 @@ window.YTN_STREAMS = {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "V1R16GZzMbE",
-        "mij2K2csjNQ",
-        "F3CymdN_8uE",
+        "CHHvoIwo7SY",
         "hw7Fjh6mncQ"
       ]
     },
@@ -63,7 +64,6 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "ZNYz0B5yLbg",
         "9M02G5c6x6w"
       ]
     },
@@ -72,6 +72,13 @@ window.YTN_STREAMS = {
       "handle": "@KalaignarTVNews",
       "streams": [
         "iWNlE6QWin0"
+      ]
+    },
+    {
+      "name": "News J",
+      "handle": "@NewsJ",
+      "streams": [
+        "OLuBiEnVLOs"
       ]
     }
   ]

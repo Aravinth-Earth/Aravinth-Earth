@@ -1,5 +1,5 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-13T15:02:27+0530",
+  "generated_at": "2026-10-13T15:21:59+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
@@ -9,16 +9,16 @@ window.YTN_STREAMS = {
         "GVgKJTuijck",
         "fVfe3FwtH2c",
         "wDTLtJfQCqA",
-        "5rbJbn4f0-M"
+        "lIwrkm-DnoQ"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "c0_fBw8r_aI",
-        "QC5EGb1bTGo",
         "nC7k2O2m11M",
+        "QC5EGb1bTGo",
+        "c0_fBw8r_aI",
         "4o4K0G0W1iw",
         "pDyzKpyFerA"
       ]
@@ -58,11 +58,9 @@ window.YTN_STREAMS = {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "usYX2jTDrgY",
-        "O3I6vpw7FSk",
         "cA0K6jyXM5E",
-        "abY8zdLFXDg",
-        "_gdsowkyhBU"
+        "_gdsowkyhBU",
+        "4k8ZR5Eghe0"
       ]
     },
     {

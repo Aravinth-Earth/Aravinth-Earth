@@ -1,11 +1,12 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-13T07:02:29+0530",
+  "generated_at": "2026-10-13T07:20:20+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "1f7W7XG7WGk"
+        "1f7W7XG7WGk",
+        "wDTLtJfQCqA"
       ]
     },
     {
@@ -30,6 +31,7 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "de9XukfYajk",
         "G04Ltn2mDJ4"
       ]
     },

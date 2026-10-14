@@ -1,79 +1,73 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-14T11:35:41+0530",
+  "generated_at": "2026-10-14T20:09:15+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "0dkeqGSwYQQ",
-        "_WLa5fa7mlM",
-        "NDqdlwG7VU0"
+        "_WpGE4i9rpY",
+        "NDqdlwG7VU0",
+        "G0XqUoSxixE",
+        "juToGqbzQIU",
+        "t9o9QmzJIcs"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
+        "0C-AQyEyzrY",
         "vykdJ0qEcDQ",
-        "qCrI_0DlzH4",
-        "xH3o7_nfcRI",
-        "JWu9MHaz6y8"
+        "BYztKfl8FEk",
+        "PCsKznu9Egg",
+        "01hNTZD3T5E"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "QjQZ490aclw",
-        "AtS0Wc8NJTU",
-        "LtlvZsoDAyw",
+        "u1Db7NtA7FM",
         "OnyqyK4E2is",
-        "otO5Y_A8Gbo"
+        "vFd4rlE10_0",
+        "rm_qTUQTN5I",
+        "QjQZ490aclw"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "J4QY7wumvpY",
-        "nr7JQy3YU2A",
+        "lhPIMde9NdM",
+        "YhwYU4XkjWs",
         "Q-IY4xKJFec",
-        "TO1WHYkbLbk",
-        "HP8nm8NxF4I"
+        "A-iJvqkXePE",
+        "yHqwC3J5Sog"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "3MWDVe-3MLg",
-        "DHBprX9AWgA",
-        "LnkriWfe0p0",
-        "kSlf_t08stk",
-        "wvH7z-HcPqg"
+        "Bjq43Q0Av6M",
+        "R00vf_Ct2PA",
+        "VFbCBMTmaU0",
+        "cLpXxEBYU1I",
+        "-b8rwtPInoQ"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "5Npts71Sb40",
-        "wZxh-jmo0fQ",
-        "6rnfNYRyW00"
+        "cjRMYd1I_V4"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "nzeAd5iSvFM"
-      ]
-    },
-    {
-      "name": "Kalaignar TV News",
-      "handle": "@KalaignarTVNews",
-      "streams": [
-        "iWNlE6QWin0"
+        "Z_IvhWjS8Jo"
       ]
     },
     {

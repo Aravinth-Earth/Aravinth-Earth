@@ -20,6 +20,13 @@
         th.sort-desc::after { content: ' ▼'; font-size: 0.7rem; }
         td { color: #c9d1d9; }
         tr:hover td { background: #1c2128; }
+        .state-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+        .state-btn { padding: 0.35rem 0.75rem; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.8rem; }
+        .state-btn:hover { background: #30363d; }
+        .state-btn.active { background: #58a6ff; color: #fff; border-color: #58a6ff; }
+        .state-summary { font-size: 0.8rem; color: #8b949e; align-self: center; }
+        .empty-row td { text-align: center; color: #8b949e; padding: 1.5rem 0.75rem; }
+        .empty-row:hover td { background: transparent; }
         .pagination { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
         .pagination button { padding: 0.35rem 0.75rem; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.8rem; }
         .pagination button:hover { background: #30363d; }
@@ -45,6 +52,13 @@
         <div class="field-group">
             <h2>Sortable & filterable table with pagination</h2>
             <p class="note">Click column headers to sort. Use the filter box to search. Navigate pages with pagination controls.</p>
+            <div class="state-bar">
+                <button class="state-btn" data-state="empty" onclick="setState('empty')">No data</button>
+                <button class="state-btn active" data-state="default" onclick="setState('default')">Default</button>
+                <button class="state-btn" data-state="max" onclick="setState('max')">Max data</button>
+                <button class="state-btn" data-state="random" onclick="setState('random')">Random</button>
+                <span class="state-summary" id="stateSummary"></span>
+            </div>
             <input type="text" class="filter-input" id="filterInput" placeholder="Filter by name, role, or department..." oninput="renderTable()">
             <div style="overflow-x:auto;">
                 <table id="dataTable">
@@ -86,18 +100,48 @@
     </div>
 
     <script>
-        const allData = Array.from({length:47}, (_,i) => ({
-            id: i+1,
-            name: ['Alice','Bob','Charlie','Diana','Eve','Frank','Grace','Hank','Ivy','Jack','Karen','Leo','Mona','Nick','Olivia','Paul','Quinn','Rita','Sam','Tina','Uma','Vince','Wendy','Xander','Yara','Zack','Amy','Ben','Clara','Dan','Ella','Finn','Gina','Hugo','Iris','Jake','Kara','Liam','Maya','Noah','Olive','Pete','Rose','Sean','Tara','Uri','Vera'][i%47],
-            role: ['Developer','Designer','QA','Manager','DevOps','Analyst','Engineer','Tester','Architect','Lead','Developer','QA','Engineer','Manager','DevOps','Analyst','Developer','Designer','Tester','Lead','Engineer','QA','Manager','Architect','DevOps','Analyst','Developer','Designer','QA','Tester','Engineer','Lead','Manager','DevOps','Analyst','Developer','Designer','QA','Engineer','Tester','Lead','Manager','Architect','DevOps','Analyst','Developer','Designer'][i%47],
-            department: ['Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Testing','Infra','Analytics','Design','Management','Testing','Engineering','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design'][i%47],
-            salary: 40000 + (i * 1234) % 80000
-        }));
+        const NAMES = ['Alice','Bob','Charlie','Diana','Eve','Frank','Grace','Hank','Ivy','Jack','Karen','Leo','Mona','Nick','Olivia','Paul','Quinn','Rita','Sam','Tina','Uma','Vince','Wendy','Xander','Yara','Zack','Amy','Ben','Clara','Dan','Ella','Finn','Gina','Hugo','Iris','Jake','Kara','Liam','Maya','Noah','Olive','Pete','Rose','Sean','Tara','Uri','Vera'];
+        const ROLES = ['Developer','Designer','QA','Manager','DevOps','Analyst','Engineer','Tester','Architect','Lead','Developer','QA','Engineer','Manager','DevOps','Analyst','Developer','Designer','Tester','Lead','Engineer','QA','Manager','Architect','DevOps','Analyst','Developer','Designer','QA','Tester','Engineer','Lead','Manager','DevOps','Analyst','Developer','Designer','QA','Engineer','Tester','Lead','Manager','Architect','DevOps','Analyst','Developer','Designer'];
+        const DEPARTMENTS = ['Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Design','Testing','Management','Infra','Analytics','Engineering','Testing','Infra','Analytics','Design','Management','Testing','Engineering','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design','Management','Engineering','Testing','Infra','Analytics','Design'];
 
+        function makeData(n) {
+            return Array.from({length: n}, (_,i) => ({
+                id: i+1,
+                name: NAMES[i % NAMES.length],
+                role: ROLES[i % ROLES.length],
+                department: DEPARTMENTS[i % DEPARTMENTS.length],
+                salary: 40000 + (i * 1234) % 80000
+            }));
+        }
+
+        // Max data: 1950 rows at 50 per page = exactly 39 pages.
+        const STATES = {
+            empty:   { total: 0,    perPage: 8 },
+            default: { total: 47,   perPage: 8 },
+            max:     { total: 1950, perPage: 50 }
+        };
+
+        let allData = [];
+        let perPage = 8;
         let currentPage = 1;
         let sortField = null;
         let sortDir = 'asc';
-        const perPage = 8;
+
+        function setState(state) {
+            let total, pp;
+            if (state === 'random') {
+                pp = 5 + Math.floor(Math.random() * 36);
+                total = Math.max(pp, 5 + Math.floor(Math.random() * 396));
+            } else {
+                total = STATES[state].total;
+                pp = STATES[state].perPage;
+            }
+            allData = makeData(total);
+            perPage = pp;
+            currentPage = 1;
+            document.querySelectorAll('.state-btn').forEach(b => b.classList.toggle('active', b.dataset.state === state));
+            renderTable();
+        }
 
         function getFiltered() {
             const q = document.getElementById('filterInput').value.toLowerCase();
@@ -122,7 +166,9 @@
             const page = data.slice(start, start + perPage);
 
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = page.map(r => `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.role}</td><td>${r.department}</td><td>$${r.salary.toLocaleString()}</td></tr>`).join('');
+            tbody.innerHTML = page.length
+                ? page.map(r => `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.role}</td><td>${r.department}</td><td>$${r.salary.toLocaleString()}</td></tr>`).join('')
+                : '<tr class="empty-row"><td colspan="5">No data available</td></tr>';
 
             let pag = `<button onclick="currentPage=1;renderTable()" ${currentPage===1?'disabled':''}>«</button>`;
             pag += `<button onclick="currentPage=Math.max(1,currentPage-1);renderTable()" ${currentPage===1?'disabled':''}>‹</button>`;
@@ -131,8 +177,12 @@
             }
             pag += `<button onclick="currentPage=Math.min(${totalPages},currentPage+1);renderTable()" ${currentPage===totalPages?'disabled':''}>›</button>`;
             pag += `<button onclick="currentPage=${totalPages};renderTable()" ${currentPage===totalPages?'disabled':''}>»</button>`;
-            pag += `<span>Page ${currentPage} of ${totalPages} (${data.length} entries)</span>`;
+            pag += `<span>Page ${currentPage} of ${totalPages}</span>`;
             document.getElementById('pagination').innerHTML = pag;
+
+            document.getElementById('stateSummary').textContent = data.length
+                ? `${data.length}${data.length !== allData.length ? ` of ${allData.length}` : ''} entries · ${perPage} per page · ${totalPages} page${totalPages === 1 ? '' : 's'}`
+                : '0 entries';
 
             ['th-id','th-name','th-role','th-dept','th-salary'].forEach(id => {
                 const el = document.getElementById(id);
@@ -179,7 +229,7 @@
             btn.closest('tr').remove();
         }
 
-        renderTable();
+        setState('default');
     </script>
 </body>
 </html>

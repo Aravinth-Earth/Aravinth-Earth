@@ -36,6 +36,71 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.332321.xyz/w/qa-playground/downloads.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/upload.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/api-mock.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/accessibility.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/inputs.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/selection.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/interactive.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/frames.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/data-tables.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/dynamic.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/forms.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/shadow-dom.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.332321.xyz/w/qa-playground/storage.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.332321.xyz/w/reverse-planning/</loc>
     <lastmod>2026-06-12</lastmod>
     <priority>0.8</priority>

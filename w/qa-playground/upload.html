@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Playground — Upload & Drag & Drop</title>
+  <meta name="description" content="Practice file uploads, drag-and-drop, and type/size validation." />
+  <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <main class="container">
+    <h1>Upload &amp; Drag &amp; Drop</h1>
+    <p class="sub">Practice file uploads and drag-and-drop. Drag-and-drop is one of the hardest interactions to automate — every framework handles it differently.</p>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <h2>Drag &amp; drop zone</h2>
+        <p class="note">Drop files here, or click to browse. Accepted: .txt .csv .png .jpg .pdf — max 1 MB each.</p>
+        <div id="dropZone" class="dropzone" tabindex="0" role="button" aria-label="Drag and drop files here, or click to browse">
+          <strong>Drag &amp; drop files here</strong><br>
+          <span>or click to browse</span>
+        </div>
+        <input type="file" id="fileInput" multiple hidden accept=".txt,.csv,.png,.jpg,.jpeg,.pdf">
+        <p id="dropStatus" class="note" aria-live="polite"></p>
+        <div id="fileList" class="file-list"></div>
+        <div id="rejected" class="rejected"></div>
+      </div>
+
+      <div class="field-group">
+        <h2>Classic file input</h2>
+        <p class="note">A standard single-file input for comparison.</p>
+        <input type="file" id="singleInput" accept=".txt,.csv,.png,.jpg,.pdf">
+        <p id="singleStatus" class="note"></p>
+      </div>
+
+      <div class="field-group span-all">
+        <h2>Simulated upload</h2>
+        <p class="note">Click Upload to simulate progress for each queued file. No data leaves the browser.</p>
+        <button id="uploadBtn" onclick="startUpload()">Upload all</button>
+        <button onclick="clearFiles()">Clear</button>
+      </div>
+    </div>
+    <details class="verify">
+      <summary>What to verify</summary>
+      <ul>
+        <li>Accepted types/sizes queue; others are rejected with a reason.</li>
+        <li>Drag-and-drop and the file picker feed the same queue.</li>
+        <li>"Upload all" advances per-file progress.</li>
+      </ul>
+    </details>
+  </main>
+  <script src="qa-playground.js"></script>
+  <script>
+    var ACCEPTED = ['text/plain', 'text/csv', 'image/png', 'image/jpeg', 'application/pdf'];
+    var MAX_BYTES = 1024 * 1024;
+    var queue = [];
+
+    var dropZone = document.getElementById('dropZone');
+    var fileInput = document.getElementById('fileInput');
+
+    dropZone.addEventListener('click', function () { fileInput.click(); });
+    dropZone.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) { e.preventDefault(); dropZone.classList.add('drag'); });
+    });
+    ['dragleave', 'dragend'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function () { dropZone.classList.remove('drag'); });
+    });
+    dropZone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      dropZone.classList.remove('drag');
+      addFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', function () { addFiles(this.files); this.value = ''; });
+    document.getElementById('singleInput').addEventListener('change', function () {
+      document.getElementById('singleStatus').textContent = this.files.length ? 'Selected: ' + this.files[0].name : '';
+    });
+
+    function fmtSize(n) {
+      if (n < 1024) return n + ' B';
+      if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+      return (n / 1024 / 1024).toFixed(1) + ' MB';
+    }
+
+    function addFiles(fileList) {
+      var rejected = [];
+      Array.prototype.forEach.call(fileList, function (f) {
+        if (ACCEPTED.indexOf(f.type) === -1) { rejected.push(f.name + ' (unsupported type)'); return; }
+        if (f.size > MAX_BYTES) { rejected.push(f.name + ' (too large)'); return; }
+        queue.push(f);
+      });
+      document.getElementById('rejected').innerHTML = rejected.length
+        ? '<div class="reject">Rejected: ' + rejected.map(escapeHtml).join(', ') + '</div>' : '';
+      render();
+    }
+
+    function render() {
+      var el = document.getElementById('fileList');
+      if (!queue.length) {
+        el.innerHTML = '<p class="note">No files queued.</p>';
+        document.getElementById('dropStatus').textContent = '';
+        return;
+      }
+      document.getElementById('dropStatus').textContent = queue.length + ' file(s) queued';
+      el.innerHTML = queue.map(function (f, i) {
+        return '<div class="file-row" data-index="' + i + '">' +
+          '<span class="fname">' + escapeHtml(f.name) + '</span>' +
+          '<span class="fmeta">' + fmtSize(f.size) + '</span>' +
+          '<div class="progress-bar" style="flex:0 0 90px;margin:0;"><div class="progress-fill" id="p' + i + '"></div></div>' +
+          '<button class="action delete" onclick="removeFile(' + i + ')">Remove</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    function removeFile(i) { queue.splice(i, 1); render(); }
+    function clearFiles() { queue = []; render(); document.getElementById('rejected').innerHTML = ''; }
+
+    function startUpload() {
+      queue.forEach(function (f, i) {
+        var p = 0;
+        var timer = setInterval(function () {
+          p += Math.random() * 20 + 8;
+          var bar = document.getElementById('p' + i);
+          if (bar) bar.style.width = Math.min(p, 100) + '%';
+          if (p >= 100) clearInterval(timer);
+        }, 200);
+      });
+    }
+  </script>
+</body>
+</html>

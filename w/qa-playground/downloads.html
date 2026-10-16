@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Playground — Downloads</title>
+  <meta name="description" content="Practice verifying file downloads, generated files, and new-tab opens." />
+  <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <main class="container">
+    <h1>File Downloads</h1>
+    <p class="note">Practice verifying file downloads: check the filename, the content, and that the download event fires.</p>
+
+    <div class="field-grid">
+    <div class="field-group">
+      <h2>Direct link download</h2>
+      <p class="note">A plain anchor with the download attribute.</p>
+      <a id="downloadCsv" class="action" href="assets/sample.csv" download>Download sample.csv</a>
+    </div>
+
+    <div class="field-group">
+      <h2>Button-triggered download (generated file)</h2>
+      <p class="note">Generates a text file in the browser and downloads it.</p>
+      <button id="generateBtn" onclick="generateDownload()">Generate &amp; Download report.txt</button>
+    </div>
+
+    <div class="field-group">
+      <h2>Open in new tab</h2>
+      <p class="note">Opens a text file in a new tab (not a download).</p>
+      <a class="action" href="assets/sample.txt" target="_blank" rel="noopener">Open sample.txt</a>
+    </div>
+    </div>
+    <details class="verify">
+      <summary>What to verify</summary>
+      <ul>
+        <li>The link downloads a file with the expected filename.</li>
+        <li>The generated file downloads fresh content each time.</li>
+        <li>The new-tab link opens without navigating the current page.</li>
+      </ul>
+    </details>
+  </main>
+  <script src="qa-playground.js"></script>
+  <script>
+    function generateDownload() {
+      var content = 'QA Playground report\nGenerated: ' + new Date().toISOString() + '\n';
+      var blob = new Blob([content], { type: 'text/plain' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'report.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

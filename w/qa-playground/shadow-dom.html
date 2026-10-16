@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Playground — Shadow DOM</title>
+  <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="description" content="Practice automating elements inside a shadow root — a web component whose internals normal CSS selectors cannot reach." />
+</head>
+<body>
+  <main class="container">
+    <h1>Shadow DOM</h1>
+    <p class="sub">These controls live inside a shadow root. A normal document CSS selector or XPath will NOT match them — you need shadow-piercing.</p>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <h2>Web component</h2>
+        <p class="note">The widget below is a custom element. Its button and input are inside its shadow root.</p>
+        <user-card class="shadow-host"></user-card>
+      </div>
+
+      <div class="field-group">
+        <h2>How frameworks see it</h2>
+        <p class="note">Cypress: chained <code>.shadow()</code>. Playwright: pierces open shadow roots by default. Selenium: needs JS/executeScript or a shadow-piercing strategy.</p>
+        <div id="result" class="result-box">No interactions yet.</div>
+      </div>
+    </div>
+
+    <details class="verify">
+      <summary>What to verify</summary>
+      <ul>
+        <li>The shadow host <code>&lt;user-card&gt;</code> exists in the light DOM.</li>
+        <li>Its internals (button, input) are only reachable through the shadow root.</li>
+        <li>Clicking the shadow button updates the output text.</li>
+        <li>Typing in the shadow input and clicking Greet echoes the value.</li>
+      </ul>
+    </details>
+  </main>
+  <script src="qa-playground.js"></script>
+  <script>
+    class UserCard extends HTMLElement {
+      connectedCallback() {
+        var root = this.attachShadow({ mode: 'open' });
+        root.innerHTML = [
+          '<style>',
+          '  .box { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:1rem; font-family: system-ui, sans-serif; color:#c9d1d9; }',
+          '  label { display:block; font-size:0.85rem; color:#8b949e; margin-bottom:0.3rem; }',
+          '  input { width:100%; padding:0.6rem 0.75rem; border:1px solid #30363d; border-radius:6px; background:#0d1117; color:#c9d1d9; margin-bottom:0.75rem; }',
+          '  button { padding:0.5rem 1.25rem; border:1px solid #30363d; border-radius:6px; background:#21262d; color:#c9d1d9; cursor:pointer; }',
+          '</style>',
+          '<div class="box">',
+          '  <label for="name">Name (inside shadow root)</label>',
+          '  <input id="name" placeholder="Type a name...">',
+          '  <button id="go" type="button">Greet</button>',
+          '  <p id="out" style="margin-top:0.75rem; color:#58a6ff;">Waiting...</p>',
+          '</div>'
+        ].join('');
+        root.getElementById('go').addEventListener('click', function () {
+          var v = root.getElementById('name').value || 'stranger';
+          root.getElementById('out').textContent = 'Hello, ' + v + '!';
+          var r = document.getElementById('result');
+          if (r) r.textContent = 'Shadow button clicked with: ' + v;
+        });
+      }
+    }
+    customElements.define('user-card', UserCard);
+  </script>
+</body>
+</html>

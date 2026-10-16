@@ -4,28 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Frames & Windows</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .container { max-width: 700px; margin: 0 auto; }
-        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
-        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
-        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
-        iframe { width: 100%; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; }
-        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; }
-        button:hover { background: #30363d; }
-        a { color: #58a6ff; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-        .iframe-demo { border: 2px dashed #30363d; border-radius: 8px; padding: 0.5rem; margin-top: 0.5rem; }
-    </style>
+    <meta name="description" content="Practice switching into iframes, nested frames, new windows, tabs and popups." />
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back">← Back to QA Playground</a>
         <h1>Frames &amp; Windows</h1>
 
+        <div class="field-grid">
         <div class="field-group">
             <h2>Basic iframe</h2>
             <p class="note">An iframe loading the inputs page. Switch to this frame to interact with elements inside.</p>
@@ -60,6 +47,16 @@
             <p class="note">Small popup window for testing popup handling.</p>
             <button onclick="window.open('inputs.html', 'popupWindow', 'width=400,height=400,menubar=no,toolbar=no,location=no')">Open Popup</button>
         </div>
+        </div>
+        <details class="verify">
+            <summary>What to verify</summary>
+            <ul>
+                <li>You must switch into the iframe before locating its elements.</li>
+                <li>The nested frame requires switching through two levels.</li>
+                <li>The new window / tab produces a separate window handle.</li>
+            </ul>
+        </details>
     </div>
+    <script src="qa-playground.js"></script>
 </body>
 </html>

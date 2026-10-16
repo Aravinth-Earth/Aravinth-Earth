@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Test Automation Practice</title>
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 
+    <meta name="description" content="Practice test automation with interactive QA challenges: inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
     <meta property="og:title" content="QA Playground — Aravinth" />
     <meta property="og:description" content="Practice test automation with interactive QA challenges. Forms, tables, and more." />
     <meta property="og:image" content="/favicon.png" />
@@ -13,70 +16,127 @@
     <meta name="twitter:title" content="QA Playground — Aravinth" />
     <meta name="twitter:description" content="Practice test automation with interactive QA challenges. Forms, tables, and more." />
     <meta name="twitter:image" content="/favicon.png" />
-    <meta name="description" content="Practice test automation with interactive QA challenges. Forms, tables, and more." />
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; }
-        .container { max-width: 800px; width: 100%; }
-        h1 { font-size: 2rem; color: #58a6ff; margin-bottom: 0.5rem; }
-        p.sub { color: #8b949e; margin-bottom: 2rem; line-height: 1.6; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
-        .card:hover { border-color: #58a6ff; }
-        a { text-decoration: none; color: inherit; display: block; }
-        .card h2 { font-size: 1.2rem; color: #58a6ff; margin-bottom: 0.3rem; }
-        .card p { font-size: 0.9rem; color: #8b949e; line-height: 1.5; }
-        .badge { display: inline-block; background: #1f2937; color: #58a6ff; font-size: 0.75rem; padding: 0.15rem 0.6rem; border-radius: 10px; margin-top: 0.5rem; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>QA Playground</h1>
         <p class="sub">A collection of web elements and interaction patterns for testing automation skills. Pick any page to practice with Selenium, Cypress, Playwright, or any automation framework.</p>
+        <p class="note">Levels: <span class="level l1">L1</span> fundamentals (0–2 yrs) · <span class="level l2">L2</span> intermediate (2–5 yrs) · <span class="level l3">L3</span> advanced (5+ yrs)</p>
 
-        <a href="inputs.html"><div class="card">
-            <h2>Input Fields</h2>
-            <p>Text inputs, numbers, email, password, week picker, file upload, maxlength, readonly, disabled</p>
-            <span class="badge">Inputs</span>
-        </div></a>
+        <div class="filter-bar" id="filterBar">
+            <button class="active" data-lv="all">All</button>
+            <button data-lv="l1">L1</button>
+            <button data-lv="l2">L2</button>
+            <button data-lv="l3">L3</button>
+        </div>
 
-        <a href="selection.html"><div class="card">
-            <h2>Selection Elements</h2>
-            <p>Checkboxes, radio buttons, single & multi-select dropdowns, listbox</p>
-            <span class="badge">Selection</span>
-        </div></a>
+        <div class="card-grid" id="cardGrid">
+            <a href="inputs.html" class="card-link" data-level="l1"><div class="card">
+                <h2>Input Fields <span class="level l1">L1</span></h2>
+                <p>Text inputs, numbers, email, password, week picker, file upload, maxlength, readonly, disabled</p>
+                <p class="practice"><b>Practice:</b> locating text/number/email/password inputs, file upload, and negative tests for maxlength/readonly/disabled/hidden fields.</p>
+                <span class="badge">Inputs</span>
+            </div></a>
 
-        <a href="interactive.html"><div class="card">
-            <h2>Interactive Elements</h2>
-            <p>Modals, alerts, confirm dialogs, prompts, tooltips, hover dropdowns, toast notifications</p>
-            <span class="badge">Interactive</span>
-        </div></a>
+            <a href="selection.html" class="card-link" data-level="l1"><div class="card">
+                <h2>Selection Elements <span class="level l1">L1</span></h2>
+                <p>Checkboxes, radio buttons, single &amp; multi-select dropdowns, listbox</p>
+                <p class="practice"><b>Practice:</b> checkboxes, radios, single/multi-select, optgroup, and reading selected values.</p>
+                <span class="badge">Selection</span>
+            </div></a>
 
-        <a href="frames.html"><div class="card">
-            <h2>Frames &amp; Windows</h2>
-            <p>Iframes, nested iframes, new window links, popups</p>
-            <span class="badge">Frames</span>
-        </div></a>
+            <a href="interactive.html" class="card-link" data-level="l1"><div class="card">
+                <h2>Interactive Elements <span class="level l1">L1</span></h2>
+                <p>Modals, alerts, confirm dialogs, prompts, tooltips, hover dropdowns, toast notifications</p>
+                <p class="practice"><b>Practice:</b> modals, browser alerts/confirm/prompt, tooltips, hover menus, toasts, accordions.</p>
+                <span class="badge">Interactive</span>
+            </div></a>
 
-        <a href="data-tables.html"><div class="card">
-            <h2>Data Tables</h2>
-            <p>Tables with pagination, sortable columns, dynamic row add/remove</p>
-            <span class="badge">Tables</span>
-        </div></a>
+            <a href="frames.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Frames &amp; Windows <span class="level l2">L2</span></h2>
+                <p>Iframes, nested iframes, new window links, popups</p>
+                <p class="practice"><b>Practice:</b> switching iframes, nested frames, new windows/tabs, popups.</p>
+                <span class="badge">Frames</span>
+            </div></a>
 
-        <a href="dynamic.html"><div class="card">
-            <h2>Dynamic Content</h2>
-            <p>Loading spinners, delayed elements, auto-refresh, progress bars, lazy-loaded content</p>
-            <span class="badge">Dynamic</span>
-        </div></a>
+            <a href="data-tables.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Data Tables <span class="level l2">L2</span></h2>
+                <p>Tables with pagination, sortable columns, dynamic row add/remove</p>
+                <p class="practice"><b>Practice:</b> sorting, filtering, pagination, dynamic rows, empty/max/random states.</p>
+                <span class="badge">Tables</span>
+            </div></a>
 
-        <a href="forms.html"><div class="card">
-            <h2>Forms &amp; Validation</h2>
-            <p>Full form with mandatory fields, validation rules, submit handling, success & error states</p>
-            <span class="badge">Forms</span>
-        </div></a>
+            <a href="dynamic.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Dynamic Content <span class="level l2">L2</span></h2>
+                <p>Loading spinners, delayed elements, auto-refresh, progress bars, lazy-loaded content</p>
+                <p class="practice"><b>Practice:</b> implicit/explicit waits, stale elements, spinners, progress bars, lazy loading.</p>
+                <span class="badge">Dynamic</span>
+            </div></a>
+
+            <a href="forms.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Forms &amp; Validation <span class="level l2">L2</span></h2>
+                <p>Full form with mandatory fields, validation rules, submit handling, success &amp; error states</p>
+                <p class="practice"><b>Practice:</b> required fields, field-level validation, success/error submission states.</p>
+                <span class="badge">Forms</span>
+            </div></a>
+
+            <a href="downloads.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Downloads <span class="level l2">L2</span></h2>
+                <p>Direct links, generated files, and new-tab opens</p>
+                <p class="practice"><b>Practice:</b> verifying download filenames, content, and download events.</p>
+                <span class="badge">Downloads</span>
+            </div></a>
+
+            <a href="upload.html" class="card-link" data-level="l2"><div class="card">
+                <h2>Upload &amp; Drag &amp; Drop <span class="level l2">L2</span></h2>
+                <p>File picker, drag-and-drop zone, validation and simulated progress</p>
+                <p class="practice"><b>Practice:</b> file uploads, drag-and-drop (native events), type/size validation.</p>
+                <span class="badge">Upload</span>
+            </div></a>
+
+            <a href="api-mock.html" class="card-link" data-level="l3"><div class="card">
+                <h2>Mock API <span class="level l3">L3</span></h2>
+                <p>Simulated async calls with loading, error, and success states</p>
+                <p class="practice"><b>Practice:</b> waiting, error handling, and request interception (cy.intercept / page.route).</p>
+                <span class="badge">Network</span>
+            </div></a>
+
+            <a href="accessibility.html" class="card-link" data-level="l3"><div class="card">
+                <h2>Accessibility Audit <span class="level l3">L3</span></h2>
+                <p>A page with deliberate a11y defects to find and report</p>
+                <p class="practice"><b>Practice:</b> a11y auditing, semantic HTML, keyboard access, ARIA.</p>
+                <span class="badge">A11y</span>
+            </div></a>
+
+            <a href="shadow-dom.html" class="card-link" data-level="l3"><div class="card">
+                <h2>Shadow DOM <span class="level l3">L3</span></h2>
+                <p>Web component with a shadow root — elements a normal CSS selector cannot reach</p>
+                <p class="practice"><b>Practice:</b> querying across shadow roots and framework-specific shadow handling.</p>
+                <span class="badge">Shadow DOM</span>
+            </div></a>
+
+            <a href="storage.html" class="card-link" data-level="l3"><div class="card">
+                <h2>Web Storage <span class="level l3">L3</span></h2>
+                <p>localStorage and sessionStorage state that survives (or not) a reload</p>
+                <p class="practice"><b>Practice:</b> reading/writing storage and building test isolation around it.</p>
+                <span class="badge">Storage</span>
+            </div></a>
+        </div>
     </div>
-<script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-    </body>
+    <script src="qa-playground.js"></script>
+    <script>
+        document.getElementById('filterBar').addEventListener('click', function (e) {
+            var btn = e.target.closest('button');
+            if (!btn) return;
+            var lv = btn.dataset.lv;
+            Array.prototype.forEach.call(this.querySelectorAll('button'), function (b) {
+                b.classList.toggle('active', b === btn);
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('#cardGrid .card-link'), function (a) {
+                a.style.display = (lv === 'all' || a.dataset.level === lv) ? '' : 'none';
+            });
+        });
+    </script>
+    <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
 </html>

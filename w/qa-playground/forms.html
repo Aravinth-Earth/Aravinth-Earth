@@ -4,41 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Forms & Validation</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .container { max-width: 600px; margin: 0 auto; }
-        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
-        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
-        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
-        label { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; color: #c9d1d9; }
-        .required::after { content: ' *'; color: #da3633; }
-        input, select, textarea { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.9rem; margin-bottom: 0.75rem; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #58a6ff; }
-        input.error, select.error, textarea.error { border-color: #da3633; }
-        input.valid { border-color: #238636; }
-        button { padding: 0.6rem 1.5rem; border: 1px solid #30363d; border-radius: 6px; background: #238636; color: #fff; cursor: pointer; font-size: 0.9rem; }
-        button:hover { background: #2ea043; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .error-msg { color: #da3633; font-size: 0.8rem; margin-top: -0.5rem; margin-bottom: 0.5rem; display: none; }
-        .error-msg.show { display: block; }
-        .success-box { display: none; padding: 1rem; background: #1c2128; border: 1px solid #238636; border-radius: 6px; text-align: center; margin-top: 1rem; }
-        .success-box.show { display: block; }
-        .success-box h3 { color: #238636; margin-bottom: 0.5rem; }
-        .checkbox-group { margin-bottom: 0.75rem; }
-        .checkbox-group label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; margin-bottom: 0.3rem; }
-        .checkbox-group input[type=checkbox] { width: 1rem; height: 1rem; accent-color: #58a6ff; margin: 0; }
-        .radio-group { margin-bottom: 0.75rem; }
-        .radio-group label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; cursor: pointer; margin-bottom: 0.3rem; }
-        .radio-group input[type=radio] { width: 1rem; height: 1rem; accent-color: #58a6ff; margin: 0; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-    </style>
+    <meta name="description" content="Practice required-field validation, error states and successful form submission." />
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+<style>
+  .radio-group, .checkbox-group { margin-bottom: 0.75rem; }
+  .radio-group label, .checkbox-group label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text); cursor: pointer; margin-bottom: 0.3rem; }
+  .radio-group input[type=radio], .checkbox-group input[type=checkbox] { margin: 0; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" class="back">← Back to QA Playground</a>
+    <div class="container narrow">
         <h1>Forms &amp; Validation</h1>
 
         <div class="field-group">
@@ -84,7 +60,7 @@
                 <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
 
                 <div class="radio-group">
-                    <label class="required" style="margin-bottom:0.5rem;">Gender</label>
+                    <label style="margin-bottom:0.5rem;">Gender</label>
                     <label><input type="radio" name="gender" value="male"> Male</label>
                     <label><input type="radio" name="gender" value="female"> Female</label>
                     <label><input type="radio" name="gender" value="other"> Other</label>
@@ -106,7 +82,7 @@
                 </label>
                 <div class="error-msg" id="termsError">You must agree to the terms</div>
 
-                <button type="submit" id="submitBtn">Submit Registration</button>
+                <button type="submit" id="submitBtn" class="submit">Submit Registration</button>
             </form>
 
             <div class="success-box" id="successBox">
@@ -115,29 +91,40 @@
                 <button onclick="resetForm()" style="margin-top:0.75rem;background:#21262d;color:#c9d1d9;">Submit Another</button>
             </div>
         </div>
+        <details class="verify">
+            <summary>What to verify</summary>
+            <ul>
+                <li>Submitting empty shows an error for every required field and blocks submit.</li>
+                <li>An invalid email and mismatched passwords are rejected.</li>
+                <li>A fully valid form shows the success box and disables submit.</li>
+            </ul>
+        </details>
     </div>
 
+    <script src="qa-playground.js"></script>
     <script>
-        function validateField(id, testFn) {
+        function validateField(id, testFn, force = false) {
             const el = document.getElementById(id);
             const err = document.getElementById(id + 'Error');
             const val = el.value.trim();
             const valid = testFn(val);
-            el.classList.toggle('error', !valid && val.length > 0);
+            const showErr = force || val.length > 0;
+            el.classList.toggle('error', !valid && showErr);
             el.classList.toggle('valid', valid);
-            err.classList.toggle('show', !valid && val.length > 0);
+            err.classList.toggle('show', !valid && showErr);
             return valid;
         }
 
-        function validateConfirm() {
+        function validateConfirm(force = false) {
             const pwd = document.getElementById('password').value;
             const confirm = document.getElementById('confirmPassword').value;
             const el = document.getElementById('confirmPassword');
             const err = document.getElementById('confirmError');
             const valid = confirm.length > 0 && pwd === confirm;
-            el.classList.toggle('error', !valid && confirm.length > 0);
-            el.classList.toggle('valid', valid && confirm.length > 0);
-            err.classList.toggle('show', !valid && confirm.length > 0);
+            const showErr = force || confirm.length > 0;
+            el.classList.toggle('error', !valid && showErr);
+            el.classList.toggle('valid', valid);
+            err.classList.toggle('show', !valid && showErr);
             return valid;
         }
 
@@ -154,9 +141,9 @@
 
             let allValid = true;
             fields.forEach(f => {
-                if (!validateField(f.id, f.test)) allValid = false;
+                if (!validateField(f.id, f.test, true)) allValid = false;
             });
-            if (!validateConfirm()) allValid = false;
+            if (!validateConfirm(true)) allValid = false;
 
             const skills = document.querySelectorAll('input[name="skills"]:checked');
             const skillsErr = document.getElementById('skillsError');

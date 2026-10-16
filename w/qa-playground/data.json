@@ -1,0 +1,10 @@
+{
+  "generated": "static",
+  "users": [
+    { "id": 1, "name": "Alice", "role": "Developer", "active": true },
+    { "id": 2, "name": "Bob", "role": "Designer", "active": false },
+    { "id": 3, "name": "Charlie", "role": "QA", "active": true },
+    { "id": 4, "name": "Diana", "role": "Manager", "active": true },
+    { "id": 5, "name": "Eve", "role": "DevOps", "active": false }
+  ]
+}

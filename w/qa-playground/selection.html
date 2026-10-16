@@ -4,50 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Selection Elements</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .container { max-width: 700px; margin: 0 auto; }
-        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
-        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
-        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
-        label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.9rem; cursor: pointer; }
-        input[type=checkbox], input[type=radio] { width: 1rem; height: 1rem; accent-color: #58a6ff; cursor: pointer; }
-        select { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.9rem; }
-        select[multiple] { height: 120px; }
-        button { padding: 0.5rem 1.25rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; }
-        button:hover { background: #30363d; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-        #selectedResult { margin-top: 0.75rem; padding: 0.5rem 0.75rem; border: 1px dashed #30363d; border-radius: 6px; font-size: 0.85rem; color: #8b949e; }
-        .inline-group { display: flex; flex-wrap: wrap; gap: 1rem; }
-    </style>
+    <meta name="description" content="Practice checkboxes, radio buttons, single and multi-select dropdowns, optgroups and toggle switches." />
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back">← Back to QA Playground</a>
         <h1>Selection Elements</h1>
 
+        <div class="field-grid">
         <div class="field-group">
             <h2>Checkboxes (single & group)</h2>
             <p class="note">Select one or more options</p>
-            <label><input type="checkbox" name="subscribe" value="newsletter"> Subscribe to newsletter</label>
-            <label><input type="checkbox" name="interest" value="tech" checked> Technology</label>
-            <label><input type="checkbox" name="interest" value="science"> Science</label>
-            <label><input type="checkbox" name="interest" value="art"> Art & Design</label>
-            <label><input type="checkbox" name="interest" value="music"> Music</label>
+            <label class="check"><input type="checkbox" name="subscribe" value="newsletter"> Subscribe to newsletter</label>
+            <label class="check"><input type="checkbox" name="interest" value="tech" checked> Technology</label>
+            <label class="check"><input type="checkbox" name="interest" value="science"> Science</label>
+            <label class="check"><input type="checkbox" name="interest" value="art"> Art & Design</label>
+            <label class="check"><input type="checkbox" name="interest" value="music"> Music</label>
             <button onclick="showCheckboxSelection()">Show Selected</button>
-            <div id="selectedResult">None selected</div>
+            <div id="selectedResult" class="result-box">None selected</div>
         </div>
 
         <div class="field-group">
             <h2>Radio buttons</h2>
             <p class="note">Select one option only</p>
-            <label><input type="radio" name="experience" value="beginner"> Beginner</label>
-            <label><input type="radio" name="experience" value="intermediate" checked> Intermediate</label>
-            <label><input type="radio" name="experience" value="advanced"> Advanced</label>
-            <label><input type="radio" name="experience" value="expert"> Expert</label>
+            <label class="check"><input type="radio" name="experience" value="beginner"> Beginner</label>
+            <label class="check"><input type="radio" name="experience" value="intermediate" checked> Intermediate</label>
+            <label class="check"><input type="radio" name="experience" value="advanced"> Advanced</label>
+            <label class="check"><input type="radio" name="experience" value="expert"> Expert</label>
         </div>
 
         <div class="field-group">
@@ -104,12 +88,26 @@
                 <span id="toggleStatus">Off</span>
             </label>
         </div>
+        </div>
+        <details class="verify">
+            <summary>What to verify</summary>
+            <ul>
+                <li>Each checkbox toggles independently; "Show Selected" lists Newsletter plus checked interests.</li>
+                <li>Only one radio in a group can be selected.</li>
+                <li>Single-select returns one value; multi-select returns several (Ctrl/Cmd + click).</li>
+                <li>The toggle switch flips its status label.</li>
+            </ul>
+        </details>
     </div>
 
+    <script src="qa-playground.js"></script>
     <script>
         function showCheckboxSelection() {
-            const checked = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.nextSibling.textContent.trim());
-            document.getElementById('selectedResult').textContent = checked.length ? checked.join(', ') : 'None selected';
+          const parts = [];
+          const sub = document.querySelector('input[name="subscribe"]');
+          if (sub && sub.checked) parts.push('Newsletter');
+          Array.from(document.querySelectorAll('input[name="interest"]:checked')).forEach(cb => parts.push(cb.nextSibling.textContent.trim()));
+          document.getElementById('selectedResult').textContent = parts.length ? parts.join(', ') : 'None selected';
         }
         document.getElementById('toggleSwitch').addEventListener('change', function() {
             document.getElementById('toggleStatus').textContent = this.checked ? 'On' : 'Off';

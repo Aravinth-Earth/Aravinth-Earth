@@ -4,29 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Input Fields</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .container { max-width: 700px; margin: 0 auto; }
-        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
-        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
-        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
-        label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #8b949e; }
-        input, select { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.9rem; }
-        input:focus { outline: none; border-color: #58a6ff; }
-        input:read-only { background: #1c2128; color: #6e7681; }
-        input:disabled { opacity: 0.5; cursor: not-allowed; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-        hr { border: none; border-top: 1px solid #21262d; margin: 1.5rem 0; }
-    </style>
+    <meta name="description" content="Practice locating and validating text, number, email, password, date, week, range, color, file, readonly, disabled and hidden inputs." />
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back">← Back to QA Playground</a>
         <h1>Input Fields</h1>
 
+        <div class="field-grid">
         <div class="field-group">
             <h2>Free text box</h2>
             <input type="text" name="inputField1" autocomplete="off" placeholder="Type anything...">
@@ -39,7 +25,7 @@
 
         <div class="field-group">
             <h2>Numbers only field</h2>
-            <p class="note">Accepts numbers. Highlights if non-numeric values entered.</p>
+            <p class="note">Accepts digits only — non-numeric characters are stripped as you type.</p>
             <input type="text" name="inputField3" autocomplete="off" placeholder="0123456789" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
 
@@ -66,7 +52,7 @@
 
         <div class="field-group">
             <h2>Color picker</h2>
-            <input type="color" name="colorPicker" value="#58a6ff" style="height:40px; padding:0.2rem;">
+            <input type="color" name="colorPicker" value="#58a6ff">
         </div>
 
         <div class="field-group">
@@ -82,7 +68,7 @@
 
         <div class="field-group">
             <h2>Textarea (multi-line)</h2>
-            <textarea name="textareaField" rows="4" style="width:100%;padding:0.6rem 0.75rem;border:1px solid #30363d;border-radius:6px;background:#0d1117;color:#c9d1d9;font-size:0.9rem;resize:vertical;" placeholder="Enter multiple lines..."></textarea>
+            <textarea name="textareaField" rows="4" placeholder="Enter multiple lines..."></textarea>
         </div>
 
         <div class="field-group">
@@ -100,6 +86,17 @@
             <input type="hidden" name="hiddenField" value="hidden-value-42">
             <p class="note">This field is hidden. Verify it exists in the DOM.</p>
         </div>
+        </div>
+        <details class="verify">
+            <summary>What to verify</summary>
+            <ul>
+                <li>Text field accepts input; the maxlength field truncates at 5 chars.</li>
+                <li>read-only is non-editable but submitted; disabled is non-editable and not submitted.</li>
+                <li>The hidden field exists in the DOM but is not visible.</li>
+                <li>The digits-only field strips non-numeric characters as you type.</li>
+            </ul>
+        </details>
     </div>
+    <script src="qa-playground.js"></script>
 </body>
 </html>

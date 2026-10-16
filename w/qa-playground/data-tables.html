@@ -4,49 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QA Playground — Data Tables</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { color: #58a6ff; margin-bottom: 1.5rem; }
-        .field-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .field-group h2 { font-size: 1rem; color: #f0f6fc; margin-bottom: 0.75rem; }
-        .field-group p.note { font-size: 0.85rem; color: #8b949e; margin-bottom: 0.5rem; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid #21262d; }
-        th { background: #1c2128; color: #58a6ff; cursor: pointer; user-select: none; }
-        th:hover { background: #21262d; }
-        th.sort-asc::after { content: ' ▲'; font-size: 0.7rem; }
-        th.sort-desc::after { content: ' ▼'; font-size: 0.7rem; }
-        td { color: #c9d1d9; }
-        tr:hover td { background: #1c2128; }
-        .state-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
-        .state-btn { padding: 0.35rem 0.75rem; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.8rem; }
-        .state-btn:hover { background: #30363d; }
-        .state-btn.active { background: #58a6ff; color: #fff; border-color: #58a6ff; }
-        .state-summary { font-size: 0.8rem; color: #8b949e; align-self: center; }
-        .empty-row td { text-align: center; color: #8b949e; padding: 1.5rem 0.75rem; }
-        .empty-row:hover td { background: transparent; }
-        .pagination { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
-        .pagination button { padding: 0.35rem 0.75rem; border: 1px solid #30363d; border-radius: 4px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.8rem; }
-        .pagination button:hover { background: #30363d; }
-        .pagination button.active { background: #58a6ff; color: #fff; border-color: #58a6ff; }
-        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
-        .pagination span { font-size: 0.85rem; color: #8b949e; }
-        button.action { padding: 0.4rem 1rem; border: 1px solid #30363d; border-radius: 6px; background: #21262d; color: #c9d1d9; cursor: pointer; font-size: 0.85rem; margin-right: 0.5rem; }
-        button.action:hover { background: #30363d; }
-        button.action.delete { border-color: #da3633; color: #da3633; }
-        button.action.delete:hover { background: #290a0a; }
-        input.row-input { padding: 0.3rem 0.5rem; border: 1px solid #30363d; border-radius: 4px; background: #0d1117; color: #c9d1d9; font-size: 0.85rem; width: 100%; }
-        .back { color: #58a6ff; margin-bottom: 1.5rem; display: inline-block; }
-        .back:hover { text-decoration: underline; }
-        .filter-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: #c9d1d9; font-size: 0.85rem; margin-bottom: 0.75rem; }
-        .filter-input:focus { outline: none; border-color: #58a6ff; }
-    </style>
+    <meta name="description" content="Practice sorting, filtering, pagination, dynamic row add/remove and empty/max/random table states.">
+    <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back">← Back to QA Playground</a>
         <h1>Data Tables</h1>
 
         <div class="field-group">
@@ -60,7 +23,7 @@
                 <span class="state-summary" id="stateSummary"></span>
             </div>
             <input type="text" class="filter-input" id="filterInput" placeholder="Filter by name, role, or department..." oninput="renderTable()">
-            <div style="overflow-x:auto;">
+            <div class="table-scroll">
                 <table id="dataTable">
                     <thead>
                         <tr>
@@ -97,8 +60,20 @@
                 </tbody>
             </table>
         </div>
+
+        <details class="verify">
+            <summary>What to verify</summary>
+            <ul>
+                <li>Clicking a column header sorts ascending, then descending.</li>
+                <li>The filter box reduces the rows and pagination reflects the filtered set.</li>
+                <li>First / last page buttons are disabled at the ends.</li>
+                <li>Add and remove row change the second table.</li>
+                <li>The header stays visible (sticky) while scrolling the table.</li>
+            </ul>
+        </details>
     </div>
 
+    <script src="qa-playground.js"></script>
     <script>
         const NAMES = ['Alice','Bob','Charlie','Diana','Eve','Frank','Grace','Hank','Ivy','Jack','Karen','Leo','Mona','Nick','Olivia','Paul','Quinn','Rita','Sam','Tina','Uma','Vince','Wendy','Xander','Yara','Zack','Amy','Ben','Clara','Dan','Ella','Finn','Gina','Hugo','Iris','Jake','Kara','Liam','Maya','Noah','Olive','Pete','Rose','Sean','Tara','Uri','Vera'];
         const ROLES = ['Developer','Designer','QA','Manager','DevOps','Analyst','Engineer','Tester','Architect','Lead','Developer','QA','Engineer','Manager','DevOps','Analyst','Developer','Designer','Tester','Lead','Engineer','QA','Manager','Architect','DevOps','Analyst','Developer','Designer','QA','Tester','Engineer','Lead','Manager','DevOps','Analyst','Developer','Designer','QA','Engineer','Tester','Lead','Manager','Architect','DevOps','Analyst','Developer','Designer'];

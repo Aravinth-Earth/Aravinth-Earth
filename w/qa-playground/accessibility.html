@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Playground — Accessibility Audit</title>
+  <meta name="description" content="Audit a page with deliberate accessibility defects: labels, contrast, keyboard access, heading order and ARIA." />
+  <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <main class="container">
+    <h1>Accessibility Audit</h1>
+    <p class="note">This page intentionally contains accessibility issues. Audit it and list every problem you can find (labels, contrast, keyboard access, heading order, focus, ARIA). Expand the answer key at the bottom to compare.</p>
+
+    <div class="field-grid">
+    <div class="field-group">
+      <h2>Ticket form (has issues)</h2>
+      <input type="text" placeholder="Full name">
+      <p style="margin:0.5rem 0;">Email</p>
+      <input type="text" id="a11yEmail">
+      <p style="margin:0.5rem 0; color:#2b3038; background:#161b22;">Low contrast helper text that is hard to read.</p>
+      <div style="margin-top:0.5rem; color:#58a6ff; cursor:pointer;" onclick="submitFake()">Submit ticket (looks like a link)</div>
+      <div id="fakeResult" style="margin-top:0.5rem; color:#da3633;"></div>
+    </div>
+
+    <div class="field-group">
+      <h2>Keyboard traps &amp; order</h2>
+      <p class="note">There is a focusable element placed out of visual order, and a control with no visible focus indicator.</p>
+      <button tabindex="5">Focus order 5</button>
+      <button tabindex="2" style="outline:none;">No focus outline</button>
+      <button tabindex="1">Focus order 1</button>
+    </div>
+    </div>
+
+    <h4>Skipped heading level (h1 then h4)</h4>
+    <p class="note">Heading structure jumps from h1 to h4.</p>
+    <img src="../../favicon.png" width="24" height="24">
+
+    <details style="margin-top:1rem;">
+      <summary style="cursor:pointer; color:#58a6ff;">Answer key</summary>
+      <ul style="margin:0.75rem 0 0 1.25rem; line-height:1.8;">
+        <li>Name input has no associated label (placeholder only).</li>
+        <li>Email field is labeled with a plain paragraph, not a &lt;label for&gt;.</li>
+        <li>Low-contrast helper text fails contrast.</li>
+        <li>"Submit" is a clickable &lt;div&gt; with no role or keyboard support.</li>
+        <li>Positive tabindex values break natural focus order.</li>
+        <li>One button removes its focus outline (no visible focus).</li>
+        <li>Heading level skips h1 to h4.</li>
+        <li>Image has no alt attribute.</li>
+      </ul>
+    </details>
+    <details class="verify">
+      <summary>What to verify</summary>
+      <ul>
+        <li>Identify the missing/incorrect labels and the clickable div without a role.</li>
+        <li>Find the contrast, heading-order and focus problems.</li>
+        <li>Confirm the answer key matches your findings.</li>
+      </ul>
+    </details>
+  </main>
+  <script src="qa-playground.js"></script>
+  <script>
+    function submitFake() {
+      document.getElementById('fakeResult').textContent = 'Submitted (no form, no validation, no announcement).';
+    }
+  </script>
+</body>
+</html>

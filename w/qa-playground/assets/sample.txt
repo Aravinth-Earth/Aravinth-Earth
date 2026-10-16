@@ -1,0 +1,4 @@
+QA Playground — sample text file
+Line 1: the quick brown fox
+Line 2: jumps over the lazy dog
+Line 3: automation practice content

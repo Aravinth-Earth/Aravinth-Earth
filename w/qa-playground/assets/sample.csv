@@ -1,0 +1,6 @@
+id,name,role,department,salary
+1,Alice,Developer,Engineering,52000
+2,Bob,Designer,Design,47000
+3,Charlie,QA,Testing,49000
+4,Diana,Manager,Management,71000
+5,Eve,DevOps,Infra,63000

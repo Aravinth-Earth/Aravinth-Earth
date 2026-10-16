@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QA Playground — Web Storage</title>
+  <link rel="stylesheet" href="qa-playground.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="description" content="Practice reading and writing localStorage and sessionStorage, and handling state that survives a page reload." />
+</head>
+<body>
+  <main class="container">
+    <h1>Web Storage</h1>
+    <p class="sub">localStorage survives reloads and tabs; sessionStorage is per-tab and cleared when the tab closes. A classic source of test pollution.</p>
+
+    <div class="field-grid">
+      <div class="field-group">
+        <h2>localStorage counter</h2>
+        <p class="note">Reload the page — this value persists.</p>
+        <div class="counter" id="lsCount">0</div>
+        <p style="margin:0.5rem 0;"><button id="lsInc" onclick="incLocal()">Increment</button> <button onclick="resetLocal()">Reset</button></p>
+      </div>
+
+      <div class="field-group">
+        <h2>sessionStorage counter</h2>
+        <p class="note">Persists during this tab session; cleared when the tab closes.</p>
+        <div class="counter" id="ssCount">0</div>
+        <p style="margin:0.5rem 0;"><button id="ssInc" onclick="incSession()">Increment</button> <button onclick="resetSession()">Reset</button></p>
+      </div>
+
+      <div class="field-group">
+        <h2>Stored value round-trip</h2>
+        <p class="note">Save a value, reload, then read it back.</p>
+        <label for="storedInput">Value</label>
+        <input type="text" id="storedInput" placeholder="Saved value...">
+        <p style="margin-top:0.5rem;"><button onclick="saveValue()">Save</button> <button onclick="loadValue()">Load</button></p>
+        <div id="storedOut" class="result-box">Nothing loaded.</div>
+      </div>
+
+      <div class="field-group">
+        <h2>All keys</h2>
+        <p class="note">Current storage contents.</p>
+        <button onclick="refreshDump()">Refresh</button>
+        <pre id="dump" style="margin-top:0.75rem; padding:0.75rem; background:var(--panel-2); border:1px solid var(--border); border-radius:6px; font-size:0.8rem; overflow-x:auto;"></pre>
+      </div>
+    </div>
+
+    <details class="verify">
+      <summary>What to verify</summary>
+      <ul>
+        <li>localStorage counter keeps its value after a reload.</li>
+        <li>sessionStorage counter keeps its value within the tab.</li>
+        <li>Reset returns each counter to 0 and removes the stored key.</li>
+        <li>A saved value is readable after reload; a fresh session starts empty (test isolation).</li>
+      </ul>
+    </details>
+  </main>
+  <script src="qa-playground.js"></script>
+  <script>
+    var LS_KEY = 'qa.local.count';
+    var SS_KEY = 'qa.session.count';
+    var VALUE_KEY = 'qa.saved.value';
+
+    function setText(id, v) { document.getElementById(id).textContent = v; }
+    function incLocal() { var v = parseInt(localStorage.getItem(LS_KEY) || '0', 10) + 1; localStorage.setItem(LS_KEY, v); setText('lsCount', v); refreshDump(); }
+    function resetLocal() { localStorage.removeItem(LS_KEY); setText('lsCount', 0); refreshDump(); }
+    function incSession() { var v = parseInt(sessionStorage.getItem(SS_KEY) || '0', 10) + 1; sessionStorage.setItem(SS_KEY, v); setText('ssCount', v); refreshDump(); }
+    function resetSession() { sessionStorage.removeItem(SS_KEY); setText('ssCount', 0); refreshDump(); }
+    function saveValue() { localStorage.setItem(VALUE_KEY, document.getElementById('storedInput').value); refreshDump(); }
+    function loadValue() { document.getElementById('storedOut').textContent = 'Loaded: ' + (localStorage.getItem(VALUE_KEY) || '(none)'); }
+    function refreshDump() {
+      var out = { localStorage: {}, sessionStorage: {} };
+      for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); out.localStorage[k] = localStorage.getItem(k); }
+      for (var j = 0; j < sessionStorage.length; j++) { var s = sessionStorage.key(j); out.sessionStorage[s] = sessionStorage.getItem(s); }
+      document.getElementById('dump').textContent = JSON.stringify(out, null, 2);
+    }
+
+    setText('lsCount', localStorage.getItem(LS_KEY) || '0');
+    setText('ssCount', sessionStorage.getItem(SS_KEY) || '0');
+    loadValue();
+    refreshDump();
+  </script>
+</body>
+</html>

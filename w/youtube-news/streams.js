@@ -1,23 +1,25 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-18T01:01:15+0530",
+  "generated_at": "2026-10-18T11:19:47+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "It-rZKCFDGo",
-        "4GjdM6Acawg",
+        "LmUXn6mRjYM",
+        "KTy6yn9PeRY",
         "t3vHGApQHhQ",
-        "bdjhjhO9qbw",
-        "vGbDHxBYZ4o"
+        "rume0KYs3rI",
+        "iXow3yWuSL4"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "jzozMmrHMbM",
-        "L_ipv55f6ow",
+        "1SQhws4Jt28",
+        "ugnZYXjUFpg",
+        "n5ITImdBvZk",
+        "76vtp2bZ9ds",
         "JWu9MHaz6y8"
       ]
     },
@@ -25,35 +27,52 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "Ge0MbMNuggg",
-        "NBBcXe8jBMc",
-        "VmoGwiP7aU4",
-        "sH7BQHccUK4",
-        "Ryrq3NUayck"
+        "rKLziEkalPs",
+        "FNpLMsgQOqM",
+        "zv2QUuoyq4c",
+        "XbZp4PfrgnY",
+        "7xMe3J-xWmg"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
+        "x4imD6tsGjw",
         "G04Ltn2mDJ4",
-        "r7U_00JkoAk"
+        "r7U_00JkoAk",
+        "mQNcLdliUPs",
+        "RXjEBLEzR-g"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "QY83uR2GUCc",
-        "4vpNXWjKqEs",
-        "htMIy_KJrlU"
+        "0maEnudTVBk",
+        "Kj-hJQ_P5AU",
+        "vskqt2YaeBY",
+        "DSgZJN0ez7Y",
+        "Yq0G2kQOR_0"
+      ]
+    },
+    {
+      "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
+      "handle": "@PuthiyaThalaimuraiTV",
+      "streams": [
+        "0UAldHz8A9E",
+        "BXhcRH5E9QM",
+        "pA77YLMtI4c",
+        "p8DO_mG_vIQ",
+        "g918pQWb7kk"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "4OkF-psD6H0"
+        "4gKs0QBGyvg",
+        "PgL2D9nJ9y4"
       ]
     },
     {

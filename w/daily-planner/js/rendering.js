@@ -9,8 +9,8 @@ const PlannerRenderer = (function() {
     function renderHeader(thead, columns, filterRowHTML, sortState, onColumnHeaderClick) {
         let headerHTML = `
             <tr>
-                <th></th>
-                <th></th>
+                <th><span class="visually-hidden">Row actions</span></th>
+                <th><span class="visually-hidden">Row number</span></th>
                 ${columns.map(col => `
                     <th>
                         <div class="column-header">
@@ -45,8 +45,8 @@ const PlannerRenderer = (function() {
     function renderFilterRow(columns) {
         return `
             <tr class="filter-row">
-                <th></th>
-                <th></th>
+                <th><span class="visually-hidden">Row actions</span></th>
+                <th><span class="visually-hidden">Row number</span></th>
                 ${columns.map(col => `
                     <th>
                         <input type="text" 

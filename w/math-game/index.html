@@ -24,7 +24,7 @@
 <body class="dark-theme">
     <a class="skip-link" href="#main-content">Skip to main content</a>
     
-    <div class="container light-theme" id="main-content" tabindex="-1">
+    <div class="container light-theme" role="main" id="main-content" tabindex="-1">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
             <span class="version-display">v1.2.3</span>
@@ -133,7 +133,7 @@
     </div>
 
     <!-- Add game info overlay -->
-    <div class="info-overlay">
+    <div class="info-overlay" role="dialog" aria-label="How the Game Works">
         <div class="info-content">
             <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
             <h2>How the Game Works</h2>
@@ -169,7 +169,7 @@
     </div>
 
     <!-- Add version history overlay -->
-    <div class="version-overlay info-overlay">
+    <div class="version-overlay info-overlay" role="dialog" aria-label="Version History">
         <div class="info-content">
             <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
             <h2>Version History</h2>

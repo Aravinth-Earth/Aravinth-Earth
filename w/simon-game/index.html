@@ -21,7 +21,7 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-  <div class="game-container" id="main-content" tabindex="-1">
+  <div class="game-container" role="main" id="main-content" tabindex="-1">
     <div class="game-header">
       <h1 class="game-title" id="game-title">Simon</h1>
       <button class="info-btn" id="info-btn" aria-label="How to Play">?</button>
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <div class="game-over-overlay" id="game-over-overlay">
+  <div class="game-over-overlay" id="game-over-overlay" role="dialog" aria-label="Game Over">
     <div class="game-over-card">
       <h2>Game Over</h2>
       <div class="game-over-stats">
@@ -76,7 +76,7 @@
     </div>
   </div>
 
-  <div class="info-overlay" id="info-overlay">
+  <div class="info-overlay" id="info-overlay" role="dialog" aria-label="How to Play">
     <div class="info-card">
       <h2>How to Play</h2>
       <p>Watch the pattern of flashing colors, then repeat it by tapping the tiles in the same order.</p>

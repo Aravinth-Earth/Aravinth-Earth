@@ -12,6 +12,11 @@
                 background-color: #121212; /* Dark background color */
                 color: #aaa; /* Light text color for contrast */
             }
+            .yt-title {
+                font-size: 1.17em;
+                font-weight: bold;
+                margin: 1em 0;
+            }
             .channel {
                 margin-bottom: 40px;
                 padding-left: 10px; /* Padding on the left of the channel section */
@@ -194,10 +199,9 @@
     </head>
     <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div id="main-content" tabindex="-1">
-        <h3>YT Live news</h3>
+    <main id="main-content" tabindex="-1">
+        <h1 class="yt-title">YT Live news</h1>
         Primarily famous tamil youtube news channels live streams, stream id's updated multiple times a day
-    </div>
     <hr>
     <div class="multi-view-mode-bar">
         <button id="multi-view-mode-toggle" onclick="toggleMultiViewSelectionMode()">Multi Stream Mode</button>
@@ -227,6 +231,7 @@
         <div class="channel-name">Custom Streams</div>
         <div class="live-streams" id="custom-streams"></div>
     </div>
+    </main>
             <script src="streams.js"></script>
         <script>
             // Single source of truth for stream-id validation, shared by both render paths below.

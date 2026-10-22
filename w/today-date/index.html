@@ -22,14 +22,14 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div class="container" id="main-content" tabindex="-1">
+    <div class="container" role="main" id="main-content" tabindex="-1">
         <!-- Theme toggle -->
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
             <span class="theme-icon">☀️</span>
         </button>
 
         <!-- Header -->
-        <header class="header">
+        <header class="header" role="none">
             <h1 class="title-en">Today's Date</h1>
             <h1 class="title-ta" lang="ta">இன்றைய தேதி</h1>
         </header>
@@ -143,7 +143,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
+        <footer class="footer" role="none">
             <p class="footer-note">Tamil dates via astronomical engine (Lahiri ayanamsa)</p>
             <p class="footer-note-ta" lang="ta">வானியல் இயந்திரம் மூலம் கணக்கிடப்படுகிறது</p>
             <p class="footer-back"><a href="../../index.html">← Back to Home</a></p>

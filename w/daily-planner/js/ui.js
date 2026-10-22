@@ -12,7 +12,7 @@ const PlannerUI = (function() {
             statusEl = document.createElement('div');
             statusEl.id = 'save-status';
             statusEl.className = 'status-indicator';
-            document.body.appendChild(statusEl);
+            (document.getElementById('main-content') || document.body).appendChild(statusEl);
         }
 
         statusEl.className = `status-indicator ${status}`;

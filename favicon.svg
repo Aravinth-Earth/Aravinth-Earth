@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Aravinth">
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="#121620"/>
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="#58a6ff" opacity="0.15"/>
+  <rect x="13" y="13" width="486" height="486" rx="99" fill="#121620"/>
+  <clipPath id="sp"><rect x="0" y="0" width="256" height="512"/></clipPath>
+  <g fill="#8d5fd3"><path d="M 256 76 L 406 436 L 345.33 436 L 256 221.6 L 166.67 436 L 106 436 Z"/><path d="M 222.5 278 L 289.5 278 L 289.5 338 L 222.5 338 Z"/></g>
+  <g fill="#58a6ff" clip-path="url(#sp)"><path d="M 256 76 L 406 436 L 345.33 436 L 256 221.6 L 166.67 436 L 106 436 Z"/><path d="M 222.5 278 L 289.5 278 L 289.5 338 L 222.5 338 Z"/></g>
+</svg>

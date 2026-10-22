@@ -17,12 +17,3 @@ package-lock.json
 # AutoResearch experiment logs
 results.tsv
 experiments_log.tsv
-
-# Cypress test artifacts
-w/life-on-earth/test/e2e/screenshots/
-w/daily-planner/test/e2e/screenshots/
-
-# Maestro UI test artifacts
-log/
-ui-test-m/site-sanity/artifacts*/
-ui-test-m/site-sanity/debug*/

@@ -5,27 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simon — Memory Sequence Game</title>
   
-    <meta property="og:title" content="Simon — Aravinth" />
+    <meta property="og:title" content="Simon — Memory Sequence Game" />
     <meta property="og:description" content="Classic memory sequence game. Watch the pattern, repeat it. Offline, no tracking." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Simon — Aravinth" />
+    <meta name="twitter:title" content="Simon — Memory Sequence Game" />
     <meta name="twitter:description" content="Classic memory sequence game. Watch the pattern, repeat it. Offline, no tracking." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Classic memory sequence game. Watch the pattern, repeat it. Offline, no tracking.">
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
   <link rel="stylesheet" href="../../css/style.css">
-  <link rel="stylesheet" href="../../css/about-privacy.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
   <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/simon-game/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/simon-game/" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-  <div class="game-container" role="main" id="main-content" tabindex="-1">
-    <div class="game-header">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="game-container" id="main-content" tabindex="-1" role="main">
+    <header class="game-header" role="banner">
       <h1 class="game-title" id="game-title">Simon</h1>
       <button class="info-btn" id="info-btn" aria-label="How to Play">?</button>
-    </div>
+    </header>
 
     <div class="stats">
       <div class="stat-item">
@@ -42,7 +80,7 @@
       </div>
     </div>
 
-    <p class="status-text" id="status-text">Press Start to begin</p>
+    <p class="status-text" id="status-text" role="status">Press Start to begin</p>
 
     <div class="board" id="board">
       <div class="tile tile-0" data-index="0" aria-label="Green tile 1" role="button" tabindex="0"></div>
@@ -53,13 +91,17 @@
 
     <button class="start-btn" id="start-btn">Start</button>
 
-    <div class="footer-links">
-      <a href="../../index.html">Home</a>
-      <a href="javascript:void(0)" onclick="window.openAboutModal()">About & Privacy</a>
-    </div>
+    <footer class="footer-links" role="contentinfo">
+      <a href="/" class="back-link">← Back to Home</a>
+      <button type="button" class="btn btn-ghost about-btn">About &amp; Privacy</button>
+    </footer>
   </div>
 
-  <div class="game-over-overlay" id="game-over-overlay" role="dialog" aria-label="Game Over">
+  <!-- The overlays start closed. aria-hidden is kept in step with the
+       "show" class by the script at the bottom of this file, so a screen
+       reader never sees the hidden card and the buttons inside it are not
+       tab stops while the overlay is closed. -->
+  <div class="game-over-overlay" id="game-over-overlay" role="dialog" aria-label="Game Over" aria-hidden="true">
     <div class="game-over-card">
       <h2>Game Over</h2>
       <div class="game-over-stats">
@@ -76,7 +118,7 @@
     </div>
   </div>
 
-  <div class="info-overlay" id="info-overlay" role="dialog" aria-label="How to Play">
+  <div class="info-overlay" id="info-overlay" role="dialog" aria-label="How to Play" aria-hidden="true">
     <div class="info-card">
       <h2>How to Play</h2>
       <p>Watch the pattern of flashing colors, then repeat it by tapping the tiles in the same order.</p>
@@ -91,7 +133,80 @@
   </div>
 
   <script src="script.js"></script>
-  <script src="../../js/about-privacy.js" defer></script>
+  <script>
+    /*
+        Keyboard and overlay handling.
+
+        Two things script.js cannot do on its own, kept here so the game's
+        own script stays untouched:
+
+        1. The tiles are <div role="button">, so Enter and Space have to be
+           turned into a press by hand -- script.js only maps the digit keys.
+           The press replays the tile's click, which is the same action the
+           mouse takes.
+
+        2. The overlays are transparent and click-through while they are
+           closed, but their buttons were still tab stops, so a keyboard
+           user could tab to a button nobody can see. aria-hidden and
+           tabindex are kept in step with the "show" class here.
+    */
+    (function () {
+      'use strict';
+
+      // 1. Enter / Space press a focused tile.
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+        var target = e.target;
+        if (!target || typeof target.closest !== 'function') return;
+        var tile = target.closest('.tile');
+        if (!tile) return;
+        // Space scrolls the page; the tile press must not.
+        e.preventDefault();
+        tile.click();
+      });
+
+      // 2. Closed overlays are hidden from assistive tech and hold no
+      //    tab stops.
+      [
+        { overlay: 'game-over-overlay', buttons: ['restart-btn'] },
+        { overlay: 'info-overlay', buttons: ['info-close-btn'] }
+      ].forEach(function (entry) {
+        var overlay = document.getElementById(entry.overlay);
+        if (!overlay) return;
+        var buttons = entry.buttons
+          .map(function (id) { return document.getElementById(id); })
+          .filter(Boolean);
+
+        function sync() {
+          var open = overlay.classList.contains('show');
+          if (open) {
+            overlay.removeAttribute('aria-hidden');
+            buttons.forEach(function (b) { b.removeAttribute('tabindex'); });
+          } else {
+            overlay.setAttribute('aria-hidden', 'true');
+            buttons.forEach(function (b) { b.setAttribute('tabindex', '-1'); });
+          }
+        }
+
+        sync();
+        // The game's script.js opens and closes the overlay by toggling the
+        // "show" class, so watch that class.
+        new MutationObserver(sync).observe(overlay, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      });
+    })();
+  </script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/theme-switcher.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

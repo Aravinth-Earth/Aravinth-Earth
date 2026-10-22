@@ -15,7 +15,7 @@
     --transition-speed: 200ms;
 }
 
-[data-theme="light"] {
+[data-tool-theme="light"] {
     --bg-primary: #f5f5f5;
     --bg-secondary: #ffffff;
     --bg-tertiary: #eaeaea;

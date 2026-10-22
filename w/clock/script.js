@@ -9,10 +9,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleFullscreenButton = document.getElementById('toggle-fullscreen');
     const footer = document.querySelector('footer');
 
+    // The colour modes are the values of the select below. They are read
+    // from the markup rather than hardcoded, so the stored value can be
+    // checked against the options the page actually offers.
+    const colorModeValues = Array.from(colorModeSelect.options).map((option) => option.value);
+
+    // "pitch-dark" is the body class the page starts with (see
+    // clock.html) and it is what paints the page's background, so it stays
+    // on the body through every colour change -- only the other mode
+    // classes are swapped. Dropping it left the body with no background
+    // at all, so in a dark site theme the clock's digits (which are drawn
+    // in the theme's light text colour) vanished into the page.
+    const BASE_COLOR_MODE = colorModeValues.includes('pitch-dark') ? 'pitch-dark' : colorModeValues[0];
+
     let is24HourFormat = true;
-    let colorMode = 'pitch-dark';
+    let colorMode = BASE_COLOR_MODE;
     let dynamicColorInterval;
     let prevPanelDisplay = '';
+
+    // The colour mode is a class on <body>, and the body's class list is
+    // shared with the site chrome: the About & Privacy modal adds
+    // "about-modal-open" to it to lock the page's scrolling behind the
+    // dialog. So the mode is swapped with classList and never by
+    // assigning className, which would wipe every other class on the
+    // body (the scroll lock, the "fullscreen" class, ...).
+    const applyColorMode = (mode) => {
+        colorModeValues.forEach((value) => {
+            if (value !== BASE_COLOR_MODE) {
+                document.body.classList.remove(value);
+            }
+        });
+        document.body.classList.add(mode);
+    };
 
     const updateClock = () => {
         const now = new Date();
@@ -27,14 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleFormat = () => {
         is24HourFormat = !is24HourFormat;
         toggleFormatButton.textContent = is24HourFormat ? 'Switch to 12-Hour Format' : 'Switch to 24-Hour Format';
-        localStorage.setItem('is24HourFormat', is24HourFormat);
+        // Namespaced: the bare key "is24HourFormat" was shared with every
+        // other script on this origin.
+        localStorage.setItem('clock.is24HourFormat', is24HourFormat);
         updateClock();
     };
 
     const changeColorMode = (e) => {
-        colorMode = e.target.value;
-        localStorage.setItem('colorMode', colorMode);
-        document.body.className = colorMode;
+        const mode = e.target.value;
+        // Only a value the select actually offers is applied.
+        if (!colorModeValues.includes(mode)) return;
+
+        colorMode = mode;
+        localStorage.setItem('clock.colorMode', colorMode);
+        applyColorMode(colorMode);
         if (colorMode === 'dynamic-color') {
             startDynamicColorChange();
         } else {
@@ -64,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fontSize = e.target.value;
         fontSizeValue.textContent = `${fontSize}px`;
         clock.style.fontSize = `${fontSize}px`;
-        localStorage.setItem('fontSize', fontSize);
+        localStorage.setItem('clock.fontSize', fontSize);
     };
 
     const toggleFullscreen = () => {
@@ -115,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fontSizeSlider.addEventListener('input', adjustFontSize);
     toggleFullscreenButton.addEventListener('click', toggleFullscreen);
 
-    const savedFontSize = localStorage.getItem('fontSize');
+    const savedFontSize = localStorage.getItem('clock.fontSize');
     if (savedFontSize) {
         fontSizeSlider.value = savedFontSize;
         fontSizeValue.textContent = `${savedFontSize}px`;
@@ -126,17 +160,21 @@ document.addEventListener('DOMContentLoaded', () => {
         clock.style.fontSize = '80px';
     }
 
-    const savedFormat = localStorage.getItem('is24HourFormat');
+    const savedFormat = localStorage.getItem('clock.is24HourFormat');
     if (savedFormat !== null) {
         is24HourFormat = savedFormat === 'true';
         toggleFormatButton.textContent = is24HourFormat ? 'Switch to 12-Hour Format' : 'Switch to 24-Hour Format';
     }
 
-    const savedColorMode = localStorage.getItem('colorMode');
-    if (savedColorMode && savedColorMode !== colorMode) {
-        colorModeSelect.value = savedColorMode;
+    const savedColorMode = localStorage.getItem('clock.colorMode');
+    // Only a value the select actually offers is applied. An unknown value
+    // -- a stale key, or one written by another script on this origin --
+    // is ignored, so the clock keeps its own default instead of losing
+    // all of its styling.
+    if (savedColorMode && colorModeValues.includes(savedColorMode)) {
         colorMode = savedColorMode;
-        document.body.className = colorMode;
+        colorModeSelect.value = savedColorMode;
+        applyColorMode(colorMode);
         if (colorMode === 'dynamic-color') {
             startDynamicColorChange();
         }

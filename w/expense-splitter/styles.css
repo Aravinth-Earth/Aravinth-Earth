@@ -519,7 +519,7 @@ body.mode-view #add-member-btn,
 body.mode-view #add-expense-btn { display: none !important; }
 
 .mode-pill {
-  position: fixed; right: 16px; bottom: 16px; z-index: 1000;
+  position: fixed; right: 16px; bottom: 76px; z-index: 1000;
   background: linear-gradient(135deg, var(--purple), var(--blue)); color: #fff;
   border: none; border-radius: 999px; padding: 10px 18px;
   font-size: var(--fs-base); font-weight: 600; cursor: pointer;

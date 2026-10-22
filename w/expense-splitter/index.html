@@ -5,25 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Splitter — Share Group Costs</title>
 
-    <meta property="og:title" content="Expense Splitter — Aravinth" />
+    <meta property="og:title" content="Expense Splitter — Share Group Costs" />
     <meta property="og:description" content="Split expenses and track shared costs with friends. Works offline, no data sent anywhere." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Expense Splitter — Aravinth" />
+    <meta name="twitter:title" content="Expense Splitter — Share Group Costs" />
     <meta name="twitter:description" content="Split expenses and track shared costs with friends. Works offline, no data sent anywhere." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Split expenses and track shared costs with friends. Works offline, no data sent anywhere." />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="styles.css">
     
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/expense-splitter/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/expense-splitter/" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div id="toast-container"></div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
-    <div class="app-layout" role="main" id="main-content" tabindex="-1">
-        <header class="app-header" role="none">
+    <div id="main-content" class="app-layout" role="main" tabindex="-1">
+        <header class="app-header">
             <div class="header-left">
                 <h1 class="app-logo">💰 Splitter</h1>
                 <div id="header-trip-info" class="header-trip-info" style="display:none">
@@ -136,6 +175,7 @@
                         <button id="add-expense-btn" class="btn btn-secondary btn-sm">+ Add</button>
                     </div>
                     <div class="expense-toolbar">
+                        <label class="visually-hidden" for="expense-sort">Sort expenses by</label>
                         <select id="expense-sort" class="sort-select">
                             <option value="date-desc">Latest</option>
                             <option value="date-asc">Oldest</option>
@@ -161,17 +201,22 @@
             </div>
             <form id="trip-form">
                 <div class="modal-body">
+                    <label class="visually-hidden" for="trip-name-input">Trip name</label>
                     <input type="text" id="trip-name-input" placeholder="Trip Name" required>
                     <div class="form-row">
+                        <label class="visually-hidden" for="start-date">Start date</label>
                         <input type="date" id="start-date" placeholder="Start date">
+                        <label class="visually-hidden" for="end-date">End date</label>
                         <input type="date" id="end-date" placeholder="End date">
                     </div>
+                    <label class="visually-hidden" for="currency">Currency</label>
                     <select id="currency">
                         <option value="INR">INR (₹)</option>
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
                     </select>
+                    <label class="visually-hidden" for="description">Trip description</label>
                     <textarea id="description" placeholder="Trip description (optional)" rows="2"></textarea>
                 </div>
                 <div class="modal-footer">
@@ -191,6 +236,7 @@
             </div>
             <form id="member-form">
                 <div class="modal-body">
+                    <label class="visually-hidden" for="member-name">Member name</label>
                     <input type="text" id="member-name" placeholder="Enter member name" required>
                 </div>
                 <div class="modal-footer">
@@ -210,14 +256,18 @@
             </div>
             <form id="expense-form">
                 <div class="modal-body">
+                    <label class="visually-hidden" for="expense-description">Expense description</label>
                     <input type="text" id="expense-description" placeholder="What for?" required>
                     <div class="form-row">
+                        <label class="visually-hidden" for="expense-amount">Amount</label>
                         <input type="number" id="expense-amount" placeholder="Amount" step="0.01" required>
+                        <label class="visually-hidden" for="expense-paid-by">Paid by</label>
                         <select id="expense-paid-by" required>
                             <option value="">Who paid?</option>
                         </select>
                     </div>
-                    <div class="split-options">
+                    <fieldset class="split-options">
+                        <legend class="visually-hidden">Split type</legend>
                         <label class="split-option selected" data-split="equal">
                             <input type="radio" name="split-type" value="equal" checked hidden>
                             <span class="split-option-label">Equally (all)</span>
@@ -238,7 +288,7 @@
                             <input type="radio" name="split-type" value="custom" hidden>
                             <span class="split-option-label">Custom</span>
                         </label>
-                    </div>
+                    </fieldset>
                     <div id="split-config" style="display:none">
                         <div id="select-members-section" style="display:none">
                             <p class="split-hint">Select members:</p>
@@ -268,7 +318,9 @@
                         </div>
                     </div>
                     <div class="form-row">
+                        <label class="visually-hidden" for="expense-date">Date</label>
                         <input type="date" id="expense-date" placeholder="Date">
+                        <label class="visually-hidden" for="expense-time">Time</label>
                         <input type="time" id="expense-time" placeholder="Time">
                     </div>
                 </div>
@@ -280,7 +332,7 @@
         </div>
     </div>
 
-    <input type="file" id="import-file-input" accept=".json" style="display:none">
+    <input type="file" id="import-file-input" accept=".json" style="display:none" aria-label="Import trip data file">
 
     <div id="viewer-modal" class="modal" style="display:none">
         <div class="modal-backdrop"></div>
@@ -320,8 +372,19 @@
     </div>
 
     
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"
+        integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ"
+        crossorigin="anonymous" defer></script>
+<script src="app.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

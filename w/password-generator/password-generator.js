@@ -287,10 +287,10 @@ function switchMode(mode) {
 }
 
 function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
+    const current = document.documentElement.getAttribute('data-tool-theme');
     const next = current === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    document.documentElement.setAttribute('data-tool-theme', next);
+    localStorage.setItem('pwdgen.theme', next);
     
     const icon = document.querySelector('.theme-switch i');
     if (icon) icon.className = next === 'light' ? 'fas fa-sun' : 'fas fa-moon';
@@ -326,7 +326,7 @@ function initializeEventListeners() {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Set theme
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    document.documentElement.setAttribute('data-tool-theme', localStorage.getItem('pwdgen.theme') || 'dark');
     
     // Setup word control sliders
     const wordCountSlider = document.getElementById('wordCountSlider');

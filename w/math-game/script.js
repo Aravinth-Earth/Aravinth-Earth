@@ -346,14 +346,14 @@ const game = {
         });
         document.getElementById('toggle-stats').addEventListener('click', ui.toggleStats);
         document.getElementById('show-info').addEventListener('click', () => {
-            document.querySelector('.info-overlay').classList.add('visible');
+            game.showOverlay('.info-overlay', true);
         });
         document.querySelector('.info-close').addEventListener('click', () => {
-            document.querySelector('.info-overlay').classList.remove('visible');
+            game.showOverlay('.info-overlay', false);
         });
         document.querySelector('.info-overlay').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) {
-                e.target.classList.remove('visible');
+                game.showOverlay('.info-overlay', false);
             }
         });
         document.getElementById('answer').addEventListener('focus', () => {
@@ -362,10 +362,32 @@ const game = {
             }, 300);
         });
         document.getElementById('show-version-history').addEventListener('click', () => {
-            document.querySelector('.version-overlay').classList.add('visible');
+            game.showOverlay('.version-overlay', true);
         });
         document.querySelector('.version-overlay .info-close').addEventListener('click', () => {
-            document.querySelector('.version-overlay').classList.remove('visible');
+            game.showOverlay('.version-overlay', false);
+        });
+    },
+
+    /**
+     * Show or hide one of the game's overlays.
+     *
+     * The overlay is transparent when closed but its buttons are still in
+     * the tab order, so a keyboard user could focus a control they cannot
+     * see. aria-hidden follows the visibility, and the buttons inside are
+     * taken out of the tab order while the overlay is closed.
+     */
+    showOverlay(selector, visible) {
+        const overlay = document.querySelector(selector);
+        if (!overlay) return;
+        overlay.classList.toggle('visible', visible);
+        overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        overlay.querySelectorAll('button, a[href], [tabindex]').forEach((el) => {
+            if (visible) {
+                el.removeAttribute('tabindex');
+            } else {
+                el.setAttribute('tabindex', '-1');
+            }
         });
     },
 
@@ -376,9 +398,17 @@ const game = {
         
         // Apply random color theme
         const randomTheme = GAME_LIMITS.THEMES[Math.floor(Math.random() * GAME_LIMITS.THEMES.length)];
-        document.body.classList.add(`theme-${randomTheme}`);
-        document.querySelectorAll('button').forEach(button => {
-            button.classList.add(`theme-${randomTheme}`);
+        // The colour themes are namespaced "mg-theme-<name>". The old hook
+        // was "theme-<name>", which the shared theme picker also uses
+        // (".theme-option" contains the substring "theme-"), so the game's
+        // CSS painted the shared picker's buttons with the game's palette.
+        document.body.classList.add(`mg-theme-${randomTheme}`);
+        // Scope to the game's own UI. A bare querySelectorAll('button')
+        // also catches the shared About & Privacy button in the footer, and
+        // the game's "theme-*" background rule would then paint that button
+        // an unreadable colour.
+        document.querySelectorAll('#main-content button').forEach(button => {
+            button.classList.add(`mg-theme-${randomTheme}`);
         });
         
         const statsCollapsed = localStorage.getItem('statsCollapsed') === 'true';
@@ -655,7 +685,12 @@ const ui = {
     toggleTheme() {
         const body = document.body;
         const container = document.querySelector('.container');
-        const buttons = document.querySelectorAll('button');
+        // Scoped to the game's own UI, like toggleColorTheme() and
+        // applyInitialTheme() above. A bare querySelectorAll('button')
+        // also caught the shared chrome -- the About & Privacy button and
+        // every theme-picker option -- and the game's button rules then
+        // painted those shared buttons with the game's colours.
+        const buttons = document.querySelectorAll('#main-content button');
         const scoreDisplay = document.getElementById('score-display');
         const infoContent = document.querySelector('.info-content');
         const gameControls = document.querySelector('.game-controls');
@@ -688,23 +723,26 @@ const ui = {
             button.classList.toggle('light-theme', !isDark);
         });
         
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('mathgame.theme', isDark ? 'dark' : 'light');
     },
 
     toggleColorTheme() {
         const body = document.body;
         const buttons = document.querySelectorAll('button');
         const randomTheme = GAME_LIMITS.THEMES[Math.floor(Math.random() * GAME_LIMITS.THEMES.length)];
-    
+
+        // Only the game's own colour-theme classes are touched. The prefix
+        // matters: the shared chrome also uses "theme-*" class names, and
+        // "theme-option" contains the substring "theme-".
         body.classList.forEach(cls => {
-            if (cls.startsWith('theme-')) {
+            if (cls.startsWith('mg-theme-')) {
                 body.classList.remove(cls);
                 buttons.forEach(button => button.classList.remove(cls));
             }
         });
-    
-        body.classList.add(`theme-${randomTheme}`);
-        buttons.forEach(button => button.classList.add(`theme-${randomTheme}`));
+
+        body.classList.add(`mg-theme-${randomTheme}`);
+        buttons.forEach(button => button.classList.add(`mg-theme-${randomTheme}`));
     },
 
     toggleStats() {

@@ -5,16 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#0d1117" />
         <title>404 — Page Not Found · Aravinth</title>
+    <meta name="robots" content="noindex, follow" />
         <meta name="description" content="The page you're looking for doesn't exist. Head back to Aravinth's homepage." />
         <link rel="canonical" href="https://www.332321.xyz/" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
         <meta property="og:title" content="404 — Page Not Found · Aravinth" />
-        <meta property="og:description" content="The page you're looking for doesn't exist. Head back to the homepage." />
-        <meta property="og:image" content="/favicon.png" />
+        <meta property="og:description" content="The page you're looking for doesn't exist. Head back to Aravinth's homepage." />
+        <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="404 — Page Not Found · Aravinth" />
-        <meta name="twitter:description" content="The page you're looking for doesn't exist. Head back to the homepage." />
+        <meta name="twitter:description" content="The page you're looking for doesn't exist. Head back to Aravinth's homepage." />
         <style>
             * {
                 margin: 0;
@@ -78,7 +79,45 @@
                 border-radius: 1px;
             }
         </style>
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
         <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta property="og:url" content="https://www.332321.xyz/404.html" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
     <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -93,5 +132,14 @@
             <a href="/" class="home-link">← Back to Home</a>
         </div>
     <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

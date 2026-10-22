@@ -15,6 +15,11 @@ const PlannerUI = (function() {
             (document.getElementById('main-content') || document.body).appendChild(statusEl);
         }
 
+        // The status text ("✓ Saved") changes without a page load, so the
+        // element has to be a live region -- otherwise a screen reader
+        // never says anything when the save finishes.
+        statusEl.setAttribute('role', 'status');
+
         statusEl.className = `status-indicator ${status}`;
 
         switch (status) {
@@ -36,12 +41,43 @@ const PlannerUI = (function() {
         }
     }
 
+    /**
+     * The container the toasts live in.
+     *
+     * It is a live region: a screen reader only announces a change when the
+     * changed thing sits inside one. The container itself is created once
+     * and kept in the DOM; the toast text is swapped inside it, so the
+     * message ("Row added") is spoken.
+     */
+    function getToastContainer() {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.setAttribute('role', 'status');
+            container.setAttribute('aria-live', 'polite');
+            container.setAttribute('aria-atomic', 'true');
+            document.body.appendChild(container);
+        }
+        return container;
+    }
+
+    // The container goes into the DOM straight away. A live region that is
+    // created and filled in the same breath is not always announced, so it
+    // has to be there before the first toast.
+    if (document.body) {
+        getToastContainer();
+    } else {
+        document.addEventListener('DOMContentLoaded', getToastContainer);
+    }
+
     function showToast(message, type = '') {
-        let toast = document.querySelector('.toast');
+        const container = getToastContainer();
+        let toast = container.querySelector('.toast');
         if (!toast) {
             toast = document.createElement('div');
             toast.className = 'toast';
-            document.body.appendChild(toast);
+            container.appendChild(toast);
         }
 
         toast.textContent = message;

@@ -27,6 +27,7 @@ body {
     width: 100%;
     max-width: 600px;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 /* Footer Styles */
@@ -38,6 +39,7 @@ footer {
     width: 100%;
     text-align: center;
     padding: 10px;
+    box-sizing: border-box;
     font-size: 0.875rem;
     transition: opacity 0.3s;
 }

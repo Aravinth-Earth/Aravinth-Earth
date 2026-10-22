@@ -38,15 +38,17 @@
         }
     }
     </script>
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="container">
         <header>
             <h1>QR Code Generator</h1>
             <p class="subtitle">Generate QR codes for various purposes - works offline!</p>
         </header>
 
-        <main>
+        <main id="main-content" tabindex="-1">
             <section class="qr-options">
                 <div class="type-selector">
                     <h2>QR Code Type</h2>
@@ -248,8 +250,4 @@
     <script src="../../js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     </body>
-<footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
-    <div style="margin-top: 10px;">
-        <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">About & Privacy</a>
-    </div>
-</footer>
+</html>

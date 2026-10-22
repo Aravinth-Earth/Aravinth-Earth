@@ -47,7 +47,7 @@
             }
             .message {
                 margin: 1rem 0 1.5rem;
-                color: #8b949e;
+                color: #a9b6c8;
                 font-size: 1rem;
                 line-height: 1.6;
             }
@@ -78,9 +78,12 @@
                 border-radius: 1px;
             }
         </style>
-    </head>
+        <link rel="stylesheet" href="/css/a11y.css">
+</head>
     <body>
-        <div class="container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+        <div class="container" role="main" id="main-content" tabindex="-1">
+            <h1 class="visually-hidden">Page not found</h1>
             <div class="code">404</div>
             <div class="divider"></div>
             <p class="message">

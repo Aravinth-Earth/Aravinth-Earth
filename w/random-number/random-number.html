@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../css/about-privacy.css">
     <style>
         body {
-            background: var(--gradient-purple);
+            background: var(--gradient-purple, #0a0c10);
             color: var(--text-primary);
             display: flex;
             flex-direction: column;
@@ -209,9 +209,11 @@
             transform: translateY(0);
         }
     </style>
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
-    <div class="generator-container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="generator-container" role="main" id="main-content" tabindex="-1">
         <div class="generator-top">
             <div class="title-block">
                 <h1>Random Number</h1>
@@ -221,7 +223,7 @@
                 <div class="mode-toggle-container">
                     <label class="switch" title="Toggle mode">
                         <!-- checked = decimal by default -->
-                        <input type="checkbox" id="mode-toggle" checked>
+                        <input type="checkbox" id="mode-toggle" aria-label="Use decimal mode" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -259,8 +261,7 @@
     </div>
 
     <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
-        <a href="../../index.html">
-        </a>
+        <a href="../../index.html">← Back to home</a>
     </footer>
 
     <script>
@@ -517,8 +518,4 @@
     <script src="../../js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     </body>
-<footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
-    <div style="margin-top: 10px;">
-        <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">About & Privacy</a>
-    </div>
-</footer>
+</html>

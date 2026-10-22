@@ -17,13 +17,16 @@
         <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="../../css/about-privacy.css">
         <script src="script.js" defer></script>        
-    </head>
+        <link rel="stylesheet" href="/css/a11y.css">
+</head>
     <body class="pitch-dark">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
         <div style="display: none;">
             <h3>Local Clock</h3>
             shows time in 24 hr format, based on device local time
         </div>
-        <div class="container">
+        <div class="container" role="main" id="main-content" tabindex="-1">
+            <h1 class="visually-hidden">Local Clock</h1>
             <!-- Clock display element -->
             <div id="clock" class="clock"></div>
             
@@ -50,11 +53,10 @@
         </div>
         <!-- JavaScript file -->        
     <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-    </body>
-    <script src="../../js/about-privacy.js" defer></script>
     <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
         <div style="margin-top: 10px;">
             <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">About & Privacy</a>
         </div>
-    </footer>    
+    </footer>
+    </body>
 </html>

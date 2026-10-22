@@ -40,8 +40,10 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="../../css/about-privacy.css">
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="app-header">
         <div class="header-content">
             <h1 class="app-title">Password Generator</h1>
@@ -52,7 +54,7 @@
         <p class="app-subtitle">Generate secure passwords with customizable options</p>
     </header>
 
-    <div class="container">
+    <div class="container" role="main" id="main-content" tabindex="-1">
         <section class="section combined-section">
             <div class="password-container">
                 <div class="password-header">
@@ -105,8 +107,8 @@
                     <div class="options-group full-width">
                         <h3>Length</h3>
                         <div class="length-controls">
-                            <input type="range" id="lengthSlider" min="10" max="512" value="12">
-                            <input type="number" id="length" value="12" min="1" max="512">
+                            <input type="range" id="lengthSlider" min="10" max="512" value="12" aria-label="Password length">
+                            <input type="number" id="length" value="12" min="1" max="512" aria-label="Password length value">
                         </div>
                     </div>
 
@@ -122,11 +124,11 @@
 
                     <div class="options-group" id="symbolLevels" style="display: none;">
                         <h3>Symbol Types</h3>
-                        <div><input type="radio" name="symbolLevel" value="basic" checked> Basic (!@#$%^&*)</div>
-                        <div><input type="radio" name="symbolLevel" value="extended"> Extended (includes Basic + {}[]()\/'"~,;:.<>)</div>
-                        <div><input type="radio" name="symbolLevel" value="advanced"> Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</div>
-                        <div><input type="radio" name="symbolLevel" value="ascii"> Full ASCII (includes all ASCII chars from 32-255)</div>
-                        <div><input type="radio" name="symbolLevel" value="custom"> Custom Symbols
+                        <div><input type="radio" name="symbolLevel" value="basic" aria-label="Basic symbols" checked> Basic (!@#$%^&*)</div>
+                        <div><input type="radio" name="symbolLevel" value="extended" aria-label="Extended symbols"> Extended (includes Basic + {}[]()\/'"~,;:.<>)</div>
+                        <div><input type="radio" name="symbolLevel" value="advanced" aria-label="Advanced symbols"> Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</div>
+                        <div><input type="radio" name="symbolLevel" value="ascii" aria-label="Full ASCII symbols"> Full ASCII (includes all ASCII chars from 32-255)</div>
+                        <div><input type="radio" name="symbolLevel" value="custom" aria-label="Custom symbols"> Custom Symbols
                             <div id="customSymbolsSection" style="display: none;">
                                 <div class="custom-symbols-input">
                                     <label for="includeSymbols">Custom symbols:</label>
@@ -210,12 +212,7 @@
     </div>
 
     <footer style="display: flex; justify-content: center; width: 100%;">
-        <div class="visitor-badge">
-            <a href="https://www.332321.xyz/index.html">
-                     alt="Visitor Badge"
-                     loading="lazy" fetchpriority="low">
-            </a>
-        </div>
+        <a href="javascript:void(0)" class="about-btn" style="color: var(--text-secondary); font-size: 1rem;" onclick="window.openAboutModal()">About &amp; Privacy</a>
     </footer>
 
     <script src="password-generator.js"></script>
@@ -223,8 +220,4 @@
     <script src="../../js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     </body>
-<footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
-    <div style="margin-top: 10px;">
-        <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">About & Privacy</a>
-    </div>
-</footer>
+</html>

@@ -51,8 +51,8 @@ textarea{resize:vertical;font-family:monospace}
 <div class="card" id="encryptCard">
 <h2>Encrypt</h2>
 <div class="param-row">
-<div><label>Iterations</label><select id="iterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
-<div><label>Hash</label><select id="hash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+<div><label for="iterations">Iterations</label><select id="iterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label for="hash">Hash</label><select id="hash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
 </div>
 <textarea id="plaintext" rows="4" placeholder="Enter message to encrypt..."></textarea>
 <input type="password" id="encPwd" placeholder="Password">
@@ -69,8 +69,8 @@ textarea{resize:vertical;font-family:monospace}
 <div class="card" id="decryptCard">
 <h2>Decrypt</h2>
 <div class="param-row">
-<div><label>Iterations</label><select id="decIterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
-<div><label>Hash</label><select id="decHash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+<div><label for="decIterations">Iterations</label><select id="decIterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label for="decHash">Hash</label><select id="decHash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
 </div>
 <textarea id="ciphertext" rows="4" placeholder="Paste encrypted text here..."></textarea>
 <input type="password" id="decPwd" placeholder="Password">

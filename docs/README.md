@@ -1,3 +1,10 @@
+<!--
+  This file deliberately lives in docs/ rather than the repository root.
+  This repository is named after the account (Aravinth-Earth/Aravinth-Earth),
+  so a root README.md is rendered as the GitHub profile README. Keep site
+  documentation here; GitHub still shows it on the repository page.
+-->
+
 # Aravinth's Site
 
 Personal site and tool collection for [Aravinth](https://www.332321.xyz) — a builder of tools, games, and privacy-first software.

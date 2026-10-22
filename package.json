@@ -1,5 +1,19 @@
 {
-  "devDependencies": {
-    "cypress": "^15.13.0"
+  "name": "aravinth-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site and tool collection for Aravinth. Static HTML/CSS/JS, no build step.",
+  "scripts": {
+    "sitemap": "node scripts/gen-sitemap.js",
+    "check": "node scripts/gen-sitemap.js --check && node scripts/check-links.js && node scripts/check-headings.js && node scripts/check-privacy.js && node scripts/check-privacy-storage.js && node scripts/check-social.js && node scripts/check-labels.js && node scripts/check-structure.js && node scripts/check-assets.js && node scripts/sw-logic-test.js",
+    "check:links": "node scripts/check-links.js",
+    "check:headings": "node scripts/check-headings.js",
+    "check:privacy": "node scripts/check-privacy.js",
+    "check:privacy-storage": "node scripts/check-privacy-storage.js",
+    "check:social": "node scripts/check-social.js",
+    "check:labels": "node scripts/check-labels.js",
+    "check:structure": "node scripts/check-structure.js",
+    "check:assets": "node scripts/check-assets.js",
+    "shell": "node scripts/apply-shell.js"
   }
 }

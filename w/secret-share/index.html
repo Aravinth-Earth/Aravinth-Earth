@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secret Share — Encrypted Message Sharing</title>
 
-    <meta property="og:title" content="Secret Share — Aravinth" />
+    <meta property="og:title" content="Secret Share — Encrypted Message Sharing" />
     <meta property="og:description" content="Encrypt text with a password. Both key and cipher needed to decrypt. Works entirely in-browser." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Secret Share — Aravinth" />
+    <meta name="twitter:title" content="Secret Share — Encrypted Message Sharing" />
     <meta name="twitter:description" content="Encrypt text with a password. Both key and cipher needed to decrypt. Works entirely in-browser." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Encrypt text with a password. Both key and cipher needed to decrypt. Works entirely in-browser." />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -42,48 +42,93 @@ textarea{resize:vertical;font-family:monospace}
 .param-row label{font-size:0.8rem;color:#9aa7b8}
 .timer{font-size:0.8rem;color:#9aa7b8;margin-bottom:0.5rem;min-height:1.2em}
 </style>
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/secret-share/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/secret-share/" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="container" role="main" id="main-content" tabindex="-1">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div class="container" id="main-content" tabindex="-1" role="main">
 <h1>Secret Share</h1>
 <p class="sub">Encrypt messages in your browser. Nothing leaves this device. Uses AES-GCM + PBKDF2 via Web Crypto API.</p>
 
 <div class="card" id="encryptCard">
 <h2>Encrypt</h2>
 <div class="param-row">
-<div><label for="iterations">Iterations</label><select id="iterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
-<div><label for="hash">Hash</label><select id="hash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+<div><label for="iterations">Encryption iterations</label><select id="iterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label for="hash">Encryption hash</label><select id="hash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
 </div>
+<label for="plaintext">Message to encrypt</label>
 <textarea id="plaintext" rows="4" placeholder="Enter message to encrypt..."></textarea>
+<label for="encPwd">Encryption password</label>
 <input type="password" id="encPwd" placeholder="Password">
+<label for="encSalt">Encryption salt phrase</label>
 <input type="text" id="encSalt" placeholder="Salt phrase" value="shared-secret">
-<div class="timer" id="encTimer"></div>
+<div class="timer" id="encTimer" role="status"></div>
 <div class="btn-group">
 <button class="btn btn-primary" onclick="doEncrypt()">Encrypt</button>
 <button class="btn btn-secondary" onclick="clearEncrypt()">Clear</button>
 </div>
 <div class="result-box" id="encResult"><div class="label">Encrypted text (share this):</div><div id="encOutput"></div><button class="btn btn-secondary" style="margin-top:0.5rem;width:100%" onclick="copyText('encOutput')">Copy</button></div>
-<div class="error-box" id="encError"></div>
+<div class="error-box" id="encError" role="alert"></div>
 </div>
 
 <div class="card" id="decryptCard">
 <h2>Decrypt</h2>
 <div class="param-row">
-<div><label for="decIterations">Iterations</label><select id="decIterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
-<div><label for="decHash">Hash</label><select id="decHash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
+<div><label for="decIterations">Decryption iterations</label><select id="decIterations"><option value="600000">600K (slow, secure)</option><option value="350000" selected>350K (recommended)</option><option value="100000">100K (faster)</option></select></div>
+<div><label for="decHash">Decryption hash</label><select id="decHash"><option value="SHA-512">SHA-512</option><option value="SHA-384">SHA-384</option><option value="SHA-256" selected>SHA-256</option></select></div>
 </div>
+<label for="ciphertext">Encrypted text to decrypt</label>
 <textarea id="ciphertext" rows="4" placeholder="Paste encrypted text here..."></textarea>
+<label for="decPwd">Decryption password</label>
 <input type="password" id="decPwd" placeholder="Password">
+<label for="decSalt">Decryption salt phrase</label>
 <input type="text" id="decSalt" placeholder="Salt phrase" value="shared-secret">
-<div class="timer" id="decTimer"></div>
+<div class="timer" id="decTimer" role="status"></div>
 <div class="btn-group">
 <button class="btn btn-primary" onclick="doDecrypt()">Decrypt</button>
 <button class="btn btn-secondary" onclick="clearDecrypt()">Clear</button>
 </div>
 <div class="result-box" id="decResult"><div class="label">Decrypted message:</div><div id="decOutput"></div><button class="btn btn-secondary" style="margin-top:0.5rem;width:100%" onclick="copyText('decOutput')">Copy</button></div>
-<div class="error-box" id="decError"></div>
+<div class="error-box" id="decError" role="alert"></div>
 </div>
 
 </div>
@@ -168,5 +213,14 @@ async function copyText(id){
 }
 </script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

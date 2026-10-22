@@ -4,19 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:title" content="Timeline Planner — Aravinth" />
+    <meta property="og:title" content="Timeline Planner — Reverse Planning Tool" />
     <meta property="og:description" content="Reverse timeline planning tool" />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Timeline Planner — Aravinth" />
+    <meta name="twitter:title" content="Timeline Planner — Reverse Planning Tool" />
     <meta name="twitter:description" content="Reverse timeline planning tool" />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Reverse timeline planning tool">
 <title>Timeline Planner — Reverse Planning Tool</title>
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
 <link rel="stylesheet" href="styles.css">
-<link rel="prefetch" href="/index.html">
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/reverse-planning/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/reverse-planning/" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -42,7 +80,7 @@
 <main id="main-content" tabindex="-1">
 <section id="input-section" aria-label="Timeline Input">
 <h2>Plan Your Timeline</h2>
-<form id="timeline-form">
+<form id="timeline-form" onsubmit="return false;">
 <label for="event-name">Event Name (optional):</label>
 <input type="text" id="event-name" name="eventName">
 <label for="target-end-time">Target End Time:</label>
@@ -50,8 +88,8 @@
 <div id="events-container">
 <h3>Events</h3>
 <div class="event">
-<input type="text" name="eventName" placeholder="Name" required>
-<input type="number" name="eventDuration" placeholder="Mins" min="1" required>
+<input type="text" name="eventName" placeholder="Name" required aria-label="Event name">
+<input type="number" name="eventDuration" placeholder="Mins" min="1" required aria-label="Event duration in minutes">
 <button type="button" class="move-up" aria-label="Move Up">⬆️</button>
 <button type="button" class="move-down" aria-label="Move Down">⬇️</button>
 <button type="button" class="remove-event" aria-label="Remove">🗑️</button>
@@ -71,7 +109,59 @@
 </main>
 <input type="file" id="load-plan" accept=".json" hidden aria-label="Load Plan">
 <script src="script.js" type="module"></script>
+<!--
+    The event rows are built by script.js, so the inputs inside them cannot
+    be given a name in the markup. A placeholder is not an accessible name,
+    so every event input is named here instead -- both the one in the
+    template and the ones the script creates.
+-->
+<script>
+(function () {
+    function labelEventInputs(root) {
+        var names = root.querySelectorAll('input[name="eventName"]');
+        for (var i = 0; i < names.length; i++) {
+            if (!names[i].getAttribute('aria-label')) {
+                names[i].setAttribute('aria-label', 'Event name');
+            }
+        }
+        var durations = root.querySelectorAll('input[name="eventDuration"]');
+        for (var j = 0; j < durations.length; j++) {
+            if (!durations[j].getAttribute('aria-label')) {
+                durations[j].setAttribute('aria-label', 'Event duration in minutes');
+            }
+        }
+    }
+
+    function start() {
+        var container = document.getElementById('events-container');
+        if (!container) {
+            return;
+        }
+        labelEventInputs(document);
+        if (typeof MutationObserver === 'function') {
+            new MutationObserver(function () {
+                labelEventInputs(container);
+            }).observe(container, { childList: true, subtree: true });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
+</script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/theme-switcher.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
 </footer>

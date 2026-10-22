@@ -1,360 +1,295 @@
-/* ===== THEME SWITCHER UI ===== */
-.theme-switcher {
-    position: fixed;
-    bottom: 20px;
-    right: 72px;
-    z-index: 1000;
-}
+/* ==========================================================================
+   themes.css — the theme layer for 332321.xyz
+   ==========================================================================
 
-.theme-gear {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--bg-secondary, #121620);
-    border: 1px solid var(--border, rgba(88,166,255,0.15));
-    color: var(--text-secondary, #8b949e);
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s, transform 0.3s;
-    opacity: 0.6;
-    line-height: 1;
-}
+   WHAT THIS FILE IS
+   Pure token remapping. A theme only re-declares the 17 semantic tokens
+   listed below; it never styles a component. Components read tokens, so a
+   theme change is a single variable swap and the 10 palettes stay in sync
+   automatically.
 
-.theme-gear:hover {
-    opacity: 1;
-}
+   THE THEME CONTRACT
+   Every [data-theme="…"] block re-maps EXACTLY these 17 tokens, in this
+   order, so all 10 themes read as one family:
 
-.theme-gear[aria-expanded="true"] {
-    transform: rotate(90deg);
-    opacity: 1;
-}
+       --bg-primary    --bg-secondary   --bg-elevated   --bg-inset
+       --bg-hover      --bg-gradient-end
+       --text-primary  --text-secondary --text-muted
+       --accent        --accent-hover   --accent-contrast
+       --accent-alt
+       --border        --border-strong
+       --success       --success-text
 
-.theme-dropdown {
-    position: absolute;
-    bottom: 52px;
-    right: 0;
-    background: var(--bg-secondary, #121620);
-    border: 1px solid var(--border, rgba(88,166,255,0.15));
-    border-radius: 8px;
-    padding: 6px;
-    min-width: 160px;
-    display: none;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-}
+   Everything else (--accent-soft, --success-soft, --focus-ring, …) is
+   DERIVED in tokens.css §3 and therefore follows along automatically.
 
-.theme-dropdown.open {
-    display: block;
-}
+   THEME KEYS ARE A CONTRACT WITH js/theme-switcher.js
+   The `data-theme` values below are the exact keys the switcher writes:
+       current, amber, teal, charcoal, greenish, colorful, sunset, nord,
+       cyberpunk, light
+   Do not rename, reorder into a different namespace, or remove any of them.
+   `light` is the tenth key: it used to be a `prefers-color-scheme: light`
+   fallback, and it is a first-class theme now so that it can be applied
+   BEFORE the first paint (see the block at the bottom of this file).
 
-.theme-option {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    background: none;
-    border: none;
-    color: var(--text-primary, #c9d1d9);
-    font-size: 0.85rem;
-    text-align: left;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background 0.15s;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+   LOAD ORDER (hard requirement — themes.css MUST be the last stylesheet):
+       <link rel="stylesheet" href="css/tokens.css">
+       <link rel="stylesheet" href="css/base.css">
+       <link rel="stylesheet" href="css/style.css">          (homepage only)
+       <link rel="stylesheet" href="css/about-privacy.css">  (homepage only)
+       <link rel="stylesheet" href="css/themes.css">         <-- LAST
+   The theme switcher UI (the gear + dropdown) lives in base.css, because
+   it is a component, not a theme.
+   ========================================================================== */
 
-.theme-option:hover {
-    background: rgba(255,255,255,0.06);
-}
-
-.theme-active {
-    background: rgba(255,255,255,0.08);
-    font-weight: 600;
-}
-
-.theme-active::before {
-    content: '●';
-    margin-right: 6px;
-    font-size: 0.7em;
-}
-
-.theme-random {
-    border-bottom: 1px solid var(--border, rgba(88,166,255,0.15));
-    margin-bottom: 4px;
-    padding-bottom: 10px;
-    color: var(--text-secondary, #8b949e);
-}
-
-/* ===== THEME PALETTE OVERRIDES ===== */
-/* Each [data-theme="X"] overrides CSS variables + hardcoded colors */
-
-/* --- Current (Blue) --- */
+/* --------------------------------------------------------------------------
+   current — the default "GitHub blue" palette
+   -------------------------------------------------------------------------- */
 [data-theme="current"] {
-    --bg-primary: #0a0c10;
-    --bg-secondary: #121620;
-    --text-primary: #c9d1d9;
-    --text-secondary: #8b949e;
-    --accent: #58a6ff;
-    --border: rgba(88, 166, 255, 0.15);
+  --bg-primary: #0a0c10;
+  --bg-secondary: #121620;
+  --bg-elevated: #0d1117;
+  --bg-inset: #0d1117;
+  --bg-hover: rgba(22, 27, 34, 0.85);
+  --text-primary: #c9d1d9;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --accent-contrast: #0a0c10;
+  --accent-alt: #a371f7;
+  --border: rgba(88, 166, 255, 0.15);
+  --border-strong: #30363d;
+  --bg-gradient-end: rgba(13, 17, 23, 0.95);
+  --success: #26a641;
+  --success-text: #7ee787;
 }
 
-[data-theme="current"] a:hover { color: #79c0ff; }
-[data-theme="current"] .work-card:hover {
-    border-color: rgba(88, 166, 255, 0.35);
-    background: rgba(22, 27, 34, 0.85);
-}
-[data-theme="current"] .connect-link:hover {
-    border-color: rgba(88, 166, 255, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="current"] .card-tag-live {
-    background: rgba(38, 166, 65, 0.15);
-    color: #7ee787;
-    border: 1px solid rgba(38, 166, 65, 0.25);
-}
-[data-theme="current"] .card-tag-repo {
-    background: rgba(163, 113, 247, 0.15);
-    color: #a371f7;
-    border: 1px solid rgba(163, 113, 247, 0.25);
-}
-
-/* --- Midnight Amber --- */
+/* --------------------------------------------------------------------------
+   amber — midnight amber
+   -------------------------------------------------------------------------- */
 [data-theme="amber"] {
-    --bg-primary: #0D1117;
-    --bg-secondary: #161B22;
-    --text-primary: #E6EDF3;
-    --text-secondary: #8B949E;
-    --accent: #F0883E;
-    --border: rgba(240, 136, 62, 0.15);
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-elevated: #1c2128;
+  --bg-inset: #0d1117;
+  --bg-hover: rgba(28, 33, 40, 0.85);
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent: #f0883e;
+  --accent-hover: #f0a06e;
+  --accent-contrast: #0d1117;
+  --accent-alt: #f0883e;
+  --border: rgba(240, 136, 62, 0.15);
+  --border-strong: #30363d;
+  --bg-gradient-end: rgba(28, 33, 40, 0.95);
+  --success: #3fb950;
+  --success-text: #3fb950;
 }
 
-[data-theme="amber"] a:hover { color: #F0A06E; }
-[data-theme="amber"] .work-card:hover {
-    border-color: rgba(240, 136, 62, 0.35);
-    background: rgba(28, 33, 40, 0.85);
-}
-[data-theme="amber"] .connect-link:hover {
-    border-color: rgba(240, 136, 62, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="amber"] .card-tag-live {
-    background: rgba(63, 185, 80, 0.15);
-    color: #3FB950;
-    border: 1px solid rgba(63, 185, 80, 0.25);
-}
-[data-theme="amber"] .card-tag-repo {
-    background: rgba(240, 136, 62, 0.15);
-    color: #F0883E;
-    border: 1px solid rgba(240, 136, 62, 0.25);
-}
-
-/* --- Deep Teal --- */
+/* --------------------------------------------------------------------------
+   teal — deep teal
+   -------------------------------------------------------------------------- */
 [data-theme="teal"] {
-    --bg-primary: #0B1221;
-    --bg-secondary: #111D2E;
-    --text-primary: #D2E0E8;
-    --text-secondary: #7D8FA0;
-    --accent: #2DD4BF;
-    --border: rgba(45, 212, 191, 0.15);
+  --bg-primary: #0b1221;
+  --bg-secondary: #111d2e;
+  --bg-elevated: #16243a;
+  --bg-inset: #0b1221;
+  --bg-hover: rgba(17, 29, 46, 0.85);
+  --text-primary: #d2e0e8;
+  --text-secondary: #7d8fa0;
+  --text-muted: #6b7c8d;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-contrast: #0b1221;
+  --accent-alt: #818cf8;
+  --border: rgba(45, 212, 191, 0.15);
+  --border-strong: #26364b;
+  --bg-gradient-end: rgba(22, 36, 58, 0.95);
+  --success: #34d399;
+  --success-text: #34d399;
 }
 
-[data-theme="teal"] a:hover { color: #5EEAD4; }
-[data-theme="teal"] .work-card:hover {
-    border-color: rgba(45, 212, 191, 0.35);
-    background: rgba(17, 29, 46, 0.85);
-}
-[data-theme="teal"] .connect-link:hover {
-    border-color: rgba(45, 212, 191, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="teal"] .card-tag-live {
-    background: rgba(52, 211, 153, 0.15);
-    color: #34D399;
-    border: 1px solid rgba(52, 211, 153, 0.25);
-}
-[data-theme="teal"] .card-tag-repo {
-    background: rgba(129, 140, 248, 0.15);
-    color: #818CF8;
-    border: 1px solid rgba(129, 140, 248, 0.25);
-}
-
-/* --- Soft Charcoal --- */
+/* --------------------------------------------------------------------------
+   charcoal — soft charcoal
+   -------------------------------------------------------------------------- */
 [data-theme="charcoal"] {
-    --bg-primary: #111318;
-    --bg-secondary: #1A1D24;
-    --text-primary: #E2E4E9;
-    --text-secondary: #9CA3AF;
-    --accent: #60A5FA;
-    --border: rgba(96, 165, 250, 0.15);
+  --bg-primary: #111318;
+  --bg-secondary: #1a1d24;
+  --bg-elevated: #22262e;
+  --bg-inset: #111318;
+  --bg-hover: rgba(34, 38, 46, 0.85);
+  --text-primary: #e2e4e9;
+  --text-secondary: #9ca3af;
+  --text-muted: #7c838f;
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-contrast: #111318;
+  --accent-alt: #f97316;
+  --border: rgba(96, 165, 250, 0.15);
+  --border-strong: #333842;
+  --bg-gradient-end: rgba(34, 38, 46, 0.95);
+  --success: #22c55e;
+  --success-text: #22c55e;
 }
 
-[data-theme="charcoal"] a:hover { color: #93C5FD; }
-[data-theme="charcoal"] .work-card:hover {
-    border-color: rgba(96, 165, 250, 0.35);
-    background: rgba(34, 38, 46, 0.85);
-}
-[data-theme="charcoal"] .connect-link:hover {
-    border-color: rgba(96, 165, 250, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="charcoal"] .card-tag-live {
-    background: rgba(34, 197, 94, 0.15);
-    color: #22C55E;
-    border: 1px solid rgba(34, 197, 94, 0.25);
-}
-[data-theme="charcoal"] .card-tag-repo {
-    background: rgba(249, 115, 22, 0.15);
-    color: #F97316;
-    border: 1px solid rgba(249, 115, 22, 0.25);
-}
-
-/* --- Greenish --- */
+/* --------------------------------------------------------------------------
+   greenish — greenish
+   -------------------------------------------------------------------------- */
 [data-theme="greenish"] {
-    --bg-primary: #0B1A0F;
-    --bg-secondary: #122118;
-    --text-primary: #D4E8D8;
-    --text-secondary: #7A9A82;
-    --accent: #4ADE80;
-    --border: rgba(74, 222, 128, 0.15);
+  --bg-primary: #0b1a0f;
+  --bg-secondary: #122118;
+  --bg-elevated: #1a2c20;
+  --bg-inset: #0b1a0f;
+  --bg-hover: rgba(18, 33, 24, 0.85);
+  --text-primary: #d4e8d8;
+  --text-secondary: #7a9a82;
+  --text-muted: #5f7a66;
+  --accent: #4ade80;
+  --accent-hover: #86efac;
+  --accent-contrast: #0b1a0f;
+  --accent-alt: #4ade80;
+  --border: rgba(74, 222, 128, 0.15);
+  --border-strong: #234030;
+  --bg-gradient-end: rgba(26, 44, 32, 0.95);
+  --success: #22c55e;
+  --success-text: #22c55e;
 }
 
-[data-theme="greenish"] a:hover { color: #86EFAC; }
-[data-theme="greenish"] .work-card:hover {
-    border-color: rgba(74, 222, 128, 0.35);
-    background: rgba(18, 33, 24, 0.85);
-}
-[data-theme="greenish"] .connect-link:hover {
-    border-color: rgba(74, 222, 128, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="greenish"] .card-tag-live {
-    background: rgba(34, 197, 94, 0.15);
-    color: #22C55E;
-    border: 1px solid rgba(34, 197, 94, 0.25);
-}
-[data-theme="greenish"] .card-tag-repo {
-    background: rgba(74, 222, 128, 0.15);
-    color: #4ADE80;
-    border: 1px solid rgba(74, 222, 128, 0.25);
-}
-
-/* --- Colorful --- */
+/* --------------------------------------------------------------------------
+   colorful — colorful
+   -------------------------------------------------------------------------- */
 [data-theme="colorful"] {
-    --bg-primary: #0F0F1A;
-    --bg-secondary: #1A1A2E;
-    --text-primary: #EAEAFF;
-    --text-secondary: #9595B5;
-    --accent: #FF6B9D;
-    --border: rgba(255, 107, 157, 0.15);
+  --bg-primary: #0f0f1a;
+  --bg-secondary: #1a1a2e;
+  --bg-elevated: #232340;
+  --bg-inset: #0f0f1a;
+  --bg-hover: rgba(26, 26, 46, 0.85);
+  --text-primary: #eaeaFF;
+  --text-secondary: #9595b5;
+  --text-muted: #75759a;
+  --accent: #ff6b9d;
+  --accent-hover: #ff9ec6;
+  --accent-contrast: #0f0f1a;
+  --accent-alt: #986ff7;
+  --border: rgba(255, 107, 157, 0.15);
+  --border-strong: #2e2e4a;
+  --bg-gradient-end: rgba(35, 35, 64, 0.95);
+  --success: #00ff88;
+  --success-text: #00ff88;
 }
 
-[data-theme="colorful"] a:hover { color: #FF9EC6; }
-[data-theme="colorful"] .work-card:hover {
-    border-color: rgba(255, 107, 157, 0.35);
-    background: rgba(26, 26, 46, 0.85);
-}
-[data-theme="colorful"] .connect-link:hover {
-    border-color: rgba(255, 107, 157, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="colorful"] .card-tag-live {
-    background: rgba(0, 255, 136, 0.15);
-    color: #00FF88;
-    border: 1px solid rgba(0, 255, 136, 0.25);
-}
-[data-theme="colorful"] .card-tag-repo {
-    background: rgba(139, 92, 246, 0.15);
-    color: #8B5CF6;
-    border: 1px solid rgba(139, 92, 246, 0.25);
-}
-
-/* --- Sunset --- */
+/* --------------------------------------------------------------------------
+   sunset — sunset
+   -------------------------------------------------------------------------- */
 [data-theme="sunset"] {
-    --bg-primary: #1A0F1E;
-    --bg-secondary: #261430;
-    --text-primary: #F0E0F5;
-    --text-secondary: #A080B0;
-    --accent: #F472B6;
-    --border: rgba(244, 114, 182, 0.15);
+  --bg-primary: #1a0f1e;
+  --bg-secondary: #261430;
+  --bg-elevated: #331a40;
+  --bg-inset: #1a0f1e;
+  --bg-hover: rgba(38, 20, 48, 0.85);
+  --text-primary: #f0e0f5;
+  --text-secondary: #a080b0;
+  --text-muted: #806690;
+  --accent: #f472b6;
+  --accent-hover: #f9a8d4;
+  --accent-contrast: #1a0f1e;
+  --accent-alt: #fb923c;
+  --border: rgba(244, 114, 182, 0.15);
+  --border-strong: #3d2449;
+  --bg-gradient-end: rgba(51, 26, 64, 0.95);
+  --success: #fbbf24;
+  --success-text: #fbbf24;
 }
 
-[data-theme="sunset"] a:hover { color: #F9A8D4; }
-[data-theme="sunset"] .work-card:hover {
-    border-color: rgba(244, 114, 182, 0.35);
-    background: rgba(38, 20, 48, 0.85);
-}
-[data-theme="sunset"] .connect-link:hover {
-    border-color: rgba(244, 114, 182, 0.35);
-    color: var(--text-primary);
-}
-[data-theme="sunset"] .card-tag-live {
-    background: rgba(251, 191, 36, 0.15);
-    color: #FBBF24;
-    border: 1px solid rgba(251, 191, 36, 0.25);
-}
-[data-theme="sunset"] .card-tag-repo {
-    background: rgba(251, 146, 60, 0.15);
-    color: #FB923C;
-    border: 1px solid rgba(251, 146, 60, 0.25);
-}
-
-/* --- Nord --- */
+/* --------------------------------------------------------------------------
+   nord — nord
+   -------------------------------------------------------------------------- */
 [data-theme="nord"] {
-    --bg-primary: #2E3440;
-    --bg-secondary: #3B4252;
-    --text-primary: #ECEFF4;
-    --text-secondary: #D8DEE9;
-    --accent: #88C0D0;
-    --border: rgba(136, 192, 208, 0.2);
+  --bg-primary: #2e3440;
+  --bg-secondary: #3b4252;
+  --bg-elevated: #434c5e;
+  --bg-inset: #2e3440;
+  --bg-hover: rgba(59, 66, 82, 0.85);
+  --text-primary: #eceff4;
+  --text-secondary: #d8dee9;
+  --text-muted: #9aa5b5;
+  --accent: #88c0d0;
+  --accent-hover: #8fbcbb;
+  --accent-contrast: #2e3440;
+  --accent-alt: #c8adc3;
+  --border: rgba(136, 192, 208, 0.2);
+  --border-strong: #4c566a;
+  --bg-gradient-end: rgba(67, 76, 94, 0.95);
+  --success: #a3be8c;
+  --success-text: #a3be8c;
 }
 
-[data-theme="nord"] a:hover { color: #8FBCBB; }
-[data-theme="nord"] .work-card:hover {
-    border-color: rgba(136, 192, 208, 0.4);
-    background: rgba(59, 66, 82, 0.85);
-}
-[data-theme="nord"] .connect-link:hover {
-    border-color: rgba(136, 192, 208, 0.4);
-    color: var(--text-primary);
-}
-[data-theme="nord"] .card-tag-live {
-    background: rgba(163, 190, 140, 0.2);
-    color: #A3BE8C;
-    border: 1px solid rgba(163, 190, 140, 0.3);
-}
-[data-theme="nord"] .card-tag-repo {
-    background: rgba(180, 142, 173, 0.2);
-    color: #B48EAD;
-    border: 1px solid rgba(180, 142, 173, 0.3);
-}
-
-/* --- Cyberpunk --- */
+/* --------------------------------------------------------------------------
+   cyberpunk — cyberpunk
+   -------------------------------------------------------------------------- */
 [data-theme="cyberpunk"] {
-    --bg-primary: #0A0A0F;
-    --bg-secondary: #12121F;
-    --text-primary: #F0F0FF;
-    --text-secondary: #8888AA;
-    --accent: #00FFCC;
-    --border: rgba(0, 255, 204, 0.15);
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121f;
+  --bg-elevated: #1b1b2e;
+  --bg-inset: #0a0a0f;
+  --bg-hover: rgba(18, 18, 31, 0.85);
+  --text-primary: #f0f0ff;
+  --text-secondary: #8888aa;
+  --text-muted: #6b6b8a;
+  --accent: #00ffcc;
+  --accent-hover: #66ffd9;
+  --accent-contrast: #0a0a0f;
+  --accent-alt: #ffff00;
+  --border: rgba(0, 255, 204, 0.15);
+  --border-strong: #262640;
+  --bg-gradient-end: rgba(27, 27, 46, 0.95);
+  --success: #ff0066;
+  --success-text: #ff0066;
 }
 
-[data-theme="cyberpunk"] a:hover { color: #66FFD9; }
-[data-theme="cyberpunk"] .work-card:hover {
-    border-color: rgba(0, 255, 204, 0.4);
-    background: rgba(18, 18, 31, 0.85);
-}
-[data-theme="cyberpunk"] .connect-link:hover {
-    border-color: rgba(0, 255, 204, 0.4);
-    color: var(--text-primary);
-}
-[data-theme="cyberpunk"] .card-tag-live {
-    background: rgba(255, 0, 102, 0.15);
-    color: #FF0066;
-    border: 1px solid rgba(255, 0, 102, 0.3);
-}
-[data-theme="cyberpunk"] .card-tag-repo {
-    background: rgba(255, 255, 0, 0.1);
-    color: #FFFF00;
-    border: 1px solid rgba(255, 255, 0, 0.25);
+/* --------------------------------------------------------------------------
+   light — the light palette
+   --------------------------------------------------------------------------
+   This palette used to live in a `prefers-color-scheme: light` media query
+   that only applied while <html> carried no data-theme attribute. That was
+   a trap: the inline <head> snippet only sets data-theme when a theme has
+   been SAVED, so a first-time visitor with an OS light preference painted
+   the site in light colours -- and the page gradient ran white -> near
+   black -- until js/theme-switcher.js ran on DOMContentLoaded.
+
+   A light palette is a normal theme now, so the same inline snippet can
+   set data-theme="light" before the first paint and the flash is gone.
+   That is also why --bg-gradient-end is a LIGHT value here: the gradient
+   is white -> #f6f8fa, never white -> near-black.
+
+   Contrast (WCAG 2.x, measured against this palette):
+       --text-primary  on --bg-primary   15.8:1   (body text)
+       --text-secondary on --bg-primary   6.1:1   (secondary text)
+       --text-muted    on --bg-inset      4.5:1   (placeholders)
+       --accent        on --bg-primary    6.3:1   (links, focus ring)
+       --accent-contrast on --accent       6.3:1  (.btn-primary label)
+       --accent-alt    on --accent-alt-soft 5.2:1 (.card-tag-repo)
+       --success-text  on --success-soft  6.0:1   (.card-tag-live)
+       --border-strong on --bg-inset      3.1:1   (control boundary)
+   -------------------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-elevated: #ffffff;
+  --bg-inset: #f6f8fa;
+  --bg-hover: rgba(31, 35, 40, 0.06);
+  --text-primary: #1f2328;
+  --text-secondary: #59636e;
+  --text-muted: #6a737d;
+  --accent: #0a5cc4;
+  --accent-hover: #0550ae;
+  --accent-contrast: #ffffff;
+  --accent-alt: #6f42c1;
+  --border: rgba(10, 92, 196, 0.15);
+  --border-strong: #868e99;
+  --bg-gradient-end: rgba(246, 248, 250, 0.95);
+  --success: #1a7f37;
+  --success-text: #116329;
 }

@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [site, main, master, 'feat/**', 'fix/**']
+  pull_request:
+    branches: [site, main, master]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref -- this repo sees frequent pushes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Browser, device and end-to-end tests are not here: they test the deployed
+# site, not this source tree, and they live in the private test repository
+# (test-my-site-cypress). This workflow only runs checks that are provable
+# from the repository contents.
+
+jobs:
+  # Fast, dependency-free checks. These run on every push and are what
+  # actually protect the site from the class of bugs we hit before:
+  # broken internal links, stale sitemaps, and pages missing a heading.
+  static-checks:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate sitemap is current
+        run: node scripts/gen-sitemap.js --check
+
+      - name: Check internal links resolve
+        run: node scripts/check-links.js
+
+      - name: Check every page has exactly one h1
+        run: node scripts/check-headings.js
+
+      - name: Check the privacy manifest matches reality
+        run: node scripts/check-privacy.js
+
+      - name: Check the privacy manifest's storage claims
+        # The egress side and the storage side are separate claims. A key
+        # name that has gone stale is just as wrong as a missing third
+        # party, and it is the one a reader is more likely to act on.
+        run: node scripts/check-privacy-storage.js
+
+      - name: Check the social preview tags
+        # Social cards are rendered by other people's servers, which read
+        # the meta tags and nothing else. A relative og:image or a missing
+        # tag produces a text-only link card, and nothing else here would
+        # notice.
+        run: node scripts/check-social.js
+
+      - name: Check every form control has an accessible name
+        # The QA Playground fixtures deliberately contain unlabelled inputs
+        # -- they exist to be tested against -- so they are excluded.
+        run: node scripts/check-labels.js
+
+      - name: Check the document structure
+        # Heading outline, duplicate ids, alt text, named buttons, and forms
+        # that cannot submit anywhere. The QA Playground fixtures are
+        # excluded -- they contain deliberate defects of exactly these kinds.
+        run: node scripts/check-structure.js
+
+      - name: Test the service worker logic
+        # Runs the worker in a Node VM with a stubbed Cache API. Needs no
+        # browser and no server, so it cannot be made flaky by a busy
+        # machine -- unlike the browser-based suite.
+        run: node scripts/sw-logic-test.js
+
+      - name: Check for secrets / oversized assets
+        run: |
+          node scripts/check-assets.js

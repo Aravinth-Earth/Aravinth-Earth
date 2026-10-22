@@ -5,8 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QA Playground — Accessibility Audit</title>
   <meta name="description" content="Audit a page with deliberate accessibility defects: labels, contrast, keyboard access, heading order and ARIA." />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
   <link rel="stylesheet" href="qa-playground.css">
-  <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/qa-playground/accessibility.html" />
+    <meta property="og:url" content="https://www.332321.xyz/w/qa-playground/accessibility.html" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:site_name" content="Aravinth" />
+    <meta property="og:title" content="QA Playground — Accessibility Audit" />
+    <meta name="twitter:title" content="QA Playground — Accessibility Audit" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:description" content="Audit a page with deliberate accessibility defects: labels, contrast, keyboard access, heading order and ARIA." />
+    <meta name="twitter:description" content="Audit a page with deliberate accessibility defects: labels, contrast, keyboard access, heading order and ARIA." />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
   <main class="container">
@@ -65,5 +111,9 @@
       document.getElementById('fakeResult').textContent = 'Submitted (no form, no validation, no announcement).';
     }
   </script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
 </body>
 </html>

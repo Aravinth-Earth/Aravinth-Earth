@@ -1,0 +1,271 @@
+/* ==========================================================================
+   tokens.css — the single source of design truth for 332321.xyz
+   ==========================================================================
+
+   WHAT THIS FILE IS
+   A global, deliberately LOW-SPECIFICITY layer of CSS custom properties.
+   Any page may link it without fighting its own stylesheet. It defines:
+
+     §1  COLOR PRIMITIVES  raw, context-free palette (--slate-950, --blue-400…)
+     §2  SEMANTIC TOKENS   role-based meaning (--bg-primary, --accent, …)
+     §3  DERIVED TOKENS    tints computed from §2, so themes stay consistent
+     §4  SCALES            spacing, radii, typography, layout, motion
+
+   LOAD ORDER (hard requirement — do not reorder, do not @import):
+       <link rel="stylesheet" href="css/tokens.css">
+       <link rel="stylesheet" href="css/base.css">
+       <link rel="stylesheet" href="css/style.css">          (homepage only)
+       <link rel="stylesheet" href="css/about-privacy.css">  (homepage only)
+       <link rel="stylesheet" href="css/themes.css">         <-- MUST BE LAST
+
+   WHY themes.css MUST BE LAST
+   themes.css only ever re-declares custom properties (per [data-theme]). It
+   has to be the final stylesheet so the re-mapped values beat every consumer
+   of those tokens.
+
+   THE THEME CONTRACT
+   All 10 themes in themes.css re-map exactly the same 17 semantic tokens:
+       --bg-primary   --bg-secondary   --bg-elevated   --bg-inset   --bg-hover
+       --bg-gradient-end
+       --text-primary --text-secondary --text-muted
+       --accent       --accent-hover   --accent-contrast --accent-alt
+       --border       --border-strong
+       --success      --success-text
+   Everything else that differs per theme is DERIVED from those 17 (§3), so a
+   new theme only has to fill in 17 values and the rest follows.
+
+   FALLBACKS
+   Every semantic token below is declared with a fallback, so a page that
+   links ONLY tokens.css (without themes.css) still renders correctly.
+   Consumers elsewhere in the site use the same `var(--token, var(--primitive))`
+   chain, so a missing tokens.css degrades instead of exploding.
+
+   NOTE ON @import
+   There is deliberately no @import anywhere in this codebase. @import
+   serialises the cascade and blocks rendering; every page links each file
+   explicitly instead.
+
+   NOTE ON color-mix()
+   §3 uses color-mix() to derive tints (Chrome 111+, Safari 16.4+, Firefox
+   113+). The percentages are fixed so that the derived value is byte-for-byte
+   the same rgba() the site used to hardcode.
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     §1  COLOR PRIMITIVES
+     Raw, context-free values. A primitive never encodes a role: it is just
+     a colour. Roles live in §2.
+     ====================================================================== */
+
+  /* ---- Neutrals (slate) --------------------------------------------- */
+  --slate-950: #0a0c10;
+  --slate-900: #121620;
+  --slate-850: #161b22;
+  --slate-800: #1c2128;
+  --slate-700: #21262d;
+  --slate-600: #30363d;
+  --slate-500: #484f58;
+  --slate-400: #6e7681;
+  --slate-300: #8b949e;
+  --slate-200: #c9d1d9;
+  --slate-100: #e6edf3;
+  --slate-50: #f0f6fc;
+  --white: #ffffff;
+  --black: #000000;
+
+  /* ---- Accent hues --------------------------------------------------- */
+  --blue-300: #79c0ff;
+  --blue-400: #58a6ff;
+  --blue-500: #388bfd;
+  --blue-600: #1f6feb;
+
+  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+
+  --violet-300: #c9a6ff;
+  --violet-400: #a371f7;
+  --violet-500: #8b5cf6;
+
+  --teal-300: #5eead4;
+  --teal-400: #2dd4bf;
+  --teal-500: #14b8a6;
+
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+
+  --amber-300: #f0a06e;
+  --amber-400: #f0883e;
+  --amber-500: #b45309;
+
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+
+  --pink-300: #f9a8d4;
+  --pink-400: #f472b6;
+
+  --yellow-300: #ffff00;
+  --yellow-400: #fbbf24;
+
+  --cyan-300: #66ffd9;
+  --cyan-400: #00ffcc;
+
+  --magenta-400: #ff0066;
+  --lime-400: #a3be8c;
+
+  --red-400: #ff7b72;
+  --red-500: #f85149;
+
+  /* ---- Nord (official palette) --------------------------------------- */
+  --nord-0: #2e3440;
+  --nord-1: #3b4252;
+  --nord-3: #4c566a;
+  --nord-4: #d8dee9;
+  --nord-6: #eceff4;
+  --nord-8: #88c0d0;
+  --nord-9: #81a1c1;
+  --nord-12: #b48ead;
+  --nord-14: #a3be8c;
+  --nord-15: #ebcb8b;
+
+  /* ---- Status primitives (theme independent) ------------------------- */
+  --success: #3fb950;
+  --success-text: #7ee787;
+  /* Text colour to use ON a --success background. --success is a mid-tone
+     green: white on it fails WCAG AA in most themes, so anything filled
+     with it needs a dark label rather than a white one. */
+  --success-contrast: #0a0c10;
+  --warning: #d29922;
+  --danger: #f85149;
+  --info: #58a6ff;
+
+  /* ======================================================================
+     §2  SEMANTIC TOKENS
+     Role-based meaning. These are the only names components should use.
+     The values below are the DEFAULT (dark, "current") palette; themes.css
+     re-maps them per [data-theme="…"].
+     ====================================================================== */
+
+  /* ---- Surfaces ------------------------------------------------------- */
+  --bg-primary: var(--slate-950, #0a0c10);
+  --bg-secondary: var(--slate-900, #121620);
+  --bg-elevated: var(--slate-850, #161b22);
+  --bg-inset: var(--slate-850, #161b22);
+  --bg-hover: rgba(22, 27, 34, 0.85);
+
+  /* ---- Text ----------------------------------------------------------- */
+  --text-primary: var(--slate-200, #c9d1d9);
+  --text-secondary: var(--slate-300, #8b949e);
+  --text-muted: var(--slate-400, #6e7681);
+  --text-inverse: var(--slate-950, #0a0c10);
+
+  /* ---- Accent --------------------------------------------------------- */
+  --accent: var(--blue-400, #58a6ff);
+  --accent-hover: var(--blue-300, #79c0ff);
+  --accent-contrast: var(--slate-950, #0a0c10);
+  --accent-alt: var(--violet-400, #a371f7);
+
+  /* ---- Borders -------------------------------------------------------- */
+  --border: rgba(88, 166, 255, 0.15);
+  --border-strong: var(--slate-600, #30363d);
+
+  /* ---- Page background gradient --------------------------------------- */
+  /* The far end of the page-wide vertical gradient. It is part of the
+     palette rather than a derived tint: a gradient stop is a visible part of
+     a theme, and keeping it an explicit 8-bit value means the default
+     palette renders bit-for-bit identically to the pre-token stylesheet. */
+  --bg-gradient-end: rgba(13, 17, 23, 0.95);
+
+  /* ======================================================================
+     §3  DERIVED TOKENS
+     Computed from §2, therefore automatically correct for every theme.
+     A theme never sets these by hand.
+     ====================================================================== */
+
+  /* Translucent accent washes */
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --accent-soft-strong: color-mix(in srgb, var(--accent) 20%, transparent);
+  --accent-border-hover: color-mix(in srgb, var(--accent) 35%, transparent);
+
+  /* Translucent secondary-accent washes (the "Repo" tag) */
+  --accent-alt-soft: color-mix(in srgb, var(--accent-alt) 15%, transparent);
+  --accent-alt-border: color-mix(in srgb, var(--accent-alt) 25%, transparent);
+
+  /* Translucent success washes (the "Live" tag) */
+  --success-soft: color-mix(in srgb, var(--success) 15%, transparent);
+  --success-border: color-mix(in srgb, var(--success) 25%, transparent);
+
+  /* Translucent neutral washes (callout panels, inline code) */
+  --surface-wash: color-mix(in srgb, var(--border-strong) 30%, transparent);
+  --surface-wash-soft: color-mix(in srgb, var(--border-strong) 20%, transparent);
+  --code-bg: color-mix(in srgb, var(--text-muted) 40%, transparent);
+
+  /* Page furniture */
+  --focus-ring: var(--accent);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --scrim: rgba(0, 0, 0, 0.7);
+  --wash-hover: rgba(255, 255, 255, 0.06);
+  --wash-active: rgba(255, 255, 255, 0.08);
+
+  /* ======================================================================
+     §4  SCALES
+     ====================================================================== */
+
+  /* ---- Spacing (4px base) --------------------------------------------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+
+  /* ---- Radii ----------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 999px;
+
+  /* ---- Typography ------------------------------------------------------ */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', ui-monospace, SFMono-Regular,
+    Consolas, monospace;
+  --font-tamil: 'Noto Sans Tamil', 'Tamil Sangam MN', 'Tamil Sangam', Latha,
+    'Nirmala UI', sans-serif;
+
+  --font-size-xs: 0.7rem;
+  --font-size-sm: 0.8rem;
+  --font-size-base: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.75rem;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.6;
+
+  /* ---- Layout ---------------------------------------------------------- */
+  --content-max: 72rem;
+  --header-h: 3.5rem;
+
+  /* ---- Z-index layers -------------------------------------------------- */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 500;
+  --z-header: 900;
+  --z-floating: 1000;
+  --z-modal: 10000;
+  --z-toast: 11000;
+
+  /* ---- Motion ---------------------------------------------------------- */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

@@ -69,7 +69,22 @@ body.dark-theme {
     --color-on-secondary: #000000;
 }
 
-body[class*="theme-"] {
+/*
+ * The game's colour themes are namespaced "mg-theme-<name>" (see
+ * script.js). The old hook was "theme-<name>", and the shared theme
+ * picker uses classes like "theme-option" -- "theme-option" CONTAINS the
+ * substring "theme-", so a bare [class*="theme-"] selector also matched
+ * the picker's buttons and painted them with the game's palette. The
+ * "mg-" prefix cannot collide with any of the shared chrome's class
+ * names (.theme-switcher .theme-gear .theme-dropdown .theme-option
+ * .theme-active .theme-random).
+ *
+ * NOTE: "dark-theme" and "light-theme" are a different hook -- the game's
+ * own light/dark toggle, which index.html hardcodes on <body> and on
+ * #main-content. They are matched by exact class selectors, never by a
+ * substring selector, so they cannot match "theme-option" either.
+ */
+body[class*="mg-theme-"] {
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     color: var(--color-text);
 }
@@ -78,7 +93,7 @@ body.game-active footer {
     display: none;
 }
 
-body.theme-green {
+body.mg-theme-green {
     --color-primary: #2ecc71;
     --color-secondary: #27ae60;
     --color-tertiary: #55efc4;
@@ -87,7 +102,7 @@ body.theme-green {
     --color-on-secondary: black;
 }
 
-body.theme-red {
+body.mg-theme-red {
     --color-primary: #e74c3c;
     --color-secondary: #c0392b;
     --color-tertiary: #ff7675;
@@ -97,7 +112,7 @@ body.theme-red {
     --color-action-bg: #ec7063;
 }
 
-body.theme-purple {
+body.mg-theme-purple {
     --color-primary: #9b59b6;
     --color-secondary: #8e44ad;
     --color-tertiary: #be90d4;
@@ -107,7 +122,7 @@ body.theme-purple {
     --color-action-bg: #6f3f83;
 }
 
-body.theme-orange {
+body.mg-theme-orange {
     --color-primary: #e67e22;
     --color-secondary: #d35400;
     --color-tertiary: #f39c12;
@@ -116,7 +131,7 @@ body.theme-orange {
     --color-on-secondary: black;
 }
 
-body.theme-yellow {
+body.mg-theme-yellow {
     --color-primary: #f1c40f;
     --color-secondary: #f39c12;
     --color-tertiary: #f1c40f;
@@ -125,7 +140,7 @@ body.theme-yellow {
     --color-on-secondary: black;
 }
 
-body.theme-pink {
+body.mg-theme-pink {
     --color-primary: #fd79a8;
     --color-secondary: #e84393;
     --color-tertiary: #ff9ff3;
@@ -134,7 +149,7 @@ body.theme-pink {
     --color-on-secondary: black;
 }
 
-body.theme-teal {
+body.mg-theme-teal {
     --color-primary: #1abc9c;
     --color-secondary: #16a085;
     --color-tertiary: #48dbfb;
@@ -143,7 +158,7 @@ body.theme-teal {
     --color-on-secondary: black;
 }
 
-body.theme-brown {
+body.mg-theme-brown {
     --color-primary: #8d6e63;
     --color-secondary: #5d4037;
     --color-tertiary: #a1887f;
@@ -153,7 +168,7 @@ body.theme-brown {
     --color-action-bg: #634d45;
 }
 
-body.theme-gray {
+body.mg-theme-gray {
     --color-primary: #95a5a6;
     --color-secondary: #7f8c8d;
     --color-tertiary: #bdc3c7;
@@ -162,7 +177,7 @@ body.theme-gray {
     --color-on-secondary: black;
 }
 
-body.theme-cyan {
+body.mg-theme-cyan {
     --color-primary: #00bcd4;
     --color-secondary: #0097a7;
     --color-tertiary: #00acc1;
@@ -171,7 +186,7 @@ body.theme-cyan {
     --color-on-secondary: black;
 }
 
-body.theme-lime {
+body.mg-theme-lime {
     --color-primary: #cddc39;
     --color-secondary: #afb42b;
     --color-tertiary: #d4e157;
@@ -180,7 +195,7 @@ body.theme-lime {
     --color-on-secondary: black;
 }
 
-body.theme-indigo {
+body.mg-theme-indigo {
     --color-primary: #3f51b5;
     --color-secondary: #303f9f;
     --color-tertiary: #5c6bc0;
@@ -190,7 +205,7 @@ body.theme-indigo {
     --color-action-bg: #3a4aa5;
 }
 
-body.theme-amber {
+body.mg-theme-amber {
     --color-primary: #ffc107;
     --color-secondary: #ff9800;
     --color-tertiary: #ffb300;
@@ -199,7 +214,7 @@ body.theme-amber {
     --color-on-secondary: black;
 }
 
-body.theme-deep-orange {
+body.mg-theme-deep-orange {
     --color-primary: #ff5722;
     --color-secondary: #e64a19;
     --color-tertiary: #ff7043;
@@ -239,7 +254,28 @@ body.theme-deep-orange {
     display: none;
 }
 
-input, select, button {
+/*
+ * THE GAME'S OWN UI
+ *
+ * The game screen is #main-content, and the game's two overlays both carry
+ * the class .info-overlay (the version overlay is
+ * `<div class="version-overlay info-overlay">`). Those are the only parts
+ * of this page that belong to the game.
+ *
+ * Everything else here is the shared site chrome: the footer, the theme
+ * picker, and the About & Privacy modal that js/about-privacy.js injects.
+ * A bare `button` selector reaches all of it, so the rules below used to
+ * repaint the shared theme picker's rows with the game's palette (and the
+ * shared modal's close button with the game's colours).
+ *
+ * `:where()` is used on purpose: it contributes NO specificity, so these
+ * rules keep exactly the weight they had before and the shared
+ * stylesheets still win wherever they are meant to. Only WHERE the rules
+ * apply changes.
+ */
+:where(#main-content, .info-overlay) input,
+:where(#main-content, .info-overlay) select,
+:where(#main-content, .info-overlay) button:not(.btn) {
     padding: 0.8rem;
     border-radius: 0.5rem;
     font-size: 1rem;
@@ -251,16 +287,18 @@ input, select, button {
     border: 2px solid var(--color-secondary);
 }
 
-body.dark-theme input,
-body.dark-theme select {
+body.dark-theme :where(#main-content, .info-overlay) input,
+body.dark-theme :where(#main-content, .info-overlay) select {
     background-color: var(--color-dark);
     color: var(--color-text-light);
     border-color: var(--color-secondary);
 }
 
-button {
-    background: var(--color-action-bg, var(--color-primary));
-    color: var(--color-on-primary);
+/* Scoped for the same reason as the rule above: the shared .btn primitive
+   brings its own colours, height, and padding. */
+:where(#main-content, .info-overlay) button:not(.btn) {
+    background: var(--color-primary);
+    color: var(--color-text-light);
     border: none;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s, color 0.3s;
@@ -268,26 +306,28 @@ button {
     padding: 0 1rem;
 }
 
-button.light-theme {
+:where(#main-content, .info-overlay) button.light-theme {
     background: #1e90ff;
     color: #000;
 }
 
-button.dark-theme {
+:where(#main-content, .info-overlay) button.dark-theme {
     background: #4ca1af;
     color: #000;
 }
 
-button[class*="theme-"] {
-    background: var(--color-action-bg, var(--color-primary));
-    color: var(--color-on-primary);
+/* Namespaced for the same reason as the body rule above: the shared
+   theme picker's ".theme-option" buttons must not be painted with the
+   game's palette. */
+:where(#main-content, .info-overlay) button[class*="mg-theme-"] {
+    background: var(--color-primary);
 }
 
-button:hover {
+:where(#main-content, .info-overlay) button:hover {
     transform: scale(1.05);
 }
 
-button:disabled {
+:where(#main-content, .info-overlay) button:disabled {
     background: #ccc;
     color: #666;
     cursor: not-allowed;
@@ -545,12 +585,12 @@ body.light-theme .top-bar {
 }
 
 /* Remove these overrides to keep consistent theme colors */
-.theme-controls button[class*="theme-"] {
+.theme-controls button[class*="mg-theme-"] {
     background: var(--color-primary);
     color: var(--color-text-light);
 }
 
-body.dark-theme .theme-controls button[class*="theme-"] {
+body.dark-theme .theme-controls button[class*="mg-theme-"] {
     background: var(--color-primary);
     color: var(--color-text-light);
 }
@@ -704,7 +744,7 @@ body.dark-theme .theme-controls button[class*="theme-"] {
 }
 
 /* Modify existing input styles */
-input[type="number"] {
+:where(#main-content, .info-overlay) input[type="number"] {
     transition: background-color 0.3s, border-color 0.3s;
 }
 

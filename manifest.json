@@ -4,15 +4,92 @@
     "description": "Personal site featuring various web tools and projects",
     "start_url": "/",
     "scope": "/",
+    "id": "/",
     "display": "standalone",
-    "background_color": "#0d1117",
+    "orientation": "any",
     "theme_color": "#0d1117",
+    "background_color": "#0d1117",
+    "lang": "en",
+    "dir": "ltr",
+    "categories": ["utilities", "productivity", "developer", "education", "games"],
     "icons": [
         {
-            "src": "/favicon.png",
+            "src": "/assets/icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
+        },
+        {
+            "src": "/assets/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/assets/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "QA Playground",
+            "short_name": "QA",
+            "description": "UI component and behaviour testbed",
+            "url": "/w/qa-playground/index.html",
+            "icons": [
+                {
+                    "src": "/assets/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Task Planner",
+            "short_name": "Planner",
+            "description": "Plan tasks for the day",
+            "url": "/w/daily-planner/index.html",
+            "icons": [
+                {
+                    "src": "/assets/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "QR Code",
+            "short_name": "QR",
+            "description": "Generate a QR code",
+            "url": "/w/qr-generator/generator.html",
+            "icons": [
+                {
+                    "src": "/assets/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Secret Share",
+            "short_name": "Secret",
+            "description": "Share a secret securely",
+            "url": "/w/secret-share/index.html",
+            "icons": [
+                {
+                    "src": "/assets/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
         }
     ],
     "prefer_related_applications": false

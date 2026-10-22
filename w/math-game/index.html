@@ -5,26 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Game — Fun Practice</title>
 
-    <meta property="og:title" content="Math Game — Aravinth" />
+    <meta property="og:title" content="Math Game — Fun Practice" />
     <meta property="og:description" content="Practice arithmetic with a fun math game. Quick challenges, offline, no tracking." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Math Game — Aravinth" />
+    <meta name="twitter:title" content="Math Game — Fun Practice" />
     <meta name="twitter:description" content="Practice arithmetic with a fun math game. Quick challenges, offline, no tracking." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Practice arithmetic with a fun math game. Quick challenges, offline, no tracking." />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="../../css/about-privacy.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/math-game/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/math-game/" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body class="dark-theme">
     <a class="skip-link" href="#main-content">Skip to main content</a>
     
-    <div class="container light-theme" role="main" id="main-content" tabindex="-1">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="container light-theme" id="main-content" role="main" tabindex="-1">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
             <span class="version-display">v1.2.3</span>
@@ -36,7 +75,7 @@
                     <option value="4">Expert (All)</option>
                 </select>
                 <div class="name-row">
-                    <input type="text" id="player-name" placeholder="Enter your name">
+                    <input type="text" id="player-name" placeholder="Enter your name" aria-label="Player name">
                     <button id="generate-name" class="icon-button" aria-label="Generate random name"><i class="fas fa-magic" aria-hidden="true"></i></button>
                 </div>
                 <div class="button-row">
@@ -61,7 +100,7 @@
                 </div>
                 <div class="user-info">
                     <div id="user-name"></div>
-                    <div>Score: <span id="score">0</span></div>
+                    <div>Score: <span id="score" aria-live="polite">0</span></div>
                     <div class="selected-info">
                         Mode: <span id="selected-difficulty"></span> | 
                         Question: <span id="question-counter">0</span>
@@ -121,21 +160,21 @@
                         <span class="value" id="third-attempt-count">0</span>
                     </div>
                 </div>
-                <h2 id="question"></h2>
-                <input type="number" id="answer" placeholder="Your answer">
+                <h2 id="question" aria-live="polite">Loading the first question…</h2>
+                <input type="number" id="answer" placeholder="Your answer" aria-label="Your answer to the question">
                 <div class="game-controls">
                     <button id="submit-answer"><i class="fas fa-check"></i> Submit</button>
                     <button id="next-question" class="hidden"><i class="fas fa-arrow-right"></i> Next Question</button>
                 </div>
-                <p id="message"></p>
+                <p id="message" role="status"></p>
             </div>
         </section>
     </div>
 
     <!-- Add game info overlay -->
-    <div class="info-overlay" role="dialog" aria-label="How the Game Works">
+    <div class="info-overlay" role="dialog" aria-modal="true" aria-label="How to play" aria-hidden="true">
         <div class="info-content">
-            <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
+            <button class="info-close" type="button" aria-label="Close"><i class="fas fa-times"></i></button>
             <h2>How the Game Works</h2>
             <div class="info-sections">
                 <section>
@@ -169,9 +208,9 @@
     </div>
 
     <!-- Add version history overlay -->
-    <div class="version-overlay info-overlay" role="dialog" aria-label="Version History">
+    <div class="version-overlay info-overlay" role="dialog" aria-modal="true" aria-label="Version history" aria-hidden="true">
         <div class="info-content">
-            <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
+            <button class="info-close" type="button" aria-label="Close"><i class="fas fa-times"></i></button>
             <h2>Version History</h2>
             <div class="info-sections">                
                 <!-- Add new version history here -->
@@ -193,8 +232,16 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="../../js/about-privacy.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
     <div style="margin-top: 10px;">

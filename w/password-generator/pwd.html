@@ -9,12 +9,12 @@
     
     <meta property="og:title" content="Password Generator — Aravinth" />
     <meta property="og:description" content="A secure password generator tool with customizable options for creating strong passwords" />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Password Generator — Aravinth" />
     <meta name="twitter:description" content="A secure password generator tool with customizable options for creating strong passwords" />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="A secure password generator tool with customizable options for creating strong passwords">
     <meta name="author" content="Aravinth">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -38,10 +38,69 @@
     }
     </script>
 
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="../../css/about-privacy.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
     <link rel="stylesheet" href="/css/a11y.css">
-</head>
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/password-generator/pwd.html" />
+    <meta property="og:url" content="https://www.332321.xyz/w/password-generator/pwd.html" />
+    <meta property="og:site_name" content="Aravinth" />
+
+<style>
+        /* The fixed footer bar must not sit on top of the last control. */
+        .container {
+            padding-bottom: 3.5rem;
+        }
+
+        /* The shared .about-btn rule sets a large font; the .btn primitive
+           should win so the trigger matches the rest of the site shell. */
+        .about-btn {
+            font-size: var(--font-size-base, 0.9rem);
+        }
+
+        /* The radio groups are wrapped in <fieldset> so the group has an
+           accessible name. A fieldset draws a border and reserves space by
+           default; the groups here are styled by .options-group, so the
+           UA decoration is switched off to keep the layout as it was. */
+        fieldset {
+            border: 0;
+            min-inline-size: 0;
+        }
+    <script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
+    </style></head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="app-header">
@@ -107,8 +166,8 @@
                     <div class="options-group full-width">
                         <h3>Length</h3>
                         <div class="length-controls">
-                            <input type="range" id="lengthSlider" min="10" max="512" value="12" aria-label="Password length">
-                            <input type="number" id="length" value="12" min="1" max="512" aria-label="Password length value">
+                            <input type="range" id="lengthSlider" min="10" max="512" value="12" aria-label="Password length slider">
+                            <input type="number" id="length" value="12" min="1" max="512" aria-label="Password length">
                         </div>
                     </div>
 
@@ -122,13 +181,14 @@
                         </div>
                     </div>
 
-                    <div class="options-group" id="symbolLevels" style="display: none;">
+                    <fieldset class="options-group" id="symbolLevels" style="display: none;">
+                        <legend class="visually-hidden">Symbol types</legend>
                         <h3>Symbol Types</h3>
-                        <div><input type="radio" name="symbolLevel" value="basic" aria-label="Basic symbols" checked> Basic (!@#$%^&*)</div>
-                        <div><input type="radio" name="symbolLevel" value="extended" aria-label="Extended symbols"> Extended (includes Basic + {}[]()\/'"~,;:.<>)</div>
-                        <div><input type="radio" name="symbolLevel" value="advanced" aria-label="Advanced symbols"> Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</div>
-                        <div><input type="radio" name="symbolLevel" value="ascii" aria-label="Full ASCII symbols"> Full ASCII (includes all ASCII chars from 32-255)</div>
-                        <div><input type="radio" name="symbolLevel" value="custom" aria-label="Custom symbols"> Custom Symbols
+                        <div><input type="radio" name="symbolLevel" id="symbolLevelBasic" value="basic" checked> <label for="symbolLevelBasic">Basic (!@#$%^&*)</label></div>
+                        <div><input type="radio" name="symbolLevel" id="symbolLevelExtended" value="extended"> <label for="symbolLevelExtended">Extended (includes Basic + {}[]()\/'"~,;:.<>)</label></div>
+                        <div><input type="radio" name="symbolLevel" id="symbolLevelAdvanced" value="advanced"> <label for="symbolLevelAdvanced">Advanced (includes Extended + ±§`¡¢£¤¥¦¨©ª«¬®¯°±²³´¶·¸¹º»¼½¾¿)</label></div>
+                        <div><input type="radio" name="symbolLevel" id="symbolLevelAscii" value="ascii"> <label for="symbolLevelAscii">Full ASCII (includes all ASCII chars from 32-255)</label></div>
+                        <div><input type="radio" name="symbolLevel" id="symbolLevelCustom" value="custom"> <label for="symbolLevelCustom">Custom Symbols</label>
                             <div id="customSymbolsSection" style="display: none;">
                                 <div class="custom-symbols-input">
                                     <label for="includeSymbols">Custom symbols:</label>
@@ -136,7 +196,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </fieldset>
                 </div>
             </div>
             <div id="wordControls" style="display: none;">
@@ -145,44 +205,47 @@
                     <div class="options-group full-width">
                         <div class="word-settings">
                             <div class="length-controls">
-                                <span>Word Count:</span>
-                                <input type="range" id="wordCountSlider" min="2" max="8" value="4">
+                                <label for="wordCount">Word Count:</label>
+                                <input type="range" id="wordCountSlider" min="2" max="8" value="4" aria-label="Word count slider">
                                 <input type="number" id="wordCount" value="4" min="2" max="8">
                             </div>
                             <div class="length-controls">
-                                <span>Word Length:</span>
-                                <input type="range" id="wordLengthSlider" min="3" max="12" value="5">
+                                <label for="wordLength">Word Length:</label>
+                                <input type="range" id="wordLengthSlider" min="3" max="12" value="5" aria-label="Word length slider">
                                 <input type="number" id="wordLength" value="5" min="3" max="12">
                             </div>
-                            <div class="pattern-options">
-                                <h4>Pattern Type:</h4>
+                            <fieldset class="pattern-options">
+                                <legend class="visually-hidden">Pattern type</legend>
+                                <h3>Pattern Type:</h3>
                                 <label><input type="radio" name="patternType" value="simple" checked> Simple (CVCV)</label>
                                 <label><input type="radio" name="patternType" value="complex"> Complex (CCVC/CVCC)</label>
                                 <label><input type="radio" name="patternType" value="random"> Random Mix</label>
-                            </div>
+                            </fieldset>
                         </div>
                     </div>
                     <div class="options-group">
                         <h3>Word Case</h3>
-                        <div class="word-case-options">
+                        <fieldset class="word-case-options">
+                            <legend class="visually-hidden">Word case</legend>
                             <label><input type="radio" name="wordCase" value="Capitalize" checked> Capitalize</label>
                             <label><input type="radio" name="wordCase" value="lowercase"> lowercase</label>
                             <label><input type="radio" name="wordCase" value="UPPERCASE"> UPPERCASE</label>
                             <label><input type="radio" name="wordCase" value="aLtErNaTe"> aLtErNaTe</label>
                             <label><input type="radio" name="wordCase" value="random"> rAndOm</label>
-                        </div>
+                        </fieldset>
                     </div>
                     <div class="options-group">
                         <h3>Word Separator</h3>
                         <div class="separator-controls">
-                            <div class="preset-separators">
+                            <fieldset class="preset-separators">
+                                <legend class="visually-hidden">Word separator</legend>
                                 <label><input type="radio" name="separator" value="-" checked> Hyphen (-)</label>
                                 <label><input type="radio" name="separator" value="."> Dot (.)</label>
                                 <label><input type="radio" name="separator" value="_"> Underscore (_)</label>
                                 <label><input type="radio" name="separator" value=" "> Space</label>
                                 <label><input type="radio" name="separator" value="custom"> Custom</label>
-                            </div>
-                            <input type="text" id="customSeparator" placeholder="Custom separator" style="display: none;">
+                            </fieldset>
+                            <input type="text" id="customSeparator" placeholder="Custom separator" style="display: none;" aria-label="Custom separator">
                         </div>
                     </div>
                     <div class="options-group">
@@ -190,17 +253,18 @@
                         <div class="append-options">
                             <div class="number-options">
                                 <label><input type="checkbox" id="appendNumber" checked> Append Number</label>
-                                <input type="number" id="numberLength" value="2" min="1" max="4" style="width: 60px;">
+                                <input type="number" id="numberLength" value="2" min="1" max="4" style="width: 60px;" aria-label="Number of digits to append">
                             </div>
                             <div class="char-options">
                                 <h4>Append Characters</h4>
-                                <div class="char-set-option">
+                                <fieldset class="char-set-option">
+                                    <legend class="visually-hidden">Append character set</legend>
                                     <label><input type="radio" name="charSetType" value="default" checked> Default Set (!@#$%^&*)</label>
                                     <label><input type="radio" name="charSetType" value="custom"> Custom Set</label>
-                                    <input type="text" id="customCharSet" placeholder="e.g., !@#$" style="display: none;">
-                                </div>
+                                    <input type="text" id="customCharSet" placeholder="e.g., !@#$" style="display: none;" aria-label="Custom character set">
+                                </fieldset>
                                 <div class="char-count">
-                                    <label>Number of characters:</label>
+                                    <label for="appendCharCount">Number of characters:</label>
                                     <input type="number" id="appendCharCount" value="1" min="1" max="4" style="width: 60px;">
                                 </div>
                             </div>
@@ -216,8 +280,16 @@
     </footer>
 
     <script src="password-generator.js"></script>
-    <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark');generatePassword();document.querySelectorAll('input[type="checkbox"],input[type="radio"],input[type="range"],input[type="number"]').forEach(i=>i.addEventListener('change',generatePassword));['includeSymbols','excludeSymbols','customSeparator','customCharSet'].forEach(id=>document.getElementById(id)?.addEventListener('input',generatePassword))});</script>
-    <script src="../../js/about-privacy.js" defer></script>
+    <script>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.setAttribute('data-tool-theme',localStorage.getItem('pwdgen.theme')||'dark');generatePassword();document.querySelectorAll('input[type="checkbox"],input[type="radio"],input[type="range"],input[type="number"]').forEach(i=>i.addEventListener('change',generatePassword));['includeSymbols','excludeSymbols','customSeparator','customCharSet'].forEach(id=>document.getElementById(id)?.addEventListener('input',generatePassword))});</script>
+    <script src="/js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

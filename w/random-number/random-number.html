@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Number Generator</title>
 
-    <meta property="og:title" content="Random Number Generator — Aravinth" />
+    <meta property="og:title" content="Random Number Generator" />
     <meta property="og:description" content="Generate random numbers instantly. Offline, no tracking." />
-    <meta property="og:image" content="/favicon.png" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Random Number Generator — Aravinth" />
+    <meta name="twitter:title" content="Random Number Generator" />
     <meta name="twitter:description" content="Generate random numbers instantly. Offline, no tracking." />
-    <meta name="twitter:image" content="/favicon.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <meta name="description" content="Generate random numbers instantly. Offline, no tracking." />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/about-privacy.css">
+    <link rel="stylesheet" href="/css/about-privacy.css" />
     <style>
         body {
             background: var(--gradient-purple, #0a0c10);
@@ -210,10 +212,46 @@
         }
     </style>
     <link rel="stylesheet" href="/css/a11y.css">
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/random-number/random-number.html" />
+    <meta property="og:url" content="https://www.332321.xyz/w/random-number/random-number.html" />
+    <meta property="og:site_name" content="Aravinth" />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div class="generator-container" role="main" id="main-content" tabindex="-1">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="generator-container" id="main-content" tabindex="-1" role="main">
         <div class="generator-top">
             <div class="title-block">
                 <h1>Random Number</h1>
@@ -223,7 +261,7 @@
                 <div class="mode-toggle-container">
                     <label class="switch" title="Toggle mode">
                         <!-- checked = decimal by default -->
-                        <input type="checkbox" id="mode-toggle" aria-label="Use decimal mode" checked>
+                        <input type="checkbox" id="mode-toggle" checked aria-label="Toggle between decimal and dice mode">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -250,14 +288,13 @@
         <div class="meta-row" style="text-align:center; margin-top:0.25rem;">Tip: Min &amp; Max are inclusive — press Enter or click Generate to produce a number. Ensure Min &lt; Max.</div>
 
         <!-- toast container for transient messages (copy etc.) -->
-        <div id="toast-container" aria-hidden="true"></div>
+        <div id="toast-container" role="status" aria-live="polite"></div>
 
         <div class="controls-row">
             <button class="btn-primary" id="generate-btn" aria-label="Generate">Generate</button>
             <button class="btn-ghost" id="copy-btn" aria-label="Copy last">Copy</button>
         </div>
 
-        
     </div>
 
     <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
@@ -515,7 +552,15 @@
             generateRandomNumber();
         }
     </script>
-    <script src="../../js/about-privacy.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
     </body>
 </html>

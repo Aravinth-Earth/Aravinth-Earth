@@ -142,9 +142,20 @@ function updateUI(lang) {
   });
   
   // Update lang button
-  document.getElementById('lang-label').textContent = lang === 'en' ? 'த' : 'EN';
+  const langLabel = document.getElementById('lang-label');
+  langLabel.textContent = lang === 'en' ? 'த' : 'EN';
+  // The label is in the other language from the page, so mark it. Without
+  // this, a screen reader announces the Tamil "த" with an English voice.
+  langLabel.setAttribute('lang', lang === 'en' ? 'ta' : 'en');
   document.getElementById('lang-btn').title = lang === 'en' ? 'தமிழுக்கு மாறு' : 'Switch to English';
-  
+
+  // The document title is the one part of the page with no data-i18n hook,
+  // so it stayed English while the page was in Tamil -- the browser tab said
+  // "Don't Get Stuck" on a page reading "சிக்கிக் கொள்ளாதே".
+  if (data.title) {
+    document.title = data.title + ' – Quick Decision Helper';
+  }
+
   // Update HTML lang attribute
   document.documentElement.lang = lang === 'ta' ? 'ta' : 'en';
 }

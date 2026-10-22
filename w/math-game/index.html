@@ -19,15 +19,17 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body class="dark-theme">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     
-    <div class="container light-theme">
+    <div class="container light-theme" role="main" id="main-content" tabindex="-1">
         <section id="welcome-screen" class="screen">
             <h1>Math Game</h1>
             <span class="version-display">v1.2.3</span>
             <div class="game-content">
-                <select id="difficulty">
+                <select id="difficulty" aria-label="Game difficulty">
                     <option value="1">Easy (+ -)</option>
                     <option value="2">Medium (* /)</option>
                     <option value="3">Hard (+ - * /)</option>
@@ -35,17 +37,17 @@
                 </select>
                 <div class="name-row">
                     <input type="text" id="player-name" placeholder="Enter your name">
-                    <button id="generate-name" class="icon-button"><i class="fas fa-magic"></i></button>
+                    <button id="generate-name" class="icon-button" aria-label="Generate random name"><i class="fas fa-magic" aria-hidden="true"></i></button>
                 </div>
                 <div class="button-row">
                     <button id="reset-game"><i class="fas fa-redo"></i> Reset</button>
                     <button id="start-game"><i class="fas fa-play"></i> Start</button>                    
                 </div>                
                 <div class="version-info">
-                    <button id="show-info" class="icon-button"><i class="fas fa-info-circle"></i></button>                    
-                    <button id="show-version-history" class="icon-button"><i class="fas fa-history"></i></button>
-                    <button class="toggle-theme icon-button"><i class="fas fa-adjust"></i></button>
-                    <button class="toggle-color-theme icon-button"><i class="fas fa-palette"></i></button>
+                    <button id="show-info" class="icon-button" aria-label="How to play"><i class="fas fa-info-circle" aria-hidden="true"></i></button>                    
+                    <button id="show-version-history" class="icon-button" aria-label="Version history"><i class="fas fa-history" aria-hidden="true"></i></button>
+                    <button class="toggle-theme icon-button" aria-label="Toggle dark mode"><i class="fas fa-adjust" aria-hidden="true"></i></button>
+                    <button class="toggle-color-theme icon-button" aria-label="Change colour theme"><i class="fas fa-palette" aria-hidden="true"></i></button>
                 </div>
             </div>
         </section>
@@ -53,9 +55,9 @@
         <section id="game-screen" class="screen hidden">
             <div class="top-bar">
                 <div class="theme-controls">
-                    <button id="back-to-menu" class="icon-button"><i class="fas fa-arrow-left"></i></button>
-                    <button class="toggle-theme" class="icon-button"><i class="fas fa-adjust"></i></button>
-                    <button class="toggle-color-theme" class="icon-button"><i class="fas fa-palette"></i></button>
+                    <button id="back-to-menu" class="icon-button" aria-label="Back to menu"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+                    <button class="toggle-theme icon-button" aria-label="Toggle dark mode"><i class="fas fa-adjust" aria-hidden="true"></i></button>
+                    <button class="toggle-color-theme icon-button" aria-label="Change colour theme"><i class="fas fa-palette" aria-hidden="true"></i></button>
                 </div>
                 <div class="user-info">
                     <div id="user-name"></div>
@@ -131,9 +133,9 @@
     </div>
 
     <!-- Add game info overlay -->
-    <div class="info-overlay">
+    <div class="info-overlay" role="dialog" aria-label="How the Game Works">
         <div class="info-content">
-            <button class="info-close"><i class="fas fa-times"></i></button>
+            <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
             <h2>How the Game Works</h2>
             <div class="info-sections">
                 <section>
@@ -167,9 +169,9 @@
     </div>
 
     <!-- Add version history overlay -->
-    <div class="version-overlay info-overlay">
+    <div class="version-overlay info-overlay" role="dialog" aria-label="Version History">
         <div class="info-content">
-            <button class="info-close"><i class="fas fa-times"></i></button>
+            <button class="info-close" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
             <h2>Version History</h2>
             <div class="info-sections">                
                 <!-- Add new version history here -->

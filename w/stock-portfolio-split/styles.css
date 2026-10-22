@@ -21,8 +21,8 @@
     
     /* Text */
     --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-secondary: #a9b6c8;
+    --text-muted: #a3b3c9;
     
     /* Border */
     --border: #334155;
@@ -157,7 +157,7 @@ body {
 .btn-danger {
     background: rgba(239, 68, 68, 0.1);
     border-color: var(--danger);
-    color: var(--danger);
+    color: #fca5a5;
 }
 
 .btn-danger:hover {
@@ -193,6 +193,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 0;
 }
 
 .form-group label {
@@ -202,6 +203,8 @@ body {
 }
 
 .form-group input {
+    width: 100%;
+    min-width: 0;
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -290,6 +293,7 @@ body {
 
 .portfolio-table-container,
 .chart-container {
+    min-width: 0;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);

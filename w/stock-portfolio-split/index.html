@@ -19,9 +19,11 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="../../css/about-privacy.css">
     <link rel="prefetch" href="/index.html">
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
-<div class="container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="container" id="main-content" tabindex="-1">
 <header class="header">
 <div class="header-content">
 <div class="logo">📊</div>
@@ -46,6 +48,7 @@
 </div>
 </header>
 <!-- Input Form -->
+<main role="main" aria-label="Portfolio">
 <section class="form-card">
 <h2>Add Holding</h2>
 <form id="holding-form">
@@ -141,6 +144,7 @@
 </div>
 </div>
 </section>
+</main>
 <!-- Import/Export Modal -->
 <div id="import-modal" class="modal">
 <div class="modal-content">

@@ -16,8 +16,10 @@
 <title>Timeline Planner — Reverse Planning Tool</title>
 <link rel="stylesheet" href="styles.css">
 <link rel="prefetch" href="/index.html">
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 <header>
 <h1>Timeline Planner</h1>
 <div class="header-controls">
@@ -37,7 +39,7 @@
 <button id="generate-random" aria-label="Generate Random Data" onclick="generateRandomData()">🎲</button>
 </div>
 </header>
-<main>
+<main id="main-content" tabindex="-1">
 <section id="input-section" aria-label="Timeline Input">
 <h2>Plan Your Timeline</h2>
 <form id="timeline-form">

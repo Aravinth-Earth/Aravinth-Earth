@@ -1,0 +1,91 @@
+/* Skip link: keyboard users can jump past the page shell.
+   Visually hidden until focused. Shared by every tool page. */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    z-index: 10000;
+    padding: 0.75rem 1rem;
+    background: #111;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 0.5rem 0;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    left: 0;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* WCAG 2.5.5 (AAA) target size: give button-like controls a 44px hit area.
+   Inline links inside prose are intentionally not enlarged. */
+button,
+select,
+.btn,
+.work-card,
+.chip,
+.home .chip,
+button.chip,
+.info-btn,
+.icon-button,
+.icon-btn,
+.action-btn {
+    min-height: 44px;
+}
+
+.info-btn,
+.icon-button,
+.icon-btn,
+.action-btn,
+.btn-compact,
+.btn-ghost,
+.theme-toggle,
+.theme-gear {
+    min-width: 44px;
+}
+
+/* Respect the OS "reduce motion" setting for non-essential motion.
+   Game feedback that conveys the result of an action (e.g. Calm Sweep's
+   correct/wrong tile pops) is left alone because it is essential. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+    body {
+        animation: none !important;
+    }
+    .header,
+    .clock-section,
+    .card,
+    .game-over-card,
+    .info-card {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+    .theme-gear,
+    .theme-dropdown {
+        transition: none !important;
+    }
+}
+
+/* Hide content visually while keeping it available to assistive tech. */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}

@@ -12,6 +12,11 @@
                 background-color: #121212; /* Dark background color */
                 color: #aaa; /* Light text color for contrast */
             }
+            .yt-title {
+                font-size: 1.17em;
+                font-weight: bold;
+                margin: 1em 0;
+            }
             .channel {
                 margin-bottom: 40px;
                 padding-left: 10px; /* Padding on the left of the channel section */
@@ -52,6 +57,15 @@
                 width: 100%; /* Ensures iframe fills the container */
                 height: 100%; /* Ensures iframe fills the container */
                 border: none;
+            }
+            @media (max-width: 360px) {
+                .live-streams {
+                    padding-left: 0;
+                }
+                .live-stream {
+                    flex: 0 1 100%;
+                    margin-left: 0;
+                }
             }
             .stream-select {
                 position: absolute;
@@ -181,12 +195,13 @@
                 margin: 20px 0;
             }
         </style>
+        <link rel="stylesheet" href="/css/a11y.css">
     </head>
     <body>
-    <div>
-        <h3>YT Live news</h3>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content" tabindex="-1">
+        <h1 class="yt-title">YT Live news</h1>
         Primarily famous tamil youtube news channels live streams, stream id's updated multiple times a day
-    </div>
     <hr>
     <div class="multi-view-mode-bar">
         <button id="multi-view-mode-toggle" onclick="toggleMultiViewSelectionMode()">Multi Stream Mode</button>
@@ -216,6 +231,7 @@
         <div class="channel-name">Custom Streams</div>
         <div class="live-streams" id="custom-streams"></div>
     </div>
+    </main>
             <script src="streams.js"></script>
         <script>
             // Single source of truth for stream-id validation, shared by both render paths below.
@@ -238,7 +254,7 @@
                 const data = window.YTN_STREAMS || null;
                 const skippedStreamIds = [];
 
-                const makeStreamCard = (streamId) => {
+                const makeStreamCard = (streamId, channelName) => {
                     const div = document.createElement('div');
                     div.className = 'live-stream';
 
@@ -251,6 +267,7 @@
 
                     const iframe = document.createElement('iframe');
                     iframe.setAttribute('data-src', 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(streamId));
+                    iframe.title = channelName ? 'Live stream: ' + channelName : 'Live stream';
                     iframe.setAttribute('frameborder', '0');
                     iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
                     iframe.setAttribute('allowfullscreen', '');
@@ -266,7 +283,16 @@
 
                     const name = document.createElement('div');
                     name.className = 'channel-name';
-                    name.textContent = channel.name + ' (' + channel.handle + ')';  // textContent — XSS-safe
+                    // Channel names can mix Tamil and English. Mark each run so
+                    // screen readers use the right voice; textContent keeps it XSS-safe.
+                    channel.name.split('|').forEach((part, index) => {
+                        if (index) name.appendChild(document.createTextNode(' | '));
+                        const segment = document.createElement('span');
+                        if (/[\u0B80-\u0BFF]/.test(part)) segment.lang = 'ta';
+                        segment.textContent = part.trim();
+                        name.appendChild(segment);
+                    });
+                    name.appendChild(document.createTextNode(' (' + channel.handle + ')'));
 
                     const rawStreamIds = Array.isArray(channel.streams) ? channel.streams : [];
                     const validStreamIds = [];
@@ -285,7 +311,7 @@
 
                     const streams = document.createElement('div');
                     streams.className = 'live-streams';
-                    validStreamIds.forEach((id) => streams.appendChild(makeStreamCard(id)));
+                    validStreamIds.forEach((id) => streams.appendChild(makeStreamCard(id, channel.name)));
 
                     section.appendChild(name);
                     section.appendChild(streams);
@@ -623,6 +649,6 @@
     </script>
 </body>
 <footer>
-    <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117"></a>
+    <a href="https://www.332321.xyz/index.html"><img src="https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fwww.332321.xyz%2F&labelColor=%230d1117&countColor=%230d1117" alt="Visitor count for www.332321.xyz"></a>
 </footer>
 </html>

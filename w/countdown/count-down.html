@@ -117,35 +117,39 @@
             padding-top: 15%;
         }
     </style>
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content" tabindex="-1">
+    <h1 class="visually-hidden">Countdown Timer</h1>
 
     <div id="inputSection">
         <div id="toggleButton" onclick="toggleInputSection()">&#9654;</div> <!-- Arrow icon -->
         <h2>Event Date & Time</h2>
         <div class="horizontal">
             <div class="input-group">
-                <input type="number" id="year" value="2024" required oninput="startTimer()" onfocus="selectValue(this)">
+                <input type="number" id="year" aria-label="Year" value="2024" required oninput="startTimer()" onfocus="selectValue(this)">
                 <span class="label">Y</span>
             </div>
             <div class="input-group">
-                <input type="number" id="month" value="10" min="1" max="12" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
+                <input type="number" id="month" aria-label="Month" value="10" min="1" max="12" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
                 <span class="label">M</span>
             </div>
             <div class="input-group">
-                <input type="number" id="day" value="2" min="1" max="31" oninput="startTimer()" placeholder="DD" onfocus="selectValue(this)">
+                <input type="number" id="day" aria-label="Day" value="2" min="1" max="31" oninput="startTimer()" placeholder="DD" onfocus="selectValue(this)">
                 <span class="label">D</span>
             </div>
             <div class="input-group">
-                <input type="number" id="hour" value="10" min="0" max="23" oninput="startTimer()" placeholder="HH" onfocus="selectValue(this)">
+                <input type="number" id="hour" aria-label="Hour" value="10" min="0" max="23" oninput="startTimer()" placeholder="HH" onfocus="selectValue(this)">
                 <span class="label">H</span>
             </div>
             <div class="input-group">
-                <input type="number" id="minute" value="0" min="0" max="59" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
+                <input type="number" id="minute" aria-label="Minute" value="0" min="0" max="59" oninput="startTimer()" placeholder="MM" onfocus="selectValue(this)">
                 <span class="label">M</span>
             </div>
             <div class="input-group">
-                <input type="number" id="second" value="0" min="0" max="59" oninput="startTimer()" placeholder="SS" onfocus="selectValue(this)">
+                <input type="number" id="second" aria-label="Second" value="0" min="0" max="59" oninput="startTimer()" placeholder="SS" onfocus="selectValue(this)">
                 <span class="label">S</span>
             </div>
         </div>
@@ -162,6 +166,7 @@
             <div class="input-group"><span class="value" id="seconds">00</span><span class="label">S</span></div>
         </div>
     </div>
+    </main>
 
     <script>
         let timer; // Variable to store the timer
@@ -272,10 +277,10 @@
     <script src="../../js/about-privacy.js" defer></script>
 
 <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-    </body>
-<footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
+    <footer style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; text-align: center; padding: 10px;">
     <div style="margin-top: 10px;">
         <a href="javascript:void(0)" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem;" onclick="window.openAboutModal()">About & Privacy</a>
     </div>
 </footer>
+    </body>
 </html>

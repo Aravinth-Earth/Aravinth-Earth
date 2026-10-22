@@ -4,9 +4,12 @@
     --bg-secondary: #2d2d2d;
     --bg-tertiary: #3d3d3d;
     --text-primary: #ffffff;
-    --text-secondary: #aaaaaa;
+    --text-secondary: #d4d4d4;
     --accent-primary: #4CAF50;
     --accent-secondary: #45a049;
+    --accent-text: #8fd19e;
+    --button-bg: #1b5e20;
+    --button-text: #ffffff;
     --border-color: #444;
     --shadow-color: rgba(0,0,0,0.3);
     --transition-speed: 200ms;
@@ -17,9 +20,12 @@
     --bg-secondary: #ffffff;
     --bg-tertiary: #eaeaea;
     --text-primary: #333333;
-    --text-secondary: #666666;
+    --text-secondary: #4a4a4a;
     --accent-primary: #43A047;
     --accent-secondary: #388E3C;
+    --accent-text: #1b5e20;
+    --button-bg: #1b5e20;
+    --button-text: #ffffff;
     --border-color: #ddd;
     --shadow-color: rgba(0,0,0,0.1);
 }
@@ -67,7 +73,7 @@ body {
 
 .section-title {
     font-size: 1.1rem;
-    color: var(--accent-primary);
+    color: var(--accent-text);
     margin-bottom: 0.75rem;
 }
 
@@ -85,14 +91,15 @@ button {
     outline: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    background-color: var(--accent-primary);
-    color: var(--text-primary);
+    background-color: var(--button-bg);
+    color: var(--button-text);
     font-size: 1rem;
     transition: background-color var(--transition-speed) ease;
 }
 
 button:hover {
-    background-color: var(--accent-secondary);
+    background-color: var(--button-bg);
+    filter: brightness(0.85);
 }
 
 .icon-button {
@@ -220,7 +227,7 @@ input[type="range"]:active::-moz-range-thumb {
 .app-title {
     font-size: 2rem;
     font-weight: 600;
-    color: var(--accent-primary);
+    color: var(--accent-text);
     margin-bottom: 0.25rem;
     letter-spacing: -0.5px;
 }
@@ -333,12 +340,14 @@ input[type="range"]:active::-moz-range-thumb {
     flex: 1;
     padding: 0.75rem;
     background: var(--bg-tertiary);
+    color: var(--text-primary);
     border: 1px solid var(--border-color);
 }
 
 .mode-button.active {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
+    background: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--button-bg);
 }
 
 /* Form group styles */

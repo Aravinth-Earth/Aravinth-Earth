@@ -42,9 +42,11 @@ textarea{resize:vertical;font-family:monospace}
 .param-row label{font-size:0.8rem;color:#8b949e}
 .timer{font-size:0.8rem;color:#8b949e;margin-bottom:0.5rem;min-height:1.2em}
 </style>
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
-<div class="container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="container" id="main-content" tabindex="-1">
 <h1>Secret Share</h1>
 <p class="sub">Encrypt messages in your browser. Nothing leaves this device. Uses AES-GCM + PBKDF2 via Web Crypto API.</p>
 

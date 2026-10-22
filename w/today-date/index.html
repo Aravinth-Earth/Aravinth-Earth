@@ -18,9 +18,11 @@
     <meta name="description" content="See today's live date in English (Gregorian) and Tamil calendars side by side. Astronomically accurate." />
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/a11y.css">
 </head>
 <body>
-    <div class="container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="container" id="main-content" tabindex="-1">
         <!-- Theme toggle -->
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
             <span class="theme-icon">☀️</span>
@@ -29,7 +31,7 @@
         <!-- Header -->
         <header class="header">
             <h1 class="title-en">Today's Date</h1>
-            <h1 class="title-ta">இன்றைய தேதி</h1>
+            <h1 class="title-ta" lang="ta">இன்றைய தேதி</h1>
         </header>
 
         <!-- Clock + day progress -->
@@ -98,23 +100,23 @@
             <div class="card card-tamil">
                 <div class="card-header">
                     <div class="card-label">
-                        <span class="card-lang">தமிழ்</span>
+                        <span class="card-lang" lang="ta">தமிழ்</span>
                     </div>
                     <span class="card-system">Tamil Calendar</span>
                 </div>
-                <div class="card-date" id="date-ta"></div>
+                <div class="card-date" id="date-ta" lang="ta"></div>
                 <div class="card-details">
                     <div class="card-detail">
                         <span class="card-detail-label">Day</span>
-                        <span id="day-ta" class="card-detail-value"></span>
+                        <span id="day-ta" class="card-detail-value" lang="ta"></span>
                     </div>
                     <div class="card-detail">
                         <span class="card-detail-label">Month</span>
-                        <span id="month-ta" class="card-detail-value"></span>
+                        <span id="month-ta" class="card-detail-value" lang="ta"></span>
                     </div>
                     <div class="card-detail">
                         <span class="card-detail-label">Year</span>
-                        <span id="year-ta" class="card-detail-value"></span>
+                        <span id="year-ta" class="card-detail-value" lang="ta"></span>
                     </div>
                 </div>
                 <div class="progress-section">
@@ -143,7 +145,7 @@
         <!-- Footer -->
         <footer class="footer">
             <p class="footer-note">Tamil dates via astronomical engine (Lahiri ayanamsa)</p>
-            <p class="footer-note-ta">வானியல் இயந்திரம் மூலம் கணக்கிடப்படுகிறது</p>
+            <p class="footer-note-ta" lang="ta">வானியல் இயந்திரம் மூலம் கணக்கிடப்படுகிறது</p>
             <p class="footer-back"><a href="../../index.html">← Back to Home</a></p>
         </footer>
     </div>

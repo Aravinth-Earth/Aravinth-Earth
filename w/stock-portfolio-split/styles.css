@@ -193,6 +193,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 0;
 }
 
 .form-group label {
@@ -202,6 +203,8 @@ body {
 }
 
 .form-group input {
+    width: 100%;
+    min-width: 0;
     padding: 0.75rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -290,6 +293,7 @@ body {
 
 .portfolio-table-container,
 .chart-container {
+    min-width: 0;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);

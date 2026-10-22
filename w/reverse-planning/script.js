@@ -157,7 +157,14 @@ class TimelineUI {
     const targetEndBlock = document.createElement('div');
     targetEndBlock.className = 'timeline-target-end-block';
     const endSpan = targetEndBlock.appendChild(document.createElement('span'));
-    endSpan.textContent = `${eventName ? `${eventName} - ` : ''}Target End Time: ${targetEndTimeString}`;
+    // The date is formatted with the browser locale, which may be Tamil or
+    // another language. Mark only that run so screen readers switch voice.
+    endSpan.textContent = `${eventName ? `${eventName} - ` : ''}Target End Time: `;
+    const dateSpan = document.createElement('span');
+    const dateLang = Intl.DateTimeFormat().resolvedOptions().locale.split('-')[0];
+    if (dateLang && dateLang !== 'en') dateSpan.lang = dateLang;
+    dateSpan.textContent = targetEndTimeString;
+    endSpan.appendChild(dateSpan);
     eventsColumn.appendChild(targetEndBlock);
   }
 

@@ -48,8 +48,10 @@
 
         <!-- Optional: Uncomment below to auto-populate build info (requires running generate-build-info script) -->
         <!-- <script src="js/build-info.js" defer></script> -->
+    <link rel="stylesheet" href="/css/a11y.css">
     </head>
     <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
         <!-- Schema.org metadata -->
         <script type="application/ld+json">
             {
@@ -93,7 +95,7 @@
                 </div>
             </header>
 
-            <main role="main">
+            <main role="main" id="main-content" tabindex="-1">
                 <section class="works" aria-labelledby="works-heading">
                     <h2 id="works-heading">What I've Built</h2>
                     <p class="works-note">A selection of projects — more on

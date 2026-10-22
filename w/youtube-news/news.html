@@ -53,6 +53,15 @@
                 height: 100%; /* Ensures iframe fills the container */
                 border: none;
             }
+            @media (max-width: 360px) {
+                .live-streams {
+                    padding-left: 0;
+                }
+                .live-stream {
+                    flex: 0 1 100%;
+                    margin-left: 0;
+                }
+            }
             .stream-select {
                 position: absolute;
                 top: 8px;
@@ -181,9 +190,11 @@
                 margin: 20px 0;
             }
         </style>
+        <link rel="stylesheet" href="/css/a11y.css">
     </head>
     <body>
-    <div>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div id="main-content" tabindex="-1">
         <h3>YT Live news</h3>
         Primarily famous tamil youtube news channels live streams, stream id's updated multiple times a day
     </div>
@@ -267,7 +278,16 @@
 
                     const name = document.createElement('div');
                     name.className = 'channel-name';
-                    name.textContent = channel.name + ' (' + channel.handle + ')';  // textContent — XSS-safe
+                    // Channel names can mix Tamil and English. Mark each run so
+                    // screen readers use the right voice; textContent keeps it XSS-safe.
+                    channel.name.split('|').forEach((part, index) => {
+                        if (index) name.appendChild(document.createTextNode(' | '));
+                        const segment = document.createElement('span');
+                        if (/[\u0B80-\u0BFF]/.test(part)) segment.lang = 'ta';
+                        segment.textContent = part.trim();
+                        name.appendChild(segment);
+                    });
+                    name.appendChild(document.createTextNode(' (' + channel.handle + ')'));
 
                     const rawStreamIds = Array.isArray(channel.streams) ? channel.streams : [];
                     const validStreamIds = [];

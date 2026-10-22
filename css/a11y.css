@@ -1,0 +1,22 @@
+/* Skip link: keyboard users can jump past the page shell.
+   Visually hidden until focused. Shared by every tool page. */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+    z-index: 10000;
+    padding: 0.75rem 1rem;
+    background: #111;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 0.5rem 0;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+    left: 0;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}

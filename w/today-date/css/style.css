@@ -11,7 +11,8 @@
     --bg-card: rgba(255, 255, 255, 0.04);
     --text-primary: #e8e8f0;
     --text-secondary: #b0b0c8;
-    --text-dim: #707088;
+    --text-dim: #8b8ba8;
+    --badge-text: #0c0c1d;
     --accent-en: #e88aaf;
     --accent-ta: #7cc4e8;
     --accent-green: #5cc88a;
@@ -28,9 +29,10 @@ body.light {
     --bg-card: rgba(255, 255, 255, 0.8);
     --text-primary: #1c1c2e;
     --text-secondary: #4a4a62;
-    --text-dim: #808098;
+    --text-dim: #62627a;
+    --badge-text: #ffffff;
     --accent-en: #c04070;
-    --accent-ta: #1a7aaa;
+    --accent-ta: #16739f;
     --accent-green: #1a8a5a;
     --border: rgba(0, 0, 0, 0.06);
     --glass-bg: rgba(255, 255, 255, 0.6);
@@ -236,12 +238,12 @@ body {
 
 .card-english .card-lang {
     background: var(--accent-en);
-    color: #fff;
+    color: var(--badge-text);
 }
 
 .card-tamil .card-lang {
     background: var(--accent-ta);
-    color: #fff;
+    color: var(--badge-text);
 }
 
 .card-system {
@@ -382,12 +384,11 @@ body {
     font-size: clamp(0.5rem, 1.5vw, 0.65rem);
     color: var(--accent-ta);
     text-decoration: none;
-    opacity: 0.7;
     transition: opacity 0.2s;
 }
 
 .footer-back a:hover {
-    opacity: 1;
+    opacity: 0.8;
 }
 
 /* === TABLET (481px – 768px) === */

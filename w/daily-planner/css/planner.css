@@ -241,7 +241,7 @@ th:hover .header-actions {
     font-size: 10px;
     padding: 2px 6px;
     background: rgba(88, 166, 255, 0.2);
-    color: var(--pl-accent);
+    color: var(--pl-accent-hover);
     border-radius: 4px;
     margin-left: 8px;
     cursor: pointer;

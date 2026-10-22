@@ -13,7 +13,7 @@
   
   --text-main: #f1f5f9; /* Slate 100 */
   --text-muted: #94a3b8; /* Slate 400 */
-  --text-dim: #64748b;   /* Slate 500 */
+  --text-dim: #8291a8;   /* Slate 400-ish; 5.5:1 on the card surface */
   
   --radius-lg: 1rem;
   --radius-md: 0.75rem;
@@ -442,7 +442,6 @@ footer {
   font-size: 0.75rem;
   color: var(--text-dim);
   padding: 1rem 0;
-  opacity: 0.7;
 }
 
 /* Responsive Breakpoints */

@@ -39,7 +39,7 @@ p.sub { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; max-width:
 .pg-nav a { flex: 0 0 auto; padding: 0.35rem 0.75rem; border-radius: 6px; color: var(--muted); text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
 .pg-nav a:hover { background: var(--panel-3); color: var(--text); }
 .pg-nav a.active { background: var(--panel-3); color: var(--accent); }
-.pg-nav a .lv { font-size: 0.65rem; opacity: 0.65; margin-left: 0.2rem; }
+.pg-nav a .lv { font-size: 0.65rem; margin-left: 0.2rem; }
 
 /* hub card grid */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
@@ -83,7 +83,7 @@ input[type=color] { height: 40px; padding: 0.2rem; }
 .verify li { color: var(--muted); font-size: 0.85rem; line-height: 1.7; }
 .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
 .filter-bar button { padding: 0.35rem 0.8rem; }
-.filter-bar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.filter-bar button.active { background: var(--accent); color: #0d1117; border-color: var(--accent); }
 .shadow-host { display: block; }
 .field-group { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
 .field-group h2 { font-size: 1rem; color: var(--text-strong); margin-bottom: 0.75rem; }
@@ -119,12 +119,12 @@ tr:hover td { background: var(--panel-2); }
 .level.l1 { background: #12261e; color: #3fb950; border: 1px solid #238636; }
 .level.l2 { background: #2a2205; color: #d29922; border: 1px solid #9e6a03; }
 .level.l3 { background: #2b1420; color: #db61a2; border: 1px solid #a4407a; }
-.practice { font-size: 0.82rem; color: var(--text); opacity: 0.85; margin-top: 0.35rem; }
+.practice { font-size: 0.82rem; color: var(--text); margin-top: 0.35rem; }
 .practice b { color: var(--accent); }
 .state-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
 .state-btn { padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--panel-3); color: var(--text); cursor: pointer; font-size: 0.8rem; }
 .state-btn:hover { background: var(--border); }
-.state-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.state-btn.active { background: var(--accent); color: #0d1117; border-color: var(--accent); }
 .state-summary { font-size: 0.8rem; color: var(--muted); align-self: center; }
 .pagination { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
 .pagination button { padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 4px; background: var(--panel-3); color: var(--text); cursor: pointer; font-size: 0.8rem; }
@@ -136,7 +136,7 @@ tr:hover td { background: var(--panel-2); }
 .row-input { width: 100%; }
 .action { padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--panel-3); color: var(--text); cursor: pointer; font-size: 0.85rem; }
 .action:hover { background: var(--border); }
-.action.delete { border-color: var(--error); color: var(--error); }
+.action.delete { border-color: var(--error); color: #ff7b72; }
 .action.delete:hover { background: var(--error-bg); }
 .required::after { content: ' *'; color: var(--error); }
 input.error, select.error, textarea.error { border-color: var(--error); }

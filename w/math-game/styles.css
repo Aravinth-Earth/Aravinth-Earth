@@ -58,6 +58,7 @@ body.light-theme {
     --color-text: var(--color-text-dark);
     --color-on-primary: #000000;
     --color-on-secondary: #000000;
+    --color-action-bg: #3ba0ff;
 }
 
 body.dark-theme {
@@ -93,6 +94,7 @@ body.theme-red {
     --color-quaternary: #d63031;
     --color-on-primary: black;
     --color-on-secondary: white;
+    --color-action-bg: #ec7063;
 }
 
 body.theme-purple {
@@ -102,6 +104,7 @@ body.theme-purple {
     --color-quaternary: #9b59b6;
     --color-on-primary: white;
     --color-on-secondary: white;
+    --color-action-bg: #6f3f83;
 }
 
 body.theme-orange {
@@ -147,6 +150,7 @@ body.theme-brown {
     --color-quaternary: #795548;
     --color-on-primary: white;
     --color-on-secondary: white;
+    --color-action-bg: #634d45;
 }
 
 body.theme-gray {
@@ -183,6 +187,7 @@ body.theme-indigo {
     --color-quaternary: #3949ab;
     --color-on-primary: white;
     --color-on-secondary: white;
+    --color-action-bg: #3a4aa5;
 }
 
 body.theme-amber {
@@ -201,6 +206,7 @@ body.theme-deep-orange {
     --color-quaternary: #d84315;
     --color-on-primary: black;
     --color-on-secondary: black;
+    --color-action-bg: #ff6f42;
 }
 
 /* ...other theme colors... */
@@ -253,7 +259,7 @@ body.dark-theme select {
 }
 
 button {
-    background: var(--color-primary);
+    background: var(--color-action-bg, var(--color-primary));
     color: var(--color-on-primary);
     border: none;
     cursor: pointer;
@@ -273,7 +279,7 @@ button.dark-theme {
 }
 
 button[class*="theme-"] {
-    background: var(--color-primary);
+    background: var(--color-action-bg, var(--color-primary));
     color: var(--color-on-primary);
 }
 
@@ -917,7 +923,7 @@ input[type="number"] {
 }
 
 .version-display {
-    background: var(--color-primary);
+    background: var(--color-action-bg, var(--color-primary));
     color: var(--color-on-primary);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -947,7 +953,7 @@ body.dark-theme .version-info #version-display {
 .version-info #version-display {
     font-size: 0.9rem;
     color: var(--color-on-primary);
-    background-color: var(--color-primary);
+    background-color: var(--color-action-bg, var(--color-primary));
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: color 0.3s, background-color 0.3s;

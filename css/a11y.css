@@ -21,6 +21,62 @@
     outline-offset: 2px;
 }
 
+/* WCAG 2.5.5 (AAA) target size: give button-like controls a 44px hit area.
+   Inline links inside prose are intentionally not enlarged. */
+button,
+select,
+.btn,
+.work-card,
+.chip,
+.home .chip,
+button.chip,
+.info-btn,
+.icon-button,
+.icon-btn,
+.action-btn {
+    min-height: 44px;
+}
+
+.info-btn,
+.icon-button,
+.icon-btn,
+.action-btn,
+.btn-compact,
+.btn-ghost,
+.theme-toggle,
+.theme-gear {
+    min-width: 44px;
+}
+
+/* Respect the OS "reduce motion" setting for non-essential motion.
+   Game feedback that conveys the result of an action (e.g. Calm Sweep's
+   correct/wrong tile pops) is left alone because it is essential. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+    }
+    body {
+        animation: none !important;
+    }
+    .header,
+    .clock-section,
+    .card,
+    .game-over-card,
+    .info-card {
+        animation: none !important;
+        opacity: 1 !important;
+    }
+    .theme-gear,
+    .theme-dropdown {
+        transition: none !important;
+    }
+}
+
 /* Hide content visually while keeping it available to assistive tech. */
 .visually-hidden {
     position: absolute !important;

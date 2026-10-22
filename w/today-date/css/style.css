@@ -11,7 +11,7 @@
     --bg-card: rgba(255, 255, 255, 0.04);
     --text-primary: #e8e8f0;
     --text-secondary: #b0b0c8;
-    --text-dim: #8b8ba8;
+    --text-dim: #aaaac8;
     --badge-text: #0c0c1d;
     --accent-en: #e88aaf;
     --accent-ta: #7cc4e8;
@@ -29,10 +29,10 @@ body.light {
     --bg-card: rgba(255, 255, 255, 0.8);
     --text-primary: #1c1c2e;
     --text-secondary: #4a4a62;
-    --text-dim: #62627a;
+    --text-dim: #424255;
     --badge-text: #ffffff;
-    --accent-en: #c04070;
-    --accent-ta: #16739f;
+    --accent-en: #8f2a4e;
+    --accent-ta: #0f567a;
     --accent-green: #1a8a5a;
     --border: rgba(0, 0, 0, 0.06);
     --glass-bg: rgba(255, 255, 255, 0.6);

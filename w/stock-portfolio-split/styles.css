@@ -21,8 +21,8 @@
     
     /* Text */
     --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #8b9bb4;
+    --text-secondary: #a9b6c8;
+    --text-muted: #a3b3c9;
     
     /* Border */
     --border: #334155;
@@ -157,7 +157,7 @@ body {
 .btn-danger {
     background: rgba(239, 68, 68, 0.1);
     border-color: var(--danger);
-    color: #f87171;
+    color: #fca5a5;
 }
 
 .btn-danger:hover {

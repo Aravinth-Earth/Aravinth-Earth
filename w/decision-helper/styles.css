@@ -12,8 +12,8 @@
   --danger: #ef4444;    /* Red 500 */
   
   --text-main: #f1f5f9; /* Slate 100 */
-  --text-muted: #94a3b8; /* Slate 400 */
-  --text-dim: #8291a8;   /* Slate 400-ish; 5.5:1 on the card surface */
+  --text-muted: #a9b6c8; /* 8.7:1 on the card surface */
+  --text-dim: #98a8bf;   /* 7.4:1 on the card surface */
   
   --radius-lg: 1rem;
   --radius-md: 0.75rem;

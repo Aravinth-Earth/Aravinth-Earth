@@ -1,24 +1,21 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-23T19:53:12+0530",
+  "generated_at": "2026-10-24T02:01:47+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "KreWKMFbMkU",
-        "Qgo6bxwxwKY",
+        "iVSdafvEm1I",
         "xoqNOs4dVSo",
-        "zDJndd2Hfew",
-        "YcZ_DeDNJ8k"
+        "Qgo6bxwxwKY",
+        "KreWKMFbMkU",
+        "zDJndd2Hfew"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "fc2PCQVY2KM",
-        "mAs238SymRk",
-        "R4g-UHiWvwY",
         "JWu9MHaz6y8",
         "3U99VoNdjZs"
       ]
@@ -27,9 +24,9 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
+        "B2YQXMJRT3c",
         "RUjy5vM-KuM",
         "G-nbsObK7Us",
-        "qaF_GedM0dI",
         "u-MeTs9wsNc",
         "5F1YNtHsJIc"
       ]
@@ -38,40 +35,28 @@ window.YTN_STREAMS = {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "hVGw_o4QlYE",
-        "8aITtTwrJ0U",
-        "7B6xpw1Ed54",
-        "SDW4s_OL2lM",
-        "KRAjyPOkpts"
+        "G04Ltn2mDJ4"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "JxRfYjf8dDo",
-        "6VbItCmDPAQ",
-        "_vrwYoZVhWM",
-        "a1nscuIlQR8",
-        "4xfMAu66enE"
+        "_Lg0IUxUMi0"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "0ICNdhvWQWM",
         "hw7Fjh6mncQ",
-        "JF-tcCrKvZE",
-        "0JVbkygGG8Q"
+        "S4nbeUpvGOw"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "BJNgEA6YKeI",
-        "z7bwQ17kaYg",
         "9M02G5c6x6w"
       ]
     },
@@ -86,7 +71,6 @@ window.YTN_STREAMS = {
       "name": "News J",
       "handle": "@NewsJ",
       "streams": [
-        "F6QNVxiPHxQ",
         "lcoyUeUr34I"
       ]
     }

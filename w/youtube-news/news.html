@@ -279,7 +279,28 @@
         <div class="live-streams" id="custom-streams"></div>
     </div>
     </main>
-            <script src="streams.js"></script>
+            <script>
+                // The stream ids are live data, so the feed is fetched with a
+                // per-load query: neither the browser HTTP cache nor the CDN
+                // edge copy can answer this with ids from an earlier load.
+                // ytnFeedReady resolves true/false once it has loaded or
+                // failed, and the renderer below waits on it.
+                window.ytnFeedReady = new Promise((resolve) => {
+                    const feed = document.createElement('script');
+                    feed.src = 'streams.js?v=' + Date.now();
+                    feed.onload = () => resolve(true);
+                    feed.onerror = () => resolve(false);
+                    document.head.appendChild(feed);
+                });
+
+                // A restored page (back/forward cache) keeps the old ids on
+                // screen without making any request, so reload and refetch.
+                window.addEventListener('pageshow', (event) => {
+                    if (event.persisted) {
+                        window.location.reload();
+                    }
+                });
+            </script>
         <script>
             // Single source of truth for stream-id validation, shared by both render paths below.
             // Embeds are always `https://www.youtube-nocookie.com/embed/<id>`, so only a
@@ -295,8 +316,10 @@
         </script>
         <script>
             // Render live channels from window.YTN_STREAMS (published by the pipeline).
+            // Starts only once the feed has arrived (or failed), so the ids on
+            // screen always belong to this page load.
             // No fallback data: empty/missing data renders an empty state only.
-            (function () {
+            window.ytnFeedReady.then(function (feedLoaded) {
                 const container = document.getElementById('channel-sections');
                 const data = window.YTN_STREAMS || null;
                 const skippedStreamIds = [];
@@ -370,7 +393,11 @@
                 if (!data || !Array.isArray(data.channels) || data.channels.length === 0) {
                     const empty = document.createElement('div');
                     empty.className = 'channel-name';
-                    empty.textContent = 'No live streams right now';
+                    // A feed that never arrived is a connection problem, not an
+                    // empty stream list -- say which one it is.
+                    empty.textContent = feedLoaded === false
+                        ? 'Could not load the stream list. Check your connection and reload.'
+                        : 'No live streams right now';
                     container.appendChild(empty);
                     return;
                 }
@@ -398,7 +425,7 @@
                 const m = g.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})([+-]\d{4})?$/);
                 updated.textContent = g ? 'Last updated on ' + (m ? m[1] + ' ' + m[2] + ' IST' : g) : '';
                 container.appendChild(updated);
-            })();
+            });
         </script>
 
 <script>

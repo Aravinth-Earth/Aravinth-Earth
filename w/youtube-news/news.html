@@ -507,7 +507,9 @@
             };
             observeIframes(document);
             document.addEventListener('ytn:streams-rendered', () => {
-                observeIframes(document.getElementById('channel-sections'));
+                const container = document.getElementById('channel-sections');
+                observeIframes(container);
+                registerStreamCheckboxes(container);
             });
 
             const updateMultiViewToolbar = () => {
@@ -593,6 +595,8 @@
             };
 
             const registerStreamCheckbox = (checkbox) => {
+                if (checkbox.dataset.ytnRegistered) return;
+                checkbox.dataset.ytnRegistered = '1';
                 checkbox.addEventListener('change', () => {
                     if (checkbox.checked && selectedStreams.size >= 16) {
                         checkbox.checked = false;
@@ -608,6 +612,12 @@
 
                     updateMultiViewToolbar();
                 });
+            };
+
+            // Same reason as observeIframes(): the feed tiles are appended
+            // after DOMContentLoaded, so wiring them has to be re-runnable.
+            const registerStreamCheckboxes = (root) => {
+                (root || document).querySelectorAll('.stream-select').forEach(registerStreamCheckbox);
             };
 
             const renderCustomStreams = () => {
@@ -731,7 +741,7 @@
                 }
             });
 
-            document.querySelectorAll('.stream-select').forEach(registerStreamCheckbox);
+            registerStreamCheckboxes(document);
             renderCustomStreams();
         });
     </script>

@@ -23,9 +23,15 @@
  *   (instant + eventually fresh), third-party libraries are cache-first
  *   (explicit allowlist only), and everything else goes straight to the
  *   network untouched.
+ *
+ * - LIVE_DATA_PATHS is an exception to all of that: a page whose whole point
+ *   is a feed of third-party live-stream ids is worthless unless the ids are
+ *   current, and its embeds need the network anyway -- an offline copy buys
+ *   nothing. Those requests are not intercepted at all, so no strategy can
+ *   answer with an old copy.
  */
 
-const CACHE_NAME = 'site-cache-v5';
+const CACHE_NAME = 'site-cache-v6';
 
 /**
  * The prefix every cache this worker owns shares.
@@ -110,8 +116,8 @@ const PAGE_PRECACHE_URLS = [
     '/w/stock-portfolio-split/index.html',
     '/w/teach-me/index.html',
     '/w/tn-assembly-map/index.html',
-    '/w/today-date/index.html',
-    '/w/youtube-news/news.html'
+    '/w/today-date/index.html'
+    // NOTE: w/youtube-news/ is deliberately absent -- see LIVE_DATA_PATHS.
 ];
 
 /**
@@ -156,6 +162,19 @@ const PRECACHE_URLS = SHELL_PRECACHE_URLS.concat(
     PAGE_PRECACHE_URLS,
     ASSET_PRECACHE_URLS
 );
+
+/**
+ * Paths whose content is live data, not app code: never intercepted, never
+ * cached, never precached.
+ *
+ * `w/youtube-news/` renders a feed of YouTube live-stream ids that the
+ * publisher refreshes several times a day. Every strategy here would answer
+ * the first load after a publish with the previous copy -- cache-first serves
+ * the entry it already holds, stale-while-revalidate serves the cached page
+ * -- and a stale id is a dead embed. The page is useless without the network,
+ * so there is nothing to buy by keeping a copy: pass it through untouched.
+ */
+const LIVE_DATA_PATHS = ['/w/youtube-news/'];
 
 /**
  * Static assets that are safe to serve from cache and refresh in the
@@ -287,6 +306,10 @@ self.addEventListener('fetch', (event) => {
 
     // Never cache API traffic.
     if (sameOrigin && url.pathname.startsWith('/api/')) return;
+
+    // Live data is passed through for navigations and assets alike: no
+    // strategy may answer this page or its feed with a copy the worker holds.
+    if (sameOrigin && isLiveDataPath(url)) return;
 
     if (request.mode === 'navigate') {
         const result = handleNavigation(event);
@@ -660,6 +683,11 @@ function isAllowedThirdParty(url) {
             url.host === entry.host &&
             url.pathname.startsWith(entry.prefix)
     );
+}
+
+/** True when the URL belongs to a live-data path (see LIVE_DATA_PATHS). */
+function isLiveDataPath(url) {
+    return LIVE_DATA_PATHS.some((prefix) => url.pathname.startsWith(prefix));
 }
 
 /**

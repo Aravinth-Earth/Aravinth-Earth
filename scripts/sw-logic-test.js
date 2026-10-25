@@ -323,6 +323,38 @@ function check(name, ok, detail) {
     const postHandled = self._fetch(postEvent);
     check('a POST is not intercepted', !postHandled || !postHandled.promise, '');
 
+    // --- live data: never intercepted, never stored ------------------------
+    // The news page renders a feed that is republished several times a day, so
+    // ANY strategy here would answer the first load after a publish with the
+    // previous copy (cache-first serves its entry, stale-while-revalidate
+    // serves the cached page). Both the page and the feed must pass straight
+    // through, and neither may be precached.
+    {
+        fetchHandler = async () => new Response('window.YTN_STREAMS = {};', { status: 200 });
+        for (const [label, build] of [
+            ['the live-data page', () => navReq('/w/youtube-news/news.html')],
+            ['the live-data feed', () => req('/w/youtube-news/streams.js?v=1')],
+            ['the live-data feed (no query)', () => req('/w/youtube-news/streams.js')],
+        ]) {
+            const ev = makeEvent(build());
+            self._fetch(ev);
+            check(
+                `${label} is not intercepted`,
+                ev.response === null,
+                ev.response === null ? 'passed through' : 'intercepted'
+            );
+        }
+
+        const liveKeys = (await cache.keys())
+            .map((r) => r.url)
+            .filter((u) => u.includes('/w/youtube-news/'));
+        check(
+            'the live-data page is not precached',
+            liveKeys.length === 0,
+            liveKeys.join(',') || 'no cache entries under /w/youtube-news/'
+        );
+    }
+
     // --- message: GET_VERSION ---------------------------------------------
     let replied = null;
     const port = { postMessage: (m) => (replied = m), start() {} };

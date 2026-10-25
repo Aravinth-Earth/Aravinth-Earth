@@ -1,15 +1,15 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-10-25T19:23:58+0530",
+  "generated_at": "2026-10-26T01:16:01+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "wKO02m07siA",
-        "RzHmbtPTNVU",
-        "FPiQwOZCJMA",
+        "5WzETFoOmfk",
         "kB46vdV_Vx4",
-        "BOnYkOcfH14"
+        "7wxG27hK78Q",
+        "Duh7aVNuIEc",
+        "E4ndYFfdlb8"
       ]
     },
     {
@@ -17,10 +17,8 @@ window.YTN_STREAMS = {
       "handle": "@PolimerNews",
       "streams": [
         "RUOXWRnBLcQ",
-        "tyuhJN3J2lE",
-        "cgFvZoCnV6o",
-        "hmtCadJ1FO0",
-        "JWu9MHaz6y8"
+        "JWu9MHaz6y8",
+        "PKuJd17ooqc"
       ]
     },
     {
@@ -29,41 +27,30 @@ window.YTN_STREAMS = {
       "streams": [
         "A3e5R4dhlDs",
         "MnGOxpjHT1Q",
-        "MMiw1LlJ0AM",
-        "XRDylwcAGQY",
-        "tm3oICTH1Uk"
+        "V1owCUXotDk",
+        "DtUpNO7GvbM",
+        "2hArabgc4BQ"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "gc9OXCMlzh0",
-        "Qtls-AZEE1U",
-        "GofhuujmEOg",
         "1WNBG5WxSYM",
-        "-y-kJt0qA8I"
+        "G04Ltn2mDJ4"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "hNA1GOAPuhw",
-        "-7dYsFpy_8E",
-        "k0mDtYCv1bU",
-        "Pmr2nc1A6_g",
-        "-e0642XcOIE"
+        "_Lg0IUxUMi0"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "unMH-eupTwc",
-        "W_11OagJRR8",
-        "0CG8EWe0D8Y",
-        "CoUqlDPYyqs",
         "hw7Fjh6mncQ"
       ]
     },
@@ -71,9 +58,6 @@ window.YTN_STREAMS = {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "NeJLMH29N-I",
-        "kE-qObEJgPo",
-        "LfBINi8FSfY",
         "9M02G5c6x6w"
       ]
     },
@@ -88,7 +72,6 @@ window.YTN_STREAMS = {
       "name": "News J",
       "handle": "@NewsJ",
       "streams": [
-        "-P4aoQRZj3E",
         "lcoyUeUr34I"
       ]
     }

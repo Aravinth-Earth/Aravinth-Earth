@@ -425,12 +425,16 @@
                 const m = g.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})([+-]\d{4})?$/);
                 updated.textContent = g ? 'Last updated on ' + (m ? m[1] + ' ' + m[2] + ' IST' : g) : '';
                 container.appendChild(updated);
+
+                // The lazy-load observer was registered before these tiles
+                // existed; tell it to pick them up, or every embed stays an
+                // empty box with no player.
+                document.dispatchEvent(new CustomEvent('ytn:streams-rendered'));
             });
         </script>
 
 <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const iframes = document.querySelectorAll('iframe[data-src]');
             const CUSTOM_STREAMS_STORAGE_KEY = 'yt-news-custom-stream-ids';
             const loadStoredCustomStreamIds = () => {
                 try {
@@ -492,8 +496,18 @@
                 threshold: 0.1
             });
 
-            iframes.forEach(iframe => {
-                observer.observe(iframe);
+            // Lazy-load every tile that carries data-src. This has to be
+            // re-runnable: the feed tiles are appended only after the live
+            // feed arrives, which is after DOMContentLoaded, so the observer
+            // is registered for the initial page AND for the rendered feed.
+            const observeIframes = (root) => {
+                (root || document).querySelectorAll('iframe[data-src]').forEach(iframe => {
+                    observer.observe(iframe);
+                });
+            };
+            observeIframes(document);
+            document.addEventListener('ytn:streams-rendered', () => {
+                observeIframes(document.getElementById('channel-sections'));
             });
 
             const updateMultiViewToolbar = () => {

@@ -273,12 +273,28 @@ function check(name, ok, detail) {
         `body: ${JSON.stringify(body3.slice(0, 30))}`
     );
 
-    // A normal (non-bypass) navigation prefers the cache even on a 500.
+    // NETWORK FIRST: with the network healthy, the network body wins over a
+    // perfectly good cached copy. This is the rule that makes a deploy visible
+    // on the very next visit, so it is asserted explicitly.
+    fetchHandler = async () => new Response('NETWORK BODY', { status: 200 });
     const nav4 = makeEvent(navReq('/w/secret-share/'));
     self._fetch(nav4);
+    await nav4.settle();
     const resp4 = nav4.response ? await nav4.response : null;
     const body4 = resp4 ? await resp4.clone().text() : '';
-    check('a normal navigation prefers the cache', body4 === 'cached copy', `body: ${JSON.stringify(body4.slice(0, 30))}`);
+    check(
+        'a healthy network wins over the cached page',
+        body4 === 'NETWORK BODY',
+        `body: ${JSON.stringify(body4.slice(0, 30))}`
+    );
+
+    const refreshed = await cache.match(req('/w/secret-share/'));
+    const refreshedBody = refreshed ? await refreshed.clone().text() : '';
+    check(
+        'the network copy replaces the cached page',
+        refreshedBody === 'NETWORK BODY',
+        `cached body: ${JSON.stringify(refreshedBody.slice(0, 30))}`
+    );
 
     // --- fetch: static assets ---------------------------------------------
     fetchHandler = async () => new Response('css body', { status: 200 });
@@ -291,20 +307,43 @@ function check(name, ok, detail) {
         ''
     );
 
-    // --- background revalidation updates the cache -----------------------
+    // --- assets are network first too -------------------------------------
     {
-        // Put a STALE copy in the cache, then let the revalidation run.
-        await cache.put(req('/w/secret-share/'), new Response('STALE', { status: 200 }));
-        fetchHandler = async () => new Response('FRESH', { status: 200 });
-        const reval = makeEvent(req('/css/style.css'));
-        self._fetch(reval);
-        await reval.settle();
+        // A stale asset in the cache must not be served while the network works.
+        await cache.put(req('/css/style.css'), new Response('STALE CSS', { status: 200 }));
+        fetchHandler = async () => new Response('FRESH CSS', { status: 200 });
+        const assetEvent = makeEvent(req('/css/style.css'));
+        self._fetch(assetEvent);
+        await assetEvent.settle();
+        const served = assetEvent.response ? await assetEvent.response : null;
+        const servedBody = served ? await served.clone().text() : '';
+        check(
+            'a stale cached asset is replaced by the network copy',
+            servedBody === 'FRESH CSS',
+            'served: ' + JSON.stringify(servedBody.slice(0, 30))
+        );
         const after = await cache.match(req('/css/style.css'));
         const body = after ? await after.clone().text() : '';
         check(
-            'a background revalidation replaces the cached copy',
-            body === 'FRESH',
+            'the fresh asset is written back to the cache',
+            body === 'FRESH CSS',
             'cached body: ' + JSON.stringify(body.slice(0, 30))
+        );
+    }
+
+    // --- offline asset falls back to the cache ---------------------------
+    {
+        await cache.put(req('/css/offline.css'), new Response('CACHED CSS', { status: 200 }));
+        fetchHandler = async () => { throw new Error('offline'); };
+        const off = makeEvent(req('/css/offline.css'));
+        self._fetch(off);
+        await off.settle();
+        const offResp = off.response ? await off.response : null;
+        const offBody = offResp ? await offResp.clone().text() : '';
+        check(
+            'an unreachable asset falls back to the cached copy',
+            offBody === 'CACHED CSS',
+            'served: ' + JSON.stringify(offBody.slice(0, 30))
         );
     }
 

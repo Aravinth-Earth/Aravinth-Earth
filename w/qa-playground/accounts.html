@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts — QA Playground</title>
+    <meta name="description" content="A real signup and login API behind a test-automation fixture: create an account, sign in, hit every failure state, change the password, delete it. Every account is purged 24 hours after it was created." />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="qa-playground.css">
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/qa-playground/accounts.html" />
+    <meta property="og:url" content="https://www.332321.xyz/w/qa-playground/accounts.html" />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:site_name" content="Aravinth" />
+    <meta property="og:title" content="Accounts — QA Playground" />
+    <meta name="twitter:title" content="Accounts — QA Playground" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:description" content="Real signup and login against a live API for automation practice. Accounts self-destruct 24 hours after signup." />
+    <meta name="twitter:description" content="Real signup and login against a live API for automation practice. Accounts self-destruct 24 hours after signup." />
+<script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
+</head>
+<body>
+    <div role="main" class="container narrow">
+        <h1>Accounts</h1>
+        <p class="sub">Real signup and sign-in against a live API. Every account deletes itself 24 hours after it was created.</p>
+
+        <div class="acct-wrap">
+            <div class="acct-card">
+                <div class="acct-head">
+                    <span class="acct-brand">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-linecap="round"/>
+                        </svg>qa-playground / accounts</span>
+                    <span class="acct-ttl" id="ttlBadge" title="Time until this account is purged">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/>
+                        </svg><span id="ttlText">24h</span></span>
+                </div>
+
+                <div class="acct-body">
+                    <div class="acct-seg" id="seg" data-i="0" role="tablist" aria-label="Sign in or create an account">
+                        <span class="pill" aria-hidden="true"></span>
+                        <button class="on" data-tab="signin" role="tab" aria-selected="true" id="tabSignin">sign_in</button>
+                        <button data-tab="signup" role="tab" aria-selected="false" id="tabSignup">sign_up</button>
+                    </div>
+
+                    <p class="acct-banner" id="banner" role="alert"></p>
+
+                    <!-- sign in -->
+                    <form data-pane="signin" id="signinForm" novalidate>
+                        <div class="acct-field">
+                            <label class="acct-label" for="identifier">identifier</label>
+                            <div class="ctl"><input id="identifier" name="identifier" type="text" placeholder="demo@qa.local or demo" autocomplete="username" aria-describedby="identifierHint identifierErr"></div>
+                            <p class="acct-hint" id="identifierHint">Email or username. Case-insensitive, spaces trimmed.</p>
+                            <p class="acct-err" id="identifierErr">Enter an email or username.</p>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="password">password</label>
+                            <div class="ctl">
+                                <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" aria-describedby="passwordErr">
+                                <button class="trail" type="button" id="revealSignin" aria-pressed="false">show</button>
+                            </div>
+                            <p class="acct-err" id="passwordErr">Enter your password.</p>
+                        </div>
+                        <label class="check"><input type="checkbox" id="keepSignedIn"> keep me signed in on this device</label>
+                        <button class="acct-btn" type="submit" id="signinBtn"><span class="acct-spinner"></span>POST /login</button>
+                        <div class="acct-kbdrow"><span><kbd>enter</kbd> submit</span><span>sandbox accounts ↓</span></div>
+                    </form>
+
+                    <!-- sign up -->
+                    <form data-pane="signup" id="signupForm" novalidate hidden>
+                        <div class="acct-field">
+                            <label class="acct-label" for="email">email</label>
+                            <div class="ctl"><input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" aria-describedby="emailHint emailErr"></div>
+                            <p class="acct-hint" id="emailHint">No verification mail — it is a label, not an inbox.</p>
+                            <p class="acct-err" id="emailErr">That is not an email shape.</p>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="displayName">display_name</label>
+                            <div class="ctl"><input id="displayName" name="display_name" type="text" placeholder="optional" autocomplete="nickname"></div>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="newPassword">password</label>
+                            <div class="ctl">
+                                <input id="newPassword" name="password" type="password" placeholder="10+ chars" autocomplete="new-password" aria-describedby="newPasswordErr strengthLabel">
+                                <button class="trail" type="button" id="revealSignup" aria-pressed="false">show</button>
+                            </div>
+                            <div class="acct-meter" id="meter" data-lvl="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                            <p class="acct-hint" id="strengthLabel">10+ characters, then variety.</p>
+                            <p class="acct-err" id="newPasswordErr">Needs 10+ characters with a digit and a symbol.</p>
+                        </div>
+                        <label class="check"><input type="checkbox" id="ackPublic"> I know this is a public practice database
+                            <span class="hint">No real passwords, no personal data. Deleted 24h after signup.</span></label>
+                        <button class="acct-btn" type="submit" id="signupBtn"><span class="acct-spinner"></span>POST /signup</button>
+                        <div class="acct-kbdrow"><span><kbd>enter</kbd> submit</span><span>purged 24h after signup</span></div>
+                    </form>
+
+                    <!-- mfa -->
+                    <form data-pane="mfa" id="mfaForm" novalidate hidden>
+                        <h3 class="acct-pane-h">Two-factor step</h3>
+                        <p class="acct-hint" style="margin-bottom:.8rem;">This account has MFA. The code is <code>123456</code>.</p>
+                        <div class="acct-field">
+                            <label class="acct-label" for="otp">code</label>
+                            <div class="ctl"><input id="otp" name="otp" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="one-time-code" aria-describedby="otpErr"></div>
+                            <p class="acct-err" id="otpErr">Six digits.</p>
+                        </div>
+                        <button class="acct-btn" type="submit" id="mfaBtn"><span class="acct-spinner"></span>POST /mfa</button>
+                        <div class="acct-kbdrow"><button class="acct-linkish" type="button" id="mfaBack">&larr; back</button><span>ticket valid 5 min</span></div>
+                    </form>
+
+                    <!-- reset -->
+                    <form data-pane="reset" id="resetForm" novalidate hidden>
+                        <h3 class="acct-pane-h">Password expired</h3>
+                        <p class="acct-hint" style="margin-bottom:.8rem;">The old password was refused by expiry, not by being wrong. Set a new one.</p>
+                        <div class="acct-field">
+                            <label class="acct-label" for="resetPassword">new password</label>
+                            <div class="ctl"><input id="resetPassword" type="password" placeholder="10+ chars" autocomplete="new-password" aria-describedby="resetPasswordErr"></div>
+                            <p class="acct-err" id="resetPasswordErr">Needs 10+ characters with a digit and a symbol.</p>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="resetConfirm">confirm</label>
+                            <div class="ctl"><input id="resetConfirm" type="password" placeholder="again" autocomplete="new-password" aria-describedby="resetConfirmErr"></div>
+                            <p class="acct-err" id="resetConfirmErr">The two do not match.</p>
+                        </div>
+                        <button class="acct-btn" type="submit" id="resetBtn"><span class="acct-spinner"></span>POST /reset</button>
+                        <div class="acct-kbdrow"><button class="acct-linkish" type="button" id="resetCancel">&larr; back</button><span>ticket valid 5 min</span></div>
+                    </form>
+
+                    <!-- signed in: account overview -->
+                    <div data-pane="account" id="accountPane" hidden>
+                        <div class="acct-id">
+                            <div class="acct-avatar" id="avatar" aria-hidden="true">PP</div>
+                            <div class="acct-idtext">
+                                <h3 id="accountName">—</h3>
+                                <p id="accountMail">—</p>
+                            </div>
+                            <span class="acct-chip" id="accountState">active</span>
+                        </div>
+
+                        <ul class="acct-rows">
+                            <li><button type="button" data-open="profile"><span class="rlabel">Profile</span><span class="rvalue" id="rowName">—</span><span class="rgo">edit</span></button></li>
+                            <li><button type="button" data-open="security"><span class="rlabel">Password</span><span class="rvalue">change</span><span class="rgo">&rsaquo;</span></button></li>
+                            <li><button type="button" data-open="session"><span class="rlabel">Session</span><span class="rvalue">this tab</span><span class="rgo">&rsaquo;</span></button></li>
+                            <li><button type="button" data-open="danger" class="danger"><span class="rlabel">Delete account</span><span class="rvalue">now</span><span class="rgo">&rsaquo;</span></button></li>
+                        </ul>
+
+                        <p class="acct-hint" id="purgeNote" style="margin-top:.9rem;">Purges automatically in <b id="accountPurge">—</b>. Nothing survives that timer.</p>
+                        <button class="acct-btn secondary" type="button" id="signOut" style="margin-top:.9rem;">sign out</button>
+                    </div>
+
+                    <!-- profile edit -->
+                    <form data-pane="profile" id="profileForm" novalidate hidden>
+                        <h3 class="acct-pane-h">Profile</h3>
+                        <div class="acct-field">
+                            <label class="acct-label" for="editName">display_name</label>
+                            <div class="ctl"><input id="editName" type="text" maxlength="40" placeholder="Ada Lovelace"></div>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="editMail">email</label>
+                            <div class="ctl"><input id="editMail" type="text" disabled></div>
+                            <p class="acct-hint">The email is the login — it cannot be changed here.</p>
+                        </div>
+                        <button class="acct-btn" type="submit" id="profileSave"><span class="acct-spinner"></span>PATCH /me</button>
+                        <div class="acct-kbdrow"><button class="acct-linkish" type="button" data-back>&larr; account</button></div>
+                    </form>
+
+                    <!-- change password -->
+                    <form data-pane="security" id="securityForm" novalidate hidden>
+                        <h3 class="acct-pane-h">Change password</h3>
+                        <div class="acct-field">
+                            <label class="acct-label" for="currentPassword">current</label>
+                            <div class="ctl"><input id="currentPassword" type="password" autocomplete="current-password" aria-describedby="currentPasswordErr"></div>
+                            <p class="acct-err" id="currentPasswordErr">Enter your current password.</p>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="nextPassword">new</label>
+                            <div class="ctl"><input id="nextPassword" type="password" placeholder="10+ chars" autocomplete="new-password" aria-describedby="nextPasswordErr"></div>
+                            <p class="acct-err" id="nextPasswordErr">Needs 10+ characters with a digit and a symbol.</p>
+                        </div>
+                        <div class="acct-field">
+                            <label class="acct-label" for="nextConfirm">confirm</label>
+                            <div class="ctl"><input id="nextConfirm" type="password" placeholder="again" autocomplete="new-password" aria-describedby="nextConfirmErr"></div>
+                            <p class="acct-err" id="nextConfirmErr">The two do not match.</p>
+                        </div>
+                        <button class="acct-btn" type="submit" id="passwordSave"><span class="acct-spinner"></span>POST /password</button>
+                        <div class="acct-kbdrow"><button class="acct-linkish" type="button" data-back>&larr; account</button><span>ends other sessions</span></div>
+                    </form>
+
+                    <!-- session detail -->
+                    <div data-pane="session" id="sessionPane" hidden>
+                        <h3 class="acct-pane-h">Session</h3>
+                        <dl class="acct-kv">
+                            <dt>user</dt><dd id="sessionUser">—</dd>
+                            <dt>state</dt><dd id="sessionState">—</dd>
+                            <dt>token</dt><dd id="sessionToken">—</dd>
+                            <dt>purges in</dt><dd id="sessionPurge">—</dd>
+                        </dl>
+                        <p class="acct-hint">The token is a bearer credential: it lives in this tab unless you ticked “keep me signed in”. Changing the password kills every other session.</p>
+                        <div class="acct-actions">
+                            <button class="acct-btn secondary small" type="button" id="signOut2">sign out</button>
+                            <button class="acct-btn danger small" type="button" data-open="danger">delete account</button>
+                        </div>
+                        <div class="acct-kbdrow"><button class="acct-linkish" type="button" data-back>&larr; account</button></div>
+                    </div>
+
+                    <!-- delete confirm -->
+                    <div data-pane="danger" id="dangerPane" hidden>
+                        <h3 class="acct-pane-h">Delete this account</h3>
+                        <div class="acct-confirm">
+                            <p><b>This is immediate.</b> The row, its sessions and its tickets go now — not at the next purge. Sandbox accounts (<code>demo@</code>, <code>mfa@</code> …) are protected and answer 403.</p>
+                        </div>
+                        <div class="acct-actions">
+                            <button class="acct-btn secondary small" type="button" data-back>keep it</button>
+                            <button class="acct-btn danger small" type="button" id="confirmDelete">DELETE /account</button>
+                        </div>
+                        <div class="acct-kbdrow"><span>the same email can sign up again straight away</span></div>
+                    </div>
+                </div>
+
+                <details class="acct-info" id="infoDrawer">
+                    <summary>Sandbox accounts</summary>
+                    <div class="acct-info-body">
+                        <p class="acct-hint sb-pw">Password for all of them: <code>Practice123!</code><button type="button" class="copy-btn" data-copy="Practice123!" title="Copy" aria-label="Copy the sandbox password"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></p>
+                        <ul class="sb-list">
+                        <li>
+                            <span class="sb-id"><code>demo@qa.local</code><button type="button" class="copy-btn" data-copy="demo@qa.local" title="Copy" aria-label="Copy demo@qa.local"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span>
+                            <span class="sb-note">signs in</span>
+                        </li>
+                        <li>
+                            <span class="sb-id"><code>mfa@qa.local</code><button type="button" class="copy-btn" data-copy="mfa@qa.local" title="Copy" aria-label="Copy mfa@qa.local"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span>
+                            <span class="sb-note">code 123456</span>
+                        </li>
+                        <li>
+                            <span class="sb-id"><code>expired@qa.local</code><button type="button" class="copy-btn" data-copy="expired@qa.local" title="Copy" aria-label="Copy expired@qa.local"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span>
+                            <span class="sb-note">reset flow</span>
+                        </li>
+                        <li>
+                            <span class="sb-id"><code>locked@qa.local</code><button type="button" class="copy-btn" data-copy="locked@qa.local" title="Copy" aria-label="Copy locked@qa.local"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span>
+                            <span class="sb-note">locked</span>
+                        </li>
+                        <li>
+                            <span class="sb-id"><code>disabled@qa.local</code><button type="button" class="copy-btn" data-copy="disabled@qa.local" title="Copy" aria-label="Copy disabled@qa.local"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg></button></span>
+                            <span class="sb-note">disabled</span>
+                        </li>
+                        </ul>
+                        <p class="acct-hint">These five are exempt from the purge, so they never expire.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script src="qa-playground.js"></script>
+    <script>
+        (function () {
+            /* Served on the site's own origin: /api/qa/* is a Cloudflare Worker
+               route on this zone, so there is no CORS and no preflight. A local
+               copy (LAN IP or file://) falls back to the deployed API. */
+            var API = /(^|\.)332321\.xyz$/.test(location.hostname)
+                ? '/api/qa'
+                : 'https://www.332321.xyz/api/qa';
+            var TOKEN_KEY = 'qa-accounts-token';
+            var ITER = 200000;
+            var SANDBOX_PASSWORD = 'Practice123!';
+
+            var seg = document.getElementById('seg');
+            var banner = document.getElementById('banner');
+            var signinForm = document.getElementById('signinForm');
+            var signupForm = document.getElementById('signupForm');
+            var mfaForm = document.getElementById('mfaForm');
+            var resetForm = document.getElementById('resetForm');
+            var profileForm = document.getElementById('profileForm');
+            var securityForm = document.getElementById('securityForm');
+            var ttlText = document.getElementById('ttlText');
+            var infoDrawer = document.getElementById('infoDrawer');
+
+            var identifier = document.getElementById('identifier');
+            var password = document.getElementById('password');
+            var email = document.getElementById('email');
+            var displayName = document.getElementById('displayName');
+            var newPassword = document.getElementById('newPassword');
+            var keepSignedIn = document.getElementById('keepSignedIn');
+            var ackPublic = document.getElementById('ackPublic');
+            var meter = document.getElementById('meter');
+            var strengthLabel = document.getElementById('strengthLabel');
+            var otp = document.getElementById('otp');
+            var resetPassword = document.getElementById('resetPassword');
+            var resetConfirm = document.getElementById('resetConfirm');
+            var editName = document.getElementById('editName');
+            var editMail = document.getElementById('editMail');
+            var currentPassword = document.getElementById('currentPassword');
+            var nextPassword = document.getElementById('nextPassword');
+            var nextConfirm = document.getElementById('nextConfirm');
+
+            var AUTH_PANES = ['signin', 'signup', 'mfa', 'reset'];
+            var state = { user: null, token: null, mfaTicket: null, resetTicket: null, resetEmail: null };
+            var countdown = null;
+
+            /* -------------------------------------------------------------- views */
+            function setView(name) {
+                Array.prototype.forEach.call(document.querySelectorAll('[data-pane]'), function (el) {
+                    el.hidden = el.dataset.pane !== name;
+                });
+                var isAuth = AUTH_PANES.indexOf(name) !== -1;
+                seg.hidden = !isAuth;
+                if (isAuth) {
+                    seg.dataset.i = name === 'signup' ? '1' : '0';
+                    document.getElementById('tabSignin').classList.toggle('on', name !== 'signup');
+                    document.getElementById('tabSignup').classList.toggle('on', name === 'signup');
+                    document.getElementById('tabSignin').setAttribute('aria-selected', String(name !== 'signup'));
+                    document.getElementById('tabSignup').setAttribute('aria-selected', String(name === 'signup'));
+                }
+                /* A field message is rewritten by every server response, so the
+                   pane switch has to restore the shipped wording — otherwise a
+                   stale "wrong password" line resurfaces in the next error. */
+                Array.prototype.forEach.call(document.querySelectorAll('.acct-field'), function (f) {
+                    f.classList.remove('invalid');
+                });
+                Array.prototype.forEach.call(document.querySelectorAll('.acct-err'), function (el) {
+                    if (el.dataset.defaultText) el.textContent = el.dataset.defaultText;
+                });
+                if (name === 'signin' || name === 'signup') setBanner('');
+            }
+
+            function setBanner(message, kind) {
+                if (!message) { banner.textContent = ''; banner.className = 'acct-banner'; return; }
+                banner.textContent = message;
+                banner.className = 'acct-banner on' + (kind ? ' ' + kind : '');
+            }
+            function fieldError(id, message) {
+                var err = document.getElementById(id);
+                if (message) err.textContent = message;
+                err.closest('.acct-field').classList.add('invalid');
+            }
+            function busy(btn, on) {
+                btn.classList.toggle('loading', !!on);
+                btn.disabled = !!on;
+            }
+
+            /* ------------------------------------------------------------- crypto */
+            function toBase64(bytes) {
+                var binary = '';
+                for (var i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+                return btoa(binary);
+            }
+
+            /* --- PBKDF2-HMAC-SHA256 in plain JS ---------------------------------
+               WebCrypto only exists in a secure context (https, or localhost). On
+               a plain-http LAN page crypto.subtle is undefined and every hash call
+               used to die with "Cannot read properties of undefined (reading
+               'importKey')". This fallback is byte-identical to WebCrypto (checked
+               against Node's crypto.pbkdf2Sync) and roughly 50x slower. */
+            const K = new Uint32Array([
+                0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+                0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+                0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+                0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+                0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+                0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+            ]);
+
+            function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
+
+            function sha256(bytes) {
+                const H = new Uint32Array([
+                    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+                ]);
+                const len = bytes.length;
+                const withPad = new Uint8Array((((len + 9) + 63) >> 6) << 6);
+                withPad.set(bytes);
+                withPad[len] = 0x80;
+                const bitLenHi = Math.floor(len / 0x20000000);
+                const bitLenLo = (len << 3) >>> 0;
+                const end = withPad.length;
+                withPad[end - 8] = (bitLenHi >>> 24) & 0xff;
+                withPad[end - 7] = (bitLenHi >>> 16) & 0xff;
+                withPad[end - 6] = (bitLenHi >>> 8) & 0xff;
+                withPad[end - 5] = bitLenHi & 0xff;
+                withPad[end - 4] = (bitLenLo >>> 24) & 0xff;
+                withPad[end - 3] = (bitLenLo >>> 16) & 0xff;
+                withPad[end - 2] = (bitLenLo >>> 8) & 0xff;
+                withPad[end - 1] = bitLenLo & 0xff;
+
+                const w = new Uint32Array(64);
+                for (let off = 0; off < end; off += 64) {
+                    for (let i = 0; i < 16; i++) {
+                        const j = off + i * 4;
+                        w[i] = (withPad[j] << 24) | (withPad[j + 1] << 16) | (withPad[j + 2] << 8) | withPad[j + 3];
+                    }
+                    for (let i = 16; i < 64; i++) {
+                        const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+                        const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+                        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+                    }
+                    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+                    for (let i = 0; i < 64; i++) {
+                        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+                        const ch = (e & f) ^ (~e & g);
+                        const t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+                        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+                        const maj = (a & b) ^ (a & c) ^ (b & c);
+                        const t2 = (S0 + maj) | 0;
+                        h = g; g = f; f = e; e = (d + t1) | 0;
+                        d = c; c = b; b = a; a = (t1 + t2) | 0;
+                    }
+                    H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+                    H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+                }
+
+                const out = new Uint8Array(32);
+                for (let i = 0; i < 8; i++) {
+                    out[i * 4] = (H[i] >>> 24) & 0xff;
+                    out[i * 4 + 1] = (H[i] >>> 16) & 0xff;
+                    out[i * 4 + 2] = (H[i] >>> 8) & 0xff;
+                    out[i * 4 + 3] = H[i] & 0xff;
+                }
+                return out;
+            }
+
+            function hmacSha256(key, msg) {
+                const block = 64;
+                let k = key.length > block ? sha256(key) : key;
+                const ipad = new Uint8Array(block + msg.length);
+                const opad = new Uint8Array(block + 32);
+                for (let i = 0; i < block; i++) {
+                    const b = i < k.length ? k[i] : 0;
+                    ipad[i] = b ^ 0x36;
+                    opad[i] = b ^ 0x5c;
+                }
+                ipad.set(msg, block);
+                opad.set(sha256(ipad), block);
+                return sha256(opad);
+            }
+
+            /** PBKDF2-HMAC-SHA256, single 32-byte output block (which is all this app needs). */
+            function pbkdf2Sha256(passwordBytes, saltBytes, iterations) {
+                const block = new Uint8Array(saltBytes.length + 4);
+                block.set(saltBytes);
+                block[saltBytes.length] = 0;
+                block[saltBytes.length + 1] = 0;
+                block[saltBytes.length + 2] = 0;
+                block[saltBytes.length + 3] = 1;
+
+                let u = hmacSha256(passwordBytes, block);
+                const out = u.slice();
+                for (let i = 1; i < iterations; i++) {
+                    u = hmacSha256(passwordBytes, u);
+                    for (let j = 0; j < 32; j++) out[j] ^= u[j];
+                }
+                return out;
+            }
+
+            var slowNoticeShown = false;
+            function slowNotice() {
+                if (slowNoticeShown) return;
+                slowNoticeShown = true;
+                setBanner('No WebCrypto on this origin (plain http) — hashing in JavaScript. Give it a few seconds.', 'info');
+            }
+
+            /* The Worker expects base64(PBKDF2-SHA256(password,
+               'qa-playground:' + lowercase(subject), 200k, 32)). */
+            async function derive(subject, plain) {
+                var enc = new TextEncoder();
+                var salt = 'qa-playground:' + String(subject).trim().toLowerCase();
+                if (window.crypto && crypto.subtle) {
+                    var key = await crypto.subtle.importKey('raw', enc.encode(plain), 'PBKDF2', false, ['deriveBits']);
+                    var bits = await crypto.subtle.deriveBits(
+                        { name: 'PBKDF2', salt: enc.encode(salt), iterations: ITER, hash: 'SHA-256' },
+                        key, 256
+                    );
+                    return toBase64(new Uint8Array(bits));
+                }
+                slowNotice();
+                /* yield once so the banner paints before the blocking loop */
+                await new Promise(function (r) { setTimeout(r, 30); });
+                return toBase64(pbkdf2Sha256(enc.encode(plain), enc.encode(salt), ITER));
+            }
+            async function bothShapes(plain, mail) {
+                var local = String(mail || '').slice(0, String(mail || '').indexOf('@'));
+                return Promise.all([derive(mail, plain), derive(local, plain)]);
+            }
+
+            async function api(path, options) {
+                options = options || {};
+                var headers = { 'content-type': 'application/json' };
+                if (options.token) headers.authorization = 'Bearer ' + options.token;
+                var res = await fetch(API + path, {
+                    method: options.method || 'GET',
+                    headers: headers,
+                    body: options.body ? JSON.stringify(options.body) : undefined
+                });
+                var text = await res.text();
+                var data = null;
+                try { data = text ? JSON.parse(text) : null; } catch (e) { data = { raw: text }; }
+                return { status: res.status, data: data };
+            }
+
+            function passwordProblem(value) {
+                if (!value) return 'Enter a password.';
+                if (value.length < 10) return 'Needs at least 10 characters.';
+                if (value.length > 64) return '64 characters maximum.';
+                if (!/\d/.test(value)) return 'Add at least one digit.';
+                if (!/[^\w\s]/.test(value)) return 'Add at least one symbol.';
+                return null;
+            }
+            function strengthOf(value) {
+                var n = 0;
+                if (value.length >= 10) n++;
+                if (value.length >= 14) n++;
+                if (/[A-Z]/.test(value) && /[a-z]/.test(value)) n++;
+                if (/\d/.test(value) && /[^\w\s]/.test(value)) n++;
+                return n;
+            }
+            var STRENGTH_LABEL = [
+                '10+ characters, then variety.', 'Too short to bother.',
+                'Getting there.', 'Solid.', 'This one has a chance.'
+            ];
+
+            /* ------------------------------------------------------------ session */
+            function storeToken(token, persist) {
+                try {
+                    if (persist) { localStorage.setItem(TOKEN_KEY, token); sessionStorage.removeItem(TOKEN_KEY); }
+                    else { sessionStorage.setItem(TOKEN_KEY, token); localStorage.removeItem(TOKEN_KEY); }
+                } catch (e) { /* storage blocked */ }
+            }
+            function readToken() {
+                try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); } catch (e) { return null; }
+            }
+            function dropToken() {
+                try { localStorage.removeItem(TOKEN_KEY); sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+            }
+
+            function startCountdown(purgesAt) {
+                if (countdown) clearInterval(countdown);
+                function tick() {
+                    var left = Math.max(0, purgesAt - Date.now());
+                    var h = Math.floor(left / 3600000);
+                    var m = Math.floor((left % 3600000) / 60000);
+                    var label = left > 0 ? h + 'h ' + String(m).padStart(2, '0') + 'm' : 'purging…';
+                    ttlText.textContent = label;
+                    var a = document.getElementById('accountPurge');
+                    if (a) a.textContent = label;
+                    var b = document.getElementById('sessionPurge');
+                    if (b) b.textContent = label;
+                }
+                tick();
+                countdown = setInterval(tick, 30000);
+            }
+
+            function initials(user) {
+                var parts = String(user.display_name || user.email || '?').trim().split(/[\s@._-]+/).filter(Boolean);
+                var out = (parts[0] || '?').charAt(0);
+                if (parts[1]) out += parts[1].charAt(0);
+                return out.toUpperCase();
+            }
+
+            function renderAccount(user, token) {
+                state.user = user;
+                state.token = token;
+                document.getElementById('avatar').textContent = initials(user);
+                document.getElementById('accountName').textContent = user.display_name || user.email;
+                document.getElementById('accountMail').textContent = user.email;
+                document.getElementById('accountState').textContent = user.state;
+                document.getElementById('rowName').textContent = user.display_name || 'not set';
+                document.getElementById('sessionUser').textContent = user.email;
+                document.getElementById('sessionState').textContent = user.state;
+                document.getElementById('sessionToken').textContent = token.slice(0, 12) + '…' + token.slice(-6);
+                if (user.seed) {
+                    /* Seed rows are exempt from the cron — a countdown would be a lie. */
+                    if (countdown) clearInterval(countdown);
+                    ttlText.textContent = 'sandbox';
+                    document.getElementById('purgeNote').innerHTML =
+                        'Sandbox account: exempt from the purge, so there is no timer to survive.';
+                    document.getElementById('sessionPurge').textContent = 'never (sandbox)';
+                } else {
+                    startCountdown(user.purges_at);
+                }
+                setView('account');
+            }
+
+            function backToSignin(message, kind) {
+                state.user = null;
+                state.token = null;
+                if (countdown) clearInterval(countdown);
+                ttlText.textContent = '24h';
+                password.value = '';
+                currentPassword.value = '';
+                setView('signin');
+                if (message) setBanner(message, kind);
+            }
+
+            /* ------------------------------------------------------------ sign in */
+            signinForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                setBanner('');
+                var id = identifier.value.trim();
+                var pw = password.value;
+                if (!id) { fieldError('identifierErr'); return; }
+                if (!pw) { fieldError('passwordErr'); return; }
+
+                var btn = document.getElementById('signinBtn');
+                busy(btn, true);
+                try {
+                    var hash = await derive(id, pw);
+                    var r = await api('/login', { method: 'POST', body: { identifier: id, pwd_hash: hash } });
+                    var d = r.data || {};
+                    if (r.status === 200) {
+                        storeToken(d.token, keepSignedIn.checked);
+                        renderAccount(d.user, d.token);
+                        return;
+                    }
+                    if (r.status === 401 && d.error === 'invalid_credentials') {
+                        fieldError('passwordErr', 'Wrong password. ' + d.attempts_left + ' of 5 attempts left.');
+                        setBanner('401 invalid_credentials · attempts ' + d.attempts + '/5');
+                    } else if (r.status === 423 && d.error === 'temporarily_locked') {
+                        setBanner('423 temporarily_locked · retry in ' + Math.ceil(d.retry_in_ms / 1000) + 's', 'warn');
+                    } else if (r.status === 423 && d.error === 'account_locked') {
+                        setBanner('423 account_locked · this fixture never unlocks', 'warn');
+                    } else if (r.status === 423 && d.error === 'account_disabled') {
+                        setBanner('423 account_disabled · closed by an admin', 'warn');
+                    } else if (r.status === 423 && d.error === 'password_expired') {
+                        state.resetTicket = d.reset_ticket;
+                        state.resetEmail = d.email;
+                        resetPassword.value = '';
+                        resetConfirm.value = '';
+                        setView('reset');
+                        setBanner('423 password_expired · set a new password', 'warn');
+                    } else if (r.status === 409 && d.error === 'mfa_required') {
+                        state.mfaTicket = d.mfa_ticket;
+                        otp.value = '';
+                        setView('mfa');
+                    } else if (r.status === 401 && d.error === 'unknown_account') {
+                        fieldError('identifierErr', 'No account by that name.');
+                        setBanner('401 unknown_account');
+                    } else if (r.status === 429) {
+                        setBanner('429 rate_limited · 10 requests a minute per IP', 'warn');
+                    } else {
+                        setBanner('Unexpected response: ' + r.status + ' ' + (d.error || ''));
+                    }
+                } catch (err) {
+                    setBanner('Network error — is the API reachable? (' + err.message + ')');
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ------------------------------------------------------------ sign up */
+            signupForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                setBanner('');
+                var mail = email.value.trim().toLowerCase();
+                var pw = newPassword.value;
+                var bad = false;
+                if (!/^[^\s@]{1,64}@[^\s@.]+(\.[^\s@.]+)+$/.test(mail)) { fieldError('emailErr'); bad = true; }
+                var problem = passwordProblem(pw);
+                if (problem) { fieldError('newPasswordErr', problem); bad = true; }
+                if (!ackPublic.checked) {
+                    setBanner('Tick the acknowledgement — this is a public practice database.', 'warn');
+                    bad = true;
+                }
+                if (bad) return;
+
+                var btn = document.getElementById('signupBtn');
+                busy(btn, true);
+                try {
+                    var pair = await bothShapes(pw, mail);
+                    var r = await api('/signup', {
+                        method: 'POST',
+                        body: { email: mail, display_name: displayName.value.trim(), pwd_hash: pair[0], pwd_hash_user: pair[1] }
+                    });
+                    if (r.status === 201) {
+                        storeToken(r.data.token, keepSignedIn.checked);
+                        renderAccount(r.data.user, r.data.token);
+                        setBanner('201 · account created', 'ok');
+                        return;
+                    }
+                    if (r.status === 409) setBanner('409 email_taken · that email already has an account', 'warn');
+                    else if (r.status === 429) setBanner('429 rate_limited', 'warn');
+                    else setBanner('Signup failed: ' + r.status + ' ' + ((r.data && r.data.error) || ''));
+                } catch (err) {
+                    setBanner('Network error — is the API reachable? (' + err.message + ')');
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ---------------------------------------------------------------- mfa */
+            mfaForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                var code = otp.value.trim();
+                if (!/^\d{6}$/.test(code)) { fieldError('otpErr', 'Six digits.'); return; }
+                var btn = document.getElementById('mfaBtn');
+                busy(btn, true);
+                try {
+                    var r = await api('/mfa', { method: 'POST', body: { mfa_ticket: state.mfaTicket, code: code } });
+                    if (r.status === 200) {
+                        storeToken(r.data.token, keepSignedIn.checked);
+                        state.mfaTicket = null;
+                        renderAccount(r.data.user, r.data.token);
+                    } else if (r.status === 401) {
+                        fieldError('otpErr', 'Code rejected (401 invalid_code).');
+                    } else if (r.status === 410) {
+                        setBanner('410 ticket_invalid_or_expired · start again', 'warn');
+                    } else {
+                        setBanner('MFA failed: ' + r.status);
+                    }
+                } catch (err) {
+                    setBanner('Network error: ' + err.message);
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* -------------------------------------------------------------- reset */
+            resetForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                var pw = resetPassword.value;
+                var problem = passwordProblem(pw);
+                if (problem) { fieldError('resetPasswordErr', problem); return; }
+                if (pw !== resetConfirm.value) { fieldError('resetConfirmErr'); return; }
+                var btn = document.getElementById('resetBtn');
+                busy(btn, true);
+                try {
+                    var pair = await bothShapes(pw, state.resetEmail || '');
+                    var r = await api('/reset', {
+                        method: 'POST',
+                        body: { reset_ticket: state.resetTicket, pwd_hash: pair[0], pwd_hash_user: pair[1] }
+                    });
+                    if (r.status === 200) {
+                        storeToken(r.data.token, keepSignedIn.checked);
+                        state.resetTicket = null;
+                        renderAccount(r.data.user, r.data.token);
+                        setBanner('password reset', 'ok');
+                    } else if (r.status === 400 && r.data.error === 'password_reused') {
+                        fieldError('resetPasswordErr', 'That is the password that just expired.');
+                    } else if (r.status === 410) {
+                        setBanner('410 ticket_invalid_or_expired · sign in again', 'warn');
+                    } else {
+                        setBanner('Reset failed: ' + r.status + ' ' + ((r.data && r.data.error) || ''));
+                    }
+                } catch (err) {
+                    setBanner('Network error: ' + err.message);
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ------------------------------------------------------------ profile */
+            profileForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                var btn = document.getElementById('profileSave');
+                busy(btn, true);
+                try {
+                    var r = await api('/me', { method: 'PATCH', token: state.token, body: { display_name: editName.value.trim() } });
+                    if (r.status === 200) {
+                        renderAccount(r.data.user, state.token);
+                        setBanner('profile saved', 'ok');
+                    } else if (r.status === 401) {
+                        backToSignin('Session expired — sign in again.', 'warn');
+                    } else {
+                        setBanner('Profile save failed: ' + r.status);
+                    }
+                } catch (err) {
+                    setBanner('Network error: ' + err.message);
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ----------------------------------------------------------- password */
+            securityForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                var current = currentPassword.value;
+                var next = nextPassword.value;
+                if (!current) { fieldError('currentPasswordErr'); return; }
+                var problem = passwordProblem(next);
+                if (problem) { fieldError('nextPasswordErr', problem); return; }
+                if (next !== nextConfirm.value) { fieldError('nextConfirmErr'); return; }
+                if (next === current) { fieldError('nextPasswordErr', 'That is the current password.'); return; }
+
+                var btn = document.getElementById('passwordSave');
+                busy(btn, true);
+                try {
+                    var mail = state.user.email;
+                    var currentHash = await derive(mail, current);
+                    var pair = await bothShapes(next, mail);
+                    var r = await api('/password', {
+                        method: 'POST',
+                        token: state.token,
+                        body: { current_pwd_hash: currentHash, pwd_hash: pair[0], pwd_hash_user: pair[1] }
+                    });
+                    if (r.status === 200) {
+                        /* The API rotates the session — keep the new token in
+                           whichever store already held the old one. */
+                        storeToken(r.data.token, !!localStorage.getItem(TOKEN_KEY));
+                        renderAccount(r.data.user, r.data.token);
+                        setBanner('password changed · other sessions ended', 'ok');
+                    } else if (r.status === 401 && r.data.error === 'invalid_current_password') {
+                        fieldError('currentPasswordErr', 'That is not the current password.');
+                    } else if (r.status === 400 && r.data.error === 'password_reused') {
+                        fieldError('nextPasswordErr', 'Pick something you have not used here.');
+                    } else if (r.status === 429) {
+                        setBanner('429 rate_limited', 'warn');
+                    } else {
+                        setBanner('Change failed: ' + r.status + ' ' + ((r.data && r.data.error) || ''));
+                    }
+                } catch (err) {
+                    setBanner('Network error: ' + err.message);
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ------------------------------------------------------------- delete */
+            document.getElementById('confirmDelete').addEventListener('click', async function () {
+                var btn = this;
+                busy(btn, true);
+                try {
+                    var r = await api('/account', { method: 'DELETE', token: state.token });
+                    if (r.status === 204) {
+                        dropToken();
+                        backToSignin('204 · account deleted. The same email can sign up again right now.', 'ok');
+                    } else if (r.status === 403) {
+                        setBanner('403 seed_account_protected · sandbox accounts survive on purpose', 'warn');
+                        setView('account');
+                    } else if (r.status === 401) {
+                        dropToken();
+                        backToSignin('Session expired — sign in again.', 'warn');
+                    } else {
+                        setBanner('Delete failed: ' + r.status);
+                    }
+                } catch (err) {
+                    setBanner('Network error: ' + err.message);
+                } finally {
+                    busy(btn, false);
+                }
+            });
+
+            /* ------------------------------------------------------------- logout */
+            function signOut() {
+                var token = state.token || readToken();
+                if (token) api('/logout', { method: 'POST', token: token }).catch(function () {});
+                dropToken();
+                backToSignin('Signed out.', 'ok');
+            }
+            document.getElementById('signOut').addEventListener('click', signOut);
+            document.getElementById('signOut2').addEventListener('click', signOut);
+
+            /* --------------------------------------------------------- navigation */
+            function openAccountPane(name) {
+                if (!state.user) return;
+                if (name === 'profile') {
+                    editName.value = state.user.display_name || '';
+                    editMail.value = state.user.email;
+                }
+                if (name === 'security') {
+                    currentPassword.value = '';
+                    nextPassword.value = '';
+                    nextConfirm.value = '';
+                }
+                setBanner('');
+                setView(name);
+            }
+            Array.prototype.forEach.call(document.querySelectorAll('[data-open]'), function (btn) {
+                btn.addEventListener('click', function () { openAccountPane(btn.dataset.open); });
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-back]'), function (btn) {
+                btn.addEventListener('click', function () { setBanner(''); setView('account'); });
+            });
+
+            document.getElementById('tabSignin').addEventListener('click', function () { setView('signin'); });
+            document.getElementById('tabSignup').addEventListener('click', function () { setView('signup'); });
+            document.getElementById('mfaBack').addEventListener('click', function () { setView('signin'); });
+            document.getElementById('resetCancel').addEventListener('click', function () { setView('signin'); });
+
+            function wireReveal(buttonId, input) {
+                document.getElementById(buttonId).addEventListener('click', function () {
+                    var showing = input.type === 'text';
+                    input.type = showing ? 'password' : 'text';
+                    this.textContent = showing ? 'show' : 'hide';
+                    this.setAttribute('aria-pressed', String(!showing));
+                });
+            }
+            wireReveal('revealSignin', password);
+            wireReveal('revealSignup', newPassword);
+
+            newPassword.addEventListener('input', function () {
+                var value = newPassword.value;
+                var n = value ? strengthOf(value) : 0;
+                meter.dataset.lvl = String(n);
+                strengthLabel.textContent = STRENGTH_LABEL[n];
+                var errField = document.getElementById('newPasswordErr').closest('.acct-field');
+                if (value) {
+                    var problem = passwordProblem(value);
+                    if (problem) fieldError('newPasswordErr', problem);
+                    else errField.classList.remove('invalid');
+                } else {
+                    errField.classList.remove('invalid');
+                }
+            });
+
+            /* Clipboard API also needs a secure context — fall back to the old
+               execCommand trick so the copy buttons work on plain http too. */
+            async function copyText(text, btn) {
+                var ok = false;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(text);
+                        ok = true;
+                    }
+                } catch (e) { ok = false; }
+                if (!ok) {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.top = '-1000px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+                    document.body.removeChild(ta);
+                }
+                if (ok) {
+                    setBanner('copied: ' + text, 'ok');
+                } else {
+                    setBanner('copy blocked by the browser — select the text manually', 'warn');
+                }
+            }
+            var CHECK_ICON = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+            Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function (btn) {
+                var glyph = btn.innerHTML;
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    copyText(btn.dataset.copy, btn);
+                    btn.innerHTML = CHECK_ICON;
+                    btn.classList.add('done');
+                    btn.title = 'Copied';
+                    setTimeout(function () {
+                        btn.innerHTML = glyph;
+                        btn.classList.remove('done');
+                        btn.title = 'Copy';
+                    }, 1200);
+                });
+            });
+
+            /* --------------------------------------------------------------- boot */
+            Array.prototype.forEach.call(document.querySelectorAll('.acct-err'), function (el) {
+                el.dataset.defaultText = el.textContent;
+            });
+
+            (async function boot() {
+                var token = readToken();
+                if (!token) { setView('signin'); return; }
+                try {
+                    var r = await api('/me', { token: token });
+                    if (r.status === 200) renderAccount(r.data.user, token);
+                    else { dropToken(); setView('signin'); }
+                } catch (e) {
+                    setView('signin');
+                }
+            })();
+
+            setView('signin');
+        })();
+    </script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+</body>
+</html>

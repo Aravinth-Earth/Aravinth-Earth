@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="qa-playground.css">
     <link rel="icon" type="image/png" href="/favicon.png" />
 
-    <meta name="description" content="Practice test automation with interactive QA challenges: inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
+    <meta name="description" content="Practice test automation with interactive QA challenges: a login gate, inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
     <meta property="og:title" content="QA Playground — Test Automation Practice" />
-    <meta property="og:description" content="Practice test automation with interactive QA challenges: inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
+    <meta property="og:description" content="Practice test automation with interactive QA challenges: a login gate, inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
     <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="QA Playground — Test Automation Practice" />
-    <meta name="twitter:description" content="Practice test automation with interactive QA challenges: inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
+    <meta name="twitter:description" content="Practice test automation with interactive QA challenges: a login gate, inputs, tables, forms, frames, dynamic content, uploads, drag and drop, accessibility, shadow DOM and storage." />
     <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
     <link rel="stylesheet" href="/css/about-privacy.css" />
     <link rel="stylesheet" href="/css/themes.css" />
@@ -59,105 +59,100 @@
     <div role="main" class="container">
         <h1>QA Playground</h1>
         <p class="sub">A collection of web elements and interaction patterns for testing automation skills. Pick any page to practice with Selenium, Cypress, Playwright, or any automation framework.</p>
-        <p class="note">Levels: <span class="level l1">L1</span> fundamentals (0–2 yrs) · <span class="level l2">L2</span> intermediate (2–5 yrs) · <span class="level l3">L3</span> advanced (5+ yrs)</p>
+        <p class="note"><b>Tracks, not levels.</b> Every page is tagged with the skill it drills — finding, driving, waiting, faking, or proving. No seniority ladder and no year counts: those five problems outlive any framework, and they don't care whether a human or an agent writes the test.</p>
 
-        <div class="filter-bar" id="filterBar">
-            <button class="active" data-lv="all">All</button>
-            <button data-lv="l1">L1</button>
-            <button data-lv="l2">L2</button>
-            <button data-lv="l3">L3</button>
+        <div class="filter-bar" id="filterBar" role="group" aria-label="Filter modules by track">
+            <button class="active" data-track="all">All modules</button>
+            <button data-track="find">Say my name <small>locators · shadow roots · frames</small></button>
+            <button data-track="drive">Handle with care <small>inputs · picks · uploads · drags</small></button>
+            <button data-track="sync">Beat the clock <small>waits · retries · stale nodes</small></button>
+            <button data-track="fake">Trust nothing <small>mocks · storage · isolation</small></button>
+            <button data-track="prove">Show your work <small>assertions · a11y · artifacts</small></button>
         </div>
 
         <div class="card-grid" id="cardGrid">
-            <a href="inputs.html" class="card-link" data-level="l1"><div class="card">
-                <h2>Input Fields <span class="level l1">L1</span></h2>
-                <p>Text inputs, numbers, email, password, week picker, file upload, maxlength, readonly, disabled</p>
+            <a href="accounts.html" class="card-link" data-track="fake"><div class="card">
+                <h2>Accounts — real API <span class="track t-fake">Trust nothing</span></h2>
+                <p class="tag">Not a mock: signup, login, MFA, expired reset and delete against a live Worker + D1 that forgets you in 24 hours.</p>
+                <p class="practice"><b>Practice:</b> real HTTP status codes (201/401/409/423/429), duplicate email, wrong-password attempt counting, lockout, MFA ticket, password reset, bearer sessions, delete-and-reuse-the-email.</p>
+            </div></a>
+
+            <a href="inputs.html" class="card-link" data-track="drive"><div class="card">
+                <h2>Input Fields <span class="track t-drive">Handle with care</span></h2>
+                <p class="tag">Type, poke, get rejected: maxlength, readonly, disabled, and a file picker.</p>
                 <p class="practice"><b>Practice:</b> locating text/number/email/password inputs, file upload, and negative tests for maxlength/readonly/disabled/hidden fields.</p>
-                <span class="badge">Inputs</span>
             </div></a>
 
-            <a href="selection.html" class="card-link" data-level="l1"><div class="card">
-                <h2>Selection Elements <span class="level l1">L1</span></h2>
-                <p>Checkboxes, radio buttons, single &amp; multi-select dropdowns, listbox</p>
+            <a href="selection.html" class="card-link" data-track="drive"><div class="card">
+                <h2>Selection Elements <span class="track t-drive">Handle with care</span></h2>
+                <p class="tag">Ticks and dropdowns that quietly remember what you did.</p>
                 <p class="practice"><b>Practice:</b> checkboxes, radios, single/multi-select, optgroup, and reading selected values.</p>
-                <span class="badge">Selection</span>
             </div></a>
 
-            <a href="interactive.html" class="card-link" data-level="l1"><div class="card">
-                <h2>Interactive Elements <span class="level l1">L1</span></h2>
-                <p>Modals, alerts, confirm dialogs, prompts, tooltips, hover dropdowns, toast notifications</p>
+            <a href="interactive.html" class="card-link" data-track="drive"><div class="card">
+                <h2>Interactive Elements <span class="track t-drive">Handle with care</span></h2>
+                <p class="tag">Dialogs that argue back, toasts that vanish, menus that open only on hover.</p>
                 <p class="practice"><b>Practice:</b> modals, browser alerts/confirm/prompt, tooltips, hover menus, toasts, accordions.</p>
-                <span class="badge">Interactive</span>
             </div></a>
 
-            <a href="frames.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Frames &amp; Windows <span class="level l2">L2</span></h2>
-                <p>Iframes, nested iframes, new window links, popups</p>
-                <p class="practice"><b>Practice:</b> switching iframes, nested frames, new windows/tabs, popups.</p>
-                <span class="badge">Frames</span>
-            </div></a>
-
-            <a href="data-tables.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Data Tables <span class="level l2">L2</span></h2>
-                <p>Tables with pagination, sortable columns, dynamic row add/remove</p>
-                <p class="practice"><b>Practice:</b> sorting, filtering, pagination, dynamic rows, empty/max/random states.</p>
-                <span class="badge">Tables</span>
-            </div></a>
-
-            <a href="dynamic.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Dynamic Content <span class="level l2">L2</span></h2>
-                <p>Loading spinners, delayed elements, auto-refresh, progress bars, lazy-loaded content</p>
-                <p class="practice"><b>Practice:</b> implicit/explicit waits, stale elements, spinners, progress bars, lazy loading.</p>
-                <span class="badge">Dynamic</span>
-            </div></a>
-
-            <a href="forms.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Forms &amp; Validation <span class="level l2">L2</span></h2>
-                <p>Full form with mandatory fields, validation rules, submit handling, success &amp; error states</p>
+            <a href="forms.html" class="card-link" data-track="drive"><div class="card">
+                <h2>Forms &amp; Validation <span class="track t-drive">Handle with care</span></h2>
+                <p class="tag">One form, a dozen ways to be wrong.</p>
                 <p class="practice"><b>Practice:</b> required fields, field-level validation, success/error submission states.</p>
-                <span class="badge">Forms</span>
             </div></a>
 
-            <a href="downloads.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Downloads <span class="level l2">L2</span></h2>
-                <p>Direct links, generated files, and new-tab opens</p>
-                <p class="practice"><b>Practice:</b> verifying download filenames, content, and download events.</p>
-                <span class="badge">Downloads</span>
-            </div></a>
-
-            <a href="upload.html" class="card-link" data-level="l2"><div class="card">
-                <h2>Upload &amp; Drag &amp; Drop <span class="level l2">L2</span></h2>
-                <p>File picker, drag-and-drop zone, validation and simulated progress</p>
+            <a href="upload.html" class="card-link" data-track="drive"><div class="card">
+                <h2>Upload &amp; Drag &amp; Drop <span class="track t-drive">Handle with care</span></h2>
+                <p class="tag">A file that has to arrive by drag, not by picker.</p>
                 <p class="practice"><b>Practice:</b> file uploads, drag-and-drop (native events), type/size validation.</p>
-                <span class="badge">Upload</span>
             </div></a>
 
-            <a href="api-mock.html" class="card-link" data-level="l3"><div class="card">
-                <h2>Mock API <span class="level l3">L3</span></h2>
-                <p>Simulated async calls with loading, error, and success states</p>
-                <p class="practice"><b>Practice:</b> waiting, error handling, and request interception (cy.intercept / page.route).</p>
-                <span class="badge">Network</span>
+            <a href="frames.html" class="card-link" data-track="find"><div class="card">
+                <h2>Frames &amp; Windows <span class="track t-find">Say my name</span></h2>
+                <p class="tag">Elements living inside elements — your selector can't see them yet.</p>
+                <p class="practice"><b>Practice:</b> switching iframes, nested frames, new windows/tabs, popups.</p>
             </div></a>
 
-            <a href="accessibility.html" class="card-link" data-level="l3"><div class="card">
-                <h2>Accessibility Audit <span class="level l3">L3</span></h2>
-                <p>A page with deliberate a11y defects to find and report</p>
-                <p class="practice"><b>Practice:</b> a11y auditing, semantic HTML, keyboard access, ARIA.</p>
-                <span class="badge">A11y</span>
-            </div></a>
-
-            <a href="shadow-dom.html" class="card-link" data-level="l3"><div class="card">
-                <h2>Shadow DOM <span class="level l3">L3</span></h2>
-                <p>Web component with a shadow root — elements a normal CSS selector cannot reach</p>
+            <a href="shadow-dom.html" class="card-link" data-track="find"><div class="card">
+                <h2>Shadow DOM <span class="track t-find">Say my name</span></h2>
+                <p class="tag">The element exists. A normal CSS selector will never reach it.</p>
                 <p class="practice"><b>Practice:</b> querying across shadow roots and framework-specific shadow handling.</p>
-                <span class="badge">Shadow DOM</span>
             </div></a>
 
-            <a href="storage.html" class="card-link" data-level="l3"><div class="card">
-                <h2>Web Storage <span class="level l3">L3</span></h2>
-                <p>localStorage and sessionStorage state that survives (or not) a reload</p>
+            <a href="dynamic.html" class="card-link" data-track="sync"><div class="card">
+                <h2>Dynamic Content <span class="track t-sync">Beat the clock</span></h2>
+                <p class="tag">It shows up late, sometimes twice, sometimes never.</p>
+                <p class="practice"><b>Practice:</b> implicit/explicit waits, stale elements, spinners, progress bars, lazy loading.</p>
+            </div></a>
+
+            <a href="api-mock.html" class="card-link" data-track="fake"><div class="card">
+                <h2>Mock API <span class="track t-fake">Trust nothing</span></h2>
+                <p class="tag">The server lies on purpose. Test both lies.</p>
+                <p class="practice"><b>Practice:</b> waiting, error handling, and request interception (cy.intercept / page.route).</p>
+            </div></a>
+
+            <a href="storage.html" class="card-link" data-track="fake"><div class="card">
+                <h2>Web Storage <span class="track t-fake">Trust nothing</span></h2>
+                <p class="tag">State that survives a reload — and tests that must not.</p>
                 <p class="practice"><b>Practice:</b> reading/writing storage and building test isolation around it.</p>
-                <span class="badge">Storage</span>
+            </div></a>
+
+            <a href="data-tables.html" class="card-link" data-track="prove"><div class="card">
+                <h2>Data Tables <span class="track t-prove">Show your work</span></h2>
+                <p class="tag">Sort it, page it, delete a row — then prove the data really moved.</p>
+                <p class="practice"><b>Practice:</b> sorting, filtering, pagination, dynamic rows, empty/max/random states.</p>
+            </div></a>
+
+            <a href="downloads.html" class="card-link" data-track="prove"><div class="card">
+                <h2>Downloads <span class="track t-prove">Show your work</span></h2>
+                <p class="tag">A file that only exists after the click.</p>
+                <p class="practice"><b>Practice:</b> verifying download filenames, content, and download events.</p>
+            </div></a>
+
+            <a href="accessibility.html" class="card-link" data-track="prove"><div class="card">
+                <h2>Accessibility Audit <span class="track t-prove">Show your work</span></h2>
+                <p class="tag">Defects hiding in plain sight. Your eyes won't find them; the keyboard will.</p>
+                <p class="practice"><b>Practice:</b> a11y auditing, semantic HTML, keyboard access, ARIA.</p>
             </div></a>
         </div>
     </div>
@@ -166,12 +161,12 @@
         document.getElementById('filterBar').addEventListener('click', function (e) {
             var btn = e.target.closest('button');
             if (!btn) return;
-            var lv = btn.dataset.lv;
+            var track = btn.dataset.track;
             Array.prototype.forEach.call(this.querySelectorAll('button'), function (b) {
                 b.classList.toggle('active', b === btn);
             });
             Array.prototype.forEach.call(document.querySelectorAll('#cardGrid .card-link'), function (a) {
-                a.style.display = (lv === 'all' || a.dataset.level === lv) ? '' : 'none';
+                a.style.display = (track === 'all' || a.dataset.track === track) ? '' : 'none';
             });
         });
     </script>

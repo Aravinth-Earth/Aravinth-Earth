@@ -39,7 +39,6 @@
     { href: 'inputs.html', label: 'Inputs', track: 'drive' },
     { href: 'selection.html', label: 'Selection', track: 'drive' },
     { href: 'interactive.html', label: 'Interactive', track: 'drive' },
-    { href: 'accounts.html', label: 'Accounts', track: 'fake' },
     { href: 'forms.html', label: 'Forms', track: 'drive' },
     { href: 'upload.html', label: 'Upload', track: 'drive' },
     { href: 'frames.html', label: 'Frames', track: 'find' },

@@ -31,7 +31,7 @@
  *   answer with an old copy.
  */
 
-const CACHE_NAME = 'site-cache-v6';
+const CACHE_NAME = 'site-cache-v7';
 
 /**
  * The prefix every cache this worker owns shares.

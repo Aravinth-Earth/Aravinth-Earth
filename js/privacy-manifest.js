@@ -468,6 +468,7 @@
     var QA_SUBPAGES = [
         'accessibility', 'api-mock', 'data-tables', 'downloads', 'dynamic',
         'forms', 'frames', 'inputs', 'interactive', 'nested-frame',
+        'accounts',
         'selection', 'shadow-dom', 'storage', 'upload',
     ];
 
@@ -489,6 +490,27 @@
             ],
         };
     });
+
+    // accounts.html is the one QA fixture that talks to a real backend.
+    manifest['/w/qa-playground/accounts.html'] = {
+        name: 'QA Playground — accounts',
+        summary: 'A real signup and sign-in flow for automation practice, served by a Cloudflare Worker with a 24-hour database.',
+        stores: [
+            {
+                label: 'Your session token',
+                detail: 'In ' + STORAGE_LOCAL + ' (key "qa-accounts-token") when you tick "keep me signed in", otherwise in ' + STORAGE_SESSION + ' under the same key. Cleared on sign out, on account delete, and when the account is purged.',
+            },
+        ],
+        // No third party: the API is this same domain (/api/qa), so it is
+        // described in the notes rather than listed as an outside party.
+        sends: [],
+        loads: [],
+        notes: [
+            'This fixture makes no analytics or third-party requests. Its only network calls go to /api/qa on this same domain — a Cloudflare Worker that answers signup, login, MFA, reset, profile and delete.',
+            'Accounts are disposable by design: every non-sandbox account is deleted 24 hours after it was created, together with its sessions. Nothing is emailed, verified or shared.',
+            'Do not type a real password here. It is a public practice database, and the five sandbox accounts are listed on the page.',
+        ],
+    };
 
     // The storage fixture is the one QA page that deliberately stores things.
     manifest['/w/qa-playground/storage.html'] = {

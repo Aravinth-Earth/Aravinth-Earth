@@ -31,7 +31,7 @@
  *   answer with an old copy.
  */
 
-const CACHE_NAME = 'site-cache-v7';
+const CACHE_NAME = 'site-cache-v8';
 
 /**
  * The prefix every cache this worker owns shares.
@@ -212,7 +212,6 @@ const THIRD_PARTY_ALLOWLIST = [
  * are normally served stale-while-revalidate, so without this a manual
  * refresh would keep showing the cached copy.
  */
-let bypassNextNavigation = false;
 
 // ---------------------------------------------------------------------------
 // Install / activate
@@ -262,7 +261,6 @@ self.addEventListener('message', (event) => {
 
     if (data.type === 'SKIP_WAITING') {
         if (data.bypassCache) {
-            bypassNextNavigation = true;
         }
         // NOTE: skipWaiting() belongs here, not in `install`. Calling it during
         // install would activate the new worker before the page asked for it
@@ -336,7 +334,7 @@ self.addEventListener('fetch', (event) => {
         JSON_PATTERN.test(url.pathname) ||
         STATIC_ASSET_PATTERN.test(url.pathname)
     ) {
-        const result = handleCacheFirst(event);
+        const result = handleNetworkFirstAsset(event);
         event.waitUntil(result.background);
         event.respondWith(result.response.catch(() => serviceUnavailable()));
     }
@@ -356,89 +354,69 @@ function serviceUnavailable() {
 // ---------------------------------------------------------------------------
 
 /**
- * Navigations: stale-while-revalidate. The cached page is returned instantly
- * and the network copy refreshes the cache in the background, so the site
- * feels instant and still heals itself.
+ * Navigations: NETWORK FIRST.
+ *
+ * The internet is the source of truth. A page is fetched from the network on
+ * every navigation and only falls back to the stored copy when that request
+ * fails (offline, DNS, timeout) or the server answers with a 5xx. The old
+ * order -- cache first, revalidate in the background -- made every deploy
+ * invisible for one visit per page, which reads as "my change is not there"
+ * even though it shipped.
+ *
+ * Trade-off, accepted on purpose: a navigation now costs a round trip when
+ * the network is up. The site is static and edge-cached, so that trip is
+ * short; a wrong-looking page is worse than a 100 ms wait.
  */
 function handleNavigation(event) {
     const request = event.request;
     const url = new URL(request.url);
     const cachePromise = caches.open(CACHE_NAME);
 
-    // The network request starts immediately, in parallel with the cache
-    // lookup. It resolves to null when the network is unavailable.
-    //
-    // `cache: 'no-cache'` forces the network instead of letting the
-    // browser's HTTP cache answer. Otherwise the revalidation fetches the
-    // same bytes that are already cached, stores them back, and the cache
-    // never updates -- a deploy stays shadowed by the origin's Cache-Control
-    // for as long as that is set.
-    const network = fetch(request, { cache: 'no-cache' })
-        .then(async (response) => {
-            if (response && response.ok) {
-                try {
-                    const cache = await cachePromise;
-                    // Store by PATHNAME, not by the full URL. A query string
-                    // would make every distinct query a separate cache entry,
-                    // so the cache could grow without bound and any one of
-                    // those entries could be the one served for the page.
-                    await cache.put(new Request(url.pathname, { headers: request.headers }), response.clone());
-                } catch (err) {
-                    /* cache.put can reject on odd responses - never fatal */
-                }
-            }
-            return response;
-        })
-        .catch(() => null);
-
     const response = (async () => {
         const cache = await cachePromise;
-        const cached = await matchPage(cache, url);
 
-        if (bypassNextNavigation) {
-            // The user asked for fresh content, so the network wins -- but
-            // only when the network actually produced a usable page.
-            //
-            // WHY: `fetch()` resolves for HTTP errors too, so a 500/502/503
-            // from the origin counts as "fresh" here. Returning it blindly
-            // would replace a perfectly good cached copy with the server's
-            // error page, which is strictly worse than the stale-while-
-            // revalidate path (that one prefers the cache). So the order is:
-            //   good network page  >  good cached page  >  server error
-            // The server error is still shown when there is no cached copy at
-            // all, because hiding it would leave the user with nothing.
-            bypassNextNavigation = false;
-            const fresh = await network;
-            if (fresh && !isServerError(fresh)) return fresh;
+        try {
+            // `cache: 'no-cache'` makes the browser revalidate with the server
+            // instead of answering from its own HTTP cache, which would hand
+            // back the same bytes we are trying to replace.
+            const fresh = await fetch(request, { cache: 'no-cache' });
+
+            if (fresh && !isServerError(fresh)) {
+                if (isCacheable(fresh)) {
+                    try {
+                        // Store by PATHNAME, not the full URL: a query string
+                        // would make every variant its own entry, so the cache
+                        // could grow without bound.
+                        await cache.put(
+                            new Request(url.pathname, { headers: request.headers }),
+                            fresh.clone()
+                        );
+                    } catch (err) {
+                        /* cache.put can reject on odd responses - never fatal */
+                    }
+                }
+                // A 404 is a dead end; serve our own styled page so the site
+                // has ONE error entry whether the miss comes from here, the
+                // server, or the offline fallback.
+                if (fresh.status === 404) {
+                    const styled = await cached404(cache);
+                    if (styled) return styled;
+                }
+                return fresh;
+            }
+
+            // 5xx: a stored copy beats the server's error page.
+            const cachedOnError = await matchPage(cache, url);
+            if (cachedOnError) return cachedOnError;
+            return fresh || offlineFallback(cache);
+        } catch (err) {
+            const cached = await matchPage(cache, url);
             if (cached) return cached;
-            if (fresh) return fresh;
             return offlineFallback(cache);
         }
-
-        if (cached) {
-            // Background update. A failed revalidation is swallowed by the
-            // `.catch()` above, so the user never sees an error because of it.
-            return cached;
-        }
-
-        const fresh = await network;
-        if (fresh) {
-            // A 404 from the server is a dead end. Serve our own styled 404
-            // page instead so the site has ONE error entry -- whether the
-            // miss is caught here, by the server, or by the offline fallback.
-            // Without this, the user gets whatever body the origin happened
-            // to return, which on a plain file server is a bare error page.
-            if (fresh.status === 404) {
-                const styled = await cached404(cache);
-                if (styled) return styled;
-            }
-            return fresh;
-        }
-
-        return offlineFallback(cache);
     })();
 
-    return { response, background: network.then(() => {}) };
+    return { response, background: Promise.resolve() };
 }
 
 /**
@@ -458,41 +436,34 @@ async function cached404(cache) {
 }
 
 /**
- * Static assets and JSON: cache-first with a background revalidate. The
- * 1.8 MB GeoJSON payloads must come from the cache, not the network, or the
- * TN assembly map is unusable offline.
+ * Static assets and JSON: NETWORK FIRST, cache as the fallback.
+ *
+ * Same rule as pages: the network answers when it can, the stored copy only
+ * when it cannot. The 1.8 MB GeoJSON payloads are the reason the cache still
+ * exists at all -- without them the assembly map is dead offline -- but they
+ * are no longer served from the cache while the network is available.
  */
-function handleCacheFirst(event) {
+function handleNetworkFirstAsset(event) {
     const request = event.request;
     const cachePromise = caches.open(CACHE_NAME);
-    const background = deferred();
 
     const response = (async () => {
         const cache = await cachePromise;
-        const cached = await cache.match(request);
-
-        if (cached) {
-            // Refresh in the background; failures are swallowed.
-            background.resolve(revalidateInBackground(cache, request));
-            return cached;
-        }
 
         try {
-            // See revalidateInBackground(): the default HTTP cache would
-            // answer this fetch with the bytes we already hold, so the cache
-            // would never actually update.
             const fresh = await fetch(request, { cache: 'no-cache' });
             if (isCacheable(fresh)) {
-                background.resolve(
-                    cache.put(request, fresh.clone()).catch(() => {})
-                );
-            } else {
-                background.resolve();
+                try {
+                    await cache.put(request, fresh.clone());
+                } catch (err) {
+                    /* a failed cache write must never fail the response */
+                }
             }
             return fresh;
         } catch (err) {
-            background.resolve();
-            // Not cached and unreachable: answer with a plain 504. Serving the
+            const cached = await cache.match(request);
+            if (cached) return cached;
+            // Not cached and unreachable: a plain 504, because serving the
             // HTML 404 page here would break CSS/JS parsing.
             return new Response('Service Unavailable', {
                 status: 504,
@@ -501,7 +472,7 @@ function handleCacheFirst(event) {
         }
     })();
 
-    return { response, background: background.promise };
+    return { response, background: Promise.resolve() };
 }
 
 /**

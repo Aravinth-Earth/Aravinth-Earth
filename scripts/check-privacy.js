@@ -24,6 +24,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
+const { isWorkerRoute } = require('./lib/worker-routes');
 
 /**
  * Resolve a reference found in a page to a file in the repository.
@@ -213,6 +214,10 @@ for (const file of htmlFiles) {
             const resolved = resolveRef(dir, raw);
             sitePath = '/' + path.relative(ROOT, resolved).split(path.sep).join('/');
         }
+
+        // A Worker-served app brings its own page and its own privacy
+        // statement; this manifest does not describe it.
+        if (isWorkerRoute(sitePath)) continue;
 
         // Only PAGE links matter. An <a href> to a stylesheet or script is
         // not a navigation, and pages do not have privacy entries for them.

@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
+const { WORKER_ROUTES } = require('./lib/worker-routes');
 const BASE_URL = 'https://www.332321.xyz';
 const SITEMAP_PATH = path.join(ROOT, 'sitemap.xml');
 
@@ -107,13 +108,24 @@ function build() {
         .filter((p) => p.route !== null)
         .sort((a, b) => a.route.localeCompare(b.route));
 
-    const urls = pages.map(({ abs, route }) => {
+    // A Worker-served page is a page: leaving it out would hide the app from
+    // search engines. There is no file to date it by, so it takes the date of
+    // the newest commit -- the last moment its deployment could have changed.
+    const fileRoutes = new Set(pages.map((p) => p.route));
+    const workerPages = WORKER_ROUTES.map((route) => route.replace(/^\//, ''))
+        .filter((route) => !fileRoutes.has(route))
+        .map((route) => ({ abs: null, route }));
+
+    const urls = pages
+        .concat(workerPages)
+        .sort((a, b) => a.route.localeCompare(b.route))
+        .map(({ abs, route }) => {
         const loc = `${BASE_URL}/${route}`;
         const priority = PRIORITY[route] ?? DEFAULT_PRIORITY;
         return [
             '  <url>',
             `    <loc>${loc}</loc>`,
-            `    <lastmod>${lastmod(abs)}</lastmod>`,
+            `    <lastmod>${abs ? lastmod(abs) : commitDate()}</lastmod>`,
             `    <priority>${priority}</priority>`,
             '  </url>',
         ].join('\n');
@@ -126,6 +138,15 @@ function build() {
         '</urlset>',
         '',
     ].join('\n');
+}
+
+/** Date of the newest commit, for entries that have no file of their own. */
+function commitDate() {
+    try {
+        return execFileSync('git', ['log', '-1', '--format=%cs'], { cwd: ROOT }).toString().trim();
+    } catch {
+        return new Date().toISOString().slice(0, 10);
+    }
 }
 
 const generated = build();

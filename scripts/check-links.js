@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { stripComments } = require('./lib/html');
+const { isWorkerRoute } = require('./lib/worker-routes');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE_ROOT = '/'; // deployed at the domain root, so "/" maps to the repo root
@@ -95,6 +96,10 @@ function resolvesToFile(pageAbsPath, rawUrl, pageIds) {
         }
         return true;
     }
+
+    // A path a Worker owns has no file in this tree -- the route answers it.
+    // Naming those paths explicitly keeps the rest of the check strict.
+    if (isWorkerRoute(clean)) return true;
 
     let targetPath;
     if (clean.startsWith('/')) {

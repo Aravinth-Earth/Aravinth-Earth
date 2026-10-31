@@ -189,8 +189,8 @@
             notes: ['This page description claims "no tracking". GoatCounter does send an anonymous page view — see above.'],
         },
 
-        '/w/expense-splitter/': {
-            name: 'Expense Splitter',
+        '/w/splitter-local/': {
+            name: 'Expense Splitter (local)',
             summary: 'Splits a trip cost between the people who went.',
             stores: [
                 {

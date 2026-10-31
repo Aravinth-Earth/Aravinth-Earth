@@ -89,7 +89,7 @@ const PAGE_PRECACHE_URLS = [
     '/w/countdown/count-down.html',
     '/w/daily-planner/index.html',
     '/w/decision-helper/index.html',
-    '/w/expense-splitter/index.html',
+    '/w/splitter-local/index.html',
     '/w/life-on-earth/Life_On_Earth.html',
     '/w/math-game/index.html',
     '/w/password-generator/pwd.html',
@@ -173,8 +173,14 @@ const PRECACHE_URLS = SHELL_PRECACHE_URLS.concat(
  * the entry it already holds, stale-while-revalidate serves the cached page
  * -- and a stale id is a dead embed. The page is useless without the network,
  * so there is nothing to buy by keeping a copy: pass it through untouched.
+ *
+ * `w/expense-splitter/` is not built from this repository at all: a Worker
+ * route answers it, page and API together, so its HTML and scripts change
+ * whenever that Worker is deployed. A cached copy here would be a version of
+ * the app that no longer exists -- and the app keeps its own encrypted cache
+ * anyway, under its own control.
  */
-const LIVE_DATA_PATHS = ['/w/youtube-news/'];
+const LIVE_DATA_PATHS = ['/w/youtube-news/', '/w/expense-splitter/'];
 
 /**
  * Static assets that are safe to serve from cache and refresh in the

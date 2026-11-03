@@ -1,62 +1,78 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-11-03T05:26:28+0530",
+  "generated_at": "2026-11-03T13:22:08+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "OlqeEnM1zJk",
-        "lB0s1AzWbS8",
-        "sq-Ytt5tR5k",
-        "cY7n46lyI_s",
-        "E4ndYFfdlb8"
+        "Yo22a9saXJs",
+        "qAYJ5CxX6H4",
+        "N5bZ19e9ZNY",
+        "I9iV_NTc8Nc",
+        "JmyTzBKLggI"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "0jx6gyi__J4",
-        "JWu9MHaz6y8"
+        "0MHlyaV5f4w",
+        "J2sLnQ0CexQ",
+        "hNu1cYt8G0k",
+        "f6gqs1wrZSc",
+        "oetPhh2l5mc"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "ehwe-wzpTf8",
-        "MnGOxpjHT1Q",
-        "W7C8W81OiIM",
-        "lQtZh-diUNo",
-        "3gUQe3crE-Q"
+        "Neqml3unu80",
+        "7XFuwiiRgfU",
+        "HDElUclbHMU",
+        "opI-ng23MoA",
+        "7XMmU0YIYd8"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "t1v9q05GgV0",
-        "G04Ltn2mDJ4"
+        "KrFajtYPQzM",
+        "347RmsCXaPY",
+        "pvHmi3dt5NM",
+        "Reb7RzueUOw",
+        "26IQIqIklm8"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "_Lg0IUxUMi0"
+        "OYL-BtNAcYs",
+        "UXrDEXyRiJo",
+        "ZpBeLBBsYrA",
+        "nVpxuj4IrZ0",
+        "4MZ7DvmEQ58"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "hw7Fjh6mncQ"
+        "KXYsLk1tEU4",
+        "hw7Fjh6mncQ",
+        "iNUecb6WNzE",
+        "cPDFnrhINyg",
+        "AIBlZnb89Dg"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
+        "0M6ZrOOg6Y4",
+        "z0y9UrWThCE",
         "9M02G5c6x6w"
       ]
     },

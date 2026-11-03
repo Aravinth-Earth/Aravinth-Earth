@@ -1,15 +1,14 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-11-03T13:22:08+0530",
+  "generated_at": "2026-11-03T22:47:35+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "Yo22a9saXJs",
-        "qAYJ5CxX6H4",
+        "fLIxPD4Tgy8",
+        "gP9oMeSrGtI",
         "N5bZ19e9ZNY",
-        "I9iV_NTc8Nc",
-        "JmyTzBKLggI"
+        "E4ndYFfdlb8"
       ]
     },
     {
@@ -17,62 +16,51 @@ window.YTN_STREAMS = {
       "handle": "@PolimerNews",
       "streams": [
         "0MHlyaV5f4w",
-        "J2sLnQ0CexQ",
-        "hNu1cYt8G0k",
-        "f6gqs1wrZSc",
-        "oetPhh2l5mc"
+        "P03LvXNm8gE",
+        "AM5B7qy0k3A",
+        "JWu9MHaz6y8"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "Neqml3unu80",
-        "7XFuwiiRgfU",
-        "HDElUclbHMU",
         "opI-ng23MoA",
-        "7XMmU0YIYd8"
+        "ShXH7idh9NY",
+        "-3VZg5CJCFg",
+        "hkbTidRkey4",
+        "N6vGdNY8AdI"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "KrFajtYPQzM",
-        "347RmsCXaPY",
-        "pvHmi3dt5NM",
-        "Reb7RzueUOw",
-        "26IQIqIklm8"
+        "G04Ltn2mDJ4"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "OYL-BtNAcYs",
-        "UXrDEXyRiJo",
-        "ZpBeLBBsYrA",
-        "nVpxuj4IrZ0",
-        "4MZ7DvmEQ58"
+        "w69tR5QYJmE",
+        "XFqH6Ciwk8I",
+        "_Lg0IUxUMi0"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "KXYsLk1tEU4",
         "hw7Fjh6mncQ",
-        "iNUecb6WNzE",
-        "cPDFnrhINyg",
-        "AIBlZnb89Dg"
+        "xxGr7o3q8l8",
+        "v2SeDutiK_w"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "0M6ZrOOg6Y4",
-        "z0y9UrWThCE",
         "9M02G5c6x6w"
       ]
     },

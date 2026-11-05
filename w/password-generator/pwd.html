@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ta-en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,12 +123,13 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/></svg>
                             Generate
                         </button>
-                        <button onclick="copyPassword()" class="copy-btn">
+                        <button type="button" id="copyBtn" onclick="copyPassword()" class="copy-btn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                             Copy
                         </button>
                     </div>
                 </div>
+                <p id="copyStatus" class="copy-status" role="status" aria-live="polite"></p>
                 <div class="strength-bar-container">
                     <div class="strength-text">
                         <span id="strengthText">Strength: Weak</span>
@@ -276,7 +277,7 @@
     </div>
 
     <footer style="display: flex; justify-content: center; width: 100%;">
-        <a href="javascript:void(0)" class="about-btn" style="color: var(--text-secondary); font-size: 1rem;" onclick="window.openAboutModal()">About &amp; Privacy</a>
+        <button type="button" class="about-btn" aria-haspopup="dialog" style="color: var(--text-secondary); font-size: 1rem;">About &amp; Privacy</button>
     </footer>
 
     <script src="password-generator.js"></script>

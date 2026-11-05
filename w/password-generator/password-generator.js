@@ -216,22 +216,67 @@ function applyCasing(text, caseType) {
     }
 }
 
-function copyPassword() {
+function showCopyStatus(message, isError) {
+    const status = document.getElementById('copyStatus');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('is-error', !!isError);
+}
+
+function selectPassword() {
+    const password = document.getElementById('password');
+    if (!password) return;
+    try {
+        const range = document.createRange();
+        range.selectNodeContents(password);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        password.focus();
+    } catch (e) {
+        /* Selecting is a convenience; the status still explains the fallback. */
+    }
+}
+
+async function copyPassword() {
     const password = document.getElementById('password')?.textContent;
     if (!password) return;
-    
-    navigator.clipboard.writeText(password)
-        .then(() => alert('Password copied!'))
-        .catch(() => {
-            const textarea = document.createElement('textarea');
-            textarea.value = password;
-    const wordCountInput = document.getElementById('wordCount');
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('Password copied!');
-        });
+
+    let copied = false;
+    try {
+        if (navigator.clipboard && window.isSecureContext !== false) {
+            await navigator.clipboard.writeText(password);
+            copied = true;
+        }
+    } catch (e) {
+        copied = false;
+    }
+
+    if (!copied) {
+        const textarea = document.createElement('textarea');
+        textarea.value = password;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            copied = document.execCommand('copy');
+        } catch (e) {
+            copied = false;
+        }
+        textarea.remove();
+
+        const copyBtn = document.getElementById('copyBtn');
+        if (copyBtn) copyBtn.focus();
+    }
+
+    if (copied) {
+        showCopyStatus('Copied to clipboard.');
+    } else {
+        selectPassword();
+        showCopyStatus('Copy failed — the password is selected. Press Ctrl+C (⌘C on Mac).', true);
+    }
 }
 
 function displayPassword(password) {

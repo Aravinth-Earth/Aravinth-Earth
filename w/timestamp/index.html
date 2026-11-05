@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamp Generator — YYYYMMDDHHMMSSZZZ or YYYYMMDDHHMMSS</title>
+
+    <meta property="og:title" content="Timestamp Generator — YYYYMMDDHHMMSSZZZ or YYYYMMDDHHMMSS" />
+    <meta property="og:description" content="A live local timestamp in YYYYMMDDHHMMSSZZZ (milliseconds) or YYYYMMDDHHMMSS (seconds). Pick a format and copy it in one click — no alerts, no pop-ups." />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Timestamp Generator — YYYYMMDDHHMMSSZZZ or YYYYMMDDHHMMSS" />
+    <meta name="twitter:description" content="A live local timestamp in YYYYMMDDHHMMSSZZZ (milliseconds) or YYYYMMDDHHMMSS (seconds). Pick a format and copy it in one click — no alerts, no pop-ups." />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta name="description" content="A live local timestamp in YYYYMMDDHHMMSSZZZ (milliseconds) or YYYYMMDDHHMMSS (seconds). Pick a format and copy it in one click — no alerts, no pop-ups." />
+
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/a11y.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/timestamp/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/timestamp/" />
+    <meta property="og:site_name" content="Aravinth" />
+    <script>
+        /* site-theme:applies-before-paint */
+        (function () {
+            try {
+                var THEMES = [
+                    'current', 'light', 'amber', 'teal', 'charcoal',
+                    'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                ];
+                var saved = localStorage.getItem('site-theme');
+                // Validate before applying. An unknown value would fall
+                // through to the default tokens -- an unpainted page --
+                // and, because the switcher only reads valid keys, it
+                // would never be repaired. The switcher writes the
+                // resolved value back, so an invalid one self-heals.
+                if (saved && THEMES.indexOf(saved) !== -1) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else if (
+                    window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: light)').matches
+                ) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'current');
+                }
+            } catch (e) {
+                /* storage unavailable -- the default theme is fine */
+            }
+        })();
+    </script>
+</head>
+<body class="app-shell">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="app-header">
+        <h1 class="app-title">Timestamp Generator</h1>
+        <p class="app-subtitle">Live local time, ready to copy.</p>
+    </header>
+
+    <main class="app-main" id="main-content" tabindex="-1">
+        <section class="ts-card" aria-labelledby="live-heading">
+            <div class="ts-card-top">
+                <h2 id="live-heading" class="ts-label">Current timestamp</h2>
+                <span class="ts-live">
+                    <span class="ts-dot" aria-hidden="true"></span>
+                    Live
+                </span>
+            </div>
+
+            <output id="timestamp-value" class="ts-value" aria-label="Current local timestamp" aria-live="off"></output>
+
+            <div class="ts-format-row">
+                <label for="format-select">Format</label>
+                <select id="format-select" class="ts-select">
+                    <option value="ms" selected>YYYYMMDDHHMMSSZZZ — milliseconds</option>
+                    <option value="seconds">YYYYMMDDHHMMSS — seconds only</option>
+                </select>
+            </div>
+
+            <div class="ts-actions">
+                <button type="button" id="copy-timestamp" class="btn btn-primary ts-copy">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy timestamp
+                </button>
+                <p id="copy-status" class="ts-status" role="status" aria-live="polite"></p>
+            </div>
+            <noscript>
+                <p class="ts-note">JavaScript is required to read your device clock.</p>
+            </noscript>
+        </section>
+
+        <details class="ts-help">
+            <summary>Format details</summary>
+            <p class="ts-note">
+                <code>YYYYMMDDHHMMSSZZZ</code> adds milliseconds (000&ndash;999), the SAP convention.
+                <code>YYYYMMDDHHMMSS</code> stops at seconds.
+            </p>
+            <dl class="ts-parts">
+                <div><dt><code>YYYY</code></dt><dd>Four-digit year</dd></div>
+                <div><dt><code>MM</code></dt><dd>Month, 01&ndash;12</dd></div>
+                <div><dt><code>DD</code></dt><dd>Day, 01&ndash;31</dd></div>
+                <div><dt><code>HH</code></dt><dd>Hour, 00&ndash;23</dd></div>
+                <div><dt><code>MM</code></dt><dd>Minute, 00&ndash;59</dd></div>
+                <div><dt><code>SS</code></dt><dd>Second, 00&ndash;59</dd></div>
+                <div><dt><code>ZZZ</code></dt><dd>Milliseconds, 000&ndash;999</dd></div>
+            </dl>
+            <p class="ts-note">
+                Local time: <span id="human-time">&nbsp;</span><br>
+                Time zone: <span id="timezone">&nbsp;</span>
+            </p>
+            <p class="ts-note">
+                Everything runs in this page. The timestamp comes from this device's clock
+                and is never sent to a server. The only preferences this page can save are
+                your site-wide theme choice and your timestamp format.
+            </p>
+        </details>
+    </main>
+
+    <footer class="app-footer">
+        <a href="/" class="back-link">&larr; Back to Home</a>
+        <button type="button" class="btn btn-ghost about-btn">About &amp; Privacy</button>
+    </footer>
+
+    <script src="timestamp.js" defer></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
+
+    <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+    <div class="theme-switcher" id="theme-switcher">
+        <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+        <div class="theme-dropdown" role="menu"></div>
+    </div>
+</body>
+</html>

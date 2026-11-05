@@ -8,6 +8,8 @@
     --accent-primary: #4CAF50;
     --accent-secondary: #45a049;
     --accent-text: #8fd19e;
+    --copy-error: #ff8a80;
+    --pwd-strength-text: #d4d4d4;
     --button-bg: #1b5e20;
     --button-text: #ffffff;
     --border-color: #444;
@@ -24,6 +26,8 @@
     --accent-primary: #43A047;
     --accent-secondary: #388E3C;
     --accent-text: #1b5e20;
+    --copy-error: #b3261e;
+    --pwd-strength-text: #4a4a4a;
     --button-bg: #1b5e20;
     --button-text: #ffffff;
     --border-color: #ddd;
@@ -281,6 +285,18 @@ input[type="range"]:active::-moz-range-thumb {
     gap: 0.5rem;
 }
 
+.copy-status {
+    min-height: 1.4em;
+    margin: 0.1rem 0 0.35rem;
+    color: var(--accent-text);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.copy-status.is-error {
+    color: var(--copy-error);
+}
+
 #password {
     font-family: monospace;
     font-size: 1.2rem;
@@ -316,7 +332,7 @@ input[type="range"]:active::-moz-range-thumb {
 .strength-text {
     display: flex;
     justify-content: space-between;
-    color: var(--text-secondary);
+    color: var(--pwd-strength-text);
     font-size: 0.9rem;
 }
 

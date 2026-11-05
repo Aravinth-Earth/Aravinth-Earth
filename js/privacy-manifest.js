@@ -425,6 +425,23 @@
             notes: ['The map data itself — around 1.8 MB of constituency, district, and timeline GeoJSON — is served from this site and is cached by the service worker.'],
         },
 
+        '/w/timestamp/': {
+            name: 'Timestamp Generator',
+            summary: 'Shows the current local time as YYYYMMDDHHMMSSZZZ or YYYYMMDDHHMMSS and copies it with one click.',
+            stores: [
+                {
+                    label: 'Your preferred timestamp format',
+                    detail: 'Whether you chose milliseconds or seconds, in ' + STORAGE_LOCAL + ' (key "timestamp.format").',
+                },
+            ],
+            sends: [],
+            loads: [],
+            notes: [
+                'The timestamp is generated from your device clock. It is never sent anywhere, and the page makes no third-party requests.',
+                'The three Z characters in the format stand for milliseconds (000–999), following the SAP timestamp convention. They are not a time zone.',
+            ],
+        },
+
         '/w/today-date/': {
             name: "Today's Date",
             summary: 'The current date and time, with Tamil and Gregorian calendars and astronomy.',

@@ -31,7 +31,7 @@
  *   answer with an old copy.
  */
 
-const CACHE_NAME = 'site-cache-v8';
+const CACHE_NAME = 'site-cache-v9';
 
 /**
  * The prefix every cache this worker owns shares.
@@ -115,6 +115,7 @@ const PAGE_PRECACHE_URLS = [
     '/w/simon-game/index.html',
     '/w/stock-portfolio-split/index.html',
     '/w/teach-me/index.html',
+    '/w/timestamp/index.html',
     '/w/tn-assembly-map/index.html',
     '/w/today-date/index.html'
     // NOTE: w/youtube-news/ is deliberately absent -- see LIVE_DATA_PATHS.
@@ -154,7 +155,11 @@ const ASSET_PRECACHE_URLS = [
     // Today / Date.
     '/w/today-date/css/style.css',
     '/w/today-date/js/calendars.js',
-    '/w/today-date/js/astronomy.js'
+    '/w/today-date/js/astronomy.js',
+
+    // Timestamp generator.
+    '/w/timestamp/styles.css',
+    '/w/timestamp/timestamp.js'
 ];
 
 /** Flat view of everything that is precached (used by tooling / tests). */

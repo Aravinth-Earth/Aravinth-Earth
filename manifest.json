@@ -40,6 +40,19 @@
     ],
     "shortcuts": [
         {
+            "name": "Neithal / Low Tide",
+            "short_name": "Low Tide",
+            "description": "A quiet place for loud days",
+            "url": "/w/neithal/",
+            "icons": [
+                {
+                    "src": "/assets/icon-192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
             "name": "QA Playground",
             "short_name": "QA",
             "description": "UI component and behaviour testbed",

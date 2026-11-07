@@ -259,6 +259,30 @@
             notes: ['Your light/dark preference for this game is stored under the key "mathgame.theme", separate from the site-wide theme.'],
         },
 
+        '/w/neithal/': {
+            name: 'Neithal / Low Tide',
+            summary: 'A bilingual, full-screen quiet place with a shelf of twelve works. Some open this site; some open elsewhere.',
+            stores: [
+                {
+                    label: 'Your language choice',
+                    detail: 'Tamil or English, in ' + STORAGE_LOCAL + ' (key "neithal-lang"). The page also reads your browser\'s first language preference on the first visit.',
+                },
+                {
+                    label: 'Your motion choice',
+                    detail: 'Whether the shoreline animation is on or off, in ' + STORAGE_LOCAL + ' (key "neithal-motion"). If you have never chosen, it follows the operating system\'s reduced-motion setting.',
+                },
+            ],
+            sends: [],
+            loads: [],
+            notes: [
+                'This is one of the two pages on the site that does not use GoatCounter. It sends no analytics and loads no third-party resources.',
+                'The sound is generated in the browser with the Web Audio API. There is no audio file and no network request. The sound is never started automatically, and no sound preference is stored.',
+                'The links marked "Elsewhere" open other websites in a new tab. Those sites have their own privacy rules; this page does not load them until you click.',
+                'The works linked from this page have their own privacy panels. Calm Sweep, for example, is the one tool on the site that sends gameplay analytics to PostHog.',
+                'The page is bilingual. The shared About / Privacy panel itself is in English.',
+            ],
+        },
+
         '/w/password-generator/pwd.html': {
             name: 'Password Generator',
             summary: 'Generates passwords locally. Nothing you type is sent anywhere.',

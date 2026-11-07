@@ -46,31 +46,44 @@ own workflow token. It does not need this PAT.
 
 ## Cloudflare cache
 
-GitHub Pages sends `cache-control: max-age=14400` for HTML. Cloudflare honors
-that, so `/` and `/404.html` can be four hours stale after a deploy.
+GitHub Pages serves HTML with `cache-control: max-age=600` and assets with
+`max-age=14400`. Without an override, Cloudflare and browsers can keep an old
+page after a deploy.
 
-The correct fix is a **Cloudflare Cache Rule**:
+The zone already has these rules in the **Cache settings** ruleset:
+
+- **HTML** — 1 second edge TTL and a browser TTL of 0, plus a Cache Response
+  Rule that removes `max-age` and sets `Cache-Control: no-cache,
+  must-revalidate`. HTML is effectively always revalidated, so a deploy is
+  visible immediately.
+- **CSS, JS, JSON** — 60 second edge TTL.
+- **`/sw.js`** — bypassed, so service-worker updates are not delayed.
+- **`/w/qa-shop/`** — bypassed, because that route is served by a Worker.
+
+The equivalent dashboard setup is:
 
 1. Cloudflare dashboard → select `332321.xyz`
-2. **Caching → Cache Rules → Create rule**
-3. Name: `Always fresh HTML`
-4. Match:
+2. **Caching → Cache Rules**
+3. HTML rule match:
 
    ```
-   http.request.method eq "GET" and (
-     http.request.uri.path eq "/" or
-     http.request.uri.path eq "/404.html" or
-     ends_with(http.request.uri.path, ".html")
-   )
+   http.request.uri.path.extension eq "html" or
+   http.request.uri.path eq "/" or
+   ends_with(http.request.uri.path, "/")
    ```
 
-5. Action: **Bypass cache**
-6. Save and deploy.
+   Settings: **Edge TTL** override to **1 second**, **Browser TTL** override to
+   **0 seconds**.
 
-HTML then always comes from GitHub Pages; CSS, JS, and images remain cached.
+4. In **Caching → Cache Response Rules**, add a rule with the same match and
+   action **Modify cache-control**: remove `max-age`, set `no-cache` and
+   `must-revalidate`.
+
+The API equivalent is the `http_request_cache_settings` and
+`http_response_cache_settings` rulesets.
 
 The deployment workflow can also purge Cloudflare after Pages succeeds. That
-is a fallback, not a replacement for the cache rule. To enable it, add:
+is a fallback, not a replacement for the cache rules. To enable it, add:
 
 ```
 CLOUDFLARE_API_TOKEN   # Zone.Cache Purge

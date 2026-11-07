@@ -6,16 +6,16 @@
         <meta name="theme-color" content="#0d1117" />
         <title>404 — Page Not Found · Aravinth</title>
     <meta name="robots" content="noindex, follow" />
-        <meta name="description" content="That page isn't here. Jump to the homepage, the Estimation tool, the Aether Store, or the QA Playground instead." />
+        <meta name="description" content="That page isn't here. Go back to the homepage." />
         <link rel="canonical" href="https://www.332321.xyz/" />
     <link rel="icon" type="image/png" href="/favicon.png" />
         <meta property="og:title" content="404 — Page Not Found · Aravinth" />
-        <meta property="og:description" content="That page isn't here. Jump to the homepage, the Estimation tool, the Aether Store, or the QA Playground instead." />
+        <meta property="og:description" content="That page isn't here. Go back to the homepage." />
         <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="404 — Page Not Found · Aravinth" />
-        <meta name="twitter:description" content="That page isn't here. Jump to the homepage, the Estimation tool, the Aether Store, or the QA Playground instead." />
+        <meta name="twitter:description" content="That page isn't here. Go back to the homepage." />
         <style>
             * {
                 margin: 0;
@@ -32,9 +32,8 @@
                 justify-content: center;
                 padding: var(--space-6, 1.5rem) 0;
             }
-            /* auto margins rather than pure centring: when the list is taller
-               than a short viewport, the top of the card must scroll into
-               view instead of being clipped above it. */
+            /* auto margins keep the card centred without clipping it on
+               short viewports. */
             .container {
                 text-align: center;
                 padding: 2rem;
@@ -59,65 +58,6 @@
             }
             @media (min-width: 768px) {
                 .message { font-size: 1.15rem; }
-            }
-            /* Where to go instead: home plus the tools a mistyped URL most
-               likely meant. Same card feel as the homepage work grid, but
-               stacked full-width so it stays readable at 390px. */
-            .destinations-title {
-                margin: 0 0 var(--space-3, 0.75rem);
-                color: var(--text-muted, #8b949e);
-                font-size: var(--font-size-sm, 0.8rem);
-                font-weight: 500;
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                text-align: center;
-            }
-            .destinations {
-                list-style: none;
-                display: grid;
-                gap: var(--space-2, 0.5rem);
-                max-width: 420px;
-                margin: 0 auto;
-                text-align: left;
-            }
-            .destination {
-                display: flex;
-                align-items: center;
-                gap: var(--space-3, 0.75rem);
-                padding: 0.65rem var(--space-4, 1rem);
-                border: 1px solid var(--accent-border-hover, rgba(88, 166, 255, 0.25));
-                border-radius: var(--radius-md, 6px);
-                background: var(--bg-secondary, #121620);
-                color: var(--accent, #58a6ff);
-                text-decoration: none;
-                transition: border-color 0.2s, background 0.2s, color 0.2s;
-            }
-            .destination:hover,
-            .destination:focus-visible {
-                border-color: var(--accent, #58a6ff);
-                background: var(--bg-elevated, #161b22);
-                color: var(--accent-hover, #79c0ff);
-            }
-            .destination-icon {
-                flex: none;
-                font-size: 1.1rem;
-                line-height: 1;
-            }
-            .destination-text {
-                display: flex;
-                flex-direction: column;
-                gap: 0.1rem;
-                min-width: 0;
-            }
-            .destination-label {
-                font-size: 0.95rem;
-                font-weight: 600;
-            }
-            .destination-note {
-                color: var(--text-secondary, #8b949e);
-                font-size: var(--font-size-sm, 0.8rem);
-                font-weight: 400;
-                line-height: 1.4;
             }
             .divider {
                 width: 48px;
@@ -175,47 +115,8 @@
             <div class="divider"></div>
             <p class="message">
                 This page doesn't exist — maybe it never did, or maybe I moved it.
-                Here's what people usually come here for.
             </p>
-            <h2 class="destinations-title">Try one of these instead</h2>
-            <ul class="destinations">
-                <li>
-                    <a class="destination" href="/">
-                        <span class="destination-icon" aria-hidden="true">🏠</span>
-                        <span class="destination-text">
-                            <span class="destination-label">Home</span>
-                            <span class="destination-note">Everything I've built, in one grid</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="destination" href="https://www.332321.xyz/w/estimate/">
-                        <span class="destination-icon" aria-hidden="true">🃏</span>
-                        <span class="destination-text">
-                            <span class="destination-label">Estimation</span>
-                            <span class="destination-note">Planning poker: a dev estimate and a QA estimate for one story</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="destination" href="https://www.332321.xyz/w/qa-shop/">
-                        <span class="destination-icon" aria-hidden="true">🪙</span>
-                        <span class="destination-text">
-                            <span class="destination-label">Aether Store</span>
-                            <span class="destination-note">A practice slice of real companies, bought with fictional currency</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="destination" href="/w/qa-playground/index.html">
-                        <span class="destination-icon" aria-hidden="true">🧪</span>
-                        <span class="destination-text">
-                            <span class="destination-label">QA Playground</span>
-                            <span class="destination-note">Practice site for test automation</span>
-                        </span>
-                    </a>
-                </li>
-            </ul>
+            <a class="btn btn-primary" href="/">Go to the homepage</a>
         </div>
     <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <script src="/js/pwa.js" defer></script>

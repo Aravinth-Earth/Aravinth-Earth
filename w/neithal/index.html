@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="en" data-lang="en" data-motion="auto">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <title>நெய்தல் / Low Tide — a quiet place for loud days</title>
+        <meta
+            name="description"
+            content="A full-screen quiet place for loud days. A shelf of twelve works, Tamil and English. No accounts, no feeds, no tracking. மனம் சத்தமாக இருக்கும் நாட்களுக்கான அமைதியான இடம்."
+        />
+        <link rel="canonical" href="https://www.332321.xyz/w/neithal/" />
+
+        <meta
+            property="og:title"
+            content="நெய்தல் / Low Tide — a quiet place for loud days"
+        />
+        <meta property="og:description" content="A full-screen quiet place for loud days. A shelf of twelve works, Tamil and English. No accounts, no feeds, no tracking. மனம் சத்தமாக இருக்கும் நாட்களுக்கான அமைதியான இடம்." />
+        <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.332321.xyz/w/neithal/" />
+        <meta property="og:site_name" content="Aravinth" />
+        <meta property="og:locale" content="en_IN" />
+        <meta property="og:locale:alternate" content="ta_IN" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="நெய்தல் / Low Tide — a quiet place for loud days"
+        />
+        <meta name="twitter:description" content="A full-screen quiet place for loud days. A shelf of twelve works, Tamil and English. No accounts, no feeds, no tracking. மனம் சத்தமாக இருக்கும் நாட்களுக்கான அமைதியான இடம்." />
+        <meta
+            name="twitter:image"
+            content="https://www.332321.xyz/og-image.png"
+        />
+
+        <script>
+            /* neithal:language-and-motion-before-paint */
+            (function () {
+                var lang = "en";
+                var query = null;
+                try {
+                    query = new URLSearchParams(window.location.search).get("lang");
+                } catch (e) {
+                    /* URLSearchParams unavailable -- stay with English. */
+                }
+                if (query === "ta" || query === "en") {
+                    lang = query;
+                } else {
+                    var stored = null;
+                    try {
+                        stored = localStorage.getItem("neithal-lang");
+                    } catch (e) {
+                        /* storage unavailable -- fall through to the browser. */
+                    }
+                    if (stored === "ta" || stored === "en") {
+                        lang = stored;
+                    } else {
+                        var languages =
+                            navigator.languages ||
+                            [navigator.language || "en"];
+                        var first = String(languages[0] || "en").toLowerCase();
+                        if (first.indexOf("ta") === 0) lang = "ta";
+                    }
+                }
+                document.documentElement.setAttribute("data-lang", lang);
+                document.documentElement.lang = lang;
+
+                var motion = null;
+                try {
+                    motion = localStorage.getItem("neithal-motion");
+                } catch (e) {
+                    /* storage unavailable -- use the OS preference. */
+                }
+                if (motion !== "on" && motion !== "off") {
+                    motion =
+                        window.matchMedia &&
+                        window.matchMedia("(prefers-reduced-motion: reduce)")
+                            .matches
+                            ? "off"
+                            : "on";
+                }
+                document.documentElement.setAttribute("data-motion", motion);
+            })();
+        </script>
+
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+        <link rel="stylesheet" href="neithal.css" />
+        <link rel="stylesheet" href="/css/a11y.css" />
+    <link rel="stylesheet" href="/css/about-privacy.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+        <noscript>
+            <style>
+                #lang-toggle,
+                #sound-toggle,
+                #motion-toggle,
+                #shelf-open,
+                .theme-switcher {
+                    display: none !important;
+                }
+            </style>
+        </noscript>
+    <script>
+            /* site-theme:applies-before-paint */
+            (function () {
+                try {
+                    var THEMES = [
+                        'current', 'light', 'amber', 'teal', 'charcoal',
+                        'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                    ];
+                    var saved = localStorage.getItem('site-theme');
+                    // Validate before applying. An unknown value would fall
+                    // through to the default tokens -- an unpainted page --
+                    // and, because the switcher only reads valid keys, it
+                    // would never be repaired. The switcher writes the
+                    // resolved value back, so an invalid one self-heals.
+                    if (saved && THEMES.indexOf(saved) !== -1) {
+                        document.documentElement.setAttribute('data-theme', saved);
+                    } else if (
+                        window.matchMedia &&
+                        window.matchMedia('(prefers-color-scheme: light)').matches
+                    ) {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'current');
+                    }
+                } catch (e) {
+                    /* storage unavailable -- the default theme is fine */
+                }
+            })();
+        </script>
+    </head>
+    <body class="neithal">
+        <a class="skip-link" href="#main-content">
+            <span data-lang-block="en" lang="en">Skip to main content</span>
+            <span data-lang-block="ta" lang="ta"
+                >முக்கிய உள்ளடக்கத்திற்குச் செல்லவும்</span
+            >
+        </a>
+
+        <main id="main-content" class="landing" tabindex="-1">
+            <div class="scene" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 1440 900"
+                            preserveAspectRatio="xMidYMid slice"
+                            focusable="false"
+                            role="presentation"
+                        >
+                            <defs>
+                                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                                    <stop class="sky-top" offset="0" />
+                                    <stop class="sky-bottom" offset="1" />
+                                </linearGradient>
+                                <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+                                    <stop class="sea-top" offset="0" />
+                                    <stop class="sea-bottom" offset="1" />
+                                </linearGradient>
+                                <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+                                    <stop class="sand-top" offset="0" />
+                                    <stop class="sand-bottom" offset="1" />
+                                </linearGradient>
+                                <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                                    <stop
+                                        class="moon-glow"
+                                        offset="0"
+                                        stop-opacity="0.55"
+                                    />
+                                    <stop
+                                        class="moon-glow"
+                                        offset="1"
+                                        stop-opacity="0"
+                                    />
+                                </radialGradient>
+                                <radialGradient id="moon" cx="42%" cy="38%" r="62%">
+                                    <stop class="moon-core" offset="0" />
+                                    <stop class="moon-edge" offset="1" />
+                                </radialGradient>
+                                <linearGradient id="reflection" x1="0" y1="0" x2="0" y2="1">
+                                    <stop
+                                        class="moon-glow"
+                                        offset="0"
+                                        stop-opacity="0.35"
+                                    />
+                                    <stop
+                                        class="moon-glow"
+                                        offset="1"
+                                        stop-opacity="0"
+                                    />
+                                </linearGradient>
+                            
+                                <linearGradient id="wetSand" x1="0" y1="0" x2="0" y2="1">
+                                    <stop class="wet-sand-top" offset="0" />
+                                    <stop class="wet-sand-bottom" offset="1" />
+                                </linearGradient>
+                                <linearGradient id="tide" x1="0" y1="0" x2="0" y2="1">
+                                    <stop class="tide-top" offset="0" />
+                                    <stop class="tide-bottom" offset="1" />
+                                </linearGradient>
+                            </defs>
+
+                            <rect class="sky-fill" x="0" y="0" width="1440" height="900" />
+                            <g class="stars">
+                                <circle cx="90" cy="110" r="1.5" />
+                                <circle cx="180" cy="200" r="1" />
+                                <circle cx="252" cy="86" r="1.8" />
+                                <circle cx="360" cy="170" r="1.2" />
+                                <circle cx="440" cy="70" r="1" />
+                                <circle cx="520" cy="230" r="1.5" />
+                                <circle cx="610" cy="120" r="1" />
+                                <circle cx="700" cy="260" r="1.3" />
+                                <circle cx="780" cy="90" r="1.6" />
+                                <circle cx="870" cy="210" r="1" />
+                                <circle cx="930" cy="140" r="1.2" />
+                                <circle cx="1010" cy="300" r="1" />
+                                <circle cx="1120" cy="110" r="1.7" />
+                                <circle cx="1200" cy="220" r="1" />
+                                <circle cx="1280" cy="90" r="1.2" />
+                                <circle cx="1360" cy="240" r="1.5" />
+                                <circle cx="300" cy="300" r="1" />
+                                <circle cx="640" cy="340" r="1.4" />
+                                <circle cx="960" cy="380" r="1" />
+                                <circle cx="1210" cy="340" r="1.2" />
+                            </g>
+
+                            <circle class="moon-halo" cx="840" cy="120" r="140" fill="url(#moonGlow)" />
+                            <circle class="moon-body" cx="840" cy="120" r="38" fill="url(#moon)" />
+
+                            <line class="horizon" x1="0" y1="520" x2="1440" y2="520" />
+                            <rect class="sea-fill" x="0" y="520" width="1440" height="250" />
+                            <ellipse
+                                class="reflection"
+                                cx="840"
+                                cy="640"
+                                rx="52"
+                                ry="108"
+                                fill="url(#reflection)"
+                            />
+
+                            <g class="waves">
+                                <path d="M0,570 C 180,566 300,574 480,570 S 840,566 1020,570 S 1320,566 1440,570" />
+                                <path d="M0,615 C 220,610 360,620 560,615 S 920,610 1120,615 S 1360,610 1440,615" />
+                                <path d="M0,665 C 200,660 400,670 640,665 S 1000,660 1200,665 S 1380,660 1440,665" />
+                                <path d="M0,705 C 240,700 420,710 680,705 S 1040,700 1260,705 S 1400,700 1440,705" />
+                            </g>
+
+                            <path
+                                class="sand-fill"
+                                d="M0,720 C 220,700 380,760 620,735 C 860,710 1080,770 1440,735 L1440,900 L0,900 Z"
+                                fill="url(#sand)"
+                            />
+                            <path
+                                class="shore-line"
+                                d="M0,720 C 220,700 380,760 620,735 C 860,710 1080,770 1440,735"
+                            />
+
+                            <path
+                                class="wet-sand"
+                                d="M0,800 C 240,790 420,815 720,800 C 980,785 1180,815 1440,800 L1440,900 L0,900 Z"
+                                fill="url(#wetSand)"
+                            />
+                            <g class="tide-breathe">
+                                <g class="tide-sheet">
+                                    <path
+                                        class="tide-fill"
+                                        d="M0,800 C 240,790 420,815 720,800 C 980,785 1180,815 1440,800 L1440,900 L0,900 Z"
+                                        fill="url(#tide)"
+                                    />
+                                    <path
+                                        class="tide-edge"
+                                        d="M0,800 C 240,790 420,815 720,800 C 980,785 1180,815 1440,800"
+                                    />
+                                </g>
+                            </g>
+
+                            <g class="motes" aria-hidden="true">
+                                <circle class="mote" cx="250" cy="650" r="2.1" />
+                                <circle class="mote" cx="430" cy="610" r="1.6" />
+                                <circle class="mote" cx="690" cy="670" r="2.4" />
+                                <circle class="mote" cx="900" cy="620" r="1.8" />
+                                <circle class="mote" cx="1120" cy="680" r="2.2" />
+                                <circle class="mote" cx="330" cy="745" r="1.7" />
+                                <circle class="mote" cx="760" cy="735" r="2.5" />
+                                <circle class="mote" cx="1240" cy="650" r="1.9" />
+                            </g>
+
+                            <g class="lights">
+                                <g class="light" transform="translate(190 790)">
+                                    <circle class="light-glow" r="30" />
+                                    <circle class="light-core" r="3.4" />
+                                </g>
+                                <g class="light" transform="translate(390 812)">
+                                    <circle class="light-glow" r="26" />
+                                    <circle class="light-core" r="3" />
+                                </g>
+                                <g class="light" transform="translate(610 780)">
+                                    <circle class="light-glow" r="32" />
+                                    <circle class="light-core" r="3.6" />
+                                </g>
+                                <g class="light" transform="translate(820 820)">
+                                    <circle class="light-glow" r="27" />
+                                    <circle class="light-core" r="3.1" />
+                                </g>
+                                <g class="light" transform="translate(1040 792)">
+                                    <circle class="light-glow" r="31" />
+                                    <circle class="light-core" r="3.5" />
+                                </g>
+                                <g class="light" transform="translate(1260 816)">
+                                    <circle class="light-glow" r="25" />
+                                    <circle class="light-core" r="3" />
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+            <canvas id="ripples" class="ripples" aria-hidden="true"></canvas>
+
+            <header class="landing-head">
+                <div class="landing-brand">
+                    <h1 class="landing-title">
+                        <span class="title-ta" lang="ta">நெய்தல்</span>
+                        <span class="title-en" lang="en">Low Tide</span>
+                    </h1>
+                    <p class="tagline">
+                        <span data-lang-block="en" lang="en"
+                            >A quiet place for loud days.</span
+                        >
+                        <span data-lang-block="ta" lang="ta"
+                            >மனம் சத்தமாக இருக்கும் நாட்களுக்கான அமைதியான
+                            இடம்.</span
+                        >
+                    </p>
+                </div>
+
+                <div class="landing-controls">
+                    <button
+                        id="lang-toggle"
+                        class="control"
+                        type="button"
+                        aria-label="Switch to Tamil"
+                    >
+                        <span class="lang-target-ta" lang="ta">தமிழ்</span>
+                        <span class="lang-target-en" lang="en">English</span>
+                    </button>
+                    <button
+                        id="sound-toggle"
+                        class="control"
+                        type="button"
+                        aria-pressed="false"
+                        data-sound="off"
+                    >
+                        <span class="state state-off" data-lang-block="en" lang="en"
+                            >Sound off</span
+                        >
+                        <span class="state state-on" data-lang-block="en" lang="en"
+                            >Sound on</span
+                        >
+                        <span class="state state-off" data-lang-block="ta" lang="ta"
+                            >ஒலி இல்லை</span
+                        >
+                        <span class="state state-on" data-lang-block="ta" lang="ta"
+                            >ஒலி உள்ளது</span
+                        >
+                    </button>
+                    <button
+                        id="motion-toggle"
+                        class="control"
+                        type="button"
+                        aria-pressed="true"
+                    >
+                        <span class="motion-on" data-lang-block="en" lang="en"
+                            >Motion on</span
+                        >
+                        <span class="motion-off" data-lang-block="en" lang="en"
+                            >Motion off</span
+                        >
+                        <span class="motion-on" data-lang-block="ta" lang="ta"
+                            >அசைவு உள்ளது</span
+                        >
+                        <span class="motion-off" data-lang-block="ta" lang="ta"
+                            >அசைவு இல்லை</span
+                        >
+                    </button>
+                </div>
+            </header>
+
+            <p
+                class="visually-hidden"
+                id="lang-status"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+            <button
+                id="shelf-open"
+                class="shelf-hint"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="shelf-dialog"
+                aria-expanded="false"
+            >
+                <span class="shelf-hint-icon" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                </span>
+                <span class="shelf-hint-text">
+                    <span data-lang-block="en" lang="en">the shelf</span>
+                    <span data-lang-block="ta" lang="ta">அலமாரி</span>
+                </span>
+                <span class="shelf-hint-count" aria-hidden="true">12</span>
+            </button>
+        </main>
+
+        <dialog
+            id="shelf-dialog"
+            class="shelf-dialog"
+            aria-labelledby="shelf-title"
+        >
+            <div class="shelf-panel">
+                <header class="shelf-head">
+                    <div class="shelf-head-copy">
+                        <p class="eyebrow">
+                            <span data-lang-block="en" lang="en">The shelf</span>
+                            <span data-lang-block="ta" lang="ta">அலமாரி</span>
+                        </p>
+                        <h2 id="shelf-title">
+                            <span data-lang-block="en" lang="en"
+                                >Twelve places</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >பன்னிரண்டு இடங்கள்</span
+                            >
+                        </h2>
+                        <p class="shelf-intro">
+                            <span data-lang-block="en" lang="en"
+                                >Take one, leave the rest.</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >ஒன்றை எடுங்கள்; மீதியை விட்டுவிடுங்கள்.</span
+                            >
+                        </p>
+                    </div>
+                    <button
+                        id="shelf-close"
+                        class="shelf-close"
+                        type="button"
+                    >
+                        <span class="shelf-close-x" aria-hidden="true">×</span>
+                        <span class="shelf-close-label">
+                            <span data-lang-block="en" lang="en">Close</span>
+                            <span data-lang-block="ta" lang="ta">மூடு</span>
+                        </span>
+                    </button>
+                </header>
+
+                <div class="shelf-body">
+                    <p class="shelf-start">
+                        <span data-lang-block="en" lang="en"
+                            >If choosing feels like too much, start with
+                            <a href="/w/calm-sweep/">Calm Sweep</a>.</span
+                        >
+                        <span data-lang-block="ta" lang="ta"
+                            >தேர்ந்தெடுப்பது கடினமாக இருந்தால்,
+                            <a href="/w/calm-sweep/" lang="en">Calm Sweep</a> இல்
+                            தொடங்குங்கள்.</span
+                        >
+                    </p>
+
+                    <section class="shelf-section" aria-labelledby="here-title">
+                        <h3 id="here-title">
+                            <span data-lang-block="en" lang="en"
+                                >From this shore</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >இந்தக் கரையில்</span
+                            >
+                        </h3>
+                        <p class="shelf-note">
+                            <span data-lang-block="en" lang="en"
+                                >Things I made, or keep coming back to.</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >நான் உருவாக்கியவை, அல்லது மீண்டும் மீண்டும் வரும்
+                                இடங்கள்.</span
+                            >
+                        </p>
+                        <ul class="works">
+                            <li>
+                                <a
+                                    class="work work-local"
+                                    href="/w/calm-sweep/"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Calm Sweep</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >focus</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >கவனம்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >A small game for when your hands need
+                                            something to do.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >கைகளுக்கு ஏதாவது வேலை வேண்டும் என்றால், ஒரு
+                                            சிறிய விளையாட்டு.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >2–10 min · silent · offline</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >2–10 நிமிடங்கள் · ஒலி இல்லை · இணையம்
+                                            தேவையில்லை</span
+                                        >
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-local"
+                                    href="/w/life-on-earth/Life_On_Earth.html"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title">
+                                            <span data-lang-block="en" lang="en"
+                                                >Life on Earth</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >வாழ்வின் நடனம்</span
+                                            >
+                                        </span>
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >look</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >பார்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >An interactive piece about the patterns
+                                            life makes. Forest sound optional.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >உயிரினங்கள் உருவாக்கும் வடிவங்களைப் பற்றிய
+                                            ஓர் ஊடாட்டக் கலை. காட்டின் ஒலி
+                                            விருப்பம்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >2–5 min · sound optional · offline</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >2–5 நிமிடங்கள் · ஒலி விருப்பம் · இணையம்
+                                            தேவையில்லை</span
+                                        >
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-local"
+                                    href="/w/clock/clock.html"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title">
+                                            <span data-lang-block="en" lang="en"
+                                                >The Clock</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >கடிகாரம்</span
+                                            >
+                                        </span>
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >look</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >பார்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Watch one minute pass. That is the whole
+                                            instruction.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >ஒரு நிமிடம் கடப்பதைப் பாருங்கள்.
+                                            அவ்வளவுதான்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >1 min · silent · offline</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >1 நிமிடம் · ஒலி இல்லை · இணையம்
+                                            தேவையில்லை</span
+                                        >
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section
+                        class="shelf-section"
+                        aria-labelledby="elsewhere-title"
+                    >
+                        <h3 id="elsewhere-title">
+                            <span data-lang-block="en" lang="en">Elsewhere</span>
+                            <span data-lang-block="ta" lang="ta">வேறெங்கோ</span>
+                            <span class="external-mark" aria-hidden="true">↗</span>
+                        </h3>
+                        <p class="shelf-note">
+                            <span data-lang-block="en" lang="en"
+                                >These open on other sites. Their rules, their
+                                weather.</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >இவை வேறு தளங்களில் திறக்கும். அவற்றின் விதிகள்,
+                                அவற்றின் வானிலை.</span
+                            >
+                        </p>
+                        <ul class="works">
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://weavesilk.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Weavesilk</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >make</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >உருவாக்கு</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Draw light that keeps moving after you
+                                            stop.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >நீங்கள் நிறுத்திய பிறகும் அசையும் ஒளியை
+                                            வரையுங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · mouse or touch</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · சுட்டி அல்லது தொடுதல்</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://thisissand.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >This Is Sand</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >make</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >உருவாக்கு</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Pour colored sand. Nothing has to become
+                                            anything.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >வண்ண மணலை ஊற்றுங்கள். எதுவும் ஆக
+                                            வேண்டியதில்லை.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · sound</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · ஒலி</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://earth.nullschool.net/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Earth Nullschool</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >look</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >பார்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Watch the wind move across the whole
+                                            planet.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >காற்று பூமி முழுவதும் நகர்வதைப்
+                                            பாருங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · data-heavy</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · தரவு அதிகம்</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://window-swap.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Window Swap</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >look</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >பார்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Look out of someone else's window for a
+                                            minute.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >ஒரு நிமிடம் வேறொருவரின் ஜன்னல் வழியே
+                                            பாருங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · video</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · காணொளி</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://pixelthoughts.co/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Pixel Thoughts</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >let go</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >விடு</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >A sixty-second place to put a thought
+                                            down.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >ஒரு எண்ணத்தை இறக்கி வைக்க அறுபது
+                                            வினாடிகள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · sound optional</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · ஒலி விருப்பம்</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://mynoise.net/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >MyNoise</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >listen</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >கேள்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Build a soundscape that fits your
+                                            ears.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >உங்கள் காதுகளுக்கேற்ற ஒலிச்சூழலை
+                                            உருவாக்குங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >sound · many generators</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >ஒலி · பல ஒலிகள்</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://asoftmurmur.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >A Soft Murmur</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >listen</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >கேள்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Mix rain, wind, and distant thunder.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >மழை, காற்று, தொலைதூர இடி — கலந்து
+                                            கொள்ளுங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >sound · mixer</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >ஒலி · கலவை</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://donothingfor2minutes.org/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >Do Nothing for 2 Minutes</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >wait</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >காத்திரு</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >A timer that asks nothing of you.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >உங்களிடம் எதையும் கேட்காத ஒரு
+                                            நேரம்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >2 min · sound</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >2 நிமிடங்கள் · ஒலி</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="work work-external"
+                                    href="https://neal.fun/deep-sea/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span class="work-head">
+                                        <span class="work-title" lang="en"
+                                            >The Deep Sea</span
+                                        >
+                                        <span class="work-tag">
+                                            <span data-lang-block="en" lang="en"
+                                                >look</span
+                                            >
+                                            <span data-lang-block="ta" lang="ta"
+                                                >பார்</span
+                                            >
+                                        </span>
+                                    </span>
+                                    <span class="work-desc">
+                                        <span data-lang-block="en" lang="en"
+                                            >Scroll down through the dark and meet what
+                                            lives there.</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >இருளில் கீழே உருட்டி, அங்கு வாழ்பவற்றைச்
+                                            சந்தியுங்கள்.</span
+                                        >
+                                    </span>
+                                    <span class="work-meta">
+                                        <span data-lang-block="en" lang="en"
+                                            >visual · long scroll</span
+                                        >
+                                        <span data-lang-block="ta" lang="ta"
+                                            >பார்வை · நீண்ட உருட்டல்</span
+                                        >
+                                    </span>
+                                    <span class="external-mark" aria-hidden="true"
+                                        >↗</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="en" lang="en"
+                                        > (opens in a new tab)</span
+                                    >
+                                    <span class="visually-hidden" data-lang-block="ta" lang="ta"
+                                        > (புதிய தாவலில் திறக்கும்)</span
+                                    >
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <footer class="shelf-foot">
+                        <p class="shelf-privacy">
+                            <span data-lang-block="en" lang="en"
+                                >This page does not count you and makes no
+                                third-party requests. The works it links to have
+                                their own privacy notes.</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >இந்தப் பக்கம் உங்களை எண்ணவில்லை; மூன்றாம் தரப்பு
+                                கோரிக்கைகளும் இல்லை. இது இணைக்கும் பக்கங்களுக்கு
+                                அவற்றின் சொந்த தனியுரிமை குறிப்புகள்
+                                உள்ளன.</span
+                            >
+                        </p>
+
+                        <details class="name-note">
+                            <summary>
+                                <span data-lang-block="en" lang="en"
+                                    >About the name</span
+                                >
+                                <span data-lang-block="ta" lang="ta"
+                                    >பெயரைப் பற்றி</span
+                                >
+                            </summary>
+                            <p data-lang-block="en" lang="en">
+                                Neithal (நெய்தல்) is the seashore in the
+                                five-landscape tradition of Sangam poetry. Low
+                                tide is when the shore is quietest. The page is
+                                named for that hour.
+                            </p>
+                            <p data-lang-block="ta" lang="ta">
+                                நெய்தல் என்பது சங்க இலக்கியத்தின் ஐந்திணைகளில்
+                                கடற்கரைத் திணை. அலை ஓய்ந்த நேரம் அதன் அமைதி.
+                                அந்த நேரத்திற்காக இந்தப் பக்கத்திற்கு இந்தப்
+                                பெயர்.
+                            </p>
+                        </details>
+
+                        <details class="crisis">
+                            <summary>
+                                <span data-lang-block="en" lang="en"
+                                    >If today is heavier than a page can
+                                    hold</span
+                                >
+                                <span data-lang-block="ta" lang="ta"
+                                    >இன்றைய நாள் இந்தப் பக்கம் தாங்க முடியாத
+                                    அளவுக்குக் கனமாக இருந்தால்</span
+                                >
+                            </summary>
+                            <p data-lang-block="en" lang="en">
+                                This is a quiet place, not a therapist. If you
+                                are in danger or cannot keep yourself safe,
+                                please reach a local crisis line. In India:
+                                <a href="tel:14416">Tele-MANAS 14416</a>,
+                                <a href="tel:18005990019"
+                                    >KIRAN 1800-599-0019</a
+                                >. Elsewhere:
+                                <a
+                                    href="https://findahelpline.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    lang="en"
+                                    >findahelpline.com</a
+                                >.
+                            </p>
+                            <p data-lang-block="ta" lang="ta">
+                                இது ஒரு அமைதியான இடம்; மருத்துவ சிகிச்சை அல்ல.
+                                ஆபத்தில் இருந்தால் அல்லது உங்களைப் பாதுகாத்துக்
+                                கொள்ள முடியவில்லை என்றால், உள்ளூர் நெருக்கடி
+                                உதவி எண்ணை அழைக்கவும். இந்தியாவில்:
+                                <a href="tel:14416">டெலி-மனஸ் 14416</a>,
+                                <a href="tel:18005990019"
+                                    >கிரண் 1800-599-0019</a
+                                >. வேறு நாடுகளில்:
+                                <a
+                                    href="https://findahelpline.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    lang="en"
+                                    >findahelpline.com</a
+                                >.
+                            </p>
+                        </details>
+
+                        <p class="shelf-meta">
+                            <span data-lang-block="en" lang="en"
+                                >Links checked: November 2026.</span
+                            >
+                            <span data-lang-block="ta" lang="ta"
+                                >இணைப்புகள் சரிபார்க்கப்பட்டன: நவம்பர்
+                                2026.</span
+                            >
+                        </p>
+
+                        <div class="shelf-actions">
+                            <button
+                                id="shelf-about"
+                                class="shelf-about"
+                                type="button"
+                                lang="en"
+                            >
+                                About &amp; Privacy
+                            </button>
+                            <button
+                                id="shelf-back"
+                                class="shelf-back"
+                                type="button"
+                            >
+                                <span data-lang-block="en" lang="en"
+                                    >Back to the shore</span
+                                >
+                                <span data-lang-block="ta" lang="ta"
+                                    >கரைக்குத் திரும்பு</span
+                                >
+                            </button>
+                        </div>
+                        <p class="shelf-privacy-note">
+                            <span data-lang-block="ta" lang="ta"
+                                >தனியுரிமை விவரங்கள் ஆங்கிலத்தில்
+                                திறக்கும்.</span
+                            >
+                        </p>
+                    </footer>
+                </div>
+            </div>
+        </dialog>
+
+        <noscript>
+            <section class="nojs-shelf" aria-labelledby="nojs-title">
+                <h2 id="nojs-title">
+                    The twelve places
+                    <span lang="ta">/ பன்னிரண்டு இடங்கள்</span>
+                </h2>
+                <p>
+                    JavaScript is off, so the shelf is here instead of in a
+                    dialog.
+                    <span lang="ta"
+                        >JavaScript அணைக்கப்பட்டுள்ளதால், அலமாரி இங்கே
+                        கீழே உள்ளது.</span
+                    >
+                </p>
+                <h3 id="nojs-here">
+                    From this shore <span lang="ta">/ இந்தக் கரையில்</span>
+                </h3>
+                <ul class="nojs-links">
+                        <li><a href="/w/calm-sweep/">Calm Sweep</a></li>
+                        <li><a href="/w/life-on-earth/Life_On_Earth.html">Life on Earth</a></li>
+                        <li><a href="/w/clock/clock.html">The Clock</a></li>
+                </ul>
+                <h3 id="nojs-elsewhere">
+                    Elsewhere <span lang="ta">/ வேறெங்கோ</span>
+                </h3>
+                <ul class="nojs-links">
+                        <li><a href="https://weavesilk.com/" target="_blank" rel="noopener noreferrer">Weavesilk</a></li>
+                        <li><a href="https://thisissand.com/" target="_blank" rel="noopener noreferrer">This Is Sand</a></li>
+                        <li><a href="https://earth.nullschool.net/" target="_blank" rel="noopener noreferrer">Earth Nullschool</a></li>
+                        <li><a href="https://window-swap.com/" target="_blank" rel="noopener noreferrer">Window Swap</a></li>
+                        <li><a href="https://pixelthoughts.co/" target="_blank" rel="noopener noreferrer">Pixel Thoughts</a></li>
+                        <li><a href="https://mynoise.net/" target="_blank" rel="noopener noreferrer">MyNoise</a></li>
+                        <li><a href="https://asoftmurmur.com/" target="_blank" rel="noopener noreferrer">A Soft Murmur</a></li>
+                        <li><a href="https://donothingfor2minutes.org/" target="_blank" rel="noopener noreferrer">Do Nothing for 2 Minutes</a></li>
+                        <li><a href="https://neal.fun/deep-sea/" target="_blank" rel="noopener noreferrer">The Deep Sea</a></li>
+                </ul>
+                <p class="nojs-crisis">
+                    If today is heavier than a page can hold: Tele-MANAS 14416,
+                    KIRAN 1800-599-0019, or
+                    <a
+                        href="https://findahelpline.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >findahelpline.com</a
+                    >.
+                    <span lang="ta"
+                        >இன்றைய நாள் இந்தப் பக்கம் தாங்க முடியாத அளவுக்குக்
+                        கனமாக இருந்தால்: டெலி-மனஸ் 14416, கிரண்
+                        1800-599-0019, அல்லது
+                        <a
+                            href="https://findahelpline.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            lang="en"
+                            >findahelpline.com</a
+                        >.</span
+                    >
+                </p>
+                <p class="nojs-meta">
+                    Links checked: November 2026.
+                    <span lang="ta"
+                        >இணைப்புகள் சரிபார்க்கப்பட்டன: நவம்பர் 2026.</span
+                    >
+                </p>
+            </section>
+        </noscript>
+
+        <script src="neithal.js" defer></script>
+    <script src="/js/pwa.js" defer></script>
+    <script src="/js/theme-switcher.js" defer></script>
+    <script src="/js/privacy-manifest.js" defer></script>
+    <script src="/js/about-privacy.js" defer></script>
+        <!-- Theme picker. The theme itself is a site-wide preference; see js/theme-switcher.js. -->
+        <div class="theme-switcher" id="theme-switcher">
+            <div class="theme-gear" role="button" aria-label="Change theme" aria-expanded="false" tabindex="0">⚙</div>
+            <div class="theme-dropdown" role="menu"></div>
+        </div>
+    </body>
+</html>

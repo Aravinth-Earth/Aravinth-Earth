@@ -92,6 +92,7 @@ const PAGE_PRECACHE_URLS = [
     '/w/splitter-local/index.html',
     '/w/life-on-earth/Life_On_Earth.html',
     '/w/math-game/index.html',
+    '/w/neithal/index.html',
     '/w/password-generator/pwd.html',
     '/w/qa-playground/accessibility.html',
     '/w/qa-playground/api-mock.html',
@@ -151,6 +152,10 @@ const ASSET_PRECACHE_URLS = [
     '/w/life-on-earth/shapes.js',
     '/w/life-on-earth/utils.js',
     '/w/life-on-earth/edge-summer-forest.opus',
+
+    // Neithal / Low Tide.
+    '/w/neithal/neithal.css',
+    '/w/neithal/neithal.js',
 
     // Today / Date.
     '/w/today-date/css/style.css',

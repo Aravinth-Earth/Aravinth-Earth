@@ -13,16 +13,16 @@
  *   other caches on the origin alone: the worker's scope is "/", so it can
  *   see every Cache on the host, and deleting someone else's would be
  *   rude.
- *   BUMP IT WHEN: the shared CSS or JS changes. Stylesheets are served
- *   cache-first, so a returning visitor keeps the copy they already have
- *   until the cache name changes. A new theme, a new token, or a changed
- *   focus ring will not reach them otherwise.
+ *   BUMP IT WHEN: the precache list changes, or the content the cache holds
+ *   must be dropped. Assets are network-first now, so a returning visitor
+ *   picks up a changed stylesheet or script on their next load whether or not
+ *   this is bumped -- the bump is about what the cache still KEEPS, not about
+ *   what gets served.
  * - Responses are classified by request, then each class gets the strategy
- *   that fits it: pages are stale-while-revalidate (instant, self-healing),
- *   static assets and JSON are cache-first with a background revalidate
- *   (instant + eventually fresh), third-party libraries are cache-first
- *   (explicit allowlist only), and everything else goes straight to the
- *   network untouched.
+ *   that fits it: pages and static assets/JSON are network-first with the
+ *   cache as an offline/5xx fallback; third-party libraries are cache-first
+ *   (explicit allowlist only); everything else goes straight to the network
+ *   untouched.
  *
  * - LIVE_DATA_PATHS is an exception to all of that: a page whose whole point
  *   is a feed of third-party live-stream ids is worthless unless the ids are
@@ -178,11 +178,11 @@ const PRECACHE_URLS = SHELL_PRECACHE_URLS.concat(
  * cached, never precached.
  *
  * `w/youtube-news/` renders a feed of YouTube live-stream ids that the
- * publisher refreshes several times a day. Every strategy here would answer
- * the first load after a publish with the previous copy -- cache-first serves
- * the entry it already holds, stale-while-revalidate serves the cached page
- * -- and a stale id is a dead embed. The page is useless without the network,
- * so there is nothing to buy by keeping a copy: pass it through untouched.
+ * publisher refreshes several times a day. Any caching at all would answer
+ * the first load after a publish with the previous copy -- a stored entry is
+ * handed back before the new one has arrived -- and a stale id is a dead
+ * embed. The page is useless without the network, so there is nothing to buy
+ * by keeping a copy: pass it through untouched.
  *
  * `w/expense-splitter/` is not built from this repository at all: a Worker
  * route answers it, page and API together, so its HTML and scripts change
@@ -193,9 +193,10 @@ const PRECACHE_URLS = SHELL_PRECACHE_URLS.concat(
 const LIVE_DATA_PATHS = ['/w/youtube-news/', '/w/expense-splitter/'];
 
 /**
- * Static assets that are safe to serve from cache and refresh in the
- * background. `mp3`/`opus` are included so the precached Life on Earth
- * soundtrack is actually served from the cache instead of being ignored.
+ * Static assets. They are served NETWORK FIRST -- the cache entry is only an
+ * offline/5xx fallback (see handleNetworkFirstAsset). `mp3`/`opus` are
+ * included so the precached Life on Earth soundtrack is actually matched when
+ * the network is gone, instead of being ignored.
  */
 const STATIC_ASSET_PATTERN =
     /\.(css|js|png|svg|jpe?g|webp|gif|ico|woff2?|ttf|otf|mp3|opus)$/i;
@@ -222,12 +223,6 @@ const THIRD_PARTY_ALLOWLIST = [
     { host: 'cdnjs.cloudflare.com', prefix: '/ajax/libs/animejs/3.2.2/' },
     { host: 'cdnjs.cloudflare.com', prefix: '/ajax/libs/font-awesome/6.0.0-beta3/' }
 ];
-
-/**
- * Set for one navigation when the user explicitly asks for a refresh. Pages
- * are normally served stale-while-revalidate, so without this a manual
- * refresh would keep showing the cached copy.
- */
 
 // ---------------------------------------------------------------------------
 // Install / activate
@@ -276,8 +271,6 @@ self.addEventListener('message', (event) => {
     const data = event.data || {};
 
     if (data.type === 'SKIP_WAITING') {
-        if (data.bypassCache) {
-        }
         // NOTE: skipWaiting() belongs here, not in `install`. Calling it during
         // install would activate the new worker before the page asked for it
         // and break the "waiting -> activate -> reload" update flow.

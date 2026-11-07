@@ -165,9 +165,10 @@
     }
 
     /**
-     * Manual refresh. Pages are served stale-while-revalidate, so the worker
-     * is asked to skip its cached copy for the next navigation; otherwise the
-     * reload would just show the same old page again.
+     * Manual refresh. Navigations are network-first, so a normal reload
+     * already fetches the new page. The refresh control still activates a
+     * waiting worker and forces an update; it no longer needs to bypass the
+     * cache.
      */
     function refreshPage() {
         if (refreshing) return;
@@ -181,7 +182,7 @@
             if (!reloading) reloadPage();
         }, REFRESH_FALLBACK);
 
-        askWorker({ type: 'SKIP_WAITING', bypassCache: true }, REFRESH_REPLY_TIMEOUT)
+        askWorker({ type: 'SKIP_WAITING' }, REFRESH_REPLY_TIMEOUT)
             .then(function () {
                 return reg && reg.update ? reg.update() : null;
             })
@@ -200,8 +201,8 @@
                         return;
                     }
                 }
-                // Nothing new to install: the reload below is enough, and the
-                // worker will serve the fresh page because of bypassCache.
+                // Nothing new to install: navigation is network-first, so
+                // the reload below is enough to get the current page.
                 reloadPage();
             })
             .catch(function (err) {

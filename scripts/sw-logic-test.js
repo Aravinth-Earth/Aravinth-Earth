@@ -441,12 +441,11 @@ function check(name, ok, detail) {
         );
     }
 
-    // --- the refresh button asks the worker to activate, optionally bypassing
-    // the cache for the next navigation.
+    // --- the refresh button asks the worker to activate the waiting worker.
     let skipReply = null;
     let skipFlag = false;
     const skipEvent = {
-        data: { type: 'SKIP_WAITING', bypassCache: true },
+        data: { type: 'SKIP_WAITING' },
         source: { postMessage: (m) => (skipReply = m) },
         ports: [],
         waitUntil(p) {},

@@ -1,9 +1,7 @@
 name: E2E after deploy
 
 on:
-  workflow_run:
-    workflows: ["pages build and deployment"]
-    types: [completed]
+  deployment_status:
   workflow_dispatch:
 
 permissions:
@@ -13,7 +11,10 @@ permissions:
 jobs:
   dispatch-e2e:
     name: Dispatch deployment E2E
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'github-pages')
     runs-on: ubuntu-latest
 
     steps:
@@ -56,11 +57,19 @@ jobs:
         with:
           github-token: ${{ secrets.E2E_DISPATCH_TOKEN }}
           script: |
-            const run = context.payload.workflow_run;
-            const sha = run ? run.head_sha : context.sha;
-            const sourceRun = run
-              ? run.html_url
+            const deployment = context.payload.deployment || {};
+            const status = context.payload.deployment_status || {};
+            const sha = deployment.sha || context.sha;
+
+            // The deployment status target is the Pages job; trim it to the run.
+            const target = status.target_url || '';
+            const sourceRun = target
+              ? target.replace(/\/job\/.*$/, '')
               : `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            const siteUrl = (status.environment_url || 'https://www.332321.xyz')
+              .replace(/^http:/, 'https:')
+              .replace(/\/$/, '');
 
             await github.rest.repos.createDispatchEvent({
               owner: 'Aravinth-Earth',
@@ -68,7 +77,7 @@ jobs:
               event_type: 'site-deployed',
               client_payload: {
                 sha,
-                site_url: 'https://www.332321.xyz',
+                site_url: siteUrl,
                 source_run_url: sourceRun,
                 event: context.eventName
               }

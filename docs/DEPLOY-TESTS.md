@@ -9,15 +9,20 @@ request from a fork.
 ## Trigger
 
 `E2E after deploy` (`.github/workflows/e2e-after-deploy.yml`) listens for the
-successful completion of the GitHub Pages workflow:
+successful `github-pages` deployment status:
 
 ```
-pages build and deployment
+deployment_status  →  state: success, environment: github-pages
 ```
 
 It then sends a `repository_dispatch` event (`site-deployed`) to the private
 test repository. There is no schedule and no push trigger. A manual
 `workflow_dispatch` is available for debugging.
+
+The workflow uses `deployment_status` rather than `workflow_run`: the built-in
+Pages workflow is a dynamic workflow, and `workflow_run` did not fire for it.
+The deployment status carries the deployment SHA, the environment URL, and the
+Pages job URL.
 
 The test repository waits for the live site to become ready before starting
 Cypress. It polls a cache-busted URL every 10 seconds for up to 10 minutes —

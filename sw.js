@@ -564,26 +564,6 @@ function deferred() {
 }
 
 /**
- * Fetch a page from the network and refresh the cache entry. Failures are
- * silent on purpose: a stale cached copy is always better than an error.
- */
-async function revalidateInBackground(cache, request) {
-    try {
-        // `cache: 'no-cache'` forces the network rather than letting the
-        // browser's HTTP cache answer. Without it the revalidation fetches
-        // the SAME bytes that are already cached, writes them back, and the
-        // cache stays stale forever -- a deploy would be shadowed by the
-        // origin's own Cache-Control for as long as that is set.
-        const response = await fetch(request, { cache: 'no-cache' });
-        if (isCacheable(response)) {
-            await cache.put(request, response.clone());
-        }
-    } catch (err) {
-        /* offline or server error - keep the cached copy */
-    }
-}
-
-/**
  * Match a navigation against the cache. GitHub Pages serves /w/tool/ from
  * /w/tool/index.html, but the cache key we precached is the file path, so
  * try the equivalent spellings before giving up.

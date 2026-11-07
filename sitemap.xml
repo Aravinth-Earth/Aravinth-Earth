@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.332321.xyz/</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
@@ -37,7 +37,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/expense-splitter/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -51,8 +51,13 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.332321.xyz/w/neithal/</loc>
+    <lastmod>2026-11-07</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.332321.xyz/w/password-generator/pwd.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <priority>0.8</priority>
   </url>
   <url>

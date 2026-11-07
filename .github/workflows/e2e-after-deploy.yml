@@ -79,6 +79,7 @@ jobs:
                 sha,
                 site_url: siteUrl,
                 source_run_url: sourceRun,
+                deployed_at: status.created_at || new Date().toISOString(),
                 event: context.eventName
               }
             });

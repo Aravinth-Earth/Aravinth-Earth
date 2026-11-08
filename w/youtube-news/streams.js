@@ -1,14 +1,13 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-11-08T12:44:59+0530",
+  "generated_at": "2026-11-08T21:46:01+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
-        "JdnkpbwWAD8",
+        "ky1gTjjiQVY",
         "jsrJK84Edw4",
         "QpYyDLAKCVM",
-        "ky1gTjjiQVY",
         "E4ndYFfdlb8"
       ]
     },
@@ -17,7 +16,6 @@ window.YTN_STREAMS = {
       "handle": "@PolimerNews",
       "streams": [
         "Y5t4rNNqngg",
-        "qRivJT0theQ",
         "JWu9MHaz6y8"
       ]
     },
@@ -25,20 +23,20 @@ window.YTN_STREAMS = {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "f_ZQgNmFfS8",
-        "A5dpTI_Ja0c",
-        "CyzPmBwsbiY",
-        "onlptoSTbUI",
-        "51zPGwmwV-M"
+        "iekftKI4ePg",
+        "D8dvfwAK1-c",
+        "AEwn4t9BgaU",
+        "1zDHKV0zxPs",
+        "MnGOxpjHT1Q"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "iYyGv_lHhKc",
-        "sRD-J_pphck",
         "EN4QRZ_vDkY",
+        "p5w8dckNYrQ",
+        "iYyGv_lHhKc",
         "G04Ltn2mDJ4"
       ]
     },
@@ -46,28 +44,27 @@ window.YTN_STREAMS = {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "CNngA8mWey0",
+        "OJmRUZu-xBw",
         "87dYvSyLZAM",
-        "F_K635RgaE4",
-        "3rT06uJXJBY",
-        "rtYHLn4B20k"
+        "qaT_cu086Rk",
+        "XjOHNFNnIzY",
+        "_Lg0IUxUMi0"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "tm8L8wjymFk",
+        "nXtoiX_-4Ak",
+        "Bdpz_HSnpDE",
         "hw7Fjh6mncQ",
-        "-P8PfMCDEDs",
-        "mTXbH_KOpnA"
+        "GlYJ1oOzcc4"
       ]
     },
     {
       "name": "Sun News Tamil",
       "handle": "@Sunnewstamil",
       "streams": [
-        "QE0R3e0sT5k",
         "9M02G5c6x6w"
       ]
     },

@@ -1,69 +1,57 @@
 window.YTN_STREAMS = {
-  "generated_at": "2026-11-10T13:52:13+0530",
+  "generated_at": "2026-11-10T22:45:16+0530",
   "channels": [
     {
       "name": "News 18 Tamil Nadu",
       "handle": "@News18Tamilnadu",
       "streams": [
         "xZ_gtv_2oVY",
-        "ZFI21dyfBsY",
-        "Zu4Rn-fBQCk",
-        "CrQRREL4xSY",
-        "tc6QXkck1Qo"
+        "M_GiwNNxvtc",
+        "q9N4gPYDVOU",
+        "E4ndYFfdlb8"
       ]
     },
     {
       "name": "Polimer News",
       "handle": "@PolimerNews",
       "streams": [
-        "VaGzpX59xk4",
-        "M0lPVy5b9n0",
-        "6rfpsTBbw6U",
+        "hXJbSu1jnEU",
         "HOng-clPCoY",
-        "GLLMKU2D--0"
+        "d58dlmgGkC4",
+        "JWu9MHaz6y8"
       ]
     },
     {
       "name": "News Tamil 24 x 7",
       "handle": "@NewsTamil24X7TV",
       "streams": [
-        "maojy__DQ-4",
-        "P-vbQvFRhvM",
         "iYmliEJ-q7Q",
-        "hADYGJNpJ-k",
-        "9eR8iNTjW1Q"
+        "Zse8sg9BuJQ",
+        "MnGOxpjHT1Q"
       ]
     },
     {
       "name": "Satiyam TV",
       "handle": "@SathiyamTV",
       "streams": [
-        "nf1a8gAbmH8",
-        "aPr1VhUsavM",
-        "E-tdU0GNjt4",
-        "nXEXWrh2tL4",
-        "6qsyi38vDAw"
+        "G04Ltn2mDJ4"
       ]
     },
     {
       "name": "Thanthi TV",
       "handle": "@thanthitv",
       "streams": [
-        "eirIdqmMVLY",
-        "jtgxw1KF7WE",
-        "bexxpgFz3PA",
-        "0xmVpIpIGLo",
-        "8xZwMxf9HoQ"
+        "5t75HUYho5M",
+        "JkMwjPFJOsM",
+        "Z9aAu0-88N4",
+        "_Lg0IUxUMi0"
       ]
     },
     {
       "name": "புதிய தலைமுறை | PuthiyathalaimuraiTV",
       "handle": "@PuthiyaThalaimuraiTV",
       "streams": [
-        "j3M5bOWA468",
-        "Han_rXOltWg",
-        "hw7Fjh6mncQ",
-        "3ULGwzPUFDU"
+        "hw7Fjh6mncQ"
       ]
     },
     {

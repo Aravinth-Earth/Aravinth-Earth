@@ -272,6 +272,14 @@
         <div class="multi-view-grid" id="multi-view-grid"></div>
     </div>
     
+                <div id="owner-refresh" hidden style="max-width: 520px; margin: 0 0 12px; padding: 10px 12px; border: 1px dashed #999; border-radius: 8px; font-size: 14px;">
+                    <strong>Owner refresh</strong>
+                    <p style="margin: 6px 0; color: #666;">Runs the fetch once and reloads with the latest stream ids. Nothing else is unlocked by this token.</p>
+                    <input id="owner-token" type="password" autocomplete="off" spellcheck="false" placeholder="Owner token" aria-label="Owner token" style="padding: 6px 8px; min-width: 240px;">
+                    <button id="owner-refresh-btn" type="button" class="secondary-btn">Refresh streams</button>
+                    <span id="owner-refresh-status" role="status" style="margin-left: 8px;"></span>
+                </div>
+
                 <div id="channel-sections"></div>
 
     <div class="channel custom-streams-section" id="custom-streams-section" hidden>
@@ -287,7 +295,7 @@
                 // failed, and the renderer below waits on it.
                 window.ytnFeedReady = new Promise((resolve) => {
                     const feed = document.createElement('script');
-                    feed.src = 'streams.js?v=' + Date.now();
+                    feed.src = 'https://ytn-feed.b1d00fb4-3928-4747-8084-a4888fb84876.workers.dev/streams.js?v=' + Date.now();
                     feed.onload = () => resolve(true);
                     feed.onerror = () => resolve(false);
                     document.head.appendChild(feed);
@@ -431,6 +439,71 @@
                 // empty box with no player.
                 document.dispatchEvent(new CustomEvent('ytn:streams-rendered'));
             });
+        </script>
+        <script>
+            // Owner-only manual refresh. Hidden unless the page is opened with ?owner=1,
+            // so a visitor sees no token box at all. The token unlocks exactly one thing:
+            // one fetch run on the Worker, after which the page reloads with the new ids.
+            // Nothing else is readable with it — the Worker keeps only its SHA-256.
+            (function () {
+                const REFRESH_URL = 'https://ytn-feed.b1d00fb4-3928-4747-8084-a4888fb84876.workers.dev/refresh';
+                if (!/[?&]owner=1\b/.test(location.search)) {
+                    return;
+                }
+                const box = document.getElementById('owner-refresh');
+                const input = document.getElementById('owner-token');
+                const button = document.getElementById('owner-refresh-btn');
+                const status = document.getElementById('owner-refresh-status');
+                if (!box || !input || !button || !status) {
+                    return;
+                }
+                box.hidden = false;
+
+                const say = (message) => {
+                    status.textContent = message;
+                };
+
+                button.addEventListener('click', async function () {
+                    const token = input.value.trim();
+                    if (!token) {
+                        say('Enter the owner token first');
+                        input.focus();
+                        return;
+                    }
+                    button.disabled = true;
+                    say('Refreshing…');
+                    try {
+                        const response = await fetch(REFRESH_URL, {
+                            method: 'POST',
+                            headers: { authorization: 'Bearer ' + token },
+                            cache: 'no-store',
+                        });
+                        let body = {};
+                        try {
+                            body = await response.json();
+                        } catch (error) {
+                            body = {};
+                        }
+                        if (response.ok) {
+                            say('Updated — reloading with the latest ids');
+                            location.reload();
+                            return;
+                        }
+                        if (response.status === 401) {
+                            say('Wrong token');
+                        } else if (response.status === 429 && body.error === 'cooldown') {
+                            say('Just ran — wait ' + body.retry_in_seconds + 's');
+                        } else if (response.status === 429) {
+                            say('Too many wrong tokens — try again later');
+                        } else {
+                            say('Refresh failed (' + response.status + ')');
+                        }
+                    } catch (error) {
+                        say('Network error — try again');
+                    }
+                    button.disabled = false;
+                });
+            })();
         </script>
 
 <script>

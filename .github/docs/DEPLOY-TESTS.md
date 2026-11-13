@@ -1,5 +1,8 @@
 # Deployment E2E tests
 
+> **Not published:** this file lives under `.github/`, which GitHub Pages does
+> not serve. Keep developer documentation here, not in a served directory.
+
 The site's browser tests live in the private repository
 [`Aravinth-Earth/test-my-site-cypress`](https://github.com/Aravinth-Earth/test-my-site-cypress).
 They are deliberately not part of this public repository's CI: they drive a

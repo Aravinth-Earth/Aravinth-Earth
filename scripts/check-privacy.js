@@ -206,6 +206,10 @@ if (!manifest) {
     process.exit(1);
 }
 
+// The panel renderer is a browser IIFE with a CommonJS export at the end;
+// requiring it here exercises the same copy the visitor reads.
+const panelCopy = require(path.join(ROOT, 'js/about-privacy.js'));
+
 // The manifest object carries helper functions alongside its route keys.
 // Only the route keys are entries.
 delete manifest.route;
@@ -228,6 +232,30 @@ function canonical(pathname) {
 
 const problems = [];
 const warnings = [];
+
+// --- The panel may not contradict itself ---------------------------------
+//
+// A party can legitimately appear in both sends and loads (GoatCounter is
+// the sitewide counter). When it does, the load line must not also say the
+// party "receive[s] nothing about how you use this page". Render the same
+// function the browser uses and look for that contradiction.
+for (const [route, entry] of Object.entries(manifest)) {
+    const sends = entry.sends || [];
+    const loads = entry.loads || [];
+    const sentTo = new Set(sends.map((s) => s && s.to).filter(Boolean));
+    if (!sentTo.size || !loads.length) continue;
+
+    const rendered = panelCopy.listOfLoads(loads, sends);
+    for (const load of loads) {
+        if (!load || !sentTo.has(load.to)) continue;
+        const item = rendered.split('<li>').find((part) => part.includes('>' + load.to + '</span>'));
+        if (item && item.includes('receive nothing about how you use this page')) {
+            problems.push(
+                `${route}  ->  ${load.to} is in sends and loads, but the load copy says it receives nothing`
+            );
+        }
+    }
+}
 
 // --- 0. The lookup function must resolve every page ----------------------
 //

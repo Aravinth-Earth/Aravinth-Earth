@@ -7,10 +7,12 @@
   --border: #30363d;
   --border-soft: #21262d;
   --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --code-bg: rgba(0, 0, 0, 0.3);
   --text: #c9d1d9;
   --text-strong: #f0f6fc;
   --muted: #a9b6c8;
-  --disabled: #6e7681;
+  --disabled: #8b949e;
   --error: #da3633;
   --error-bg: #290a0a;
   --success: #238636;

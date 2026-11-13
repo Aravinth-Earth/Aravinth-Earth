@@ -8,6 +8,11 @@
    theme change is a single variable swap and the 10 palettes stay in sync
    automatically.
 
+   CASCADE LAYER
+   The remaps below live in @layer theme. A page's own unlayered `:root`
+   palette wins over them by design, so a dark tool keeps its colours when
+   the site theme is light. See the layer note in tokens.css.
+
    THE THEME CONTRACT
    Every [data-theme="…"] block re-maps EXACTLY these 17 tokens, in this
    order, so all 10 themes read as one family:
@@ -45,6 +50,7 @@
 /* --------------------------------------------------------------------------
    current — the default "GitHub blue" palette
    -------------------------------------------------------------------------- */
+@layer theme {
 [data-theme="current"] {
   --bg-primary: #0a0c10;
   --bg-secondary: #121620;
@@ -292,4 +298,5 @@
   --bg-gradient-end: rgba(246, 248, 250, 0.95);
   --success: #1a7f37;
   --success-text: #116329;
+}
 }

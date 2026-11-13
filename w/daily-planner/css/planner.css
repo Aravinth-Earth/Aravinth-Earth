@@ -116,7 +116,7 @@ th, td {
 thead th {
     background-color: var(--pl-bg-tertiary);
     font-weight: 500;
-    color: #fff;
+    color: var(--pl-text-primary);
     position: relative;
     white-space: nowrap;
 }
@@ -240,15 +240,15 @@ th:hover .header-actions {
 .column-type-badge {
     font-size: 10px;
     padding: 2px 6px;
-    background: rgba(88, 166, 255, 0.2);
-    color: #c9e6ff;
+    background: var(--pl-accent);
+    color: var(--accent-contrast, #0a0c10);
     border-radius: 4px;
     margin-left: 8px;
     cursor: pointer;
 }
 
 .column-type-badge:hover {
-    background: rgba(88, 166, 255, 0.3);
+    background: var(--pl-accent-hover, var(--pl-accent));
 }
 
 /* Filter Row */

@@ -13,6 +13,9 @@
     --text-secondary: #a9b6c8;
     --primary-color: #6d28d9;
     --success-color: #56d364;
+    --bg-primary: #0a0c10;
+    --bg-secondary: #121620;
+    --text-primary: #c9d1d9;
 }
 
 body {
@@ -20,10 +23,19 @@ body {
     color: var(--text-primary);
 }
 
+a {
+    color: #79c0ff;
+}
+
+p a {
+    text-decoration: underline;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    background: none;
 }
 
 header {
@@ -292,7 +304,7 @@ footer {
 }
 
 footer a {
-    color: var(--secondary-color);
+    color: #79c0ff;
 }
 
 footer .visitor-badge {

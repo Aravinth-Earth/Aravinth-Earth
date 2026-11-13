@@ -13,6 +13,60 @@ const PlannerApp = (function() {
     let tableEl, thead, tbody;
     let sortState = {}; // { columnId: 'asc' | 'desc' }
 
+    // The renderer has one branch per known column type. An imported table
+    // must not be able to invent a type and fall through to an unexpected
+    // branch, so the import gate accepts only these.
+    const KNOWN_COLUMN_TYPES = new Set(['freetext', 'date', 'time', 'datetime', 'number', 'dropdown']);
+    const MAX_IMPORT_COLUMNS = 100;
+    const MAX_IMPORT_ROWS = 5000;
+
+    function findRowElement(rowId) {
+        if (!tbody) return null;
+        const target = String(rowId);
+        return Array.from(tbody.querySelectorAll('tr[data-row-id]'))
+            .find(row => row.dataset.rowId === target) || null;
+    }
+
+    function findRowElements() {
+        const rows = new Map();
+        if (!tbody) return rows;
+        for (const row of tbody.querySelectorAll('tr[data-row-id]')) {
+            rows.set(row.dataset.rowId, row);
+        }
+        return rows;
+    }
+
+    function isValidImportedTable(table) {
+        if (!table || typeof table !== 'object' || Array.isArray(table)) return false;
+        if (!Array.isArray(table.columns) || !Array.isArray(table.rows)) return false;
+        if (table.columns.length === 0 || table.columns.length > MAX_IMPORT_COLUMNS) return false;
+        if (table.rows.length > MAX_IMPORT_ROWS) return false;
+
+        const columnIds = new Set();
+        for (const column of table.columns) {
+            if (!column || typeof column !== 'object' || Array.isArray(column)) return false;
+            if (typeof column.id !== 'string' || !column.id) return false;
+            if (typeof column.name !== 'string') return false;
+            if (typeof column.type !== 'string' || !KNOWN_COLUMN_TYPES.has(column.type)) return false;
+            if (columnIds.has(column.id)) return false;
+            columnIds.add(column.id);
+        }
+
+        const rowIds = new Set();
+        for (const row of table.rows) {
+            if (!row || typeof row !== 'object' || Array.isArray(row)) return false;
+            if (row.id === undefined || row.id === null) return false;
+            if (row.cells !== undefined && (row.cells === null || typeof row.cells !== 'object' || Array.isArray(row.cells))) {
+                return false;
+            }
+            const rowId = String(row.id);
+            if (rowIds.has(rowId)) return false;
+            rowIds.add(rowId);
+        }
+
+        return true;
+    }
+
     function init() {
         console.log('[PlannerApp] >>> init() - Starting initialization');
         
@@ -85,8 +139,9 @@ const PlannerApp = (function() {
             input.value = '';
         });
         
+        const rowElements = findRowElements();
         currentTable.rows.forEach(row => {
-            const rowEl = tbody.querySelector(`tr[data-row-id="${row.id}"]`);
+            const rowEl = rowElements.get(String(row.id));
             if (rowEl) {
                 rowEl.style.display = '';
             }
@@ -137,7 +192,7 @@ const PlannerApp = (function() {
         PlannerRenderer.updateSerialNumbers(tbody);
         debouncedSave();
         
-        const newRowEl = tbody.querySelector(`tr[data-row-id="${newRow.id}"]`);
+        const newRowEl = findRowElement(newRow.id);
         if (newRowEl) {
             newRowEl.classList.add('highlight');
             setTimeout(() => newRowEl.classList.remove('highlight'), 1000);
@@ -349,8 +404,9 @@ const PlannerApp = (function() {
             visible[row.id] = String(cellValue).toLowerCase().includes(filterValue);
         });
 
+        const rowElements = findRowElements();
         currentTable.rows.forEach(row => {
-            const rowEl = tbody.querySelector(`tr[data-row-id="${row.id}"]`);
+            const rowEl = rowElements.get(String(row.id));
             if (rowEl) {
                 rowEl.style.display = visible[row.id] ? '' : 'none';
             }
@@ -419,13 +475,15 @@ const PlannerApp = (function() {
         reader.onload = (event) => {
             try {
                 const imported = JSON.parse(event.target.result);
-                if (imported.columns && imported.rows) {
-                    currentTable = imported;
-                    PlannerDB.saveTable(currentTable).then(() => {
-                        renderTable();
-                        PlannerUI.showToast('Imported successfully', 'success');
-                    });
+                if (!isValidImportedTable(imported)) {
+                    PlannerUI.showToast('Invalid file format', 'error');
+                    return;
                 }
+                currentTable = imported;
+                PlannerDB.saveTable(currentTable).then(() => {
+                    renderTable();
+                    PlannerUI.showToast('Imported successfully', 'success');
+                });
             } catch (err) {
                 PlannerUI.showToast('Invalid file format', 'error');
             }

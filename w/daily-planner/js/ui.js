@@ -124,7 +124,7 @@ const PlannerUI = (function() {
                         <input type="text" 
                                id="dropdown-options-input" 
                                class="modal-input"
-                               value="${column.options ? column.options.join(', ') : ''}"
+                               value="${escapeAttr(column.options ? column.options.join(', ') : '')}"
                                placeholder="Option1, Option2, Option3">
                     </div>
                 </div>
@@ -191,7 +191,7 @@ const PlannerUI = (function() {
                 </div>
                 <div class="modal-footer">
                     <button class="controls button" data-action="close-modal">Cancel</button>
-                    <button class="controls button primary" data-action="save-dropdown-value" data-column-id="${columnId}" data-row-id="${rowId}">Add</button>
+                    <button class="controls button primary" data-action="save-dropdown-value" data-column-id="${escapeAttr(columnId)}" data-row-id="${escapeAttr(rowId)}">Add</button>
                 </div>
             </div>
         `;
@@ -273,6 +273,12 @@ const PlannerUI = (function() {
         return div.innerHTML;
     }
 
+    function escapeAttr(text) {
+        return escapeHtml(text)
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     return {
         showStatus,
         showToast,
@@ -280,6 +286,7 @@ const PlannerUI = (function() {
         showAddDropdownValueModal,
         showConfirmDialog,
         closeExistingModals,
-        escapeHtml
+        escapeHtml,
+        escapeAttr
     };
 })();

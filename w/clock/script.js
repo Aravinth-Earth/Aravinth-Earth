@@ -42,6 +42,27 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add(mode);
     };
 
+    // The slider sets a CAP, never a raw font-size: the stylesheet caps the
+    // element to its container, then this measures the rendered string and
+    // scales it down until the whole reading fits. The format, the font and
+    // the slider all change the width, so a fixed number cannot work.
+    const fitClock = () => {
+        const cap = Math.max(15, Math.min(150, Number(fontSizeSlider.value) || 80));
+        clock.style.setProperty('--clock-size', `${cap}px`);
+
+        const available = clock.clientWidth;
+        if (!available) return;
+
+        // Shrinking is not perfectly linear -- fixed gaps and rounding both
+        // contribute -- so keep measuring until the string actually fits.
+        let size = cap;
+        let guard = 0;
+        while (clock.scrollWidth > available && size > 8 && guard++ < 12) {
+            size = Math.max(8, Math.floor(size * available / clock.scrollWidth));
+            clock.style.setProperty('--clock-size', `${size}px`);
+        }
+    };
+
     const updateClock = () => {
         const now = new Date();
         const hours = is24HourFormat ? now.getHours() : now.getHours() % 12 || 12;
@@ -50,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ampm = !is24HourFormat ? now.getHours() >= 12 ? ' PM' : ' AM' : '';
 
         clock.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}${ampm}`;
+        fitClock();
     };
 
     const toggleFormat = () => {
@@ -97,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const adjustFontSize = (e) => {
         const fontSize = e.target.value;
         fontSizeValue.textContent = `${fontSize}px`;
-        clock.style.fontSize = `${fontSize}px`;
         localStorage.setItem('clock.fontSize', fontSize);
+        fitClock();
     };
 
     const toggleFullscreen = () => {
@@ -108,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.requestFullscreen().then(() => {
                 document.body.classList.add('fullscreen');
                 footer.style.display = 'none';
+                fitClock();
             }).catch((err) => {
                 settingsPanel.style.display = prevPanelDisplay;
                 console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
@@ -116,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.exitFullscreen().then(() => {
                 document.body.classList.remove('fullscreen');
                 footer.style.display = '';
+                fitClock();
                 if (prevPanelDisplay === 'block') {
                     settingsPanel.style.display = 'block';
                 }
@@ -131,9 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsPanel.style.display = 'none';
             document.body.classList.add('fullscreen');
             footer.style.display = 'none';
+            fitClock();
         } else {
             document.body.classList.remove('fullscreen');
             footer.style.display = '';
+            fitClock();
             if (prevPanelDisplay === 'block') {
                 settingsPanel.style.display = 'block';
             }
@@ -153,11 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedFontSize) {
         fontSizeSlider.value = savedFontSize;
         fontSizeValue.textContent = `${savedFontSize}px`;
-        clock.style.fontSize = `${savedFontSize}px`;
     } else {
         fontSizeSlider.value = '80';
         fontSizeValue.textContent = '80px';
-        clock.style.fontSize = '80px';
     }
 
     const savedFormat = localStorage.getItem('clock.is24HourFormat');
@@ -180,6 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(fitClock);
+    }
+
     updateClock();
     setInterval(updateClock, 1000);
+    window.addEventListener('resize', fitClock);
 });

@@ -75,16 +75,19 @@ button:active, select:active {
 
 /* Clock Styles */
 .clock {
-    font-size: clamp(3rem, 10vw, 8rem);
+    font-size: var(--clock-size, clamp(3rem, 10vw, 8rem));
     font-weight: 300;
     color: var(--text-primary);
     text-shadow: 0 0 20px var(--accent-primary);
-    transition: all 0.3s;
+    transition: color 0.3s, text-shadow 0.3s;
     display: flex;
     align-items: center;
     justify-content: center; /* Center the content horizontally */
     gap: 10px;
     white-space: nowrap; /* Prevent line wrapping */
+    max-width: 100%;
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 /* Color Modes */

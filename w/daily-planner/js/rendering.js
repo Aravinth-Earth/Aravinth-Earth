@@ -17,21 +17,21 @@ const PlannerRenderer = (function() {
                             <span class="header-text" 
                                   contenteditable="true" 
                                   data-field="name" 
-                                  data-column-id="${col.id}">${escapeHtml(col.name)}</span>
+                                  data-column-id="${escapeAttr(col.id)}">${escapeHtml(col.name)}</span>
                             <span class="column-type-badge" 
                                   title="Click to change column type"
-                                  data-column-id="${col.id}"
-                                  data-action="change-type">${col.type}</span>
+                                  data-column-id="${escapeAttr(col.id)}"
+                                  data-action="change-type">${escapeHtml(col.type)}</span>
                             <div class="header-actions">
                                 <button class="icon-btn" 
                                         title="Sort" 
                                         data-action="sort"
-                                        data-column-id="${col.id}"
-                                        data-sort-dir="${sortState[col.id] || ''}">↕️</button>
+                                        data-column-id="${escapeAttr(col.id)}"
+                                        data-sort-dir="${escapeAttr(sortState[col.id] || '')}">↕️</button>
                                 <button class="icon-btn danger" 
                                         title="Delete column" 
                                         data-action="delete-column"
-                                        data-column-id="${col.id}">✖️</button>
+                                        data-column-id="${escapeAttr(col.id)}">✖️</button>
                             </div>
                         </div>
                     </th>
@@ -52,7 +52,7 @@ const PlannerRenderer = (function() {
                         <input type="text" 
                                class="filter-input" 
                                placeholder="Filter..."
-                               data-filter-column="${col.id}">
+                               data-filter-column="${escapeAttr(col.id)}">
                     </th>
                 `).join('')}
             </tr>
@@ -77,28 +77,28 @@ const PlannerRenderer = (function() {
             const isFiltered = filterVisible !== null && !filterVisible[row.id];
             const isFirst = index === 0;
             const isLast = index === rows.length - 1;
-            const totalRows = rows.length;
-            
+            const rowId = escapeAttr(row.id);
+
             return `
-                <tr data-row-id="${row.id}" ${isFiltered ? 'style="display:none"' : ''}>
+                <tr data-row-id="${rowId}" ${isFiltered ? 'style="display:none"' : ''}>
                     <td>
                         <div class="action-buttons">
                             <button class="icon-btn ${isFirst ? 'disabled' : ''}" 
                                     title="${isFirst ? 'Move up (first row)' : 'Move up'}" 
                                     data-action="move-row"
-                                    data-row-id="${row.id}"
+                                    data-row-id="${rowId}"
                                     data-direction="up"
                                     ${isFirst ? 'disabled' : ''}>⬆️</button>
                             <button class="icon-btn ${isLast ? 'disabled' : ''}" 
                                     title="${isLast ? 'Move down (last row)' : 'Move down'}" 
                                     data-action="move-row"
-                                    data-row-id="${row.id}"
+                                    data-row-id="${rowId}"
                                     data-direction="down"
                                     ${isLast ? 'disabled' : ''}>⬇️</button>
                             <button class="icon-btn danger" 
                                     title="Delete row" 
                                     data-action="delete-row"
-                                    data-row-id="${row.id}">🗑️</button>
+                                    data-row-id="${rowId}">🗑️</button>
                         </div>
                     </td>
                     <td>${index + 1}</td>
@@ -115,62 +115,65 @@ const PlannerRenderer = (function() {
             return '<td></td>';
         }
 
-        const cellData = row.cells[column.id];
-        const value = cellData?.value || '';
+        const cellData = row.cells?.[column.id];
+        const rawValue = cellData?.value ?? '';
+        const value = escapeAttr(rawValue);
+        const columnId = escapeAttr(column.id);
+        const rowId = escapeAttr(row.id);
 
         switch (column.type) {
             case 'date':
-                return `<td data-column-id="${column.id}" data-row-id="${row.id}">
+                return `<td data-column-id="${columnId}" data-row-id="${rowId}">
                             <input type="date" 
                                    class="cell-input cell-date"
                                    value="${value}"
-                                   data-column-id="${column.id}"
-                                   data-row-id="${row.id}"
+                                   data-column-id="${columnId}"
+                                   data-row-id="${rowId}"
                                    data-field="value">
                         </td>`;
 
             case 'time':
-                return `<td data-column-id="${column.id}" data-row-id="${row.id}">
+                return `<td data-column-id="${columnId}" data-row-id="${rowId}">
                             <input type="time" 
                                    class="cell-input cell-time"
                                    value="${value}"
-                                   data-column-id="${column.id}"
-                                   data-row-id="${row.id}"
+                                   data-column-id="${columnId}"
+                                   data-row-id="${rowId}"
                                    data-field="value">
                         </td>`;
 
             case 'datetime':
-                return `<td data-column-id="${column.id}" data-row-id="${row.id}">
+                return `<td data-column-id="${columnId}" data-row-id="${rowId}">
                             <input type="datetime-local" 
                                    class="cell-input cell-datetime"
                                    value="${value}"
-                                   data-column-id="${column.id}"
-                                   data-row-id="${row.id}"
+                                   data-column-id="${columnId}"
+                                   data-row-id="${rowId}"
                                    data-field="value">
                         </td>`;
 
             case 'number':
-                return `<td data-column-id="${column.id}" data-row-id="${row.id}">
+                return `<td data-column-id="${columnId}" data-row-id="${rowId}">
                             <input type="number" 
                                    class="cell-input cell-number"
                                    value="${value}"
-                                   data-column-id="${column.id}"
-                                   data-row-id="${row.id}"
+                                   data-column-id="${columnId}"
+                                   data-row-id="${rowId}"
                                    data-field="value"
                                    placeholder="0">
                         </td>`;
 
             case 'dropdown':
                 const options = getDropdownOptions ? getDropdownOptions(column) : [];
-                return `<td data-column-id="${column.id}" data-row-id="${row.id}">
+                return `<td data-column-id="${columnId}" data-row-id="${rowId}">
                             <div class="dropdown-cell">
                                 <select class="cell-input cell-dropdown"
-                                        data-column-id="${column.id}"
-                                        data-row-id="${row.id}"
+                                        data-column-id="${columnId}"
+                                        data-row-id="${rowId}"
                                         data-field="value">
                                     <option value="">-- Select --</option>
                                     ${options.map(opt => `
-                                        <option value="${escapeHtml(opt)}" ${value === opt ? 'selected' : ''}>
+                                        <option value="${escapeAttr(opt)}" ${rawValue === opt ? 'selected' : ''}>
                                             ${escapeHtml(opt)}
                                         </option>
                                     `).join('')}
@@ -178,18 +181,19 @@ const PlannerRenderer = (function() {
                                 <button class="dropdown-add-new" 
                                         type="button" 
                                         data-action="add-dropdown-value"
-                                        data-column-id="${column.id}"
-                                        data-row-id="${row.id}"
+                                        data-column-id="${columnId}"
+                                        data-row-id="${rowId}"
                                         title="Add new value">+</button>
                             </div>
                         </td>`;
 
             default:
-                return `<td data-column-id="${column.id}" 
-                             data-row-id="${row.id}"
+                const maxLength = Math.max(1, Math.min(10000, parseInt(column.maxLength, 10) || 500));
+                return `<td data-column-id="${columnId}"
+                             data-row-id="${rowId}"
                              contenteditable="true"
                              data-field="value"
-                             data-max-length="${column.maxLength || 500}">${escapeHtml(value)}</td>`;
+                             data-max-length="${maxLength}">${escapeHtml(rawValue)}</td>`;
         }
     }
 
@@ -211,16 +215,22 @@ const PlannerRenderer = (function() {
         if (!tbody || !column || !rows) return;
 
         const options = getDropdownOptions ? getDropdownOptions(column) : [];
+        const cells = Array.from(tbody.querySelectorAll('td[data-row-id][data-column-id]'));
+        const columnId = String(column.id);
         rows.forEach(row => {
-            const cell = tbody.querySelector(`td[data-row-id="${row.id}"][data-column-id="${column.id}"]`);
+            const rowId = String(row.id);
+            const cell = cells.find(el =>
+                el.dataset.rowId === rowId && el.dataset.columnId === columnId
+            );
             if (cell) {
                 if (column.type === 'dropdown') {
                     const select = cell.querySelector('select');
                     if (select) {
+                        const value = row.cells?.[column.id]?.value ?? '';
                         select.innerHTML = `
                             <option value="">-- Select --</option>
                             ${options.map(opt => `
-                                <option value="${escapeHtml(opt)}" ${row.cells[column.id]?.value === opt ? 'selected' : ''}>
+                                <option value="${escapeAttr(opt)}" ${value === opt ? 'selected' : ''}>
                                     ${escapeHtml(opt)}
                                 </option>
                             `).join('')}
@@ -238,6 +248,21 @@ const PlannerRenderer = (function() {
         return div.innerHTML;
     }
 
+    /**
+     * Escape a value for an HTML attribute position.
+     *
+     * escapeHtml() round-trips through textContent -> innerHTML, which
+     * escapes &, < and > but deliberately leaves quotes alone. A quoted
+     * attribute value needs both quote characters escaped as well, or a
+     * value from an imported table can close the attribute and open a new
+     * one.
+     */
+    function escapeAttr(text) {
+        return escapeHtml(text)
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     return {
         renderHeader,
         renderFilterRow,
@@ -245,6 +270,7 @@ const PlannerRenderer = (function() {
         renderCell,
         updateSerialNumbers,
         renderColumnCells,
-        escapeHtml
+        escapeHtml,
+        escapeAttr
     };
 })();

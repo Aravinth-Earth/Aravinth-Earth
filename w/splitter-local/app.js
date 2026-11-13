@@ -315,6 +315,16 @@ qsa('.split-option').forEach(el => {
   });
 });
 
+// The radios are visually hidden but native: keyboard arrows move the
+// selection and fire a change event. The label click handler above covers
+// pointer use; this one makes the same state update reachable without a
+// pointer.
+qsa('input[name="split-type"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    if (this.checked) updateSplitOptions(this.value);
+  });
+});
+
 function populateSelectMembers() {
   const c = $('select-member-checkboxes'); c.innerHTML = '';
   members.forEach(m => {
@@ -986,7 +996,7 @@ function init() {
   $('import-data-btn').onclick = () => $('import-file-input').click();
   $('import-file-input').onchange = importData;
   $('clear-data-btn').onclick = clearCache;
-  $('add-member-btn').onclick = openMemberModal;
+  $('add-member-btn').onclick = () => openMemberModal();
   $('add-expense-btn').onclick = openExpenseModal;
   $('trip-form').onsubmit = handleTripSubmit;
   $('member-form').onsubmit = handleMemberSubmit;

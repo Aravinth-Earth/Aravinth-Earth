@@ -54,9 +54,115 @@ const PARTY_HOSTS = {
     'unpkg': ['unpkg.com'],
     'cdnjs': ['cdnjs.cloudflare.com'],
     'YouTube': ['youtube.com', 'youtube-nocookie.com', 'youtu.be'],
+    'YouTube News feed': ['ytn-feed.b1d00fb4-3928-4747-8084-a4888fb84876.workers.dev'],
     'CARTO': ['cartocdn.com'],
     'transparenttextures.com': ['transparenttextures.com'],
 };
+
+/** Hosts this site owns; a request to one of them is not third-party egress. */
+function isOwnHost(host) {
+    return host === '332321.xyz' || host.endsWith('.332321.xyz');
+}
+
+/** Resolve a host to the party label the manifest uses, if the gate knows it. */
+function partyForHost(host) {
+    for (const [party, hosts] of Object.entries(PARTY_HOSTS)) {
+        for (const known of hosts) {
+            if (host === known || host.endsWith('.' + known)) return party;
+        }
+    }
+    return null;
+}
+
+function hostFrom(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return null;
+    const candidate = raw.startsWith('//') ? 'https:' + raw : raw;
+    if (!/^(?:https?|wss?):\/\//i.test(candidate)) return null;
+    try {
+        return new URL(candidate).hostname.toLowerCase();
+    } catch {
+        return null;
+    }
+}
+
+/** Hosts referenced by CSS url()/@import declarations. */
+function cssRequestHosts(text) {
+    const hosts = new Set();
+    for (const match of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/gi)) {
+        const host = hostFrom(match[1]);
+        if (host) hosts.add(host);
+    }
+    for (const match of text.matchAll(/@import\s+(?:url\()?["']([^"']+)["']/gi)) {
+        const host = hostFrom(match[1]);
+        if (host) hosts.add(host);
+    }
+    return hosts;
+}
+
+/** Hosts a script actually requests, without treating ordinary links as egress. */
+function jsRequestHosts(text) {
+    const hosts = new Set();
+    const patterns = [
+        /(?:fetch|importScripts|sendBeacon)\s*\(\s*["'`]([^"'`\s]+)/gi,
+        /\.(?:src|href)\s*=\s*["'`]([^"'`\s]+)/gi,
+        /\.open\s*\(\s*["'][A-Z]+["']\s*,\s*["'`]([^"'`\s]+)/gi,
+        /new\s+(?:WebSocket|EventSource)\s*\(\s*["'`]([^"'`\s]+)/gi,
+        /import\s*\(\s*["'`]([^"'`\s]+)/gi,
+    ];
+    for (const pattern of patterns) {
+        for (const match of text.matchAll(pattern)) {
+            const host = hostFrom(match[1]);
+            if (host) hosts.add(host);
+        }
+    }
+    return hosts;
+}
+
+/**
+ * Hosts an HTML document actually requests.
+ *
+ * Only attributes that fetch something count: a link a visitor can follow is
+ * not egress. <a href> is deliberately excluded; <link> is included only for
+ * the relations that load a resource.
+ */
+function htmlRequestHosts(html) {
+    const hosts = new Set();
+    const add = (value) => {
+        const host = hostFrom(value);
+        if (host) hosts.add(host);
+    };
+    const addSrcset = (value) => {
+        for (const part of String(value).split(',')) {
+            const url = part.trim().split(/\s+/)[0];
+            add(url);
+        }
+    };
+
+    for (const tag of html.matchAll(/<(?:script|img|iframe|video|audio|source|embed|track|input|object)\b[^>]*>/gi)) {
+        const markup = tag[0];
+        for (const attr of markup.matchAll(/\b(?:src|poster|data)\s*=\s*["']([^"']+)["']/gi)) add(attr[1]);
+        for (const attr of markup.matchAll(/\bsrcset\s*=\s*["']([^"']+)["']/gi)) addSrcset(attr[1]);
+    }
+
+    for (const tag of html.matchAll(/<link\b[^>]*>/gi)) {
+        const markup = tag[0];
+        const rel = (markup.match(/\brel\s*=\s*["']([^"']+)["']/i) || [])[1] || '';
+        if (!/\b(?:stylesheet|icon|apple-touch-icon|manifest|preload|modulepreload|preconnect|dns-prefetch|prerender)\b/i.test(rel)) continue;
+        const href = (markup.match(/\bhref\s*=\s*["']([^"']+)["']/i) || [])[1];
+        if (href) add(href);
+    }
+
+    for (const block of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) {
+        for (const host of cssRequestHosts(block[1])) hosts.add(host);
+    }
+    for (const style of html.matchAll(/\bstyle\s*=\s*["']([^"']*)["']/gi)) {
+        for (const host of cssRequestHosts(style[1])) hosts.add(host);
+    }
+    for (const host of jsRequestHosts(html)) hosts.add(host);
+
+    return hosts;
+}
 
 function walk(dir, out = [], exts = null) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -259,7 +365,7 @@ for (const file of htmlFiles) {
 
     // Collect candidate local sources: the page plus scripts/stylesheets it
     // references that live beside it.
-    const localSources = [html];
+    const localSources = [{ text: html, ext: '.html' }];
     const refRe = /(?:src|href)\s*=\s*["']([^"']+)["']/gi;
     let m;
     while ((m = refRe.exec(html)) !== null) {
@@ -274,12 +380,12 @@ for (const file of htmlFiles) {
                 // reference into it would make every page look like it
                 // contacts every third party on the site.
                 if (path.resolve(resolved) === MANIFEST_PATH) continue;
-                localSources.push(fs.readFileSync(resolved, 'utf8'));
+                localSources.push({ text: fs.readFileSync(resolved, 'utf8'), ext });
             }
         }
     }
 
-    const haystack = localSources.join('\n');
+    const haystack = localSources.map(source => source.text).join('\n');
 
     // Which parties does this page actually contact?
     const actual = new Set();
@@ -289,6 +395,29 @@ for (const file of htmlFiles) {
                 actual.add(party);
                 break;
             }
+        }
+    }
+
+    // Known parties are only half the question. A host the gate has never
+    // heard of must also be a mismatch, or an undeclared third party is
+    // invisible precisely because nobody listed it. Scan the hosts the page
+    // actually requests, not every URL it mentions: a <a href> is a
+    // destination, not egress.
+    const requestedHosts = new Set();
+    for (const source of localSources) {
+        let found;
+        if (source.ext === '.html') found = htmlRequestHosts(source.text);
+        else if (source.ext === '.css') found = cssRequestHosts(source.text);
+        else if (source.ext === '.js') found = jsRequestHosts(source.text);
+        else found = new Set();
+        for (const host of found) requestedHosts.add(host);
+    }
+    for (const host of requestedHosts) {
+        if (isOwnHost(host)) continue;
+        if (!partyForHost(host)) {
+            problems.push(
+                `${route}  ->  contacts ${host} but no manifest entry names it (privacy notice is incomplete)`
+            );
         }
     }
 

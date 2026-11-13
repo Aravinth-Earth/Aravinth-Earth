@@ -453,6 +453,7 @@ textarea { resize:vertical }
 .split-option.selected { border-color:var(--purple); background:rgba(168,85,247,0.1) }
 .split-option-label { font-size:var(--fs-sm); font-weight:500; color:var(--text-sec) }
 .split-option.selected .split-option-label { color:var(--purple) }
+.split-option:has(input:focus-visible) { outline:2px solid var(--blue); outline-offset:2px }
 
 #split-config { background:var(--bg-surface); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border) }
 .split-hint { font-size:var(--fs-sm); color:var(--text-sec); margin-bottom:6px }

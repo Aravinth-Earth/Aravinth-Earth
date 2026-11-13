@@ -507,7 +507,10 @@
                     why: 'to play the embedded player. The embeds use youtube-nocookie.com, so no persistent YouTube cookie is set.',
                 },
             ],
-            loads: [{ to: 'YouTube', what: 'embedded players' }],
+            loads: [
+                { to: 'YouTube', what: 'embedded players' },
+                { to: 'YouTube News feed', what: 'the live stream id list from this site’s own feed service' },
+            ],
             notes: [
                 'This is the only page on the site that does not use GoatCounter.',
                 'A third-party visitor counter used to sit in this page’s footer. It was removed — it told an outside service who visited, which did not earn its place.',

@@ -272,12 +272,11 @@
         <div class="multi-view-grid" id="multi-view-grid"></div>
     </div>
     
-                <div id="owner-refresh" hidden style="max-width: 520px; margin: 0 0 12px; padding: 10px 12px; border: 1px dashed #999; border-radius: 8px; font-size: 14px;">
-                    <strong>Owner refresh</strong>
-                    <p style="margin: 6px 0; color: #666;">Runs the fetch once and reloads with the latest stream ids. Nothing else is unlocked by this token.</p>
-                    <input id="owner-token" type="password" autocomplete="off" spellcheck="false" placeholder="Owner token" aria-label="Owner token" style="padding: 6px 8px; min-width: 240px;">
-                    <button id="owner-refresh-btn" type="button" class="secondary-btn">Refresh streams</button>
-                    <span id="owner-refresh-status" role="status" style="margin-left: 8px;"></span>
+                <div id="owner-refresh" style="display: flex; gap: 8px; align-items: center; justify-content: flex-end; font-size: 12px; opacity: .55; margin: 0 0 8px;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.55">
+                    <button id="owner-refresh-toggle" type="button" title="Owner refresh: fetch the stream ids once" aria-label="Owner refresh" style="background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: inherit; text-decoration: underline dotted;">↻ refresh ids</button>
+                    <input id="owner-token" name="ytn-owner-token" type="password" autocomplete="current-password" spellcheck="false" placeholder="owner token" aria-label="Owner token" hidden style="padding: 4px 6px; font-size: 12px; width: 200px;">
+                    <button id="owner-refresh-btn" type="button" class="secondary-btn" hidden>Go</button>
+                    <span id="owner-refresh-status" role="status"></span>
                 </div>
 
                 <div id="channel-sections"></div>
@@ -441,27 +440,46 @@
             });
         </script>
         <script>
-            // Owner-only manual refresh. Hidden unless the page is opened with ?owner=1,
-            // so a visitor sees no token box at all. The token unlocks exactly one thing:
-            // one fetch run on the Worker, after which the page reloads with the new ids.
-            // Nothing else is readable with it — the Worker keeps only its SHA-256.
+            // Owner-only manual refresh, deliberately quiet: a small "↻ refresh ids" link
+            // at the right of the page. Clicking it asks for the owner token, runs one
+            // fetch on the Worker, and reloads with the new ids. The token unlocks that
+            // one action and nothing else — the Worker keeps only its SHA-256.
             (function () {
                 const REFRESH_URL = 'https://ytn-feed.b1d00fb4-3928-4747-8084-a4888fb84876.workers.dev/refresh';
-                if (!/[?&]owner=1\b/.test(location.search)) {
-                    return;
-                }
                 const box = document.getElementById('owner-refresh');
+                const toggle = document.getElementById('owner-refresh-toggle');
                 const input = document.getElementById('owner-token');
                 const button = document.getElementById('owner-refresh-btn');
                 const status = document.getElementById('owner-refresh-status');
-                if (!box || !input || !button || !status) {
+                if (!box || !toggle || !input || !button || !status) {
                     return;
                 }
-                box.hidden = false;
 
                 const say = (message) => {
                     status.textContent = message;
                 };
+
+                const openPanel = () => {
+                    input.hidden = false;
+                    button.hidden = false;
+                    box.style.opacity = '1';
+                    input.focus();
+                };
+
+                toggle.addEventListener('click', function () {
+                    if (input.hidden) {
+                        openPanel();
+                    } else {
+                        input.hidden = true;
+                        button.hidden = true;
+                        say('');
+                    }
+                });
+
+                // ?owner=1 still works for a bookmarked direct link.
+                if (/[?&]owner=1\b/.test(location.search)) {
+                    openPanel();
+                }
 
                 button.addEventListener('click', async function () {
                     const token = input.value.trim();

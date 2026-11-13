@@ -84,20 +84,32 @@
         );
     }
 
-    function listOfLoads(loads) {
+    function listOfLoads(loads, sends) {
         if (!loads || !loads.length) {
             return '<p class="about-small-text">None. This page loads no third-party resources.</p>';
         }
+        // A party can be both a load and a send (GoatCounter is the sitewide
+        // page-view counter). In that case the fixed "receives nothing"
+        // clause would contradict the entry's own sends list.
+        var sentTo = {};
+        (sends || []).forEach(function (s) {
+            if (s && s.to) sentTo[s.to] = true;
+        });
         return (
             '<ul class="privacy-list">' +
             loads
                 .map(function (l) {
+                    var clause = sentTo[l.to]
+                        ? ' The request also carries what this page sends — see above.'
+                        : ' They can see your IP address and browser, but receive nothing about how you use this page.';
                     return (
                         '<li><span class="privacy-label">' +
                         esc(l.to) +
                         '</span> <span class="privacy-detail">serves ' +
                         esc(l.what) +
-                        '. They can see your IP address and browser, but receive nothing about how you use this page.</span></li>'
+                        '.' +
+                        clause +
+                        '</span></li>'
                     );
                 })
                 .join('') +
@@ -123,7 +135,7 @@
                 '<h4 class="about-subheading">Sent off your device</h4>' +
                 listOfSends(entry.sends) +
                 '<h4 class="about-subheading">Third-party resources this page loads</h4>' +
-                listOfLoads(entry.loads) +
+                listOfLoads(entry.loads, entry.sends) +
                 (entry.notes && entry.notes.length
                     ? '<h4 class="about-subheading">Worth knowing</h4><ul class="privacy-list">' +
                       entry.notes.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('') +
@@ -309,9 +321,15 @@
         window.closeAboutModal = closeModal;
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeModal);
-    } else {
-        initializeModal();
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = { listOfSends, listOfLoads, buildModalHTML };
+    }
+
+    if (typeof document !== 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeModal);
+        } else {
+            initializeModal();
+        }
     }
 })();

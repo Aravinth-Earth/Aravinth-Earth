@@ -6,6 +6,10 @@
   Its README resolver looks in the root, .github/ and docs/, so a README.md
   anywhere in that chain ends up on the profile. This file is the site's
   documentation instead.
+
+  It lives under .github/docs/ on purpose: GitHub Pages does not publish
+  .github/, so developer documentation cannot be fetched from the site
+  origin.
 -->
 
 # Aravinth's Site

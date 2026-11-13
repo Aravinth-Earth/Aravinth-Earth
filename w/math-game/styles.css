@@ -298,7 +298,7 @@ body.dark-theme :where(#main-content, .info-overlay) select {
    brings its own colours, height, and padding. */
 :where(#main-content, .info-overlay) button:not(.btn) {
     background: var(--color-primary);
-    color: var(--color-text-light);
+    color: var(--color-on-primary);
     border: none;
     cursor: pointer;
     transition: transform 0.2s, background 0.3s, color 0.3s;
@@ -574,7 +574,7 @@ body.light-theme .top-bar {
 .theme-controls button {
     padding: 0.5rem 1rem;
     background: var(--color-primary);
-    color: var(--color-text-light);
+    color: var(--color-on-primary);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     border: none;
 }
@@ -587,12 +587,12 @@ body.light-theme .top-bar {
 /* Remove these overrides to keep consistent theme colors */
 .theme-controls button[class*="mg-theme-"] {
     background: var(--color-primary);
-    color: var(--color-text-light);
+    color: var(--color-on-primary);
 }
 
 body.dark-theme .theme-controls button[class*="mg-theme-"] {
     background: var(--color-primary);
-    color: var(--color-text-light);
+    color: var(--color-on-primary);
 }
 
 .game-controls {

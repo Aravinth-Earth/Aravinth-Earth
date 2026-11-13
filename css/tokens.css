@@ -34,6 +34,13 @@
    Everything else that differs per theme is DERIVED from those 17 (§3), so a
    new theme only has to fill in 17 values and the rest follows.
 
+   CASCADE LAYERS
+   This file declares `@layer tokens, theme;`. The base tokens live in
+   @layer tokens and themes.css puts its remaps in @layer theme. Unlayered
+   page CSS beats both layers, which is what lets a self-contained tool keep
+   its own palette even when the site theme is light. Do not unlayer these
+   files: a light site theme would repaint every dark tool.
+
    FALLBACKS
    Every semantic token below is declared with a fallback, so a page that
    links ONLY tokens.css (without themes.css) still renders correctly.
@@ -51,6 +58,9 @@
    the same rgba() the site used to hardcode.
    ========================================================================== */
 
+@layer tokens, theme;
+
+@layer tokens {
 :root {
   /* ======================================================================
      §1  COLOR PRIMITIVES
@@ -268,4 +278,5 @@
   --transition-base: 200ms ease;
   --transition-slow: 300ms ease;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
 }

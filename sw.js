@@ -184,13 +184,12 @@ const PRECACHE_URLS = SHELL_PRECACHE_URLS.concat(
  * embed. The page is useless without the network, so there is nothing to buy
  * by keeping a copy: pass it through untouched.
  *
- * `w/expense-splitter/` is not built from this repository at all: a Worker
- * route answers it, page and API together, so its HTML and scripts change
- * whenever that Worker is deployed. A cached copy here would be a version of
- * the app that no longer exists -- and the app keeps its own encrypted cache
- * anyway, under its own control.
+ * `w/expense-splitter/` used to be listed here, while a Worker answered that
+ * path from outside this repository. It is now a plain page in this tree --
+ * the introduction to the app, which lives on its own origin -- so it is an
+ * ordinary page: network-first, cached like every other one.
  */
-const LIVE_DATA_PATHS = ['/w/youtube-news/', '/w/expense-splitter/'];
+const LIVE_DATA_PATHS = ['/w/youtube-news/'];
 
 /**
  * Static assets. They are served NETWORK FIRST -- the cache entry is only an

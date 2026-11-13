@@ -12,8 +12,15 @@
  * that the route is live is the deployment check's job, not this file's.
  */
 
-/** Path prefixes, with the trailing slash, exactly as the site links to them. */
-const WORKER_ROUTES = ['/w/expense-splitter/'];
+/**
+ * Path prefixes, with the trailing slash, exactly as the site links to them.
+ *
+ * Currently empty. The expense splitter app now runs on its own origin
+ * (expense-splitter.332321.xyz), and the site's "/w/expense-splitter/" path is
+ * a real page in this repository -- the introduction that links to it. The
+ * list stays in place for the next path a Worker does own.
+ */
+const WORKER_ROUTES = [];
 
 /**
  * True when a site path is served by a Worker route.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitter — Shared Group Expenses, Sealed in the Browser</title>
+
+    <meta property="og:title" content="Splitter — Shared Group Expenses, Sealed in the Browser" />
+    <meta property="og:description" content="One group, one 16-character code, expenses on everyone's screen, balances settled at the end. Your group's data is sealed in the browser before it is stored." />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Splitter — Shared Group Expenses, Sealed in the Browser" />
+    <meta name="twitter:description" content="One group, one 16-character code, expenses on everyone's screen, balances settled at the end. Your group's data is sealed in the browser before it is stored." />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta name="description" content="One group, one 16-character code, expenses on everyone's screen, balances settled at the end. Your group's data is sealed in the browser before it is stored." />
+
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/expense-splitter/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/expense-splitter/" />
+    <meta property="og:site_name" content="Aravinth" />
+    <script>
+        /* site-theme:applies-before-paint */
+        (function () {
+            try {
+                var THEMES = [
+                    'current', 'light', 'amber', 'teal', 'charcoal',
+                    'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                ];
+                var saved = localStorage.getItem('site-theme');
+                // Validate before applying. An unknown value would fall
+                // through to the default tokens -- an unpainted page --
+                // and, because the switcher only reads valid keys, it
+                // would never be repaired. The switcher writes the
+                // resolved value back, so an invalid one self-heals.
+                if (saved && THEMES.indexOf(saved) !== -1) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else if (
+                    window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: light)').matches
+                ) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'current');
+                }
+            } catch (e) {
+                /* storage unavailable -- the default theme is fine */
+            }
+        })();
+    </script>
+</head>
+<body class="app-shell">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <main class="landing" id="main-content" tabindex="-1">
+        <header class="hero">
+            <span class="mark" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linejoin="round">
+                    <path class="mark-share" d="M24 24 L27.13 4.25 A20 20 0 0 1 42.67 31.17 Z"></path>
+                    <path d="M24 24 L39.54 36.59 A20 20 0 0 1 8.46 36.59 Z"></path>
+                    <path d="M24 24 L5.33 31.17 A20 20 0 0 1 20.87 4.25 Z"></path>
+                </svg>
+            </span>
+
+            <h1 class="hero-name">Splitter</h1>
+            <p class="hero-tagline">Shared group expenses, sealed in your browser.</p>
+            <p class="hero-lede">One person creates a group and passes on a 16-character code; everyone else opens the same group with it. Expenses land on every screen as they are added, and at the end the app shows who owes whom.</p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary enter" href="https://expense-splitter.332321.xyz/">Open Splitter</a>
+                <a class="hero-alt" href="/w/splitter-local/">Use the local-only version</a>
+            </div>
+
+            <p class="hero-note">Splitter is still in development, so small things may change.</p>
+        </header>
+
+        <section class="block" aria-labelledby="how-title">
+            <h2 class="eyebrow" id="how-title">How it works</h2>
+            <ol class="steps">
+                <li>Create a group and get a code</li>
+                <li>Everyone adds what they paid</li>
+                <li>See who owes whom, and settle up</li>
+            </ol>
+        </section>
+
+        <section class="block honesty" aria-labelledby="honesty-title">
+            <h2 class="eyebrow" id="honesty-title">What the server can and cannot do</h2>
+            <p class="honesty-lede">The code is the key, and it never leaves your browser. The server holds ciphertext and the routing ids that let your devices find each other — not names, amounts or splits.</p>
+            <ul class="limits">
+                <li><strong>A leaked code cannot be revoked.</strong> Anyone who has it can open the group, and there is no way to call it back.</li>
+                <li><strong>The server cannot check a split.</strong> It cannot read the amounts, so it cannot tell you that they add up. That check stays with you.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <a class="back-link" href="/">&larr; All tools</a>
+        <p class="footer-line">Made by Aravinth. Plain HTML, CSS and JavaScript, no build step.</p>
+    </footer>
+
+    <script src="/js/pwa.js" defer></script>
+    <!-- GoatCounter: the site-wide anonymous page-view counter, loaded exactly
+         as every other page loads it. No SRI hash on purpose — the loader URL
+         is versionless and shared by the whole site. -->
+    <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

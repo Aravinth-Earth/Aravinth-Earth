@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="qa-playground.css">
     <style>
         body { padding: 0.5rem; margin: 0; font-size: 0.85rem; }
-        h3 { color: var(--accent); margin-bottom: 0.5rem; font-size: 0.95rem; }
+        h2 { color: var(--accent); margin-bottom: 0.5rem; font-size: 0.95rem; }
         p { margin-bottom: 0.5rem; }
     </style>
     <link rel="stylesheet" href="/css/about-privacy.css" />
@@ -60,11 +60,13 @@
         </script>
 </head>
 <body data-bare>
+    <main id="main-content" tabindex="-1">
     <h1 class="visually-hidden">Nested Frame</h1>
-    <h3>I am a nested iframe</h3>
+    <h2>I am a nested iframe</h2>
     <div class="frame-indicator">Level 1 — Nested Frame</div>
     <p>This iframe loads another iframe inside it. To reach the innermost elements, switch through both frames.</p>
     <iframe src="inputs.html" name="innerIframe" height="200" width="100%" style="border:1px solid #30363d;border-radius:4px;background:#0d1117;" title="Inner iframe"></iframe>
+    </main>
     <script src="qa-playground.js"></script>
     <script src="/js/pwa.js" defer></script>
     <script src="/js/theme-switcher.js" defer></script>

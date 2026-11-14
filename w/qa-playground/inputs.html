@@ -88,28 +88,28 @@
         <div class="field-group">
             <h2>Week & Year picker</h2>
             <p class="note">Supported: Chrome, Edge, Opera. Not supported: Firefox, Safari.</p>
-            <input type="week" name="weekYear">
+            <input type="week" name="weekYear" aria-label="Week and year">
         </div>
 
         <div class="field-group">
             <h2>Date picker</h2>
-            <input type="date" name="dateField">
+            <input type="date" name="dateField" aria-label="Date">
         </div>
 
         <div class="field-group">
             <h2>Color picker</h2>
-            <input type="color" name="colorPicker" value="#58a6ff">
+            <input type="color" name="colorPicker" value="#58a6ff" aria-label="Colour">
         </div>
 
         <div class="field-group">
             <h2>File upload</h2>
-            <input type="file" name="fileUpload" accept=".txt,.pdf,.png,.jpg">
+            <input type="file" name="fileUpload" accept=".txt,.pdf,.png,.jpg" aria-label="File upload">
         </div>
 
         <div class="field-group">
             <h2>Range slider</h2>
             <p class="note">Value: <span id="rangeVal">50</span></p>
-            <input type="range" name="rangeSlider" min="0" max="100" value="50" oninput="document.getElementById('rangeVal').textContent=this.value">
+            <input type="range" name="rangeSlider" min="0" max="100" value="50" aria-label="Range slider" oninput="document.getElementById('rangeVal').textContent=this.value">
         </div>
 
         <div class="field-group">
@@ -119,12 +119,12 @@
 
         <div class="field-group">
             <h2>Read-only field</h2>
-            <input type="text" name="readonlyField" value="This is read-only" readonly>
+            <input type="text" name="readonlyField" value="This is read-only" readonly aria-label="Read-only field">
         </div>
 
         <div class="field-group">
             <h2>Disabled field</h2>
-            <input type="text" name="disabledField" value="This is disabled" disabled>
+            <input type="text" name="disabledField" value="This is disabled" disabled aria-label="Disabled field">
         </div>
 
         <div class="field-group">

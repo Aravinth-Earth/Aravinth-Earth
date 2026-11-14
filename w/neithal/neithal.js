@@ -46,7 +46,7 @@
         if (!langToggle) return;
         langToggle.setAttribute(
             "aria-label",
-            currentLang() === "en" ? "Switch to Tamil" : "ஆங்கிலத்திற்கு மாறு"
+            currentLang() === "en" ? "Switch to Tamil (தமிழ்)" : "Switch to English (English)"
         );
     }
 

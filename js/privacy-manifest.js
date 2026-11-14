@@ -226,6 +226,18 @@
             ],
         },
 
+        '/w/bookmarks/': {
+            name: 'Bookmarks',
+            summary: 'The introduction to Bookmarks, an end-to-end encrypted bookmark vault that runs on its own origin. This page describes it and links to it.',
+            stores: [],
+            sends: [PAGEVIEWS],
+            loads: [GC],
+            notes: [
+                'This is a landing page, not the app. It has no form and keeps nothing; the vault is created at bookmarks.332321.xyz, which carries its own statements.',
+                'The one thing this page keeps is the site-wide theme choice, read from the same "site-theme" key as every other page here.',
+            ],
+        },
+
         '/w/life-on-earth/Life_On_Earth.html': {
             name: 'Life On Earth',
             summary: 'An interactive art piece with ambient sound.',

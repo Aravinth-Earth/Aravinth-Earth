@@ -6,6 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://www.332321.xyz/w/bookmarks/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.332321.xyz/w/calculator/calc.html</loc>
     <lastmod>2026-10-22</lastmod>
     <priority>0.7</priority>
@@ -27,17 +32,17 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/daily-planner/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/decision-helper/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/expense-splitter/</loc>
-    <lastmod>2026-11-13</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -47,12 +52,12 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/math-game/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/neithal/</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -77,7 +82,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/data-tables.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -92,7 +97,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/forms.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -102,7 +107,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/inputs.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -112,12 +117,12 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/nested-frame.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/selection.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -132,7 +137,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/qa-playground/upload.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -142,7 +147,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/random-number/random-number.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -152,22 +157,22 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/secret-share/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/simon-game/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/splitter-local/</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.332321.xyz/w/stock-portfolio-split/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -192,7 +197,7 @@
   </url>
   <url>
     <loc>https://www.332321.xyz/w/youtube-news/news.html</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>

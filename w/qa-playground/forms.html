@@ -87,7 +87,7 @@
                 <input type="number" id="age" placeholder="18-120" min="18" max="120" onblur="validateField('age', val => {const n=parseInt(val); return n>=18 && n<=120;})">
                 <div class="error-msg" id="ageError">Age must be between 18 and 120</div>
 
-                <label class="required">Country</label>
+                <label class="required" for="country">Country</label>
                 <select id="country" onblur="validateField('country', val => val !== '')">
                     <option value="">-- Select --</option>
                     <option value="in">India</option>

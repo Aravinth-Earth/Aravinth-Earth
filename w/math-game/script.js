@@ -382,6 +382,7 @@ const game = {
         if (!overlay) return;
         overlay.classList.toggle('visible', visible);
         overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        overlay.inert = !visible;
         overlay.querySelectorAll('button, a[href], [tabindex]').forEach((el) => {
             if (visible) {
                 el.removeAttribute('tabindex');

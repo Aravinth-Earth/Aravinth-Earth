@@ -1,0 +1,226 @@
+/* Bookmarks — product landing page.
+   Colours, spacing and type come from /css/tokens.css, and the dark/light
+   switch from /css/themes.css (which must stay the last stylesheet). This file
+   only names semantic roles, so every site theme applies unchanged.
+
+   Layout is mobile-first: one column, one heading, no card grid. */
+
+.landing {
+    width: 100%;
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 8vw, 4.5rem) var(--space-5) var(--space-8);
+    flex: 1 0 auto;
+}
+
+/* ---- Hero ------------------------------------------------------------- */
+
+.mark {
+    display: inline-flex;
+    color: var(--accent);
+}
+
+.mark svg {
+    display: block;
+    width: clamp(40px, 11vw, 56px);
+    height: auto;
+}
+
+/* The keyhole is the page showing through the mark, so it has to take the
+   page's own background in every theme rather than a fixed colour. */
+.mark .cut {
+    fill: var(--bg-primary);
+}
+
+.hero-name {
+    margin: var(--space-5) 0 0;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-primary);
+}
+
+.hero-tagline {
+    margin: var(--space-3) 0 0;
+    max-width: 26em;
+    font-size: clamp(1.05rem, 3.4vw, 1.35rem);
+    line-height: 1.45;
+    color: var(--text-primary);
+}
+
+.hero-lede {
+    margin: var(--space-4) 0 0;
+    max-width: 34em;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+}
+
+.enter {
+    min-height: 3rem;
+    padding-inline: var(--space-6);
+    font-size: 1rem;
+}
+
+.hero-alt {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 0.22em;
+}
+
+.hero-alt:hover {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+}
+
+.hero-note {
+    margin: var(--space-4) 0 0;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.hero-alt-line {
+    margin: var(--space-3) 0 0;
+}
+
+/* ---- Shared section furniture ----------------------------------------- */
+
+.block {
+    margin-top: clamp(2.25rem, 6vw, 3.25rem);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-strong);
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* ---- Three steps ------------------------------------------------------ */
+
+.steps {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding-left: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--text-primary);
+}
+
+.steps li::marker {
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- Screenshots ------------------------------------------------------ */
+
+.shot {
+    margin: var(--space-4) 0 0;
+}
+
+.shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--bg-secondary);
+}
+
+.shot figcaption {
+    margin-top: var(--space-2);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* ---- Honesty block ---------------------------------------------------- */
+
+.honesty {
+    padding: var(--space-5);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-lg);
+    background: var(--bg-secondary);
+}
+
+.honesty-lede {
+    margin: var(--space-3) 0 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.limits {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+.limits strong {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ---- Footer ----------------------------------------------------------- */
+
+.landing-footer {
+    width: 100%;
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-5) var(--space-6);
+    border-top: 1px solid var(--border-strong);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.back-link {
+    /* base.css pads the back link; trim it so it lines up with the column. */
+    margin-left: calc(var(--space-3) * -1);
+}
+
+.footer-line {
+    margin: 0;
+    line-height: 1.55;
+}
+
+/* ---- Wider screens ---------------------------------------------------- */
+
+@media (min-width: 30rem) {
+    .hero-actions {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+    }
+}

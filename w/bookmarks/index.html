@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarks — A Bookmark Vault Sealed in Your Browser</title>
+
+    <meta property="og:title" content="Bookmarks — A Bookmark Vault Sealed in Your Browser" />
+    <meta property="og:description" content="A bookmark vault kept on your own device: add, search and import offline, with the list sealed by a 13-word phrase before it reaches the server. Sync is optional." />
+    <meta property="og:image" content="https://www.332321.xyz/og-image.png" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bookmarks — A Bookmark Vault Sealed in Your Browser" />
+    <meta name="twitter:description" content="A bookmark vault kept on your own device: add, search and import offline, with the list sealed by a 13-word phrase before it reaches the server. Sync is optional." />
+    <meta name="twitter:image" content="https://www.332321.xyz/og-image.png" />
+    <meta name="description" content="A bookmark vault kept on your own device: add, search and import offline, with the list sealed by a 13-word phrase before it reaches the server. Sync is optional." />
+
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href="https://www.332321.xyz/w/bookmarks/" />
+    <meta property="og:url" content="https://www.332321.xyz/w/bookmarks/" />
+    <meta property="og:site_name" content="Aravinth" />
+    <script>
+        /* site-theme:applies-before-paint */
+        (function () {
+            try {
+                var THEMES = [
+                    'current', 'light', 'amber', 'teal', 'charcoal',
+                    'greenish', 'colorful', 'sunset', 'nord', 'cyberpunk'
+                ];
+                var saved = localStorage.getItem('site-theme');
+                // Validate before applying. An unknown value would fall
+                // through to the default tokens -- an unpainted page --
+                // and, because the switcher only reads valid keys, it
+                // would never be repaired. The switcher writes the
+                // resolved value back, so an invalid one self-heals.
+                if (saved && THEMES.indexOf(saved) !== -1) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else if (
+                    window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: light)').matches
+                ) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'current');
+                }
+            } catch (e) {
+                /* storage unavailable -- the default theme is fine */
+            }
+        })();
+    </script>
+</head>
+<body class="app-shell">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <main class="landing" id="main-content" tabindex="-1">
+        <header class="hero">
+            <span class="mark" aria-hidden="true">
+                <svg viewBox="0 0 64 64" focusable="false">
+                    <path fill="currentColor" d="M21 11h22a5 5 0 0 1 5 5v35.2c0 1.5-1.7 2.4-2.9 1.6L32 44.6 18.9 52.8c-1.2.8-2.9-.1-2.9-1.6V16a5 5 0 0 1 5-5z"></path>
+                    <circle class="cut" cx="32" cy="27.5" r="7"></circle>
+                    <path class="cut" d="M28.8 32h6.4l1.4 12.6h-9.2z"></path>
+                </svg>
+            </span>
+
+            <h1 class="hero-name">Bookmarks</h1>
+            <p class="hero-tagline">Your bookmarks, sealed in your browser.</p>
+            <p class="hero-lede">A bookmark vault that lives on your own device. The list is encrypted with a 13-word phrase before anything is stored, so the server holds ciphertext it cannot read — and adding, searching and importing work with no connection at all.</p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary enter" href="https://bookmarks.332321.xyz/">Open Bookmarks</a>
+                <a class="hero-alt" href="https://github.com/Aravinth-Earth/bookmarks" target="_blank" rel="noopener noreferrer">Read the source</a>
+            </div>
+
+            <p class="hero-note">The local vault is free for everyone. Hosted sync is still in development.</p>
+        </header>
+
+        <section class="block" aria-labelledby="how-title">
+            <h2 class="eyebrow" id="how-title">How it works</h2>
+            <ol class="steps">
+                <li>Create a vault, and keep its 13 words</li>
+                <li>Add, edit, search and import — offline</li>
+                <li>Turn sync on only if you want the sealed copy on the server</li>
+            </ol>
+        </section>
+
+        <section class="block" aria-labelledby="look-title">
+            <h2 class="eyebrow" id="look-title">What it looks like</h2>
+
+            <figure class="shot">
+                <img src="shots/vault.png" width="1280" height="840" loading="lazy" alt="The bookmark list: eight bookmarks with their addresses, uses and last-used dates, under a search bar and the Add, view, Lock and Settings controls." />
+                <figcaption>One list, on this device. The icon, the name, the address, how often it was used and when it was last opened.</figcaption>
+            </figure>
+
+            <figure class="shot">
+                <img src="shots/collected.png" width="1218" height="393" loading="lazy" alt="The Collected on this device section: four addresses this browser opened, with their visits and last-seen dates, and an Add action for each row." />
+                <figcaption>The optional extension lists the addresses this browser opened under the vault, so the ones worth keeping can be added.</figcaption>
+            </figure>
+        </section>
+
+        <section class="block honesty" aria-labelledby="honesty-title">
+            <h2 class="eyebrow" id="honesty-title">What the server can and cannot do</h2>
+            <p class="honesty-lede">The phrase is the account. It derives the id the server files the copy under and the key that opens it; only the sealed ciphertext is uploaded, so the server cannot read a single address.</p>
+            <ul class="limits">
+                <li><strong>There is no recovery.</strong> Lose the 13 words and the vault cannot be opened by anyone, including whoever runs the server. The only backup is an export you keep.</li>
+                <li><strong>No account in the email sense.</strong> There is no address to sign up with and no password to reset — the phrase is the whole of the account.</li>
+                <li><strong>Nothing else is fetched.</strong> No CDN, no web font, no analytics on the app, and no vendor icon service; the page loads only files its own server serves.</li>
+            </ul>
+        </section>
+
+        <section class="block" aria-labelledby="extension-title">
+            <h2 class="eyebrow" id="extension-title">The optional browser extension</h2>
+            <p class="honesty-lede">The vault works exactly as it does without it. Installed, the extension keeps the address of each page this browser opens — only the address, on this device — and lists them under the vault as <em>Collected on this device</em>, where the ones worth keeping can be added.</p>
+            <p class="honesty-lede">What it collects stays in the extension's own local storage: it is never in the sealed vault, never synced, and the extension makes no network request. Removing it deletes its list; the vault is untouched either way.</p>
+            <p class="hero-alt-line"><a class="hero-alt" href="https://github.com/Aravinth-Earth/bookmarks/blob/main/extension/README.md" target="_blank" rel="noopener noreferrer">Install and permissions</a></p>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <a class="back-link" href="/">&larr; All tools</a>
+        <p class="footer-line">Made by Aravinth. Plain HTML, CSS and JavaScript, no build step.</p>
+    </footer>
+
+    <script src="/js/pwa.js" defer></script>
+    <!-- GoatCounter: the site-wide anonymous page-view counter, loaded exactly
+         as every other page loads it. No SRI hash on purpose — the loader URL
+         is versionless and shared by the whole site. -->
+    <script data-goatcounter="https://priv-ana.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

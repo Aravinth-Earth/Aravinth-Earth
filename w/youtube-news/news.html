@@ -82,6 +82,20 @@
             body.multi-select-mode .stream-select {
                 display: block;
             }
+            /* Keep the last row of tiles clear of the fixed selection toolbar. */
+            body.multi-select-mode #main-content {
+                padding-bottom: 150px;
+            }
+            @media (max-width: 600px) {
+                body.multi-select-mode #main-content {
+                    padding-bottom: 230px;
+                }
+            }
+            /* The fixed selection toolbar owns the bottom of the screen; the
+               theme gear would float on top of its buttons. */
+            body.multi-select-mode .theme-switcher {
+                display: none;
+            }
             .multi-view-mode-bar {
                 padding: 0 10px 20px;
             }
@@ -92,12 +106,16 @@
                 bottom: 0;
                 z-index: 90;
                 display: none;
+                flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-between;
                 gap: 12px;
                 padding: 12px 14px;
                 background-color: rgba(18, 18, 18, 0.96);
                 border-top: 1px solid #333;
+            }
+            #multi-view-count {
+                white-space: nowrap;
             }
             .multi-view-custom {
                 display: flex;
@@ -115,6 +133,7 @@
             }
             .multi-view-actions {
                 display: flex;
+                flex-wrap: wrap;
                 gap: 10px;
             }
             .custom-stream-error {
@@ -124,6 +143,33 @@
             }
             .custom-stream-error[hidden] {
                 display: none;
+            }
+            @media (max-width: 600px) {
+                .multi-view-toolbar {
+                    gap: 8px;
+                    padding: 8px 10px;
+                }
+                .multi-view-custom {
+                    width: 100%;
+                }
+                .multi-view-custom input {
+                    flex: 1 1 auto;
+                    width: auto;
+                    min-width: 0;
+                }
+                .multi-view-custom button {
+                    flex: 0 0 auto;
+                }
+                .multi-view-actions {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    width: 100%;
+                }
+                .multi-view-actions button {
+                    width: 100%;
+                    padding: 8px 10px;
+                }
             }
             button {
                 background-color: #bb86fc;
@@ -148,30 +194,31 @@
                 inset: 0;
                 z-index: 1000;
                 display: none;
+                overflow: hidden;
                 background-color: #000;
+            }
+            /* Pages behind the overlay must not scroll while it is open. */
+            body.multi-view-open {
+                overflow: hidden;
+            }
+            /* Site chrome would otherwise float above the grid: the theme
+               switcher is fixed with the same z-index as the overlay and
+               comes later in the DOM, so it paints on top. A full view
+               should show only the streams and Exit. */
+            body.multi-view-open .theme-switcher,
+            body.multi-view-open .skip-link {
+                display: none;
             }
             .multi-view-grid {
                 display: grid;
-                width: 100vw;
-                height: 100vh;
+                width: 100%;
+                height: 100%;
                 gap: 0;
                 background-color: #000;
             }
-            .multi-view-grid.count-2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; }
-            .multi-view-grid.count-3,
-            .multi-view-grid.count-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
-            .multi-view-grid.count-5,
-            .multi-view-grid.count-6 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
-            .multi-view-grid.count-7,
-            .multi-view-grid.count-8 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
-            .multi-view-grid.count-9 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
-            .multi-view-grid.count-10,
-            .multi-view-grid.count-11,
-            .multi-view-grid.count-12,
-            .multi-view-grid.count-13,
-            .multi-view-grid.count-14,
-            .multi-view-grid.count-15,
-            .multi-view-grid.count-16 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
+            /* Column/row counts are chosen in JS from the live viewport size
+               and the number of streams (see planMultiViewGrid), so no fixed
+               count-N classes are needed. */
             .multi-view-tile {
                 min-width: 0;
                 min-height: 0;
@@ -187,6 +234,11 @@
             }
             .multi-view-overlay:hover .multi-view-exit,
             .multi-view-exit:focus {
+                opacity: 1;
+            }
+            /* In-tab view has no browser chrome of its own, so keep the exit
+               control visible instead of revealing it only on hover. */
+            .multi-view-overlay.tab-mode .multi-view-exit {
                 opacity: 1;
             }
             hr {
@@ -252,7 +304,7 @@
         Primarily famous tamil youtube news channels live streams, stream id's updated multiple times a day
     <hr>
     <div class="multi-view-mode-bar">
-        <button id="multi-view-mode-toggle" onclick="toggleMultiViewSelectionMode()">Multi Stream Mode</button>
+        <button id="multi-view-mode-toggle" type="button" aria-pressed="false" onclick="toggleMultiViewSelectionMode()">Multi Stream Mode</button>
     </div>
     <div class="multi-view-toolbar" id="multi-view-toolbar">
         <span id="multi-view-count">0 streams selected</span>
@@ -264,10 +316,11 @@
         <div class="multi-view-actions">
             <button class="secondary-btn" onclick="clearMultiViewSelection()">Clear</button>
             <button class="secondary-btn" onclick="exitMultiViewSelectionMode()">Exit Mode</button>
+            <button id="multi-view-start-tab" class="secondary-btn" onclick="startMultiViewInTab()" disabled title="Fill this browser tab with the streams, without entering fullscreen">Maximize in Tab</button>
             <button id="multi-view-start" onclick="startMultiViewFullscreen()" disabled>Select 2-16 Streams</button>
         </div>
     </div>
-    <div class="multi-view-overlay" id="multi-view-overlay">
+    <div class="multi-view-overlay" id="multi-view-overlay" role="dialog" aria-modal="true" aria-label="Multi stream view">
         <button class="multi-view-exit" onclick="exitMultiViewFullscreen()">Exit</button>
         <div class="multi-view-grid" id="multi-view-grid"></div>
     </div>
@@ -339,8 +392,8 @@
                     checkbox.type = 'checkbox';
                     checkbox.className = 'stream-select';
                     checkbox.value = streamId;
-                    checkbox.title = 'Select for multi fullscreen';
-                    checkbox.setAttribute('aria-label', 'Select stream for multi fullscreen');
+                    checkbox.title = 'Select for multi stream view';
+                    checkbox.setAttribute('aria-label', 'Select stream for multi stream view');
 
                     const iframe = document.createElement('iframe');
                     iframe.setAttribute('data-src', 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(streamId));
@@ -607,15 +660,19 @@
                 const toolbar = document.getElementById('multi-view-toolbar');
                 const countLabel = document.getElementById('multi-view-count');
                 const startButton = document.getElementById('multi-view-start');
+                const startTabButton = document.getElementById('multi-view-start-tab');
                 const modeToggle = document.getElementById('multi-view-mode-toggle');
                 const count = selectedStreams.size;
+                const canStart = count >= 2 && count <= 16;
 
                 document.body.classList.toggle('multi-select-mode', multiSelectMode);
                 toolbar.style.display = multiSelectMode ? 'flex' : 'none';
                 modeToggle.textContent = multiSelectMode ? 'Exit Multi Stream Mode' : 'Multi Stream Mode';
+                modeToggle.setAttribute('aria-pressed', String(multiSelectMode));
                 countLabel.textContent = `${count} stream${count === 1 ? '' : 's'} selected`;
-                startButton.disabled = count < 2 || count > 16;
+                startButton.disabled = !canStart;
                 startButton.textContent = count < 2 ? 'Select 2-16 Streams' : 'Multi Fullscreen';
+                startTabButton.disabled = !canStart;
             };
 
             window.clearMultiViewSelection = () => {
@@ -691,7 +748,7 @@
                 checkbox.addEventListener('change', () => {
                     if (checkbox.checked && selectedStreams.size >= 16) {
                         checkbox.checked = false;
-                        alert('Select up to 16 streams for multi fullscreen.');
+                        alert('Select up to 16 streams for multi stream view.');
                         return;
                     }
 
@@ -765,7 +822,7 @@
                 clearCustomStreamError();
 
                 if (!selectedStreams.has(streamId) && selectedStreams.size >= 16) {
-                    alert('Select up to 16 streams for multi fullscreen.');
+                    alert('Select up to 16 streams for multi stream view.');
                     return;
                 }
 
@@ -776,17 +833,134 @@
                 updateMultiViewToolbar();
             };
 
-            window.startMultiViewFullscreen = async () => {
-                const streams = Array.from(selectedStreams.values());
-                if (streams.length < 2 || streams.length > 16) {
-                    alert('Select between 2 and 16 streams.');
-                    return;
+            // Which kind of full-view layout is open, or null when closed.
+            // 'tab'     -- the overlay fills the browser tab only, page scroll
+            //              locked; the browser window and its chrome are untouched.
+            // 'fullscreen' -- the overlay is also in the Fullscreen API.
+            let multiViewMode = null;
+            let multiViewOwnsFullscreen = false;
+            let multiViewReturnFocus = null;
+
+            // --- Adaptive tile grid ---------------------------------------------
+            // Pick the column/row count from the number of streams and the live
+            // viewport, so the videos use as much of the screen as possible: in
+            // a portrait tab two streams stack instead of sitting side by side.
+            // Candidates are scored by how much of the viewport the 16:9 video
+            // inside each tile can actually cover (letterbox bars are waste),
+            // then filtered for visual balance. The search space is at most 15
+            // layouts, so no layout library is needed.
+            const VIDEO_ASPECT = 16 / 9;
+
+            const visibleVideoArea = (width, height) => {
+                if (width <= 0 || height <= 0) return 0;
+                const videoWidth = Math.min(width, height * VIDEO_ASPECT);
+                return videoWidth * (videoWidth / VIDEO_ASPECT);
+            };
+
+            const planMultiViewGrid = (count, width, height) => {
+                const candidates = [];
+                for (let cols = 1; cols <= count; cols++) {
+                    const rows = Math.ceil(count / cols);
+                    const lastRowCount = count - (rows - 1) * cols;
+                    const cellWidth = width / cols;
+                    const cellHeight = height / rows;
+                    const cellVideo = visibleVideoArea(cellWidth, cellHeight);
+                    // Tiles that start the last (incomplete) row are widened
+                    // to the full grid width, so no part of the screen is an
+                    // empty cell.
+                    const lastRowVideo = visibleVideoArea(width / lastRowCount, cellHeight);
+                    const coverage =
+                        ((rows - 1) * cols * cellVideo + lastRowCount * lastRowVideo) /
+                        (width * height);
+                    const imbalance =
+                        Math.max(cellVideo, lastRowVideo) / Math.min(cellVideo, lastRowVideo);
+                    candidates.push({
+                        cols,
+                        rows,
+                        lastRowCount,
+                        coverage,
+                        imbalance,
+                        tileAspect: cellWidth / cellHeight,
+                    });
                 }
 
+                // Keep tiles within roughly 3x of each other, so one stream
+                // never dwarfs the rest; if nothing qualifies, take the best.
+                const balanced = candidates.filter((candidate) => candidate.imbalance <= 3.25);
+                const pool = balanced.length ? balanced : candidates;
+                const best = Math.max(...pool.map((candidate) => candidate.coverage));
+                // Among layouts close to the best coverage, prefer a grid whose
+                // last row is full, then the shape that follows the viewport
+                // (wide screens get columns, tall screens get rows), then the
+                // tile closest to 16:9.
+                const landscape = width >= height;
+                const shortlist = pool.filter((candidate) => candidate.coverage >= best * 0.96);
+                shortlist.sort((a, b) => {
+                    const aFull = a.lastRowCount === a.cols;
+                    const bFull = b.lastRowCount === b.cols;
+                    if (aFull !== bFull) return aFull ? -1 : 1;
+                    const aFollowsViewport = landscape ? a.cols >= a.rows : a.cols <= a.rows;
+                    const bFollowsViewport = landscape ? b.cols >= b.rows : b.cols <= b.rows;
+                    if (aFollowsViewport !== bFollowsViewport) return aFollowsViewport ? -1 : 1;
+                    return (
+                        Math.abs(Math.log(a.tileAspect / VIDEO_ASPECT)) -
+                        Math.abs(Math.log(b.tileAspect / VIDEO_ASPECT))
+                    );
+                });
+                return shortlist[0];
+            };
+
+            let multiViewStreamCount = 0;
+            let multiViewLayoutFrame = 0;
+
+            const greatestCommonDivisor = (a, b) => (b ? greatestCommonDivisor(b, a % b) : a);
+
+            const applyMultiViewLayout = () => {
+                const grid = document.getElementById('multi-view-grid');
+                if (!multiViewStreamCount || !grid) return;
+
+                const { width, height } = grid.getBoundingClientRect();
+                if (!width || !height) return;
+
+                const plan = planMultiViewGrid(multiViewStreamCount, width, height);
+
+                // The last row holds fewer tiles and stretches to the full
+                // width. Columns are expressed in shared units so those tiles
+                // split that width evenly (e.g. 3 columns + 2 tiles = spans
+                // 2/2/2 and 3/3, not 4/2 and 2/2).
+                const shared = greatestCommonDivisor(plan.cols, plan.lastRowCount);
+                const unitColumns = (plan.cols / shared) * plan.lastRowCount;
+                const normalSpan = plan.lastRowCount / shared;
+                const lastRowSpan = plan.cols / shared;
+
+                grid.style.gridTemplateColumns = `repeat(${unitColumns}, minmax(0, 1fr))`;
+                grid.style.gridTemplateRows = `repeat(${plan.rows}, minmax(0, 1fr))`;
+                grid.dataset.layout = `${plan.cols}x${plan.rows}`;
+
+                const lastRowStart = (plan.rows - 1) * plan.cols;
+                Array.from(grid.children).forEach((tile, index) => {
+                    const span = index < lastRowStart ? normalSpan : lastRowSpan;
+                    tile.style.gridColumn = `span ${span}`;
+                });
+            };
+
+            const scheduleMultiViewLayout = () => {
+                if (multiViewLayoutFrame) return;
+                multiViewLayoutFrame = window.requestAnimationFrame(() => {
+                    multiViewLayoutFrame = 0;
+                    applyMultiViewLayout();
+                });
+            };
+
+            const buildMultiView = (streams) => {
                 const overlay = document.getElementById('multi-view-overlay');
                 const grid = document.getElementById('multi-view-grid');
-                grid.className = `multi-view-grid count-${streams.length}`;
+                overlay.classList.remove('tab-mode');
+                grid.className = 'multi-view-grid';
+                grid.style.gridTemplateColumns = '';
+                grid.style.gridTemplateRows = '';
                 grid.innerHTML = '';
+                multiViewStreamCount = streams.length;
 
                 streams.forEach(({ streamId, channelName }) => {
                     const tile = document.createElement('div');
@@ -803,31 +977,135 @@
                     grid.appendChild(tile);
                 });
 
+                multiViewReturnFocus = document.activeElement;
                 overlay.style.display = 'block';
+                document.body.classList.add('multi-view-open');
+                applyMultiViewLayout();
+                return overlay;
+            };
 
-                if (overlay.requestFullscreen) {
-                    await overlay.requestFullscreen();
+            // Re-flow when the tab is resized, rotated, or the view enters or
+            // leaves fullscreen. A ResizeObserver covers all of them; the
+            // resize listener is the fallback for browsers without it.
+            const multiViewGridElement = document.getElementById('multi-view-grid');
+            if (typeof ResizeObserver === 'function' && multiViewGridElement) {
+                new ResizeObserver(scheduleMultiViewLayout).observe(multiViewGridElement);
+            } else {
+                window.addEventListener('resize', scheduleMultiViewLayout);
+                document.addEventListener('fullscreenchange', scheduleMultiViewLayout);
+            }
+
+            const collectSelectedStreams = () => {
+                const streams = Array.from(selectedStreams.values());
+                if (streams.length < 2 || streams.length > 16) {
+                    alert('Select between 2 and 16 streams.');
+                    return null;
                 }
+                return streams;
+            };
+
+            window.startMultiViewFullscreen = async () => {
+                const streams = collectSelectedStreams();
+                if (!streams) {
+                    return;
+                }
+
+                const overlay = buildMultiView(streams);
+                multiViewMode = 'fullscreen';
+
+                // If the browser refuses fullscreen (permission, an unsupported
+                // embed context, a non-user-gesture call), the same overlay is
+                // already filling the tab, so the view still works -- it just
+                // stops short of covering the window chrome.
+                if (overlay.requestFullscreen) {
+                    try {
+                        await overlay.requestFullscreen();
+                    } catch (error) {
+                        multiViewMode = 'tab';
+                        overlay.classList.add('tab-mode');
+                        const exitButton = overlay.querySelector('.multi-view-exit');
+                        if (exitButton) exitButton.focus();
+                    }
+                } else {
+                    multiViewMode = 'tab';
+                    overlay.classList.add('tab-mode');
+                    const exitButton = overlay.querySelector('.multi-view-exit');
+                    if (exitButton) exitButton.focus();
+                }
+            };
+
+            // Fill the browser tab only: no Fullscreen API, no window chrome
+            // change. The grid covers the viewport and the page behind it stops
+            // scrolling, so every pixel of the tab goes to the streams.
+            window.startMultiViewInTab = () => {
+                const streams = collectSelectedStreams();
+                if (!streams) {
+                    return;
+                }
+
+                const overlay = buildMultiView(streams);
+                overlay.classList.add('tab-mode');
+                multiViewMode = 'tab';
+
+                const exitButton = overlay.querySelector('.multi-view-exit');
+                if (exitButton) exitButton.focus();
             };
 
             const closeMultiViewOverlay = () => {
                 const overlay = document.getElementById('multi-view-overlay');
                 const grid = document.getElementById('multi-view-grid');
                 overlay.style.display = 'none';
+                overlay.classList.remove('tab-mode');
+                document.body.classList.remove('multi-view-open');
                 grid.innerHTML = '';
                 grid.className = 'multi-view-grid';
+                grid.style.gridTemplateColumns = '';
+                grid.style.gridTemplateRows = '';
+                delete grid.dataset.layout;
+                multiViewStreamCount = 0;
+                multiViewMode = null;
+                multiViewOwnsFullscreen = false;
+
+                const returnTo = multiViewReturnFocus;
+                multiViewReturnFocus = null;
+                if (returnTo && typeof returnTo.focus === 'function' && document.contains(returnTo)) {
+                    returnTo.focus();
+                }
             };
 
             window.exitMultiViewFullscreen = () => {
+                // Close the grid first: that also covers the case where a player
+                // iframe inside it holds fullscreen (exitFullscreen would then
+                // return to the grid instead of the page).
+                closeMultiViewOverlay();
                 if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                } else {
-                    closeMultiViewOverlay();
+                    const exited = document.exitFullscreen();
+                    if (exited && typeof exited.catch === 'function') {
+                        exited.catch(() => {});
+                    }
                 }
             };
 
             document.addEventListener('fullscreenchange', () => {
-                if (!document.fullscreenElement) {
+                // An in-tab view is not tied to the Fullscreen API, so a player
+                // iframe entering or leaving fullscreen must not tear it down.
+                if (multiViewMode === 'tab') {
+                    return;
+                }
+                const overlay = document.getElementById('multi-view-overlay');
+                if (document.fullscreenElement === overlay) {
+                    multiViewOwnsFullscreen = true;
+                    return;
+                }
+                // A player iframe may itself go fullscreen inside the overlay;
+                // only leave the grid when the overlay's own fullscreen ends.
+                if (multiViewOwnsFullscreen && !document.fullscreenElement) {
+                    closeMultiViewOverlay();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && multiViewMode === 'tab') {
                     closeMultiViewOverlay();
                 }
             });
